@@ -1225,37 +1225,43 @@
 
                 <!-- 5. טאב מעקב פיננסי -->
                 <div x-show="activeTab === 'finances' && !selectedClientId" x-cloak class="space-y-6">
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center sm:justify-between shadow-xl">
-                            <div>
-                                <span class="text-slate-400 text-[9px] md:text-xs font-bold block mb-1">הכנסה חודשית</span>
-                                <span class="text-sm md:text-2xl font-black text-white" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
-                            </div>
+                    
+                    <!-- סיכום פיננסי מעורב -->
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">הכנסה חודשית צפויה</span>
+                            <span class="text-sm md:text-xl font-black text-white" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center sm:justify-between shadow-xl">
-                            <div>
-                                <span class="text-slate-400 text-[9px] md:text-xs font-bold block mb-1">סה״כ שנגבה</span>
-                                <span class="text-sm md:text-2xl font-black text-white" x-text="getTotalRevenueCollected() + ' ₪'"></span>
-                            </div>
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">סה״כ הכנסות שנגבו</span>
+                            <span class="text-sm md:text-xl font-black text-emerald-450" x-text="getTotalRevenueCollected() + ' ₪'"></span>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center sm:justify-between shadow-xl">
-                            <div>
-                                <span class="text-slate-400 text-[9px] md:text-xs font-bold block mb-1">חובות לקוחות</span>
-                                <span class="text-sm md:text-2xl font-black text-amber-400" x-text="getPendingRevenueAmount() + ' ₪'"></span>
-                            </div>
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">סה״כ הוצאות תפעול</span>
+                            <span class="text-sm md:text-xl font-black text-red-400" x-text="getTotalExpenses() + ' ₪'"></span>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">רווח נקי לעסק</span>
+                            <span :class="getNetProfit() >= 0 ? 'text-emerald-400' : 'text-red-400'" class="text-sm md:text-xl font-black" x-text="getNetProfit() + ' ₪'"></span>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl col-span-2 md:col-span-1">
+                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">חובות לקוחות פעילים</span>
+                            <span class="text-sm md:text-xl font-black text-amber-400" x-text="getPendingRevenueAmount() + ' ₪'"></span>
                         </div>
                     </div>
 
-                    <!-- גרף הכנסות -->
+                    <!-- גרף הכנסות ורווחים -->
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
-                        <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 mb-3">הכנסות בחצי השנה האחרונה</h4>
+                        <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 mb-3">רווח נקי חודשי (חצי שנה אחרונה)</h4>
                         <div class="w-full h-44 bg-slate-950 rounded-xl p-3 flex flex-col justify-between">
                             <div class="flex items-end justify-around h-32 pt-4">
                                 <template x-for="item in getMonthlyFinancialData()" :key="item.name">
                                     <div class="flex flex-col items-center gap-1.5 w-12">
-                                        <div class="w-5 bg-emerald-500 rounded-t-md transition-all" :style="'height: ' + Math.max(4, (item.value / 5000) * 100) + 'px;'"></div>
+                                        <div class="w-5 bg-emerald-500 rounded-t-md transition-all" :style="'height: ' + Math.max(4, Math.min(100, (item.value / 10000) * 100)) + 'px;'"></div>
                                         <span class="text-[9px] text-slate-400 font-bold" x-text="item.name"></span>
                                         <span class="text-[8px] text-slate-500" x-text="item.value + ' ₪'"></span>
                                     </div>
@@ -1264,17 +1270,90 @@
                         </div>
                     </div>
 
-                    <!-- טבלת תשלומים -->
+                    <!-- ניהול הוצאות והכנסות חיצוניות -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- הזנת תנועה פיננסית -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 lg:col-span-1">
+                            <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2">הוספת תנועה פיננסית חדשה</h4>
+                            <form @submit.prevent="addTransaction()" class="space-y-3 text-xs">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">סוג תנועה</label>
+                                    <select x-model="newTransaction.type" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        <option value="expense">הוצאת עסק (-)</option>
+                                        <option value="income">הכנסה חיצונית (+)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">סכום (₪)</label>
+                                    <input type="number" x-model="newTransaction.amount" required placeholder="500" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">תיאור תנועה</label>
+                                    <input type="text" x-model="newTransaction.description" required placeholder="למשל: שכירות סטודיו, רכישת ציוד..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">תאריך</label>
+                                    <input type="date" x-model="newTransaction.date" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                </div>
+                                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-xl transition mt-2">
+                                    <span>רשום תנועה</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- יומן תנועות עסק (Ledger) -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden lg:col-span-2 flex flex-col h-[350px]">
+                            <div class="p-4 border-b border-slate-800">
+                                <h4 class="text-xs md:text-sm font-bold text-slate-200">יומן תנועות פיננסיות בעסק</h4>
+                            </div>
+                            <div class="flex-1 overflow-y-auto">
+                                <table class="w-full text-right border-collapse text-xs">
+                                    <thead>
+                                        <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 font-bold">
+                                            <th class="py-2.5 px-4">תאריך</th>
+                                            <th class="py-2.5 px-4">תיאור</th>
+                                            <th class="py-2.5 px-4 text-center">סוג</th>
+                                            <th class="py-2.5 px-4 text-center">סכום</th>
+                                            <th class="py-2.5 px-4 text-left">מחיקה</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-800/40">
+                                        <template x-for="tx in transactions" :key="tx.id">
+                                            <tr class="hover:bg-slate-800/20 transition">
+                                                <td class="py-2.5 px-4 text-slate-350" x-text="formatDate(tx.date)"></td>
+                                                <td class="py-2.5 px-4 text-slate-200 font-semibold" x-text="tx.description"></td>
+                                                <td class="py-2.5 px-4 text-center">
+                                                    <span :class="tx.type === 'income' ? 'bg-emerald-950/80 text-emerald-400 border-emerald-900/60' : 'bg-red-950/80 text-red-400 border-red-900/60'" class="text-[9px] px-2 py-0.5 rounded-full border" x-text="tx.type === 'income' ? 'הכנסה' : 'הוצאה'"></span>
+                                                </td>
+                                                <td :class="tx.type === 'income' ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold'" class="py-2.5 px-4 text-center text-xs" x-text="(tx.type === 'income' ? '+' : '-') + tx.amount + ' ₪'"></td>
+                                                <td class="py-2.5 px-4 text-left">
+                                                    <button @click="deleteTransaction(tx.id)" class="text-slate-500 hover:text-red-450 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                        <template x-if="transactions.length === 0">
+                                            <tr>
+                                                <td colspan="5" class="py-8 text-center text-slate-550 italic">טרם נרשמו תנועות פיננסיות השנה.</td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- מעקב תשלומי מתאמנים דינמי -->
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+                        <div class="p-4 border-b border-slate-800">
+                            <h4 class="text-xs md:text-sm font-bold text-slate-200">מעקב תשלומי מתאמנים פעילים</h4>
+                        </div>
                         <div class="overflow-x-auto w-full">
-                            <table class="w-full text-right border-collapse min-w-[550px] text-xs">
+                            <table class="w-full text-right border-collapse min-w-[650px] text-xs">
                                 <thead>
                                     <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 font-black">
-                                        <th class="py-3 px-6">שם המתאמן</th>
-                                        <th class="py-3 px-6 text-center">חודש 1</th>
-                                        <th class="py-3 px-6 text-center">חודש 2</th>
-                                        <th class="py-3 px-6 text-center">חודש 3</th>
-                                        <th class="py-3 px-6 text-center">סה״כ שולם</th>
+                                        <th class="py-3 px-6 w-1/4">שם המתאמן</th>
+                                        <th class="py-3 px-6">תשלומים חודשיים (לחץ לשינוי סטטוס)</th>
+                                        <th class="py-3 px-6 text-center w-24">סה״כ שולם</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-800/50">
@@ -1282,12 +1361,21 @@
                                         <tr class="hover:bg-slate-800/30 transition">
                                             <td class="py-2.5 px-6">
                                                 <button @click="selectClient(client.id)" class="text-xs font-bold text-slate-200 hover:text-emerald-400 transition" x-text="client.name"></button>
+                                                <span class="text-[9px] text-slate-500 block" x-text="'מנוי: ' + (client.pricePerMonth || 250) + ' ₪ לחודש'"></span >
                                             </td>
-                                            <template x-for="(pay, pIdx) in client.payments" :key="pIdx">
-                                                <td class="py-2.5 px-6 text-center">
-                                                    <button @click="toggleClientPaymentStatus(client.id, pIdx)" :class="pay.status === 'paid' ? 'bg-emerald-950 text-emerald-400 border-emerald-800' : 'bg-amber-950 text-amber-400 border-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-bold border transition" x-text="pay.status === 'paid' ? 'שולם' : 'ממתין'"></button>
-                                                </td>
-                                            </template>
+                                            <td class="py-2.5 px-6">
+                                                <!-- רשימת תגים דינמית חלקה -->
+                                                <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none whitespace-nowrap py-1">
+                                                    <template x-for="(pay, pIdx) in client.payments" :key="pIdx">
+                                                        <button 
+                                                            @click="toggleClientPaymentStatus(client.id, pIdx)" 
+                                                            :class="pay.status === 'paid' ? 'bg-emerald-950 text-emerald-400 border-emerald-800' : 'bg-amber-950 text-amber-400 border-amber-800'" 
+                                                            class="text-[9px] px-2.5 py-0.5 rounded-full font-bold border transition cursor-pointer select-none"
+                                                            x-text="'ח׳ ' + pay.month + ': ' + pay.amount + ' ₪'">
+                                                        </button>
+                                                    </template>
+                                                </div>
+                                            </td>
                                             <td class="py-2.5 px-6 text-center text-slate-200 font-bold text-xs" x-text="getClientPaidSum(client) + ' ₪'"></td>
                                         </tr>
                                     </template>
@@ -1434,6 +1522,17 @@
                     <input type="text" x-model="newClient.goal" placeholder="חיטוב, מסה, כוח..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
                 </div>
 
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 mb-1">מחיר חודשי (₪)</label>
+                        <input type="number" x-model="newClient.pricePerMonth" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 mb-1">חודשי ליווי (תשלומים)</label>
+                        <input type="number" x-model="newClient.paymentMonths" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    </div>
+                </div>
+
                 <div class="pt-4 border-t border-slate-800 flex justify-end gap-2 text-xs">
                     <button type="button" @click="openAddClientModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 px-4 py-2 rounded-xl font-bold">ביטול</button>
                     <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-5 py-2 rounded-xl">שמור והוסף</button>
@@ -1488,6 +1587,17 @@
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 mb-1">מטרה עיקרית</label>
                     <input type="text" x-model="editingClient.goal" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 mb-1">מחיר חודשי (₪)</label>
+                        <input type="number" x-model="editingClient.pricePerMonth" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 mb-1">חודשי ליווי (תשלומים)</label>
+                        <input type="number" x-model="editingClient.paymentMonths" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    </div>
                 </div>
 
                 <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs">
@@ -1600,12 +1710,14 @@
                 clients: [],
                 scheduleEvents: [],
                 workoutTemplates: [],
+                transactions: [],
                 
                 // אובייקטים לטפסים
-                newClient: { name: '', phone: '', email: '', startDate: '', startWeight: '', goal: '' },
+                newClient: { name: '', phone: '', email: '', startDate: '', startWeight: '', goal: '', pricePerMonth: 250, paymentMonths: 3 },
                 editingClient: {},
                 newCheckin: { date: '', weight: '', bodyFat: '', waist: '', adherenceNutrition: 5, adherenceTraining: 5, notes: '', isDrop: false },
                 newEvent: { clientId: '', type: 'zoom', date: '', time: '' },
+                newTransaction: { type: 'expense', amount: '', description: '', date: '' },
                 
                 intakePasteText: '',
                 chartMetric: 'weight',
@@ -1781,6 +1893,7 @@
                             this.clients = parsed.clients || [];
                             this.scheduleEvents = parsed.scheduleEvents || [];
                             this.workoutTemplates = parsed.workoutTemplates || [];
+                            this.transactions = parsed.transactions || [];
                             return;
                         } catch (e) {}
                     }
@@ -1793,6 +1906,7 @@
                             this.clients = Array.isArray(parsed) ? parsed : (parsed.clients || []);
                             this.scheduleEvents = parsed.scheduleEvents || [];
                             this.workoutTemplates = parsed.workoutTemplates || [];
+                            this.transactions = [];
                             this.saveData(); // Migrate to V2 immediately
                             return;
                         } catch (e) {}
@@ -1823,6 +1937,11 @@
                                         }
                                         if (parsed.workoutTemplates && parsed.workoutTemplates.length > 0) {
                                             this.db.collection("config").doc("templates").set({ templates: parsed.workoutTemplates });
+                                        }
+                                        if (parsed.transactions && parsed.transactions.length > 0) {
+                                            parsed.transactions.forEach(t => {
+                                                this.db.collection("transactions").doc(t.id).set(t);
+                                            });
                                         }
                                         return;
                                     }
@@ -1855,6 +1974,15 @@
                             this.workoutTemplates = doc.data().templates || [];
                         }
                     }, err => console.error("Templates sync error:", err));
+
+                    this.db.collection("transactions").onSnapshot(snapshot => {
+                        const cloudTx = [];
+                        snapshot.forEach(doc => {
+                            cloudTx.push(doc.data());
+                        });
+                        cloudTx.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        this.transactions = cloudTx;
+                    }, err => console.error("Transactions sync error:", err));
                 },
 
                 saveData() {
@@ -1864,14 +1992,14 @@
                         }
                         this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents });
                         this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates });
-                    } else {
-                        const db = {
-                            clients: this.clients,
-                            scheduleEvents: this.scheduleEvents,
-                            workoutTemplates: this.workoutTemplates
-                        };
-                        localStorage.setItem('il_fitness_db_v2', JSON.stringify(db));
                     }
+                    const db = {
+                        clients: this.clients,
+                        scheduleEvents: this.scheduleEvents,
+                        workoutTemplates: this.workoutTemplates,
+                        transactions: this.transactions
+                    };
+                    localStorage.setItem('il_fitness_db_v2', JSON.stringify(db));
                     setTimeout(() => {
                         if (window.lucide) window.lucide.createIcons();
                     }, 50);
@@ -2014,7 +2142,129 @@
                 },
 
                 getActiveClientsCount() { return this.clients.filter(c => c.status === 'active').length; },
-                getExpectedMonthlyRevenue() { return this.getActiveClientsCount() * 250; },
+                
+                // הוספת עסקאות
+                addTransaction() {
+                    if (!this.newTransaction.amount || !this.newTransaction.description) {
+                        alert("אנא מלא סכום ותיאור!");
+                        return;
+                    }
+                    const tx = {
+                        id: 'tx_' + Date.now(),
+                        type: this.newTransaction.type, // 'income' or 'expense'
+                        amount: parseFloat(this.newTransaction.amount),
+                        description: this.newTransaction.description,
+                        date: this.newTransaction.date || this.getTodayDate()
+                    };
+
+                    this.transactions.push(tx);
+                    this.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("transactions").doc(tx.id).set(tx);
+                    }
+                    this.saveData();
+
+                    // איפוס הטופס
+                    this.newTransaction = { type: 'expense', amount: '', description: '', date: this.getTodayDate() };
+                },
+
+                deleteTransaction(id) {
+                    if (confirm("למחוק תנועה זו?")) {
+                        this.transactions = this.transactions.filter(t => t.id !== id);
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("transactions").doc(id).delete();
+                        }
+                        this.saveData();
+                    }
+                },
+
+                // חישובים פיננסיים דינמיים
+                getExpectedMonthlyRevenue() {
+                    return this.clients
+                        .filter(c => c.status === 'active')
+                        .reduce((sum, c) => sum + (parseFloat(c.pricePerMonth) || 250), 0);
+                },
+
+                getTotalRevenueCollected() {
+                    let totalClient = 0;
+                    this.clients.forEach(c => {
+                        (c.payments || []).forEach(p => { if (p.status === 'paid') totalClient += p.amount; });
+                    });
+                    
+                    let totalExternal = this.transactions
+                        .filter(t => t.type === 'income')
+                        .reduce((sum, t) => sum + t.amount, 0);
+
+                    return totalClient + totalExternal;
+                },
+
+                getTotalExpenses() {
+                    return this.transactions
+                        .filter(t => t.type === 'expense')
+                        .reduce((sum, t) => sum + t.amount, 0);
+                },
+
+                getNetProfit() {
+                    return this.getTotalRevenueCollected() - this.getTotalExpenses();
+                },
+
+                getPendingRevenueAmount() {
+                    let total = 0;
+                    this.clients.forEach(c => {
+                        if (c.status === 'active') {
+                            (c.payments || []).forEach(p => { if (p.status === 'pending') total += p.amount; });
+                        }
+                    });
+                    return total;
+                },
+
+                getMonthlyFinancialData() {
+                    const data = [];
+                    const now = new Date();
+                    
+                    for (let i = 5; i >= 0; i--) {
+                        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                        const monthName = d.toLocaleDateString('he-IL', { month: 'short' });
+                        const year = d.getFullYear();
+                        const month = d.getMonth();
+                        
+                        let collected = 0;
+                        let expenses = 0;
+                        
+                        this.clients.forEach(c => {
+                            if (!c.startDate) return;
+                            const start = new Date(c.startDate);
+                            (c.payments || []).forEach((p, idx) => {
+                                if (p.status !== 'paid') return;
+                                const payDate = new Date(start);
+                                payDate.setDate(start.getDate() + idx * 30);
+                                if (payDate.getFullYear() === year && payDate.getMonth() === month) {
+                                    collected += p.amount;
+                                }
+                            });
+                        });
+                        
+                        this.transactions.forEach(t => {
+                            if (!t.date) return;
+                            const tDate = new Date(t.date);
+                            if (tDate.getFullYear() === year && tDate.getMonth() === month) {
+                                if (t.type === 'income') {
+                                    collected += t.amount;
+                                } else {
+                                    expenses += t.amount;
+                                }
+                            }
+                        });
+                        
+                        data.push({
+                            name: monthName,
+                            value: Math.max(0, collected - expenses)
+                        });
+                    }
+                    return data;
+                },
+
                 getCompletedPersonalSessions() { return this.scheduleEvents.filter(e => e.status === 'completed').length; },
                 getNeedsAttentionCount() { return this.clients.filter(c => c.status === 'active' && c.needsAttention).length; },
                 getAttentionClients() { return this.clients.filter(c => c.status === 'active' && c.needsAttention); },
@@ -2023,22 +2273,6 @@
                         return client.checkins[client.checkins.length - 1].notes;
                     }
                     return client.notes || '';
-                },
-                getTotalRevenueCollected() {
-                    let total = 0;
-                    this.clients.forEach(c => {
-                        c.payments.forEach(p => { if (p.status === 'paid') total += p.amount; });
-                    });
-                    return total;
-                },
-                getPendingRevenueAmount() {
-                    let total = 0;
-                    this.clients.forEach(c => {
-                        if (c.status === 'active') {
-                            c.payments.forEach(p => { if (p.status === 'pending') total += p.amount; });
-                        }
-                    });
-                    return total;
                 },
                 filteredClients() {
                     return this.clients.filter(c => {
@@ -2056,11 +2290,20 @@
                         bodyFat: null, waist: null, adherenceNutrition: 5, adherenceTraining: 5, notes: 'שקילת בסיס ראשונית', isDrop: false
                     }] : [];
 
+                    const price = parseFloat(this.newClient.pricePerMonth) || 250;
+                    const months = parseInt(this.newClient.paymentMonths) || 3;
+                    const paymentList = [];
+                    for (let i = 1; i <= months; i++) {
+                        paymentList.push({ month: i, amount: price, status: 'pending' });
+                    }
+
                     const newClientObj = {
                         id: newId, name: this.newClient.name, phone: this.newClient.phone, email: this.newClient.email || '',
                         startDate: this.newClient.startDate, goal: this.newClient.goal || '', status: 'active', needsAttention: false,
                         personalSessionStatus: 'pending', personalSessionDate: '', notes: '',
-                        payments: [{ month: 1, amount: 250, status: 'pending' }, { month: 2, amount: 250, status: 'pending' }, { month: 3, amount: 250, status: 'pending' }],
+                        pricePerMonth: price,
+                        paymentMonths: months,
+                        payments: paymentList,
                         checkins: startingCheckin, workoutPlan: { days: [] }, macroCalculated: null, mealPlan: { meals: [] }
                     };
 
@@ -2098,13 +2341,39 @@
                 },
 
                 openEditClientModal(client) {
-                    this.editingClient = { ...client };
+                    this.editingClient = { 
+                        pricePerMonth: client.pricePerMonth !== undefined ? client.pricePerMonth : 250,
+                        paymentMonths: client.paymentMonths !== undefined ? client.paymentMonths : (client.payments?.length || 3),
+                        ...client 
+                    };
                     this.openEditModal = true;
                 },
 
                 updateClient() {
                     const idx = this.clients.findIndex(c => c.id === this.editingClient.id);
                     if (idx !== -1) {
+                        const oldClient = this.clients[idx];
+                        
+                        // If price or months changed, regenerate payment lists to match
+                        const newPrice = parseFloat(this.editingClient.pricePerMonth) || 250;
+                        const newMonths = parseInt(this.editingClient.paymentMonths) || 3;
+                        
+                        const oldPrice = parseFloat(oldClient.pricePerMonth) || 250;
+                        const oldMonths = parseInt(oldClient.paymentMonths) || (oldClient.payments?.length || 3);
+                        
+                        if (newPrice !== oldPrice || newMonths !== oldMonths) {
+                            const newPayments = [];
+                            for (let i = 1; i <= newMonths; i++) {
+                                const existingPay = (oldClient.payments || [])[i - 1];
+                                newPayments.push({
+                                    month: i,
+                                    amount: newPrice,
+                                    status: existingPay ? existingPay.status : 'pending'
+                                });
+                            }
+                            this.editingClient.payments = newPayments;
+                        }
+                        
                         this.clients[idx] = { ...this.clients[idx], ...this.editingClient };
                         if (this.isCloudSynced && this.db) {
                             this.db.collection("clients").doc(this.editingClient.id).set(this.clients[idx]);
