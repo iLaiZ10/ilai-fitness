@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
 
   // 1. פקודת /start תמיד מורשית לכולם כדי לגלות את מזהה ה-Chat ID
   if (text.startsWith('/start')) {
-    const responseText = `👋 שלום איליי!\n\nהבוט של *ILAI FITNESS* מחובר לענן בהצלחה.\n\n🔑 מזהה ה-Chat ID שלך הוא:\n\`${chatId}\`\n\nהעתק מזהה זה והזן אותו תחת הגדרות הסביבה של Vercel (בשם \`TELEGRAM_ALLOWED_CHAT_ID\`) כדי לאבטח את הבוט.`;
+    const responseText = `👋 שלום אילאי!\n\nהבוט של *ILAI FITNESS* מחובר לענן בהצלחה.\n\n🔑 מזהה ה-Chat ID שלך הוא:\n\`${chatId}\`\n\nהעתק מזהה זה והזן אותו תחת הגדרות הסביבה של Vercel (בשם \`TELEGRAM_ALLOWED_CHAT_ID\`) כדי לאבטח את הבוט.`;
     await sendTelegramMessage(chatId, responseText);
     return res.status(200).send('OK');
   }
