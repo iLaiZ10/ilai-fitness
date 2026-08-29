@@ -358,6 +358,17 @@
                 </div>
             </header>
 
+            <!-- באנר שגיאת סנכרון ענן -->
+            <template x-if="cloudError">
+                <div class="bg-red-950/80 border-b border-red-800 px-4 py-3 text-red-200 text-xs flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="alert-triangle" class="w-4.5 h-4.5 text-red-400 shrink-0"></i>
+                        <span x-text="cloudError"></span>
+                    </div>
+                    <button @click="cloudError = null" class="text-red-400 hover:text-white font-bold shrink-0">סגור</button>
+                </div>
+            </template>
+
             <!-- גוף התוכן לפי הטאב הפעיל -->
             <div class="p-4 md:p-8 flex-1">
                 
@@ -1614,6 +1625,7 @@
                 firebaseConfig: null,
                 firebaseInput: { apiKey: '', authDomain: '', projectId: '', storageBucket: '', messagingSenderId: '', appId: '' },
                 db: null,
+                cloudError: null,
 
                 exerciseLibrary: [
                     { name: "סקווט עם מוט (Barbell Squat)", muscle: "legs", video: "https://www.youtube.com/watch?v=ultWZbUMPL8" },
@@ -1756,24 +1768,54 @@
                     if (!this.db) return;
 
                     this.db.collection("clients").onSnapshot(snapshot => {
+                        this.cloudError = null; // Clear previous errors if successful
+                        
+                        // Migration from local storage to cloud if cloud database is empty
+                        if (snapshot.empty) {
+                            const savedV2 = localStorage.getItem('il_fitness_db_v2');
+                            if (savedV2) {
+                                try {
+                                    const parsed = JSON.parse(savedV2);
+                                    if (parsed.clients && parsed.clients.length > 0) {
+                                        console.log("Migrating local database to empty cloud...");
+                                        parsed.clients.forEach(c => {
+                                            this.db.collection("clients").doc(c.id).set(c);
+                                        });
+                                        if (parsed.scheduleEvents && parsed.scheduleEvents.length > 0) {
+                                            this.db.collection("config").doc("schedule").set({ events: parsed.scheduleEvents });
+                                        }
+                                        if (parsed.workoutTemplates && parsed.workoutTemplates.length > 0) {
+                                            this.db.collection("config").doc("templates").set({ templates: parsed.workoutTemplates });
+                                        }
+                                        return;
+                                    }
+                                } catch (e) {
+                                    console.error("Auto migration failed:", e);
+                                }
+                            }
+                        }
+
                         const cloudClients = [];
                         snapshot.forEach(doc => {
                             cloudClients.push(doc.data());
                         });
                         this.clients = cloudClients;
-                    }, err => console.error("Clients sync error:", err));
+                    }, err => {
+                        console.error("Clients sync error:", err);
+                        this.cloudError = "שגיאת גישה לענן (Firebase): ודא שחוקי הגישה (Rules) מוגדרים ל-allow read, write: if true ב-Firebase console.";
+                    });
 
                     this.db.collection("config").doc("schedule").onSnapshot(doc => {
                         if (doc.exists) {
                             this.scheduleEvents = doc.data().events || [];
                         }
-                    });
+                    }, err => console.error("Schedule sync error:", err));
 
                     this.db.collection("config").doc("templates").onSnapshot(doc => {
                         if (doc.exists) {
                             this.workoutTemplates = doc.data().templates || [];
                         }
-                    });
+                    }, err => console.error("Templates sync error:", err));
                 },
 
                 saveData() {
