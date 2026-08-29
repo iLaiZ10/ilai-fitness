@@ -1147,7 +1147,7 @@
                                                     <template x-for="(item, iIdx) in meal.items" :key="iIdx">
                                                         <tr class="border-b border-slate-800/40">
                                                             <td class="py-1 px-1">
-                                                                <input type="text" x-model="item.food" @input="saveData()" placeholder="למשל: חזה עוף" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-slate-200 focus:outline-none text-xs font-semibold">
+                                                                <input type="text" x-model="item.food" @input="saveData()" placeholder="חזה עוף" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-slate-200 focus:outline-none text-xs font-semibold">
                                                             </td>
                                                             <td class="py-1 px-1">
                                                                 <input type="text" x-model="item.quantity" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
@@ -1338,7 +1338,7 @@
                             <p class="text-[11px] text-slate-400">אפשרות להוריד גיבוי מקומי למכשיר שלך או להעלות גיבוי קודם.</p>
                             
                             <div class="flex items-center gap-3 text-xs">
-                                <button @click="exportDatabase()" class="bg-slate-950 border border-slate-800 text-slate-350 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+                                <button @click="exportDatabase()" class="bg-slate-950 border border-slate-800 text-slate-355 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
                                     <i data-lucide="download" class="w-3.5 h-3.5"></i>
                                     <span>ייצא קובץ גיבוי</span>
                                 </button>
@@ -1654,7 +1654,24 @@
 
                 // טעינת הגדרות Firebase
                 loadFirebaseConfig() {
-                    const savedConfig = localStorage.getItem('il_fitness_firebase_config');
+                    let savedConfig = localStorage.getItem('il_fitness_firebase_config');
+                    
+                    // מפתחות ברירת המחדל שהמתשתמש הגדיר עבור הפרויקט שלו
+                    const defaultCloudConfig = {
+                        apiKey: "AIzaSyD9CAKRqTP4NUlQyedInV-BKB3z2AA-_nU",
+                        authDomain: "ilai-fitness.firebaseapp.com",
+                        projectId: "ilai-fitness",
+                        storageBucket: "ilai-fitness.firebasestorage.app",
+                        messagingSenderId: "1064083996299",
+                        appId: "1:1064083996299:web:88b6641cda78fb32cd9e8e"
+                    };
+
+                    if (!savedConfig) {
+                        // מגדירים אוטומטית את מפתחות ברירת המחדל בפעם הראשונה
+                        localStorage.setItem('il_fitness_firebase_config', JSON.stringify(defaultCloudConfig));
+                        savedConfig = JSON.stringify(defaultCloudConfig);
+                    }
+
                     if (savedConfig) {
                         try {
                             this.firebaseConfig = JSON.parse(savedConfig);
@@ -1673,7 +1690,6 @@
                         }
                     }
 
-                    // אם לא מוגדר ענן, עובדים מקומית על localStorage
                     this.isCloudSynced = false;
                     this.loadLocalDatabase();
                 },
@@ -1687,14 +1703,12 @@
                     const config = { ...this.firebaseInput };
                     localStorage.setItem('il_fitness_firebase_config', JSON.stringify(config));
                     
-                    // אתחול והעלאת נתונים ראשונית מה-localStorage לענן
                     try {
                         firebase.initializeApp(config);
                         this.db = firebase.firestore();
                         this.isCloudSynced = true;
                         this.firebaseConfig = config;
                         
-                        // מיגרציית נתונים: העלאת הנתונים המקומיים לענן בפעם הראשונה
                         this.db.collection("clients").get().then(snapshot => {
                             if (snapshot.empty && this.clients.length > 0) {
                                 this.clients.forEach(c => {
@@ -1724,7 +1738,6 @@
                     }
                 },
 
-                // טעינת נתונים מקומית מ-localStorage
                 loadLocalDatabase() {
                     const savedV2 = localStorage.getItem('il_fitness_db_v2');
                     if (savedV2) {
@@ -1739,11 +1752,9 @@
                     this.loadDefaultData();
                 },
 
-                // טעינת נתונים מהענן בזמן אמת
                 loadDataFromCloud() {
                     if (!this.db) return;
 
-                    // לקוחות
                     this.db.collection("clients").onSnapshot(snapshot => {
                         const cloudClients = [];
                         snapshot.forEach(doc => {
@@ -1752,14 +1763,12 @@
                         this.clients = cloudClients;
                     }, err => console.error("Clients sync error:", err));
 
-                    // לו"ז שבועי
                     this.db.collection("config").doc("schedule").onSnapshot(doc => {
                         if (doc.exists) {
                             this.scheduleEvents = doc.data().events || [];
                         }
                     });
 
-                    // תבניות אימון
                     this.db.collection("config").doc("templates").onSnapshot(doc => {
                         if (doc.exists) {
                             this.workoutTemplates = doc.data().templates || [];
@@ -1769,14 +1778,12 @@
 
                 saveData() {
                     if (this.isCloudSynced && this.db) {
-                        // שמירה לענן (Firestore)
                         if (this.currentClient) {
                             this.db.collection("clients").doc(this.currentClient.id).set(this.currentClient);
                         }
                         this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents });
                         this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates });
                     } else {
-                        // שמירה מקומית (localStorage)
                         const db = {
                             clients: this.clients,
                             scheduleEvents: this.scheduleEvents,
@@ -2198,7 +2205,6 @@
                 },
 
                 loadDefaultData() {
-                    // Fallback local mock data used only if localStorage and Cloud are both empty
                     this.clients = [];
                     this.scheduleEvents = [];
                     this.workoutTemplates = [];
