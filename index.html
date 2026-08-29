@@ -34,6 +34,7 @@
     <!-- Firebase SDK Compat (עבור סנכרון ענן בזמן אמת) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -1116,6 +1117,56 @@
                                 </div>
                             </div>
 
+                            <!-- ניהול קובץ PDF לתפריט -->
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl space-y-4">
+                                <h4 class="text-xs md:text-sm font-bold text-slate-200 flex items-center gap-2 border-b border-slate-800 pb-2">
+                                    <i data-lucide="file-text" class="w-4 h-4 text-emerald-500"></i>
+                                    <span>תפריט תזונה בפורמט PDF</span>
+                                </h4>
+                                
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                    <div class="space-y-1">
+                                        <p class="text-xs text-slate-350">תוכל להעלות לכאן קובץ PDF של תפריט התזונה העדכני של המתאמן או להדביק קישור חיצוני.</p>
+                                        <template x-if="currentClient?.mealPlanPdfUrl">
+                                            <div class="text-[10px] text-emerald-450 font-bold flex items-center gap-1">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                <span>קובץ תפריט PDF מצורף ומסונכרן</span>
+                                            </div>
+                                        </template>
+                                        <template x-if="!currentClient?.mealPlanPdfUrl">
+                                            <div class="text-[10px] text-slate-500 italic">טרם צורף תפריט PDF</div>
+                                        </template>
+                                    </div>
+
+                                    <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
+                                        <template x-if="currentClient?.mealPlanPdfUrl">
+                                            <div class="flex items-center gap-2 w-full sm:w-auto">
+                                                <a :href="currentClient.mealPlanPdfUrl" target="_blank" class="flex-1 sm:flex-none justify-center bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg">
+                                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                                    <span>פתח תפריט (PDF)</span>
+                                                </a>
+                                                <button @click="deleteMealPlanPdf()" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:border-red-900 text-red-450 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition">
+                                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                    <span>הסר קובץ</span>
+                                                </button>
+                                            </div>
+                                        </template>
+                                        
+                                        <div class="flex items-center gap-2 w-full sm:w-auto" x-show="!currentClient?.mealPlanPdfUrl">
+                                            <label class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:bg-slate-900 text-slate-200 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer transition select-none">
+                                                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                                <span x-text="pdfUploading ? 'מעלה קובץ...' : 'העלה PDF מהמכשיר'"></span>
+                                                <input type="file" accept="application/pdf" @change="uploadMealPlanPdf($event)" class="hidden" :disabled="pdfUploading">
+                                            </label>
+                                            <button @click="setMealPlanPdfLink()" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:bg-slate-900 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition">
+                                                <i data-lucide="link" class="w-3.5 h-3.5"></i>
+                                                <span>הדבק קישור</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- השוואת יעדים -->
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
@@ -1718,6 +1769,7 @@
                 newCheckin: { date: '', weight: '', bodyFat: '', waist: '', adherenceNutrition: 5, adherenceTraining: 5, notes: '', isDrop: false },
                 newEvent: { clientId: '', type: 'zoom', date: '', time: '' },
                 newTransaction: { type: 'expense', amount: '', description: '', date: '' },
+                pdfUploading: false,
                 
                 intakePasteText: '',
                 chartMetric: 'weight',
@@ -2380,6 +2432,89 @@
                         }
                         this.saveData();
                         this.openEditModal = false;
+                    }
+                },
+
+                uploadMealPlanPdf(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    if (file.type !== 'application/pdf') {
+                        alert('אנא בחר קובץ PDF בלבד!');
+                        return;
+                    }
+                    
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client) return;
+
+                    this.pdfUploading = true;
+
+                    // If Cloud synced, upload to Firebase Storage
+                    if (this.isCloudSynced && window.firebase) {
+                        try {
+                            const storageRef = firebase.storage().ref();
+                            const pdfRef = storageRef.child(`meal_plans/${client.id}.pdf`);
+                            
+                            pdfRef.put(file).then(snapshot => {
+                                return snapshot.ref.getDownloadURL();
+                            }).then(url => {
+                                client.mealPlanPdfUrl = url;
+                                if (this.db) {
+                                    this.db.collection("clients").doc(client.id).set(client);
+                                }
+                                this.saveData();
+                                this.pdfUploading = false;
+                                alert('תפריט ה-PDF הועלה בהצלחה לענן!');
+                            }).catch(err => {
+                                console.error("PDF upload error:", err);
+                                this.pdfUploading = false;
+                                alert('שגיאה בהעלאה לענן: ' + err.message + '\n\nהערה: ודא שהפעלת את Storage ב-Firebase console וחוקי הגישה מוגדרים ל-allow read, write: if true;');
+                            });
+                        } catch (e) {
+                            console.error("Storage init error:", e);
+                            this.pdfUploading = false;
+                            alert('שגיאה באתחול שירות האחסון. האם Storage מופעל ב-Firebase?');
+                        }
+                    } else {
+                        // Offline/Local mode: Convert to base64 and save in localStorage
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            client.mealPlanPdfUrl = e.target.result;
+                            this.saveData();
+                            this.pdfUploading = false;
+                            alert('קובץ ה-PDF נשמר בהצלחה במחשב מקומית!');
+                        };
+                        reader.onerror = () => {
+                            this.pdfUploading = false;
+                            alert('שגיאה בקריאת הקובץ במחשב.');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+
+                deleteMealPlanPdf() {
+                    if (confirm("האם למחוק את תפריט ה-PDF של מתאמן זה?")) {
+                        const client = this.clients.find(c => c.id === this.selectedClientId);
+                        if (client) {
+                            client.mealPlanPdfUrl = '';
+                            if (this.isCloudSynced && this.db) {
+                                this.db.collection("clients").doc(client.id).set(client);
+                            }
+                            this.saveData();
+                            alert("תפריט ה-PDF הוסר בהצלחה.");
+                        }
+                    }
+                },
+
+                setMealPlanPdfLink() {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client) return;
+                    const url = prompt("הדבק כאן קישור ישיר לקובץ ה-PDF (למשל מתוך Google Drive):", client.mealPlanPdfUrl || "");
+                    if (url !== null) {
+                        client.mealPlanPdfUrl = url;
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
                     }
                 },
 
