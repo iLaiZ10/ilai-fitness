@@ -1667,6 +1667,7 @@
                 // טעינת הגדרות Firebase
                 loadFirebaseConfig() {
                     let savedConfig = localStorage.getItem('il_fitness_firebase_config');
+                    const isDisabled = localStorage.getItem('il_fitness_firebase_disabled') === 'true';
                     
                     // מפתחות ברירת המחדל שהמתשתמש הגדיר עבור הפרויקט שלו
                     const defaultCloudConfig = {
@@ -1678,7 +1679,7 @@
                         appId: "1:1064083996299:web:88b6641cda78fb32cd9e8e"
                     };
 
-                    if (!savedConfig) {
+                    if (!savedConfig && !isDisabled) {
                         // מגדירים אוטומטית את מפתחות ברירת המחדל בפעם הראשונה
                         localStorage.setItem('il_fitness_firebase_config', JSON.stringify(defaultCloudConfig));
                         savedConfig = JSON.stringify(defaultCloudConfig);
@@ -1689,9 +1690,14 @@
                             this.firebaseConfig = JSON.parse(savedConfig);
                             this.firebaseInput = { ...this.firebaseConfig };
                             
-                            // אתחול Firebase Web SDK
-                            firebase.initializeApp(this.firebaseConfig);
-                            this.db = firebase.firestore();
+                            // אתחול Firebase Web SDK בצורה בטוחה ללא שגיאות כפילות
+                            let app;
+                            if (!firebase.apps.length) {
+                                app = firebase.initializeApp(this.firebaseConfig);
+                            } else {
+                                app = firebase.app();
+                            }
+                            this.db = app.firestore();
                             this.isCloudSynced = true;
                             
                             // טעינה מקבילה בזמן אמת מהענן
@@ -1714,10 +1720,16 @@
 
                     const config = { ...this.firebaseInput };
                     localStorage.setItem('il_fitness_firebase_config', JSON.stringify(config));
+                    localStorage.removeItem('il_fitness_firebase_disabled'); // ביטול ה-Disabled
                     
                     try {
-                        firebase.initializeApp(config);
-                        this.db = firebase.firestore();
+                        let app;
+                        if (!firebase.apps.length) {
+                            app = firebase.initializeApp(config);
+                        } else {
+                            app = firebase.app();
+                        }
+                        this.db = app.firestore();
                         this.isCloudSynced = true;
                         this.firebaseConfig = config;
                         
@@ -1733,6 +1745,9 @@
                                 alert("חיבור לענן בוצע בהצלחה! נתוני הענן נטענים כעת.");
                             }
                             this.loadDataFromCloud();
+                        }).catch(err => {
+                            console.error("Error reading from Firestore on manual save:", err);
+                            alert("חיבור בוצע, אך חוקי האבטחה (Rules) ב-Firebase חוסמים קריאה וכתיבה!");
                         });
                     } catch (err) {
                         alert(`שגיאה בחיבור לענן: ${err.message}`);
@@ -1742,6 +1757,7 @@
                 clearFirebaseConfig() {
                     if (confirm("האם לנתק את חיבור הענן? המערכת תחזור לעבוד עם הנתונים המקומיים בדפדפן זה.")) {
                         localStorage.removeItem('il_fitness_firebase_config');
+                        localStorage.setItem('il_fitness_firebase_disabled', 'true');
                         this.isCloudSynced = false;
                         this.db = null;
                         this.firebaseConfig = null;
