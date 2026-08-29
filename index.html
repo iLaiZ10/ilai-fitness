@@ -1777,6 +1777,20 @@
                             return;
                         } catch (e) {}
                     }
+                    
+                    // Fallback to legacy database key to prevent data loss
+                    const legacyDb = localStorage.getItem('il_fitness_db');
+                    if (legacyDb) {
+                        try {
+                            const parsed = JSON.parse(legacyDb);
+                            this.clients = Array.isArray(parsed) ? parsed : (parsed.clients || []);
+                            this.scheduleEvents = parsed.scheduleEvents || [];
+                            this.workoutTemplates = parsed.workoutTemplates || [];
+                            this.saveData(); // Migrate to V2 immediately
+                            return;
+                        } catch (e) {}
+                    }
+                    
                     this.loadDefaultData();
                 },
 
@@ -1819,6 +1833,8 @@
                     }, err => {
                         console.error("Clients sync error:", err);
                         this.cloudError = "שגיאת גישה לענן (Firebase): ודא שחוקי הגישה (Rules) מוגדרים ל-allow read, write: if true ב-Firebase console.";
+                        this.isCloudSynced = false;
+                        this.loadLocalDatabase();
                     });
 
                     this.db.collection("config").doc("schedule").onSnapshot(doc => {
