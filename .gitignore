@@ -1,0 +1,4 @@
+*backup*.json
+*.log
+.system_generated/
+scratch/

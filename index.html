@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILAI FITNESS - ניהול מתאמנים</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f4fbf7',
+                            100: '#e8f7ee',
+                            500: '#10b981', // Emerald green accent
+                            600: '#059669',
+                            700: '#047857',
+                            950: '#022c22'
+                        },
+                        accent: {
+                            500: '#a3e635', // Lime/Neon green highlight
+                            600: '#84cc16'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        /* סגנונות מיוחדים להדפסת תוכנית האימון והתזונה ל-PDF */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 12px;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                background: white !important;
+            }
+            .avoid-break {
+                page-break-inside: avoid;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body class="h-full text-slate-100 flex flex-col font-sans" x-data="fitnessApp()" x-init="initApp()">
+
+    <!-- אזור ההדפסה ל-PDF (נסתר מהתצוגה הרגילה במערכת) -->
+    <div class="hidden print-only p-8 text-black bg-white" id="print-area">
+        <template x-if="printClient">
+            <div class="print-container">
+                <!-- ================= עמוד 1: תוכנית אימונים ================= -->
+                <div class="page-break">
+                    <!-- לוגו וכותרת -->
+                    <div class="flex justify-between items-center border-b-2 border-emerald-600 pb-4 mb-6">
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-emerald-800 tracking-wider">ILAI FITNESS</h1>
+                            <p class="text-sm text-gray-500 font-semibold">ליווי אונליין ואימונים אישיים</p>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="text-xl font-bold text-gray-800" x-text="printClient.name"></h2>
+                            <p class="text-sm text-gray-500" x-text="'תאריך עדכון: ' + getTodayDate()"></p>
+                        </div>
+                    </div>
+
+                    <!-- מטרות ויעדים תזונתיים -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <h3 class="font-bold text-emerald-800 mb-1 text-sm">מטרת העל והנחיות כלליות:</h3>
+                            <p class="text-gray-700 text-xs" x-text="printClient.goal || 'לא הוגדרה מטרה ספציפית'"></p>
+                            <template x-if="printClient.notes">
+                                <div class="mt-2 text-[10px] text-gray-600 border-t border-gray-200 pt-2">
+                                    <strong>הערות ודגשים: </strong>
+                                    <span x-text="printClient.notes"></span>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <div class="bg-emerald-50/40 p-4 rounded-lg border border-emerald-100 flex flex-col justify-between">
+                            <h3 class="font-bold text-emerald-800 mb-1 text-sm">יעדי תזונה יומיים:</h3>
+                            <template x-if="printClient.macroCalculated && printClient.macroCalculated.targetCalories">
+                                <div class="grid grid-cols-4 gap-2 text-center mt-2">
+                                    <div class="bg-white p-1.5 rounded border border-emerald-100">
+                                        <span class="text-[9px] text-gray-500 block">קלוריות</span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetCalories + ' קק״ל'"></span>
+                                    </div>
+                                    <div class="bg-white p-1.5 rounded border border-emerald-100">
+                                        <span class="text-[9px] text-gray-500 block">חלבון</span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetProtein + 'ג\''"></span>
+                                    </div>
+                                    <div class="bg-white p-1.5 rounded border border-emerald-100">
+                                        <span class="text-[9px] text-gray-500 block">פחמימה</span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetCarbs + 'ג\''"></span>
+                                    </div>
+                                    <div class="bg-white p-1.5 rounded border border-emerald-100">
+                                        <span class="text-[9px] text-gray-500 block">שומן</span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetFat + 'ג\''"></span>
+                                    </div>
+                                </div>
+                            </template>
+                            <template x-if="!printClient.macroCalculated || !printClient.macroCalculated.targetCalories">
+                                <p class="text-gray-500 italic text-xs">לא הוגדרו יעדי תזונה.</p>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- תוכנית האימונים -->
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-4">תוכנית אימונים מפורטת</h3>
+                        
+                        <template x-if="!printClient.workoutPlan || !printClient.workoutPlan.days || printClient.workoutPlan.days.length === 0">
+                            <p class="text-gray-500 italic">טרם נבנתה תוכנית אימונים.</p>
+                        </template>
+
+                        <template x-for="(day, dayIdx) in (printClient.workoutPlan?.days || [])" :key="dayIdx">
+                            <div class="mb-6 avoid-break">
+                                <h4 class="text-md font-bold text-white bg-emerald-700 px-3 py-1.5 rounded mb-2 inline-block" x-text="'יום אימון: ' + day.name"></h4>
+                                <table class="w-full text-right border-collapse border border-gray-300 text-xs">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="border border-gray-300 p-2 text-gray-700 font-bold w-1/3">תרגיל</th>
+                                            <th class="border border-gray-300 p-2 text-gray-700 font-bold text-center w-12">סטים</th>
+                                            <th class="border border-gray-300 p-2 text-gray-700 font-bold text-center w-16">חזרות</th>
+                                            <th class="border border-gray-300 p-2 text-gray-700 font-bold text-center w-16">מנוחה</th>
+                                            <th class="border border-gray-300 p-2 text-gray-700 font-bold w-12 text-center">הדגמה</th>
+                                            <th class="border border-gray-300 p-2 text-gray-700 font-bold">הערות ודגשים לביצוע</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="(ex, exIdx) in day.exercises" :key="exIdx">
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="border border-gray-300 p-2 font-semibold text-gray-950" x-text="ex.name"></td>
+                                                <td class="border border-gray-300 p-2 text-center text-gray-900" x-text="ex.sets"></td>
+                                                <td class="border border-gray-300 p-2 text-center text-gray-900" x-text="ex.reps"></td>
+                                                <td class="border border-gray-300 p-2 text-center text-gray-900" x-text="ex.rest"></td>
+                                                <td class="border border-gray-300 p-2 text-center text-emerald-700 text-[10px]">
+                                                    <template x-if="ex.video">
+                                                        <a :href="ex.video" target="_blank" class="font-bold underline">וידאו</a>
+                                                    </template>
+                                                    <template x-if="!ex.video">
+                                                        <span>-</span>
+                                                    </template>
+                                                </td>
+                                                <td class="border border-gray-300 p-2 text-gray-700" x-text="ex.notes || '-'"></td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- ================= עמוד 2: תוכנית תזונה (אם קיימת) ================= -->
+                <template x-if="printClient.mealPlan && printClient.mealPlan.meals && printClient.mealPlan.meals.length > 0">
+                    <div>
+                        <!-- כותרת עמוד 2 -->
+                        <div class="flex justify-between items-center border-b-2 border-emerald-600 pb-4 mb-6 mt-8">
+                            <div>
+                                <h1 class="text-3xl font-extrabold text-emerald-800 tracking-wider">ILAI FITNESS</h1>
+                                <p class="text-sm text-gray-500 font-semibold">תוכנית תזונה מותאמת אישית</p>
+                            </div>
+                            <div class="text-left">
+                                <h2 class="text-xl font-bold text-gray-800" x-text="printClient.name"></h2>
+                                <p class="text-sm text-gray-500" x-text="'תאריך עדכון: ' + getTodayDate()"></p>
+                            </div>
+                        </div>
+
+                        <!-- תפריט הארוחות -->
+                        <div class="space-y-6">
+                            <template x-for="(meal, mIdx) in printClient.mealPlan.meals" :key="mIdx">
+                                <div class="avoid-break border border-gray-200 rounded-lg p-4 bg-gray-50/50">
+                                    <h4 class="text-sm font-bold text-white bg-emerald-700 px-3 py-1.5 rounded mb-3 inline-block" x-text="meal.name"></h4>
+                                    
+                                    <table class="w-full text-right border-collapse text-xs">
+                                        <thead>
+                                            <tr class="border-b border-gray-300 text-gray-600 font-bold">
+                                                <th class="pb-2 w-1/3">מאכל</th>
+                                                <th class="pb-2 text-center w-20">כמות/מנה</th>
+                                                <th class="pb-2 text-center w-16">קלוריות</th>
+                                                <th class="pb-2 text-center w-16">חלבון (ג')</th>
+                                                <th class="pb-2 text-center w-16">פחמימה (ג')</th>
+                                                <th class="pb-2 text-center w-16">שומן (ג')</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template x-for="(item, iIdx) in meal.items" :key="iIdx">
+                                                <tr class="border-b border-gray-200/60 py-1">
+                                                    <td class="py-2 text-gray-900 font-medium" x-text="item.food"></td>
+                                                    <td class="py-2 text-center text-gray-700" x-text="item.quantity"></td>
+                                                    <td class="py-2 text-center text-gray-700 font-bold" x-text="item.calories"></td>
+                                                    <td class="py-2 text-center text-gray-700" x-text="item.protein"></td>
+                                                    <td class="py-2 text-center text-gray-700" x-text="item.carbs"></td>
+                                                    <td class="py-2 text-center text-gray-700" x-text="item.fat"></td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- סיכומי תפריט בתחתית הדף -->
+                        <div class="mt-6 bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex justify-between items-center text-sm">
+                            <span class="font-bold text-emerald-800">סה"כ ערכים בתפריט:</span>
+                            <div class="flex gap-6 text-gray-800">
+                                <span>קלוריות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'calories')"></strong> קק"ל</span>
+                                <span>חלבון: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'protein') + ' ג\''"></strong></span>
+                                <span>פחמימות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'carbs') + ' ג\''"></strong></span>
+                                <span>שומנים: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'fat') + ' ג\''"></strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+
+    <!-- המערכת הראשית (מוסתרת בזמן הדפסה) -->
+    <div class="flex h-full no-print">
+        
+        <!-- סרגל צד (Sidebar) -->
+        <aside class="w-64 bg-slate-900 border-l border-slate-800 flex flex-col shrink-0">
+            <!-- לוגו מותג -->
+            <div class="p-6 border-b border-slate-800 flex flex-col items-center justify-center">
+                <span class="text-2xl font-black tracking-wider text-emerald-500">ILAI FITNESS</span>
+                <span class="text-xs text-slate-400 font-medium tracking-widest mt-1">מערכת ניהול מתאמנים</span>
+            </div>
+
+            <!-- ניווט טאבים -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <button 
+                    @click="activeTab = 'dashboard'; selectedClientId = null"
+                    :class="activeTab === 'dashboard' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'"
+                    class="w-full flex items-center px-4 py-3 rounded-xl transition duration-150 font-medium text-sm gap-3">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>לוח בקרה</span>
+                </button>
+                
+                <button 
+                    @click="activeTab = 'clients'; selectedClientId = null"
+                    :class="activeTab === 'clients' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'"
+                    class="w-full flex items-center px-4 py-3 rounded-xl transition duration-150 font-medium text-sm gap-3">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>רשימת מתאמנים</span>
+                </button>
+
+                <button 
+                    @click="activeTab = 'schedule'; selectedClientId = null"
+                    :class="activeTab === 'schedule' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'"
+                    class="w-full flex items-center px-4 py-3 rounded-xl transition duration-150 font-medium text-sm gap-3">
+                    <i data-lucide="calendar-days" class="w-5 h-5"></i>
+                    <span>יומן שבועי</span>
+                </button>
+
+                <button 
+                    @click="activeTab = 'finances'; selectedClientId = null"
+                    :class="activeTab === 'finances' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'"
+                    class="w-full flex items-center px-4 py-3 rounded-xl transition duration-150 font-medium text-sm gap-3">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                    <span>מעקב פיננסי</span>
+                </button>
+
+                <button 
+                    @click="activeTab = 'settings'; selectedClientId = null"
+                    :class="activeTab === 'settings' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'"
+                    class="w-full flex items-center px-4 py-3 rounded-xl transition duration-150 font-medium text-sm gap-3">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span>הגדרות וגיבוי</span>
+                </button>
+            </nav>
+
+            <!-- פרטי משתמש קבועים למטה -->
+            <div class="p-4 border-t border-slate-800 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold">
+                    ע
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold text-slate-200">עידו מאמן ראשי</span>
+                    <span class="text-xs text-slate-400">מנהל מערכת</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- אזור התוכן המרכזי -->
+        <main class="flex-1 bg-slate-950 overflow-y-auto flex flex-col">
+            
+            <!-- סרגל עליון (Top Header) -->
+            <header class="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-slate-900/40 backdrop-blur-md">
+                <h2 class="text-lg font-bold text-slate-200" x-text="getTabTitle()"></h2>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-xs text-slate-400" x-text="getTodayFormattedDate()"></div>
+                    <button 
+                        @click="openAddClientModal = true" 
+                        class="bg-emerald-50 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition shadow-lg shadow-emerald-500/10">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>מתאמן חדש</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- גוף התוכן לפי הטאב הפעיל -->
+            <div class="p-8 flex-1">
+                
+                <!-- 1. טאב לוח בקרה (Dashboard) -->
+                <div x-show="activeTab === 'dashboard' && !selectedClientId" x-cloak class="space-y-8">
+                    <!-- כרטיסיות סיכום (Stats Cards) -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-xl">
+                            <div>
+                                <span class="text-slate-400 text-xs font-bold block mb-1">מתאמנים פעילים בליווי</span>
+                                <span class="text-3xl font-black text-white" x-text="getActiveClientsCount()"></span>
+                            </div>
+                            <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                                <i data-lucide="users" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-xl">
+                            <div>
+                                <span class="text-slate-400 text-xs font-bold block mb-1">הכנסה חודשית צפויה</span>
+                                <span class="text-3xl font-black text-white" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
+                            </div>
+                            <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                                <i data-lucide="wallet" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-xl">
+                            <div>
+                                <span class="text-slate-400 text-xs font-bold block mb-1">פגישות שבוצעו השבוע</span>
+                                <span class="text-3xl font-black text-white" x-text="getCompletedPersonalSessions() + ' / ' + getActiveClientsCount()"></span>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center">
+                                <i data-lucide="dumbbell" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-xl">
+                            <div>
+                                <span class="text-slate-400 text-xs font-bold block mb-1">מתאמנים בנפילה / קושי</span>
+                                <span class="text-3xl font-black text-red-400" x-text="getNeedsAttentionCount()"></span>
+                            </div>
+                            <div class="w-12 h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl flex items-center justify-center">
+                                <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- אזור לוחות העבודה בלוח הבקרה -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- מתאמנים הדורשים יחס מיוחד -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[400px]">
+                            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                                <h3 class="font-black text-slate-200 flex items-center gap-2">
+                                    <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
+                                    <span>מתאמנים שצריכים יחס מיוחד (נפילה/קושי)</span>
+                                </h3>
+                                <span class="bg-red-950 text-red-400 text-xs px-2.5 py-1 rounded-full font-bold border border-red-800" x-text="getNeedsAttentionCount() + ' מתוך ' + getActiveClientsCount()"></span>
+                            </div>
+                            <div class="flex-1 p-6 overflow-y-auto space-y-4">
+                                <template x-for="client in getAttentionClients()" :key="client.id">
+                                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
+                                        <div class="space-y-1">
+                                            <button @click="selectClient(client.id)" class="text-sm font-bold text-slate-200 hover:text-emerald-400 text-right block" x-text="client.name"></button>
+                                            <span class="text-xs text-red-400 bg-red-950/40 px-2 py-0.5 rounded border border-red-900/50" x-text="'הערה אחרונה: ' + (getLastNote(client) || 'סומן לקושי ללא פירוט')"></span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button @click="selectClient(client.id)" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800">
+                                                כרטיס מתאמן
+                                            </button>
+                                            <a :href="getWhatsAppLink(client, 'attention')" target="_blank"
+                                               class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-lg transition" title="שלח הודעת תמיכה בוואטסאפ">
+                                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template x-if="getAttentionClients().length === 0">
+                                    <div class="h-full flex flex-col items-center justify-center text-slate-500 italic text-sm">
+                                        <i data-lucide="check-circle" class="w-10 h-10 text-emerald-600/30 mb-2"></i>
+                                        <span>כל המתאמנים במסלול תקין! מעולה.</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- משימות ליווי להיום -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[400px]">
+                            <div class="p-6 border-b border-slate-800">
+                                <h3 class="font-black text-slate-200 flex items-center gap-2">
+                                    <i data-lucide="calendar" class="w-5 h-5 text-emerald-400"></i>
+                                    <span>משימות ופגישות קרובות</span>
+                                </h3>
+                            </div>
+                            <div class="flex-1 p-6 overflow-y-auto space-y-4">
+                                <template x-for="task in getUpcomingTasks()" :key="task.id">
+                                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
+                                        <div class="space-y-1">
+                                            <button @click="selectClient(task.id)" class="text-sm font-bold text-slate-200 hover:text-emerald-400 text-right block" x-text="task.name"></button>
+                                            <span class="text-xs" :class="task.type === 'zoom' ? 'text-blue-400' : 'text-amber-400'" x-text="task.desc"></span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <template x-if="task.type === 'zoom'">
+                                                <button @click="markPersonalSessionDone(task.id)" class="bg-blue-600/20 text-blue-400 border border-blue-800 hover:bg-blue-600 hover:text-white text-xs px-2.5 py-1.5 rounded-lg transition">
+                                                    בוצע
+                                                </button>
+                                            </template>
+                                            <button @click="selectClient(task.id)" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800">
+                                                לכרטיס
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template x-if="getUpcomingTasks().length === 0">
+                                    <div class="h-full flex flex-col items-center justify-center text-slate-500 italic text-sm">
+                                        <i data-lucide="coffee" class="w-10 h-10 text-emerald-600/30 mb-2"></i>
+                                        <span>אין משימות דחופות להיום. זמן לשתות קפה!</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. טאב רשימת מתאמנים -->
+                <div x-show="activeTab === 'clients' && !selectedClientId" x-cloak class="space-y-6">
+                    <!-- חיפוש, פילטרים וקליטה מהירה -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col gap-4 shadow-xl">
+                        <div class="flex flex-col md:flex-row gap-4 justify-between items-center w-full">
+                            <div class="relative w-full md:w-96">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+                                    <i data-lucide="search" class="w-5 h-5"></i>
+                                </span>
+                                <input 
+                                    type="text" 
+                                    x-model="searchQuery" 
+                                    placeholder="חיפוש מתאמן..." 
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl pr-10 pl-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm transition">
+                            </div>
+
+                            <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+                                <button @click="statusFilter = 'all'" :class="statusFilter === 'all' ? 'bg-emerald-600 text-white' : 'bg-slate-950 text-slate-400 hover:bg-slate-800 border border-slate-800'" class="px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">הכל</button>
+                                <button @click="statusFilter = 'active'" :class="statusFilter === 'active' ? 'bg-emerald-600 text-white' : 'bg-slate-950 text-slate-400 hover:bg-slate-800 border border-slate-800'" class="px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">פעילים</button>
+                                <button @click="statusFilter = 'paused'" :class="statusFilter === 'paused' ? 'bg-emerald-600 text-white' : 'bg-slate-950 text-slate-400 hover:bg-slate-800 border border-slate-800'" class="px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">מושהים</button>
+                                <button @click="statusFilter = 'completed'" :class="statusFilter === 'completed' ? 'bg-emerald-600 text-white' : 'bg-slate-950 text-slate-400 hover:bg-slate-800 border border-slate-800'" class="px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">סיימו ליווי</button>
+                            </div>
+                        </div>
+
+                        <!-- אזור שאלון קליטה דיגיטלי דרך וואטסאפ -->
+                        <div class="border-t border-slate-800 pt-4 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+                            <div class="text-right text-slate-400">
+                                <span class="font-bold text-slate-200 block mb-0.5">שאלון קליטה חכם</span>
+                                <span>העתק שאלון לשליחה בוואטסאפ ללקוח חדש, והדבק את התשובות שלו לייבוא אוטומטי מהיר!</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button @click="copyOnboardingQuestionnaire()" class="bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-300 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                    <span>העתק שאלון קליטה</span>
+                                </button>
+                                <button @click="openImportIntakeModal = true" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500 hover:text-slate-950 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+                                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                                    <span>ייבא תשובות לקוח</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- טבלת מתאמנים -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 text-xs font-black uppercase tracking-wider">
+                                    <th class="py-4 px-6">שם המתאמן</th>
+                                    <th class="py-4 px-6">טלפון</th>
+                                    <th class="py-4 px-6 text-center">התחלה</th>
+                                    <th class="py-4 px-6 text-center">תשלום החודש</th>
+                                    <th class="py-4 px-6 text-center">פגישות מתוזמנות</th>
+                                    <th class="py-4 px-6 text-center">סטטוס</th>
+                                    <th class="py-4 px-6 text-left">פעולות</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/50">
+                                <template x-for="client in filteredClients()" :key="client.id">
+                                    <tr class="hover:bg-slate-800/30 transition">
+                                        <td class="py-4 px-6">
+                                            <div class="flex items-center gap-3">
+                                                <button @click="selectClient(client.id)" class="text-sm font-bold text-slate-200 hover:text-emerald-400 transition text-right" x-text="client.name"></button>
+                                                <template x-if="client.needsAttention">
+                                                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" title="צריך יחס מיוחד"></span>
+                                                </template>
+                                            </div>
+                                            <span class="text-xs text-slate-500 block truncate max-w-xs mt-0.5" x-text="client.goal || 'ללא מטרה מוגדרת'"></span>
+                                        </td>
+                                        <td class="py-4 px-6 text-slate-300 text-sm" x-text="client.phone"></td>
+                                        <td class="py-4 px-6 text-center text-slate-400 text-xs" x-text="formatDate(client.startDate)"></td>
+                                        
+                                        <!-- סטטוס תשלום החודש -->
+                                        <td class="py-4 px-6 text-center">
+                                            <span :class="isCurrentMonthPaid(client) ? 'bg-emerald-950/60 text-emerald-400 border-emerald-800' : 'bg-amber-950/60 text-amber-400 border-amber-800'"
+                                                  class="text-xs px-2.5 py-1 rounded-full font-bold border inline-block"
+                                                  x-text="isCurrentMonthPaid(client) ? 'שולם' : 'ממתין לתשלום'">
+                                            </span>
+                                        </td>
+
+                                        <!-- פגישות מתוזמנות -->
+                                        <td class="py-4 px-6 text-center">
+                                            <span :class="getPersonalSessionClass(client.personalSessionStatus)"
+                                                  class="text-xs px-2.5 py-1 rounded-full font-bold border inline-block"
+                                                  x-text="getPersonalSessionLabel(client.personalSessionStatus)">
+                                            </span>
+                                        </td>
+
+                                        <!-- סטטוס כללי -->
+                                        <td class="py-4 px-6 text-center">
+                                            <span :class="client.status === 'active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : client.status === 'paused' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-slate-500/10 text-slate-400 border-slate-500/20'"
+                                                  class="text-xs px-2 py-0.5 rounded border inline-block"
+                                                  x-text="client.status === 'active' ? 'פעיל' : client.status === 'paused' ? 'מושהה' : 'סיום ליווי'">
+                                            </span>
+                                        </td>
+
+                                        <!-- פעולות -->
+                                        <td class="py-4 px-6 text-left">
+                                            <div class="flex items-center justify-end gap-2">
+                                                <button @click="selectClient(client.id)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                                                    ניהול מתאמן
+                                                </button>
+                                                <button @click="deleteClient(client.id)" class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-slate-800 transition" title="מחק מתאמן">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. טאב יומן שבועי -->
+                <div x-show="activeTab === 'schedule' && !selectedClientId" x-cloak class="space-y-6">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
+                        <div class="flex items-center gap-4">
+                            <h3 class="text-xl font-bold text-slate-200">יומן אימונים ושיחות זום שבועי</h3>
+                            <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
+                                <button @click="weekOffset--" class="p-2 hover:bg-slate-800 transition text-slate-400 hover:text-white">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                                <span class="px-4 py-2 text-xs font-bold text-slate-200" x-text="getWeekRangeLabel()"></span>
+                                <button @click="weekOffset++" class="p-2 hover:bg-slate-800 transition text-slate-400 hover:text-white">
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button @click="openAddEventModal = true" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 transition shadow-lg shadow-emerald-500/10">
+                            <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                            <span>קבע פגישה חדשה</span>
+                        </button>
+                    </div>
+
+                    <!-- ימי השבוע -->
+                    <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
+                        <template x-for="day in getCurrentWeekDays()" :key="day.date">
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col min-h-[300px] shadow-xl">
+                                <div class="border-b border-slate-800 pb-2 mb-3 flex justify-between items-center">
+                                    <span class="font-black text-slate-200" x-text="day.name"></span>
+                                    <span class="text-xs text-slate-500 font-bold" x-text="day.formatted"></span>
+                                </div>
+                                
+                                <div class="flex-1 space-y-2 overflow-y-auto max-h-[350px]">
+                                    <template x-for="event in getEventsForDate(day.date)" :key="event.id">
+                                        <div :class="event.status === 'completed' ? 'border-emerald-800 bg-emerald-950/20' : (event.status === 'cancelled' ? 'border-red-950 bg-red-950/10 opacity-60' : 'border-slate-800 bg-slate-950')"
+                                             class="border rounded-xl p-3 text-xs space-y-2 relative group hover:border-slate-700 transition">
+                                            <div class="flex justify-between items-start">
+                                                <span class="font-bold text-slate-200" x-text="event.clientName"></span>
+                                                <span class="text-[10px] text-slate-400 font-semibold" x-text="event.time"></span>
+                                            </div>
+                                            <div class="flex items-center gap-1">
+                                                <span :class="event.type === 'zoom' ? 'bg-blue-950/40 text-blue-400 border-blue-900/50' : 'bg-amber-950/40 text-amber-400 border-amber-900/50'"
+                                                      class="px-1.5 py-0.5 rounded text-[9px] border"
+                                                      x-text="event.type === 'zoom' ? 'שיחת זום' : 'אימון 1:1'">
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center justify-end gap-1.5 border-t border-slate-800/40 pt-2">
+                                                <button @click="changeEventStatus(event.id, 'completed')" class="text-emerald-400 hover:text-emerald-300" title="סמן כבוצע"><i data-lucide="check" class="w-3.5 h-3.5"></i></button>
+                                                <button @click="changeEventStatus(event.id, 'cancelled')" class="text-red-400 hover:text-red-300" title="סמן כבוטל"><i data-lucide="ban" class="w-3.5 h-3.5"></i></button>
+                                                <button @click="deleteEvent(event.id)" class="text-slate-500 hover:text-red-400" title="מחק פגישה"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template x-if="getEventsForDate(day.date).length === 0">
+                                        <div class="flex-1 flex items-center justify-center text-slate-600 italic text-[11px] py-8">אין פגישות</div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- 4. כרטיס מתאמן מפורט (Client Detail View) -->
+                <div x-show="selectedClientId" x-cloak class="space-y-6">
+                    <!-- כפתור חזרה וכותרת מתאמן -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
+                        <div class="flex items-center gap-4">
+                            <button @click="selectedClientId = null" class="bg-slate-950 border border-slate-800 text-slate-300 hover:text-white p-2.5 rounded-xl hover:bg-slate-800 transition">
+                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </button>
+                            <div>
+                                <div class="flex items-center gap-3">
+                                    <h3 class="text-2xl font-black text-white" x-text="currentClient?.name"></h3>
+                                    <button 
+                                        @click="toggleClientAttention(currentClient.id)" 
+                                        :class="currentClient?.needsAttention ? 'bg-red-600 text-white border-red-500 shadow-lg shadow-red-900/30' : 'bg-slate-950 text-slate-400 border-slate-800 hover:bg-slate-800'"
+                                        class="px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1 transition">
+                                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+                                        <span>סימון לקושי/נפילה</span>
+                                    </button>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1" x-text="'טלפון: ' + currentClient?.phone + ' | התחלת ליווי: ' + formatDate(currentClient?.startDate)"></p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <a :href="'https://wa.me/972' + cleanPhone(currentClient?.phone)" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <span>פתח וואטסאפ חופשי</span>
+                            </a>
+                            <button @click="openEditClientModal(currentClient)" class="bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                <span>עריכת פרופיל</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- תפריט פנימי לכרטיס המתאמן -->
+                    <div class="flex border-b border-slate-800 gap-1 overflow-x-auto pb-1">
+                        <button @click="detailSubTab = 'profile'" :class="detailSubTab === 'profile' ? 'border-emerald-500 text-emerald-400 font-bold' : 'border-transparent text-slate-400 hover:text-white'" class="px-6 py-3 border-b-2 font-semibold text-sm transition whitespace-nowrap">פרופיל & תזונה יומיים</button>
+                        <button @click="detailSubTab = 'checkins'" :class="detailSubTab === 'checkins' ? 'border-emerald-500 text-emerald-400 font-bold' : 'border-transparent text-slate-400 hover:text-white'" class="px-6 py-3 border-b-2 font-semibold text-sm transition whitespace-nowrap">מעקב מדדים וגרפים</button>
+                        <button @click="detailSubTab = 'workout'" :class="detailSubTab === 'workout' ? 'border-emerald-500 text-emerald-400 font-bold' : 'border-transparent text-slate-400 hover:text-white'" class="px-6 py-3 border-b-2 font-semibold text-sm transition whitespace-nowrap">תוכנית אימון</button>
+                        <button @click="detailSubTab = 'mealplan'" :class="detailSubTab === 'mealplan' ? 'border-emerald-500 text-emerald-400 font-bold' : 'border-transparent text-slate-400 hover:text-white'" class="px-6 py-3 border-b-2 font-semibold text-sm transition whitespace-nowrap">תוכנית תזונה (ארוחות)</button>
+                        <button @click="detailSubTab = 'payments'" :class="detailSubTab === 'payments' ? 'border-emerald-500 text-emerald-400 font-bold' : 'border-transparent text-slate-400 hover:text-white'" class="px-6 py-3 border-b-2 font-semibold text-sm transition whitespace-nowrap">תשלומים</button>
+                    </div>
+
+                    <!-- לשוניות כרטיס מתאמן -->
+                    <div class="mt-6">
+                        
+                        <!-- טאב פנימי 1: פרופיל ומחשבון מאקרו -->
+                        <div x-show="detailSubTab === 'profile'" x-cloak class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="space-y-6 lg:col-span-1">
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
+                                    <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3">פרטים אישיים</h4>
+                                    <div class="space-y-3 text-sm">
+                                        <div>
+                                            <span class="text-slate-500 text-xs block">כתובת אימייל</span>
+                                            <span class="text-slate-200" x-text="currentClient?.email || 'לא הוזן'"></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-500 text-xs block">מטרת הליווי</span>
+                                            <span class="text-slate-200" x-text="currentClient?.goal || 'לא הוגדרה'"></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-slate-500 text-xs block">תאריך תחילת הליווי</span>
+                                            <span class="text-slate-200" x-text="formatDate(currentClient?.startDate)"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- אוטומציות וואטסאפ -->
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
+                                    <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3">שליחה מהירה בוואטסאפ</h4>
+                                    <div class="grid grid-cols-1 gap-2 text-xs">
+                                        <a :href="getWhatsAppLink(currentClient, 'weighin')" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition">
+                                            <div class="flex items-center gap-2.5">
+                                                <i data-lucide="scale" class="w-4 h-4 text-emerald-400"></i>
+                                                <div class="text-right">
+                                                    <span class="font-bold text-slate-200 block">תזכורת לשקילה שבועית</span>
+                                                    <span class="text-slate-500 text-[10px]">מבקש עדכון משקל ומדדים</span>
+                                                </div>
+                                            </div>
+                                            <i data-lucide="chevron-left" class="w-4 h-4 text-slate-500"></i>
+                                        </a>
+
+                                        <a :href="getWhatsAppLink(currentClient, 'workout')" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition">
+                                            <div class="flex items-center gap-2.5">
+                                                <i data-lucide="dumbbell" class="w-4 h-4 text-emerald-400"></i>
+                                                <div class="text-right">
+                                                    <span class="font-bold text-slate-200 block">תוכנית אימונים מוכנה</span>
+                                                    <span class="text-slate-500 text-[10px]">הודעה שהתוכנית החדשה עודכנה</span>
+                                                </div>
+                                            </div>
+                                            <i data-lucide="chevron-left" class="w-4 h-4 text-slate-500"></i>
+                                        </a>
+
+                                        <a :href="getWhatsAppLink(currentClient, 'meeting')" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition">
+                                            <div class="flex items-center gap-2.5">
+                                                <i data-lucide="video" class="w-4 h-4 text-emerald-400"></i>
+                                                <div class="text-right">
+                                                    <span class="font-bold text-slate-200 block">תזכורת לפגישת זום / 1:1</span>
+                                                    <span class="text-slate-500 text-[10px]">מזכיר על שיחה או אימון קרוב</span>
+                                                </div>
+                                            </div>
+                                            <i data-lucide="chevron-left" class="w-4 h-4 text-slate-500"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- מחשבון מאקרו קלוריות והערות -->
+                            <div class="lg:col-span-2 space-y-6">
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                                    <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3 flex justify-between items-center">
+                                        <span>מחשבון קלוריות ויעדים תזונתיים</span>
+                                        <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-400">
+                                            <input type="checkbox" x-model="macroManual" @change="toggleManualMacro()" class="w-3.5 h-3.5 text-emerald-600 bg-slate-950 border-slate-800 rounded">
+                                            <span>הזנה ידנית</span>
+                                        </label>
+                                    </h4>
+                                    
+                                    <!-- ממשק מחשבון אוטומטי -->
+                                    <div x-show="!macroManual" class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm" x-cloak>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">מין</label>
+                                            <select x-model="macroGender" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500">
+                                                <option value="male">גבר</option>
+                                                <option value="female">אישה</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">גיל</label>
+                                            <input type="number" x-model="macroAge" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">גובה (ס"מ)</label>
+                                            <input type="number" x-model="macroHeight" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">פעילות גופנית</label>
+                                            <select x-model="macroActivity" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none text-xs">
+                                                <option value="1.2">לא פעיל (משרדי)</option>
+                                                <option value="1.375">פעיל קל (1-3 אימונים)</option>
+                                                <option value="1.55">פעיל בינוני (3-5 אימונים)</option>
+                                                <option value="1.725">פעיל מאוד (6-7 אימונים)</option>
+                                                <option value="1.9">פעיל אקסטרים</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">גרעון/עודף קלורי</label>
+                                            <input type="number" x-model="macroOffset" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">חלבון (גרם/ק"ג)</label>
+                                            <input type="number" step="0.1" x-model="macroProteinRatio" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">שומן (גרם/ק"ג)</label>
+                                            <input type="number" step="0.1" x-model="macroFatRatio" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                        <div class="flex items-end">
+                                            <button type="button" @click="runAutoMacroCalculator()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-lg text-sm transition">חשב יעדים</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- ממשק הזנה ידנית -->
+                                    <div x-show="macroManual" class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm" x-cloak>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">יעד קלוריות</label>
+                                            <input type="number" x-model="manualCalories" @input="saveManualMacros()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">יעד חלבון (גרם)</label>
+                                            <input type="number" x-model="manualProtein" @input="saveManualMacros()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">יעד פחמימות (גרם)</label>
+                                            <input type="number" x-model="manualCarbs" @input="saveManualMacros()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1">יעד שומנים (גרם)</label>
+                                            <input type="number" x-model="manualFat" @input="saveManualMacros()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                        </div>
+                                    </div>
+
+                                    <!-- תצוגת תוצאות -->
+                                    <template x-if="currentClient?.macroCalculated?.targetCalories">
+                                        <div class="mt-4 bg-slate-950 border border-slate-800 rounded-xl p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                            <div class="space-y-1">
+                                                <span class="text-xs text-slate-500 block">קלוריות יומיות</span>
+                                                <span class="text-lg font-black text-emerald-400" x-text="currentClient.macroCalculated.targetCalories + ' kcal'"></span>
+                                            </div>
+                                            <div class="space-y-1 border-r border-slate-800/60">
+                                                <span class="text-xs text-slate-500 block">חלבון</span>
+                                                <span class="text-lg font-black text-emerald-400" x-text="currentClient.macroCalculated.targetProtein + ' גרם'"></span>
+                                            </div>
+                                            <div class="space-y-1 border-r border-slate-800/60">
+                                                <span class="text-xs text-slate-500 block">פחמימות</span>
+                                                <span class="text-lg font-black text-emerald-400" x-text="currentClient.macroCalculated.targetCarbs + ' גרם'"></span>
+                                            </div>
+                                            <div class="space-y-1 border-r border-slate-800/60">
+                                                <span class="text-xs text-slate-500 block">שומן</span>
+                                                <span class="text-lg font-black text-emerald-400" x-text="currentClient.macroCalculated.targetFat + ' גרם'"></span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col space-y-4 shadow-xl">
+                                    <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3">הערות ומגבלות מיוחדות</h4>
+                                    <textarea x-model="currentClient.notes" @input="saveData()" placeholder="הקלד מגבלות, בעיות ברכיים, רגישויות וכו'..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm transition h-32 resize-none"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- טאב פנימי 2: מעקב שקילות וגרפים מרובים -->
+                        <div x-show="detailSubTab === 'checkins'" x-cloak class="space-y-6">
+                            <!-- הוספת מעקב חדש -->
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                                <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3 mb-4">הוספת מעקב שקילה ומדדים חדש</h4>
+                                <form @submit.prevent="addCheckin()" class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 mb-1">תאריך שקילה</label>
+                                        <input type="date" x-model="newCheckin.date" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 mb-1">משקל (ק"ג)</label>
+                                        <input type="number" step="0.1" x-model="newCheckin.weight" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 mb-1">אחוז שומן (אופציונלי)</label>
+                                        <input type="number" step="0.1" x-model="newCheckin.bodyFat" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 mb-1">היקף מותן (ס"מ)</label>
+                                        <input type="number" step="0.1" x-model="newCheckin.waist" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 mb-1">התמדה בתזונה</label>
+                                        <select x-model="newCheckin.adherenceNutrition" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none text-sm">
+                                            <option value="5">5 - מעולה (100%)</option>
+                                            <option value="4">4 - כמעט הכל</option>
+                                            <option value="3">3 - סביר</option>
+                                            <option value="2">2 - חלקי מאוד</option>
+                                            <option value="1">1 - לא התמיד</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 mb-1">התמדה באימונים</label>
+                                        <select x-model="newCheckin.adherenceTraining" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none text-sm">
+                                            <option value="5">5 - מלא (100%)</option>
+                                            <option value="4">4 - כמעט הכל</option>
+                                            <option value="3">3 - סביר</option>
+                                            <option value="2">2 - חלקי מאוד</option>
+                                            <option value="1">1 - לא התאמן</option>
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-4">
+                                        <label class="block text-xs font-bold text-slate-400 mb-1">הערות ופידבק</label>
+                                        <input type="text" x-model="newCheckin.notes" placeholder="תיאור קצר..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none text-sm">
+                                    </div>
+                                    <div class="md:col-span-1 flex items-center mt-5">
+                                        <label class="flex items-center gap-2 cursor-pointer select-none">
+                                            <input type="checkbox" x-model="newCheckin.isDrop" class="w-4 h-4 text-emerald-600 bg-slate-950 border-slate-800 rounded">
+                                            <span class="text-xs text-red-400 font-bold">סמן כנפילה</span>
+                                        </label>
+                                    </div>
+                                    <div class="md:col-span-1 flex items-end">
+                                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-lg text-sm transition">הוסף מדדים</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- גרף מדדים -->
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl" x-show="getChartDataPoints().length > 1">
+                                <div class="border-b border-slate-800 pb-3 mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                                    <h4 class="text-md font-bold text-slate-200">גרף מעקב התקדמות</h4>
+                                    
+                                    <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                                        <button @click="chartMetric = 'weight'" :class="chartMetric === 'weight' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'" class="px-3 py-1 rounded-lg text-xs font-bold transition">משקל</button>
+                                        <button @click="chartMetric = 'bodyFat'" :class="chartMetric === 'bodyFat' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'" class="px-3 py-1 rounded-lg text-xs font-bold transition">אחוז שומן</button>
+                                        <button @click="chartMetric = 'waist'" :class="chartMetric === 'waist' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'" class="px-3 py-1 rounded-lg text-xs font-bold transition">היקף מותן</button>
+                                    </div>
+                                </div>
+
+                                <div class="w-full h-64 bg-slate-950 rounded-xl p-4 flex flex-col justify-between">
+                                    <svg class="w-full h-48" viewBox="0 0 600 200" preserveAspectRatio="none">
+                                        <polyline fill="none" stroke="#10b981" stroke-width="3" :points="getChartPoints()" />
+                                        <template x-for="(point, pIdx) in getChartDataPoints()" :key="pIdx">
+                                            <g>
+                                                <circle :cx="point.x" :cy="point.y" r="5" :fill="point.isDrop ? '#ef4444' : '#10b981'" />
+                                                <text :x="point.x" :y="point.y - 10" fill="#cbd5e1" font-size="10" text-anchor="middle" x-text="point.value.toFixed(1)"></text>
+                                            </g>
+                                        </template>
+                                    </svg>
+                                    <div class="flex justify-between text-xs text-slate-500 px-2 mt-2">
+                                        <span x-text="formatDate(currentClient?.checkins[0]?.date)"></span>
+                                        <span class="text-emerald-400 font-bold" x-text="'סה״כ שינוי במדד: ' + getMetricDelta()"></span>
+                                        <span x-text="formatDate(currentClient?.checkins[currentClient.checkins.length - 1]?.date)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- טאב פנימי 3: תוכנית אימונים (עם תבניות וספרייה) -->
+                        <div x-show="detailSubTab === 'workout'" x-cloak class="space-y-6">
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
+                                <div class="flex flex-col gap-2">
+                                    <h4 class="text-md font-bold text-slate-200">בניית תוכנית אימונים</h4>
+                                    <!-- תבניות אימון -->
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="text-xs text-slate-400">טען תבנית אימון מוכנה:</span>
+                                        <select @change="applyTemplateToClient($event.target.value)" class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-300 focus:outline-none">
+                                            <option value="">-- בחר תבנית --</option>
+                                            <template x-for="temp in workoutTemplates" :key="temp.name">
+                                                <option :value="temp.name" x-text="temp.name"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button @click="saveCurrentWorkoutAsTemplate()" class="bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                        <i data-lucide="save" class="w-4 h-4"></i>
+                                        <span>שמור תוכנית זו כתבנית</span>
+                                    </button>
+                                    <button @click="addWorkoutDay()" class="bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                        <span>הוסף יום אימון</span>
+                                    </button>
+                                    <button @click="printWorkout(currentClient)" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-xl text-sm font-extrabold flex items-center gap-2 transition">
+                                        <i data-lucide="printer" class="w-4 h-4"></i>
+                                        <span>הדפס PDF</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ימי האימון והתרגילים -->
+                            <div class="space-y-6">
+                                <template x-for="(day, dayIdx) in (currentClient?.workoutPlan?.days || [])" :key="dayIdx">
+                                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                                        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                                            <input type="text" x-model="day.name" @input="saveData()" class="bg-slate-950 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-lg text-sm focus:outline-none w-64 font-bold">
+                                            <button @click="deleteWorkoutDay(dayIdx)" class="text-red-400 hover:text-red-300 text-xs flex items-center gap-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i><span>מחק יום</span></button>
+                                        </div>
+
+                                        <table class="w-full text-right border-collapse">
+                                            <thead>
+                                                <tr class="text-slate-400 text-xs font-black">
+                                                    <th class="py-2 px-2 w-1/3">תרגיל (הקלד או בחר מספרייה)</th>
+                                                    <th class="py-2 px-2 text-center w-16">סטים</th>
+                                                    <th class="py-2 px-2 text-center w-24">חזרות</th>
+                                                    <th class="py-2 px-2 text-center w-20">מנוחה</th>
+                                                    <th class="py-2 px-2">הערות / דגשים</th>
+                                                    <th class="py-2 px-2 text-left w-12">מחק</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template x-for="(ex, exIdx) in day.exercises" :key="exIdx">
+                                                    <tr class="border-b border-slate-800/40">
+                                                        <td class="py-2 px-1">
+                                                            <input 
+                                                                type="text" 
+                                                                x-model="ex.name" 
+                                                                @input="onExerciseNameChange(dayIdx, exIdx)"
+                                                                list="exercise-library-list" 
+                                                                placeholder="הקלד או בחר..." 
+                                                                class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm font-semibold">
+                                                        </td>
+                                                        <td class="py-2 px-1">
+                                                            <input type="number" x-model="ex.sets" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-2 px-1">
+                                                            <input type="text" x-model="ex.reps" @input="saveData()" placeholder="8-12" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-2 px-1">
+                                                            <input type="text" x-model="ex.rest" @input="saveData()" placeholder="90 שנ'" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-2 px-1">
+                                                            <input type="text" x-model="ex.notes" @input="saveData()" placeholder="דגש מיוחד" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-2 px-1 text-left">
+                                                            <button @click="deleteExercise(dayIdx, exIdx)" class="text-slate-500 hover:text-red-400 p-1.5 rounded"><i data-lucide="x" class="w-4 h-4"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <button @click="addExercise(dayIdx)" class="text-emerald-400 hover:text-emerald-300 text-xs font-bold flex items-center gap-1.5 mt-2">
+                                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                            <span>הוסף תרגיל</span>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- טאב פנימי 4: מחולל תפריטי תזונה (ארוחות) -->
+                        <div x-show="detailSubTab === 'mealplan'" x-cloak class="space-y-6">
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex justify-between items-center shadow-xl">
+                                <div>
+                                    <h4 class="text-md font-bold text-slate-200">מחולל תפריט תזונה מפורט</h4>
+                                    <p class="text-xs text-slate-400 mt-1">בנה את הארוחות והמאכלים של המתאמן. המערכת תסכום ותשווה את הערכים ליעד הקלוריות היומי.</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button @click="addMeal()" class="bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2">
+                                        <i data-lucide="plus" class="w-4 h-4"></i>
+                                        <span>הוסף ארוחה</span>
+                                    </button>
+                                    <button @click="printWorkout(currentClient)" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-xl text-sm font-extrabold transition">
+                                        <span>הדפס תוכנית תזונה (PDF)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- השוואת יעדים וערכים נוכחיים בתפריט -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center">
+                                    <span class="text-xs text-slate-500 block">קלוריות בתפריט / יעד</span>
+                                    <span class="text-lg font-black" :class="getMealPlanSum(currentClient, 'calories') > (currentClient?.macroCalculated?.targetCalories || 0) ? 'text-red-400' : 'text-emerald-400'"
+                                          x-text="getMealPlanSum(currentClient, 'calories') + ' / ' + (currentClient?.macroCalculated?.targetCalories || 0)"></span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center">
+                                    <span class="text-xs text-slate-500 block">חלבון בתפריט / יעד</span>
+                                    <span class="text-lg font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + 'ג\''"></span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center">
+                                    <span class="text-xs text-slate-500 block">פחמימה בתפריט / יעד</span>
+                                    <span class="text-lg font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + 'ג\''"></span>
+                                </div>
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center">
+                                    <span class="text-xs text-slate-500 block">שומן בתפריט / יעד</span>
+                                    <span class="text-lg font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + 'ג\''"></span>
+                                </div>
+                            </div>
+
+                            <!-- רשימת הארוחות בעריכה -->
+                            <div class="space-y-6">
+                                <template x-for="(meal, mIdx) in (currentClient?.mealPlan?.meals || [])" :key="mIdx">
+                                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                                        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                                            <input type="text" x-model="meal.name" @input="saveData()" class="bg-slate-950 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-lg text-sm focus:outline-none w-64 font-bold">
+                                            <button @click="deleteMeal(mIdx)" class="text-red-400 hover:text-red-300 text-xs flex items-center gap-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i><span>מחק ארוחה</span></button>
+                                        </div>
+
+                                        <table class="w-full text-right border-collapse text-xs">
+                                            <thead>
+                                                <tr class="text-slate-400 font-black">
+                                                    <th class="py-2 px-1 w-1/3">מאכל</th>
+                                                    <th class="py-2 px-1 text-center w-24">כמות (גרם/יחידה)</th>
+                                                    <th class="py-2 px-1 text-center w-16">קלוריות</th>
+                                                    <th class="py-2 px-1 text-center w-16">חלבון</th>
+                                                    <th class="py-2 px-1 text-center w-16">פחמימה</th>
+                                                    <th class="py-2 px-1 text-center w-16">שומן</th>
+                                                    <th class="py-2 px-1 text-left w-12">מחק</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template x-for="(item, iIdx) in meal.items" :key="iIdx">
+                                                    <tr class="border-b border-slate-800/40">
+                                                        <td class="py-1 px-1">
+                                                            <input type="text" x-model="item.food" @input="saveData()" placeholder="למשל: חזה עוף מבושל" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none text-sm font-semibold">
+                                                        </td>
+                                                        <td class="py-1 px-1">
+                                                            <input type="text" x-model="item.quantity" @input="saveData()" placeholder="150 גרם" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-1 px-1">
+                                                            <input type="number" x-model.number="item.calories" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-1 px-1">
+                                                            <input type="number" x-model.number="item.protein" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-1 px-1">
+                                                            <input type="number" x-model.number="item.carbs" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-1 px-1">
+                                                            <input type="number" x-model.number="item.fat" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                        </td>
+                                                        <td class="py-1 px-1 text-left">
+                                                            <button @click="deleteMealItem(mIdx, iIdx)" class="text-slate-500 hover:text-red-400 p-1.5 rounded"><i data-lucide="x" class="w-4 h-4"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                        
+                                        <button @click="addMealItem(mIdx)" class="text-emerald-400 hover:text-emerald-300 text-xs font-bold flex items-center gap-1.5 mt-2">
+                                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                            <span>הוסף מאכל</span>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- טאב פנימי 5: תשלומים -->
+                        <div x-show="detailSubTab === 'payments'" x-cloak class="space-y-6">
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                                <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3 mb-6">מעקב תשלומים - מסלול 3 חודשים (250₪ לחודש)</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <template x-for="(payment, pIdx) in (currentClient?.payments || [])" :key="pIdx">
+                                        <div :class="payment.status === 'paid' ? 'border-emerald-500/50 bg-emerald-950/20' : 'border-slate-800 bg-slate-950'" class="border rounded-2xl p-6 flex flex-col justify-between h-40 shadow-md">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <span class="text-xs text-slate-400 font-bold block" x-text="'חודש מס׳ ' + payment.month"></span>
+                                                    <span class="text-2xl font-black text-white mt-1 block">250 ₪</span>
+                                                </div>
+                                                <span :class="payment.status === 'paid' ? 'bg-emerald-950 text-emerald-400' : 'bg-amber-950 text-amber-400'" class="text-xs px-2.5 py-1 rounded-full font-bold border" x-text="payment.status === 'paid' ? 'שולם' : 'ממתין'"></span>
+                                            </div>
+                                            <div class="mt-4 flex items-center justify-between border-t border-slate-800/60 pt-3">
+                                                <span class="text-xs text-slate-500" x-text="'תאריך יעד: ' + getPaymentDueDate(currentClient?.startDate, payment.month)"></span>
+                                                <button @click="togglePaymentStatus(pIdx)" :class="payment.status === 'paid' ? 'bg-slate-900 text-slate-400' : 'bg-emerald-500 text-slate-950'" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition" x-text="payment.status === 'paid' ? 'סמן כממתין' : 'סמן כשולם'"></button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. טאב מעקב פיננסי ואנליטיקה -->
+                <div x-show="activeTab === 'finances' && !selectedClientId" x-cloak class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-xl">
+                            <div>
+                                <span class="text-slate-400 text-xs font-bold block mb-1">הכנסה חודשית פעילה</span>
+                                <span class="text-3xl font-black text-white" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
+                            </div>
+                            <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                                <i data-lucide="trending-up" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-xl">
+                            <div>
+                                <span class="text-slate-400 text-xs font-bold block mb-1">סה״כ הכנסות שנגבו</span>
+                                <span class="text-3xl font-black text-white" x-text="getTotalRevenueCollected() + ' ₪'"></span>
+                            </div>
+                            <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                                <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex items-center justify-between shadow-xl">
+                            <div>
+                                <span class="text-slate-400 text-xs font-bold block mb-1">חובות לקוחות ממתינים</span>
+                                <span class="text-3xl font-black text-amber-400" x-text="getPendingRevenueAmount() + ' ₪'"></span>
+                            </div>
+                            <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center">
+                                <i data-lucide="clock" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- גרף הכנסות חודשיות (SVG Bar Chart) -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                        <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3 mb-4">גרף הכנסות בחצי השנה האחרונה</h4>
+                        <div class="w-full h-64 bg-slate-950 rounded-xl p-4 flex flex-col justify-between">
+                            <div class="flex items-end justify-around h-48 pt-6">
+                                <template x-for="item in getMonthlyFinancialData()" :key="item.name">
+                                    <div class="flex flex-col items-center gap-2 w-16">
+                                        <!-- עמודת הגרף -->
+                                        <div class="w-8 bg-emerald-500 rounded-t-lg transition-all duration-500"
+                                             :style="'height: ' + Math.max(5, (item.value / 5000) * 150) + 'px;'"
+                                             :title="item.value + ' ₪'"></div>
+                                        <span class="text-[10px] text-slate-400 font-bold" x-text="item.name"></span>
+                                        <span class="text-[9px] text-slate-500" x-text="item.value + ' ₪'"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- טבלת תשלומים כללית -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 text-xs font-black">
+                                    <th class="py-3 px-6">שם המתאמן</th>
+                                    <th class="py-3 px-6 text-center">חודש 1 (250₪)</th>
+                                    <th class="py-3 px-6 text-center">חודש 2 (250₪)</th>
+                                    <th class="py-3 px-6 text-center">חודש 3 (250₪)</th>
+                                    <th class="py-3 px-6 text-center">סה״כ שולם</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/50">
+                                <template x-for="client in clients" :key="client.id">
+                                    <tr class="hover:bg-slate-800/30 transition">
+                                        <td class="py-3 px-6">
+                                            <button @click="selectClient(client.id)" class="text-sm font-bold text-slate-200 hover:text-emerald-400 transition" x-text="client.name"></button>
+                                        </td>
+                                        <template x-for="(pay, pIdx) in client.payments" :key="pIdx">
+                                            <td class="py-3 px-6 text-center">
+                                                <button @click="toggleClientPaymentStatus(client.id, pIdx)" :class="pay.status === 'paid' ? 'bg-emerald-950 text-emerald-400 border-emerald-800' : 'bg-amber-950 text-amber-400 border-amber-800'" class="text-xs px-2.5 py-1 rounded-full font-bold border transition" x-text="pay.status === 'paid' ? 'שולם' : 'ממתין'"></button>
+                                            </td>
+                                        </template>
+                                        <td class="py-3 px-6 text-center text-slate-200 font-bold text-sm" x-text="getClientPaidSum(client) + ' ₪'"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6. טאב הגדרות וגיבוי -->
+                <div x-show="activeTab === 'settings' && !selectedClientId" x-cloak class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- ניהול וגיבוי נתונים -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                            <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3">גיבוי וייצוא נתונים</h4>
+                            <p class="text-xs text-slate-400">מומלץ לייצא קובץ גיבוי פעם בשבוע כדי לשמור על בטיחות המידע במחשב שלך.</p>
+                            
+                            <div class="flex items-center gap-4 pt-2">
+                                <button @click="exportDatabase()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 transition">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    <span>ייצא קובץ גיבוי (JSON)</span>
+                                </button>
+                                
+                                <label class="bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-300 font-bold px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 transition cursor-pointer">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    <span>ייבא קובץ גיבוי</span>
+                                    <input type="file" @change="importDatabase" class="hidden" accept=".json">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- מחיקת נתונים/אתחול -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                            <h4 class="text-md font-bold text-slate-200 border-b border-slate-800 pb-3 text-red-400">אזור סכנה - מחיקת מידע</h4>
+                            <p class="text-xs text-slate-400">ביצוע פעולה זו ימחק את כל המידע והיומן לצמיתות.</p>
+                            
+                            <div class="pt-2">
+                                <button @click="resetDatabase()" class="bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-400 font-bold px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 transition">
+                                    <i data-lucide="alert-octagon" class="w-4 h-4"></i>
+                                    <span>אתחל את כל מסד הנתונים</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- מאגרי נתונים גלובליים לשימוש אוטומטי (Exercise Library Auto-complete list) -->
+    <datalist id="exercise-library-list">
+        <template x-for="ex in exerciseLibrary" :key="ex.name">
+            <option :value="ex.name"></option>
+        </template>
+    </datalist>
+
+    <!-- מודל 1: הוספת מתאמן חדש -->
+    <div x-show="openAddClientModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col" @click.away="openAddClientModal = false">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-200 flex items-center gap-2">
+                    <i data-lucide="user-plus" class="w-5 h-5 text-emerald-500"></i>
+                    <span>הוספת מתאמן חדש לליווי</span>
+                </h3>
+                <button @click="openAddClientModal = false" class="text-slate-500 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <form @submit.prevent="addClient()" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">שם מלא</label>
+                    <input type="text" x-model="newClient.name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">מספר טלפון (וואטסאפ)</label>
+                        <input type="tel" x-model="newClient.phone" required placeholder="0501234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">אימייל (אופציונלי)</label>
+                        <input type="email" x-model="newClient.email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">תאריך תחילת הליווי</label>
+                        <input type="date" x-model="newClient.startDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">משקל התחלתי (ק"ג)</label>
+                        <input type="number" step="0.1" x-model="newClient.startWeight" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">מטרה עיקרית</label>
+                    <input type="text" x-model="newClient.goal" placeholder="חיטוב, מסה, בניית כוח..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 flex justify-end gap-2">
+                    <button type="button" @click="openAddClientModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm font-bold transition">ביטול</button>
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-2 rounded-xl text-sm transition">שמור והוסף</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- מודל 2: עריכת פרופיל מתאמן -->
+    <div x-show="openEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col" @click.away="openEditModal = false">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-200 flex items-center gap-2">
+                    <i data-lucide="edit-3" class="w-5 h-5 text-emerald-500"></i>
+                    <span>עריכת פרטי מתאמן</span>
+                </h3>
+                <button @click="openEditModal = false" class="text-slate-500 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <form @submit.prevent="updateClient()" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">שם מלא</label>
+                    <input type="text" x-model="editingClient.name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">מספר טלפון</label>
+                        <input type="tel" x-model="editingClient.phone" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">אימייל</label>
+                        <input type="email" x-model="editingClient.email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">תאריך תחילת הליווי</label>
+                        <input type="date" x-model="editingClient.startDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">סטטוס ליווי</label>
+                        <select x-model="editingClient.status" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                            <option value="active">פעיל</option>
+                            <option value="paused">מושהה</option>
+                            <option value="completed">סיים</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">מטרה עיקרית</label>
+                    <input type="text" x-model="editingClient.goal" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 flex justify-end gap-2">
+                    <button type="button" @click="openEditModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm font-bold transition">ביטול</button>
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-2 rounded-xl text-sm transition">שמור שינויים</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- מודל 3: קביעת פגישה חדשה ליומן -->
+    <div x-show="openAddEventModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl flex flex-col" @click.away="openAddEventModal = false">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-200 flex items-center gap-2">
+                    <i data-lucide="calendar-plus" class="w-5 h-5 text-emerald-500"></i>
+                    <span>קביעת פגישה ביומן</span>
+                </h3>
+                <button @click="openAddEventModal = false" class="text-slate-500 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <form @submit.prevent="addScheduleEvent()" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">בחר מתאמן</label>
+                    <select x-model="newEvent.clientId" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                        <option value="">-- בחר לקוח --</option>
+                        <template x-for="client in clients" :key="client.id">
+                            <option :value="client.id" x-text="client.name"></option>
+                        </template>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">סוג פגישה</label>
+                    <select x-model="newEvent.type" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                        <option value="zoom">שיחת זום שבועית</option>
+                        <option value="session">אימון אישי 1:1 פיזי</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">תאריך</label>
+                        <input type="date" x-model="newEvent.date" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">שעה</label>
+                        <input type="time" x-model="newEvent.time" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none text-sm">
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 flex justify-end gap-2">
+                    <button type="button" @click="openAddEventModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm font-bold transition">ביטול</button>
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-2 rounded-xl text-sm transition">קבע פגישה</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- מודל 4: ייבוא שאלון קליטה -->
+    <div x-show="openImportIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col" @click.away="openImportIntakeModal = false">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-200 flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-5 h-5 text-emerald-500"></i>
+                    <span>ייבוא חכם של שאלון קליטה מהוואטסאפ</span>
+                </h3>
+                <button @click="openImportIntakeModal = false" class="text-slate-500 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <p class="text-xs text-slate-400">הדבק כאן את הודעת התשובה שקיבלת מהלקוח בוואטסאפ בשלמותה. המערכת תסרוק ותחלץ ממנה אוטומטית את כל פרטי המתאמן ותיצור עבורו כרטיס חדש!</p>
+                <textarea 
+                    x-model="intakePasteText" 
+                    placeholder="הדבק את ההודעה המלאה כאן..."
+                    class="w-full h-64 bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-200 placeholder-slate-650 focus:outline-none focus:border-emerald-500 text-xs resize-none"></textarea>
+                
+                <div class="pt-4 border-t border-slate-800 flex justify-end gap-2">
+                    <button type="button" @click="openImportIntakeModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm font-bold transition">ביטול</button>
+                    <button type="button" @click="parseAndCreateClientFromIntake()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-2 rounded-xl text-sm transition">ייבא וצור מתאמן</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- לוגיקה ואפליקציה ב-JavaScript -->
+    <script>
+        function fitnessApp() {
+            return {
+                // ניווט ומצב
+                activeTab: 'dashboard',
+                selectedClientId: null,
+                detailSubTab: 'profile',
+                searchQuery: '',
+                statusFilter: 'all',
+                
+                // מודלים
+                openAddClientModal: false,
+                openEditModal: false,
+                openAddEventModal: false,
+                openImportIntakeModal: false,
+                
+                // לוח זמנים שבועי
+                weekOffset: 0,
+                
+                // נתונים
+                clients: [],
+                scheduleEvents: [],
+                workoutTemplates: [],
+                
+                // אובייקטים לטפסים
+                newClient: { name: '', phone: '', email: '', startDate: '', startWeight: '', goal: '' },
+                editingClient: {},
+                newCheckin: { date: '', weight: '', bodyFat: '', waist: '', adherenceNutrition: 5, adherenceTraining: 5, notes: '', isDrop: false },
+                newEvent: { clientId: '', type: 'zoom', date: '', time: '' },
+                
+                // טקסט לייבוא
+                intakePasteText: '',
+                
+                // גרף פעיל
+                chartMetric: 'weight',
+                
+                // אובייקטים זמניים למחשבון מאקרו
+                macroManual: false,
+                macroGender: 'male',
+                macroAge: 25,
+                macroHeight: 175,
+                macroActivity: '1.2',
+                macroOffset: -500,
+                macroProteinRatio: 2.0,
+                macroFatRatio: 0.8,
+                
+                manualCalories: 2000,
+                manualProtein: 150,
+                manualCarbs: 200,
+                manualFat: 65,
+                
+                printClient: null,
+
+                // ספריית תרגילים מובנית מראש
+                exerciseLibrary: [
+                    // רגליים
+                    { name: "סקווט עם מוט (Barbell Squat)", muscle: "legs", video: "https://www.youtube.com/watch?v=ultWZbUMPL8" },
+                    { name: "דדליפט רומני (Romanian Deadlift)", muscle: "legs", video: "https://www.youtube.com/watch?v=op9kVnSso6Q" },
+                    { name: "לאנג'ים עם משקולות (Dumbbell Lunge)", muscle: "legs", video: "https://www.youtube.com/watch?v=qEwKCR5JCog" },
+                    { name: "לחיצת רגליים במכונה (Leg Press)", muscle: "legs", video: "https://www.youtube.com/watch?v=rT7DgCr-3pg" },
+                    { name: "כפיפת ברך במכונה (Leg Curl)", muscle: "legs", video: "https://www.youtube.com/watch?v=CAwf7n6Luuc" },
+                    
+                    // חזה
+                    { name: "לחיצת חזה עם מוט (Bench Press)", muscle: "chest", video: "https://www.youtube.com/watch?v=rT7DgCr-3pg" },
+                    { name: "לחיצת חזה עם משקולות (Dumbbell Bench Press)", muscle: "chest", video: "https://www.youtube.com/watch?v=qEwKCR5JCog" },
+                    { name: "פרפר במכונה (Pec Deck Fly)", muscle: "chest", video: "https://www.youtube.com/watch?v=CAwf7n6Luuc" },
+                    { name: "שכיבות סמיכה (Push-Up)", muscle: "chest", video: "https://www.youtube.com/watch?v=pvIjsG5Svck" },
+
+                    // גב
+                    { name: "פולי עליון (Lat Pulldown)", muscle: "back", video: "https://www.youtube.com/watch?v=CAwf7n6Luuc" },
+                    { name: "חתירה במכונה/כבל (Cable Row)", muscle: "back", video: "https://www.youtube.com/watch?v=rT7DgCr-3pg" },
+                    { name: "מתח (Pull-Up)", muscle: "back", video: "https://www.youtube.com/watch?v=ultWZbUMPL8" },
+                    
+                    // כתפיים
+                    { name: "לחיצת כתפיים עם דאמבלים (Dumbbell Shoulder Press)", muscle: "shoulders", video: "https://www.youtube.com/watch?v=qEwKCR5JCog" },
+                    { name: "הרחקת זרועות לצדדים (Lateral Raise)", muscle: "shoulders", video: "https://www.youtube.com/watch?v=ykJmrZ5v0oo" },
+                    
+                    // זרועות וליבה
+                    { name: "כפיפות מרפקים (Bicep Curl)", muscle: "arms", video: "https://www.youtube.com/watch?v=ykJmrZ5v0oo" },
+                    { name: "פשיטת מרפקים בפולי (Tricep Pushdown)", muscle: "arms", video: "https://www.youtube.com/watch?v=2-LAMcpzODU" },
+                    { name: "פלאנק (Plank)", muscle: "core", video: "https://www.youtube.com/watch?v=pvIjsG5Svck" },
+                    { name: "כפיפות בטן (Crunch)", muscle: "core", video: "https://www.youtube.com/watch?v=pvIjsG5Svck" }
+                ],
+                
+                get currentClient() {
+                    return this.clients.find(c => c.id === this.selectedClientId) || null;
+                },
+
+                initApp() {
+                    this.loadDatabase();
+                    this.resetNewClientForm();
+                    this.resetNewCheckinForm();
+                    this.resetNewEventForm();
+                    this.intakePasteText = '';
+                    
+                    setTimeout(() => {
+                        if (window.lucide) window.lucide.createIcons();
+                    }, 100);
+                },
+
+                // טעינת בסיס נתונים v2
+                loadDatabase() {
+                    const savedV2 = localStorage.getItem('il_fitness_db_v2');
+                    if (savedV2) {
+                        try {
+                            const parsed = JSON.parse(savedV2);
+                            this.clients = parsed.clients || [];
+                            this.scheduleEvents = parsed.scheduleEvents || [];
+                            this.workoutTemplates = parsed.workoutTemplates || [];
+                            return;
+                        } catch (e) {
+                            console.error("שגיאה בטעינת המערכת", e);
+                        }
+                    }
+
+                    // תמיכה לאחור בגרסה 1
+                    const savedV1 = localStorage.getItem('il_fitness_db');
+                    if (savedV1) {
+                        try {
+                            this.clients = JSON.parse(savedV1);
+                            this.scheduleEvents = [];
+                            this.workoutTemplates = [];
+                            this.saveData();
+                            return;
+                        } catch (e) {}
+                    }
+
+                    this.loadDefaultData();
+                },
+
+                loadDefaultData() {
+                    this.clients = [
+                        {
+                            id: "demo-1",
+                            name: "אלירן כהן",
+                            phone: "0546789012",
+                            email: "eliran.c@gmail.com",
+                            startDate: "2026-08-01",
+                            goal: "חיטוב, ירידה במשקל ושיפור סיבולת לב ריאה",
+                            status: "active",
+                            needsAttention: false,
+                            personalSessionStatus: "scheduled",
+                            personalSessionDate: "2026-09-05",
+                            notes: "רגישות קלה בברך ימין. מעדיף להתאמן בבוקר.",
+                            payments: [
+                                { month: 1, amount: 250, status: "paid" },
+                                { month: 2, amount: 250, status: "pending" },
+                                { month: 3, amount: 250, status: "pending" }
+                            ],
+                            checkins: [
+                                { date: "2026-08-01", weight: 88.5, bodyFat: 24, waist: 98, adherenceNutrition: 5, adherenceTraining: 5, notes: "שקילת בסיס ראשונית.", isDrop: false },
+                                { date: "2026-08-08", weight: 87.2, bodyFat: 23.5, waist: 96.8, adherenceNutrition: 4, adherenceTraining: 5, notes: "ירידה מעולה בנוזלים.", isDrop: false },
+                                { date: "2026-08-15", weight: 86.8, bodyFat: 23.1, waist: 96.0, adherenceNutrition: 5, adherenceTraining: 4, notes: "התמדה טובה.", isDrop: false },
+                                { date: "2026-08-22", weight: 86.9, bodyFat: 23.2, waist: 96.2, adherenceNutrition: 2, adherenceTraining: 3, notes: "קושי לשמור על גירעון בסופש.", isDrop: true }
+                            ],
+                            workoutPlan: {
+                                days: [
+                                    {
+                                        name: "A - רגליים וגב",
+                                        exercises: [
+                                            { name: "סקווט עם מוט (Barbell Squat)", sets: 4, reps: "10-12", rest: "90 שניות", video: "https://www.youtube.com/watch?v=ultWZbUMPL8", notes: "עבודה מבוקרת" },
+                                            { name: "פולי עליון (Lat Pulldown)", sets: 4, reps: "10", rest: "90 שניות", video: "https://www.youtube.com/watch?v=CAwf7n6Luuc", notes: "מתיחה מלאה" }
+                                        ]
+                                    }
+                                ]
+                            },
+                            macroCalculated: { targetCalories: 1950, targetProtein: 175, targetCarbs: 180, targetFat: 70 },
+                            mealPlan: {
+                                meals: [
+                                    {
+                                        name: "ארוחת בוקר",
+                                        items: [
+                                            { food: "חביתה משתי ביצים + שמן זית", quantity: "1 מנה", calories: 220, protein: 14, carbs: 1, fat: 17 },
+                                            { food: "פרוסת לחם מלא", quantity: "2 פרוסות", calories: 150, protein: 6, carbs: 26, fat: 2 }
+                                        ]
+                                    },
+                                    {
+                                        name: "ארוחת צהריים",
+                                        items: [
+                                            { food: "חזה עוף מבושל/צלוי", quantity: "150 גרם", calories: 247, protein: 46, carbs: 0, fat: 5 },
+                                            { food: "אורז בסמטי מבושל", quantity: "150 גרם", calories: 195, protein: 4, carbs: 43, fat: 1 }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ];
+                    this.scheduleEvents = [
+                        {
+                            id: "event-demo-1",
+                            clientId: "demo-1",
+                            clientName: "אלירן כהן",
+                            type: "zoom",
+                            date: this.getTodayDate(),
+                            time: "18:00",
+                            status: "scheduled"
+                        }
+                    ];
+                    this.workoutTemplates = [
+                        {
+                            name: "תוכנית בסיס AB חיטוב",
+                            days: [
+                                {
+                                    name: "A - פלג גוף תחתון וגב",
+                                    exercises: [
+                                        { name: "סקווט עם מוט (Barbell Squat)", sets: 4, reps: "10-12", rest: "90 שניות", video: "https://www.youtube.com/watch?v=ultWZbUMPL8", notes: "עבודה נקייה" }
+                                    ]
+                                }
+                            ]
+                        }
+                    ];
+                    this.saveData();
+                },
+
+                saveData() {
+                    const db = {
+                        clients: this.clients,
+                        scheduleEvents: this.scheduleEvents,
+                        workoutTemplates: this.workoutTemplates
+                    };
+                    localStorage.setItem('il_fitness_db_v2', JSON.stringify(db));
+                    setTimeout(() => {
+                        if (window.lucide) window.lucide.createIcons();
+                    }, 50);
+                },
+
+                // מחשבון מאקרו קלוריות
+                runAutoMacroCalculator() {
+                    const client = this.currentClient;
+                    if (!client) return;
+
+                    let weight = 70;
+                    if (client.checkins && client.checkins.length > 0) {
+                        weight = client.checkins[client.checkins.length - 1].weight;
+                    } else if (this.newClient.startWeight) {
+                        weight = parseFloat(this.newClient.startWeight);
+                    }
+
+                    const h = parseFloat(this.macroHeight);
+                    const w = parseFloat(weight);
+                    const a = parseInt(this.macroAge);
+                    const gender = this.macroGender;
+                    const activity = parseFloat(this.macroActivity);
+                    const offset = parseInt(this.macroOffset);
+
+                    let bmr = 0;
+                    if (gender === 'male') {
+                        bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
+                    } else {
+                        bmr = (10 * w) + (6.25 * h) - (5 * a) - 161;
+                    }
+
+                    const tdee = Math.round(bmr * activity);
+                    const targetCal = Math.round(tdee + offset);
+
+                    const targetProtein = Math.round(w * parseFloat(this.macroProteinRatio));
+                    const targetFat = Math.round(w * parseFloat(this.macroFatRatio));
+                    const proteinCal = targetProtein * 4;
+                    const fatCal = targetFat * 9;
+                    const carbCal = targetCal - (proteinCal + fatCal);
+                    const targetCarbs = Math.max(0, Math.round(carbCal / 4));
+
+                    client.macroCalculated = {
+                        targetCalories: targetCal,
+                        targetProtein: targetProtein,
+                        targetCarbs: targetCarbs,
+                        targetFat: targetFat,
+                        useManual: false
+                    };
+
+                    this.saveData();
+                },
+
+                toggleManualMacro() {
+                    if (this.macroManual && this.currentClient) {
+                        const m = this.currentClient.macroCalculated || {};
+                        this.manualCalories = m.targetCalories || 2000;
+                        this.manualProtein = m.targetProtein || 150;
+                        this.manualCarbs = m.targetCarbs || 200;
+                        this.manualFat = m.targetFat || 65;
+                    }
+                },
+
+                saveManualMacros() {
+                    if (this.currentClient) {
+                        this.currentClient.macroCalculated = {
+                            targetCalories: parseInt(this.manualCalories) || 0,
+                            targetProtein: parseInt(this.manualProtein) || 0,
+                            targetCarbs: parseInt(this.manualCarbs) || 0,
+                            targetFat: parseInt(this.manualFat) || 0,
+                            useManual: true
+                        };
+                        this.saveData();
+                    }
+                },
+
+                loadClientMacroForm() {
+                    const client = this.currentClient;
+                    if (client && client.macroCalculated) {
+                        const m = client.macroCalculated;
+                        this.macroManual = m.useManual || false;
+                        if (m.useManual) {
+                            this.manualCalories = m.targetCalories;
+                            this.manualProtein = m.targetProtein;
+                            this.manualCarbs = m.targetCarbs;
+                            this.manualFat = m.targetFat;
+                        }
+                    }
+                },
+
+                // מחולל תוכנית תזונה (Meal Plan)
+                addMeal() {
+                    const client = this.currentClient;
+                    if (client) {
+                        if (!client.mealPlan) client.mealPlan = { meals: [] };
+                        if (!client.mealPlan.meals) client.mealPlan.meals = [];
+                        
+                        const count = client.mealPlan.meals.length + 1;
+                        client.mealPlan.meals.push({
+                            name: `ארוחה מס׳ ${count}`,
+                            items: [
+                                { food: '', quantity: '100 גרם', calories: 0, protein: 0, carbs: 0, fat: 0 }
+                            ]
+                        });
+                        this.saveData();
+                    }
+                },
+
+                deleteMeal(mIdx) {
+                    if (confirm("האם למחוק ארוחה זו לצמיתות?")) {
+                        const client = this.currentClient;
+                        if (client && client.mealPlan && client.mealPlan.meals) {
+                            client.mealPlan.meals.splice(mIdx, 1);
+                            this.saveData();
+                        }
+                    }
+                },
+
+                addMealItem(mIdx) {
+                    const client = this.currentClient;
+                    if (client && client.mealPlan && client.mealPlan.meals[mIdx]) {
+                        client.mealPlan.meals[mIdx].items.push({
+                            food: '', quantity: '100 גרם', calories: 0, protein: 0, carbs: 0, fat: 0
+                        });
+                        this.saveData();
+                    }
+                },
+
+                deleteMealItem(mIdx, iIdx) {
+                    const client = this.currentClient;
+                    if (client && client.mealPlan && client.mealPlan.meals[mIdx]) {
+                        client.mealPlan.meals[mIdx].items.splice(iIdx, 1);
+                        this.saveData();
+                    }
+                },
+
+                getMealPlanSum(client, field) {
+                    if (!client || !client.mealPlan || !client.mealPlan.meals) return 0;
+                    let total = 0;
+                    client.mealPlan.meals.forEach(m => {
+                        m.items.forEach(i => {
+                            const val = parseFloat(i[field]);
+                            if (!isNaN(val)) total += val;
+                        });
+                    });
+                    return Math.round(total);
+                },
+
+                // ספריית תרגילים וקישורי וידאו
+                onExerciseNameChange(dayIdx, exIdx) {
+                    if (!this.currentClient) return;
+                    const ex = this.currentClient.workoutPlan.days[dayIdx].exercises[exIdx];
+                    const found = this.exerciseLibrary.find(e => e.name === ex.name);
+                    if (found) {
+                        ex.video = found.video;
+                    }
+                    this.saveData();
+                },
+
+                // ניהול תבניות אימון (Workout Presets)
+                saveCurrentWorkoutAsTemplate() {
+                    const client = this.currentClient;
+                    if (!client || !client.workoutPlan || !client.workoutPlan.days || client.workoutPlan.days.length === 0) {
+                        alert("אין תוכנית אימונים פעילה לשמירה כתבנית!");
+                        return;
+                    }
+                    
+                    const name = prompt("הזן שם עבור התבנית החדשה:");
+                    if (!name) return;
+
+                    // העתקה עמוקה (Clone) של ימי האימון
+                    const daysCloned = JSON.parse(JSON.stringify(client.workoutPlan.days));
+                    this.workoutTemplates.push({
+                        name: name,
+                        days: daysCloned
+                    });
+                    this.saveData();
+                    alert(`התבנית "${name}" נשמרה בהצלחה!`);
+                },
+
+                applyTemplateToClient(templateName) {
+                    if (!templateName || !this.currentClient) return;
+                    const temp = this.workoutTemplates.find(t => t.name === templateName);
+                    if (temp) {
+                        if (confirm(`האם ברצונך לטעון את התבנית "${templateName}"? פעולה זו תדרוס את תוכנית האימון הנוכחית של המתאמן!`)) {
+                            this.currentClient.workoutPlan = {
+                                days: JSON.parse(JSON.stringify(temp.days))
+                            };
+                            this.saveData();
+                        }
+                    }
+                },
+
+                // שאלון קליטה דיגיטלי וואטסאפ וייבוא
+                copyOnboardingQuestionnaire() {
+                    const text = `*שאלון קליטה - ILAI FITNESS*\n\nהיי! כדי שאוכל לבנות לך את תוכנית האימונים והתזונה המדויקת והנכונה ביותר עבורך, אשמח שתענה על השאלות הבאות ותחזיר לי את ההודעה המלאה:\n\n1. *שם מלא*:\n2. *מספר טלפון*:\n3. *אימייל*:\n4. *גיל*:\n5. *גובה (ס"מ)*:\n6. *משקל נוכחי (ק"ג)*:\n7. *מטרת הליווי* (למשל: חיטוב / בניית שריר / כוח):\n8. *פציעות, מגבלות או רגישויות רפואיות* (אם יש):\n9. *ניסיון קודם באימונים* (למשל: ללא ניסיון / מתאמן שנה / מתקדם):\n\nתודה רבה, נתחיל בקרוב! 🚀`;
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert("שאלון הקליטה הועתק ללוח! כעת תוכל להדביק ולשלוח אותו בוואטסאפ ללקוח חדש.");
+                    }).catch(err => {
+                        alert("שגיאה בהעתקה.");
+                    });
+                },
+
+                parseAndCreateClientFromIntake() {
+                    if (!this.intakePasteText) return;
+
+                    const text = this.intakePasteText;
+                    const lines = text.split('\n');
+                    
+                    let name = '', phone = '', email = '', weight = '', goal = '', notes = '', age = '', height = '';
+
+                    lines.forEach(line => {
+                        const cleanLine = line.replace(/\*/g, ''); // הסרת כוכביות של מודגש
+                        if (cleanLine.includes('שם מלא')) name = cleanLine.split(':')[1]?.trim() || '';
+                        if (cleanLine.includes('טלפון')) phone = cleanLine.split(':')[1]?.trim() || '';
+                        if (cleanLine.includes('אימייל')) email = cleanLine.split(':')[1]?.trim() || '';
+                        if (cleanLine.includes('גיל')) age = cleanLine.split(':')[1]?.trim() || '';
+                        if (cleanLine.includes('גובה')) height = cleanLine.split(':')[1]?.trim() || '';
+                        if (cleanLine.includes('משקל')) weight = cleanLine.split(':')[1]?.trim() || '';
+                        if (cleanLine.includes('מטרה')) goal = cleanLine.split(':')[1]?.trim() || '';
+                        if (cleanLine.includes('פציעות')) notes = cleanLine.split(':')[1]?.trim() || '';
+                    });
+
+                    if (!name) {
+                        alert("לא הצלחנו לפענח את השם המלא מהשאלון. אנא ודא שהתשובה מודבקת במבנה הנכון.");
+                        return;
+                    }
+
+                    const newId = 'client_' + Date.now();
+                    const startingCheckin = weight ? [{
+                        date: this.getTodayDate(),
+                        weight: parseFloat(weight),
+                        bodyFat: null,
+                        waist: null,
+                        adherenceNutrition: 5,
+                        adherenceTraining: 5,
+                        notes: 'שקילת בסיס ראשונית משאלון קליטה',
+                        isDrop: false
+                    }] : [];
+
+                    const newClientObj = {
+                        id: newId,
+                        name: name,
+                        phone: phone || '0500000000',
+                        email: email || '',
+                        startDate: this.getTodayDate(),
+                        goal: goal || '',
+                        status: 'active',
+                        needsAttention: false,
+                        personalSessionStatus: 'pending',
+                        personalSessionDate: '',
+                        notes: notes ? `רגישות/פציעות: ${notes}` : '',
+                        payments: [
+                            { month: 1, amount: 250, status: 'pending' },
+                            { month: 2, amount: 250, status: 'pending' },
+                            { month: 3, amount: 250, status: 'pending' }
+                        ],
+                        checkins: startingCheckin,
+                        workoutPlan: { days: [] },
+                        macroCalculated: {
+                            targetCalories: 2000,
+                            targetProtein: 150,
+                            targetCarbs: 200,
+                            targetFat: 65
+                        },
+                        mealPlan: { meals: [] }
+                    };
+
+                    this.clients.push(newClientObj);
+                    this.saveData();
+                    this.openImportIntakeModal = false;
+                    this.intakePasteText = '';
+                    this.selectClient(newId);
+                    alert(`המתאמן ${name} נוצר בהצלחה!`);
+                },
+
+                // אנליטיקה פיננסית מתקדמת (גרף עמודות 6 חודשים)
+                getMonthlyFinancialData() {
+                    const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+                    const revenueByMonth = Array(12).fill(0);
+                    
+                    this.clients.forEach(c => {
+                        c.payments.forEach(p => {
+                            if (p.status === 'paid' && c.startDate) {
+                                const start = new Date(c.startDate);
+                                const payDate = new Date(start);
+                                payDate.setDate(start.getDate() + (p.month - 1) * 30);
+                                
+                                const monthIndex = payDate.getMonth();
+                                revenueByMonth[monthIndex] += p.amount;
+                            }
+                        });
+                    });
+                    
+                    const currentMonth = new Date().getMonth();
+                    const data = [];
+                    for (let i = 5; i >= 0; i--) {
+                        const mIdx = (currentMonth - i + 12) % 12;
+                        data.push({
+                            name: months[mIdx],
+                            value: revenueByMonth[mIdx]
+                        });
+                    }
+                    return data;
+                },
+
+                // אוטומציות וואטסאפ
+                getWhatsAppLink(client, type) {
+                    if (!client) return '#';
+                    const name = client.name;
+                    const phone = this.cleanPhone(client.phone);
+                    let message = '';
+
+                    if (type === 'weighin') {
+                        message = `היי ${name}, בוקר טוב! ☀️ הגיע הזמן לשקילה ומדדים השבועיים שלנו. אשמח שתעדכן אותי בהקדם כדי שנוכל לעקוב ולוודא שאנחנו לגמרי בכיוון הנכון! 💪`;
+                    } else if (type === 'workout') {
+                        message = `היי ${name}, תוכנית האימונים החדשה והמעודכנת שלך מוכנה וממתינה לך במערכת! 🏋️‍♂️ המון בהצלחה באימונים הקרובים, תן בראש!`;
+                    } else if (type === 'meeting') {
+                        const nextMeeting = this.scheduleEvents.find(e => e.clientId === client.id && e.status === 'scheduled');
+                        const dateStr = nextMeeting ? this.formatDate(nextMeeting.date) : '[תאריך]';
+                        const timeStr = nextMeeting ? nextMeeting.time : '[שעה]';
+                        const meetingType = nextMeeting && nextMeeting.type === 'zoom' ? 'שיחת הזום' : 'אימון ה-1:1';
+                        message = `היי ${name}, מזכיר לך על ${meetingType} שלנו שנקבעה ליום ${dateStr} בשעה ${timeStr}. נשתמע! 🚀`;
+                    } else if (type === 'attention') {
+                        message = `היי ${name}, מה קורה? ראיתי שהיה קצת קושי השבוע במעקב. הכל בסדר? רציתי לראות איך אני יכול לעזור ולדייק אותך כדי שנחזור למסלול הכי חזק שיש.`;
+                    }
+
+                    return `https://wa.me/972${phone}?text=${encodeURIComponent(message)}`;
+                },
+
+                // יומן שבועי ניווט ולוח
+                getCurrentWeekDays() {
+                    const today = new Date();
+                    const currentDay = today.getDay();
+                    const sunday = new Date(today);
+                    sunday.setDate(today.getDate() - currentDay + (this.weekOffset * 7));
+
+                    const days = [];
+                    const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+                    for (let i = 0; i < 7; i++) {
+                        const day = new Date(sunday);
+                        day.setDate(sunday.getDate() + i);
+                        
+                        const yyyy = day.getFullYear();
+                        let mm = day.getMonth() + 1;
+                        let dd = day.getDate();
+                        if (dd < 10) dd = '0' + dd;
+                        if (mm < 10) mm = '0' + mm;
+                        const dateStr = `${yyyy}-${mm}-${dd}`;
+                        
+                        days.push({
+                            name: 'יום ' + dayNames[i],
+                            date: dateStr,
+                            formatted: `${dd}/${mm}`
+                        });
+                    }
+                    return days;
+                },
+
+                getWeekRangeLabel() {
+                    const days = this.getCurrentWeekDays();
+                    return `שבוע: ${days[0].formatted} - ${days[6].formatted}`;
+                },
+
+                getEventsForDate(dateStr) {
+                    return this.scheduleEvents.filter(e => e.date === dateStr);
+                },
+
+                addScheduleEvent() {
+                    const client = this.clients.find(c => c.id === this.newEvent.clientId);
+                    if (!client) return;
+
+                    const eventObj = {
+                        id: 'event_' + Date.now(),
+                        clientId: this.newEvent.clientId,
+                        clientName: client.name,
+                        type: this.newEvent.type,
+                        date: this.newEvent.date,
+                        time: this.newEvent.time,
+                        status: 'scheduled'
+                    };
+
+                    this.scheduleEvents.push(eventObj);
+                    client.personalSessionStatus = 'scheduled';
+                    client.personalSessionDate = this.newEvent.date;
+                    this.saveData();
+                    this.openAddEventModal = false;
+                    this.resetNewEventForm();
+                },
+
+                changeEventStatus(eventId, newStatus) {
+                    const event = this.scheduleEvents.find(e => e.id === eventId);
+                    if (event) {
+                        event.status = newStatus;
+                        const client = this.clients.find(c => c.id === event.clientId);
+                        if (client && client.personalSessionDate === event.date) {
+                            client.personalSessionStatus = newStatus;
+                        }
+                        this.saveData();
+                    }
+                },
+
+                deleteEvent(eventId) {
+                    if (confirm("האם למחוק פגישה זו מהיומן?")) {
+                        const event = this.scheduleEvents.find(e => e.id === eventId);
+                        if (event) {
+                            const client = this.clients.find(c => c.id === event.clientId);
+                            if (client && client.personalSessionDate === event.date) {
+                                client.personalSessionStatus = 'pending';
+                                client.personalSessionDate = '';
+                            }
+                        }
+                        this.scheduleEvents = this.scheduleEvents.filter(e => e.id !== eventId);
+                        this.saveData();
+                    }
+                },
+
+                // פונקציות תשתית קיימות
+                getActiveClientsCount() { return this.clients.filter(c => c.status === 'active').length; },
+                getExpectedMonthlyRevenue() { return this.getActiveClientsCount() * 250; },
+                getCompletedPersonalSessions() { return this.scheduleEvents.filter(e => e.status === 'completed').length; },
+                getNeedsAttentionCount() { return this.clients.filter(c => c.status === 'active' && c.needsAttention).length; },
+                getAttentionClients() { return this.clients.filter(c => c.status === 'active' && c.needsAttention); },
+                getLastNote(client) {
+                    if (client.checkins && client.checkins.length > 0) {
+                        const last = client.checkins[client.checkins.length - 1];
+                        return last.notes;
+                    }
+                    return client.notes || '';
+                },
+                getTotalRevenueCollected() {
+                    let total = 0;
+                    this.clients.forEach(c => {
+                        c.payments.forEach(p => {
+                            if (p.status === 'paid') total += p.amount;
+                        });
+                    });
+                    return total;
+                },
+                getPendingRevenueAmount() {
+                    let total = 0;
+                    this.clients.forEach(c => {
+                        if (c.status !== 'active') return;
+                        c.payments.forEach(p => {
+                            if (p.status === 'pending') total += p.amount;
+                        });
+                    });
+                    return total;
+                },
+                filteredClients() {
+                    return this.clients.filter(c => {
+                        const matchesSearch = c.name.includes(this.searchQuery) || c.phone.includes(this.searchQuery);
+                        const matchesStatus = this.statusFilter === 'all' || c.status === this.statusFilter;
+                        return matchesSearch && matchesStatus;
+                    });
+                },
+
+                addClient() {
+                    const newId = 'client_' + Date.now();
+                    const startingCheckin = this.newClient.startWeight ? [{
+                        date: this.newClient.startDate,
+                        weight: parseFloat(this.newClient.startWeight),
+                        bodyFat: null, waist: null, adherenceNutrition: 5, adherenceTraining: 5, notes: 'שקילת בסיס ראשונית', isDrop: false
+                    }] : [];
+
+                    const newClientObj = {
+                        id: newId, name: this.newClient.name, phone: this.newClient.phone, email: this.newClient.email || '',
+                        startDate: this.newClient.startDate, goal: this.newClient.goal || '', status: 'active', needsAttention: false,
+                        personalSessionStatus: 'pending', personalSessionDate: '', notes: '',
+                        payments: [{ month: 1, amount: 250, status: 'pending' }, { month: 2, amount: 250, status: 'pending' }, { month: 3, amount: 250, status: 'pending' }],
+                        checkins: startingCheckin, workoutPlan: { days: [] }, macroCalculated: null, mealPlan: { meals: [] }
+                    };
+
+                    this.clients.push(newClientObj);
+                    this.saveData();
+                    this.openAddClientModal = false;
+                    this.resetNewClientForm();
+                    this.selectClient(newId);
+                },
+
+                deleteClient(id) {
+                    if (confirm("האם למחוק מתאמן זה לצמיתות?")) {
+                        this.clients = this.clients.filter(c => c.id !== id);
+                        this.scheduleEvents = this.scheduleEvents.filter(e => e.clientId !== id);
+                        this.saveData();
+                        if (this.selectedClientId === id) this.selectedClientId = null;
+                    }
+                },
+
+                selectClient(id) {
+                    this.selectedClientId = id;
+                    this.detailSubTab = 'profile';
+                    this.chartMetric = 'weight';
+                    this.resetNewCheckinForm();
+                    this.loadClientMacroForm();
+                    setTimeout(() => {
+                        if (window.lucide) window.lucide.createIcons();
+                    }, 100);
+                },
+
+                openEditClientModal(client) {
+                    this.editingClient = { ...client };
+                    this.openEditModal = true;
+                },
+
+                updateClient() {
+                    const idx = this.clients.findIndex(c => c.id === this.editingClient.id);
+                    if (idx !== -1) {
+                        this.clients[idx] = { ...this.clients[idx], ...this.editingClient };
+                        this.saveData();
+                        this.openEditModal = false;
+                    }
+                },
+
+                toggleClientAttention(id) {
+                    const client = this.clients.find(c => c.id === id);
+                    if (client) {
+                        client.needsAttention = !client.needsAttention;
+                        this.saveData();
+                    }
+                },
+
+                addCheckin() {
+                    if (!this.selectedClientId) return;
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (client) {
+                        const checkinObj = {
+                            date: this.newCheckin.date,
+                            weight: parseFloat(this.newCheckin.weight),
+                            bodyFat: this.newCheckin.bodyFat ? parseFloat(this.newCheckin.bodyFat) : null,
+                            waist: this.newCheckin.waist ? parseFloat(this.newCheckin.waist) : null,
+                            adherenceNutrition: parseInt(this.newCheckin.adherenceNutrition),
+                            adherenceTraining: parseInt(this.newCheckin.adherenceTraining),
+                            notes: this.newCheckin.notes,
+                            isDrop: this.newCheckin.isDrop
+                        };
+                        if (this.newCheckin.isDrop) client.needsAttention = true;
+                        client.checkins.push(checkinObj);
+                        client.checkins.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        this.saveData();
+                        this.resetNewCheckinForm();
+                    }
+                },
+
+                deleteCheckin(index) {
+                    if (confirm("למחוק שקילה זו?")) {
+                        const client = this.clients.find(c => c.id === this.selectedClientId);
+                        if (client) { client.checkins.splice(index, 1); this.saveData(); }
+                    }
+                },
+
+                addWorkoutDay() {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (client) {
+                        if (!client.workoutPlan) client.workoutPlan = { days: [] };
+                        if (!client.workoutPlan.days) client.workoutPlan.days = [];
+                        const dayNames = ['A', 'B', 'C', 'D', 'E'];
+                        const nextName = dayNames[client.workoutPlan.days.length] || 'חדש';
+                        client.workoutPlan.days.push({ name: nextName + ' - אימון חדש', exercises: [{ name: '', sets: 4, reps: '10', rest: '90 שניות', notes: '' }] });
+                        this.saveData();
+                    }
+                },
+
+                deleteWorkoutDay(dayIdx) {
+                    if (confirm("למחוק יום אימון זה?")) {
+                        const client = this.clients.find(c => c.id === this.selectedClientId);
+                        if (client && client.workoutPlan?.days) { client.workoutPlan.days.splice(dayIdx, 1); this.saveData(); }
+                    }
+                },
+
+                addExercise(dayIdx) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (client && client.workoutPlan?.days[dayIdx]) {
+                        client.workoutPlan.days[dayIdx].exercises.push({ name: '', sets: 3, reps: '12', rest: '60 שניות', notes: '' });
+                        this.saveData();
+                    }
+                },
+
+                deleteExercise(dayIdx, exIdx) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (client && client.workoutPlan?.days[dayIdx]) { client.workoutPlan.days[dayIdx].exercises.splice(exIdx, 1); this.saveData(); }
+                },
+
+                printWorkout(client) { this.printClient = client; setTimeout(() => { window.print(); }, 200); },
+                togglePaymentStatus(index) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (client && client.payments[index]) { client.payments[index].status = client.payments[index].status === 'paid' ? 'pending' : 'paid'; this.saveData(); }
+                },
+                toggleClientPaymentStatus(clientId, index) {
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (client && client.payments[index]) { client.payments[index].status = client.payments[index].status === 'paid' ? 'pending' : 'paid'; this.saveData(); }
+                },
+                isCurrentMonthPaid(client) { return !client.payments.find(p => p.status === 'pending'); },
+                getClientPaidSum(client) { return client.payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0); },
+                
+                resetDatabase() {
+                    if (confirm("לאפס הכל?")) {
+                        localStorage.removeItem('il_fitness_db_v2');
+                        localStorage.removeItem('il_fitness_db');
+                        this.clients = []; this.scheduleEvents = []; this.workoutTemplates = []; this.selectedClientId = null; this.saveData();
+                    }
+                },
+
+                exportDatabase() {
+                    const db = { clients: this.clients, scheduleEvents: this.scheduleEvents, workoutTemplates: this.workoutTemplates };
+                    const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `ilai_fitness_crm_${this.getTodayDate()}.json`;
+                    link.click();
+                },
+
+                importDatabase(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const imported = JSON.parse(e.target.result);
+                            if (imported && (Array.isArray(imported.clients) || Array.isArray(imported))) {
+                                if (confirm("לדרוס נתונים קיימים?")) {
+                                    if (Array.isArray(imported)) { this.clients = imported; this.scheduleEvents = []; this.workoutTemplates = []; }
+                                    else { this.clients = imported.clients || []; this.scheduleEvents = imported.scheduleEvents || []; this.workoutTemplates = imported.workoutTemplates || []; }
+                                    this.saveData();
+                                    alert("שוחזר בהצלחה!");
+                                }
+                            }
+                        } catch (err) {}
+                    };
+                    reader.readAsText(file);
+                },
+
+                resetNewClientForm() { this.newClient = { name: '', phone: '', email: '', startDate: this.getTodayDate(), startWeight: '', goal: '' }; },
+                resetNewCheckinForm() { this.newCheckin = { date: this.getTodayDate(), weight: '', bodyFat: '', waist: '', adherenceNutrition: 5, adherenceTraining: 5, notes: '', isDrop: false }; },
+                resetNewEventForm() { this.newEvent = { clientId: '', type: 'zoom', date: this.getTodayDate(), time: '10:00' }; },
+                getTodayDate() {
+                    const today = new Date();
+                    const yyyy = today.getFullYear();
+                    let mm = today.getMonth() + 1;
+                    let dd = today.getDate();
+                    if (dd < 10) dd = '0' + dd;
+                    if (mm < 10) mm = '0' + mm;
+                    return yyyy + '-' + mm + '-' + dd;
+                },
+                getTodayFormattedDate() { return new Date().toLocaleDateString('he-IL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); },
+                formatDate(dateStr) {
+                    if (!dateStr) return '-';
+                    try { return new Date(dateStr).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch (e) { return dateStr; }
+                },
+                cleanPhone(phone) {
+                    if (!phone) return '';
+                    let cleaned = phone.replace(/\D/g, '');
+                    if (cleaned.startsWith('0')) cleaned = cleaned.substring(1);
+                    return cleaned;
+                },
+                getPaymentDueDate(startDateStr, monthIndex) {
+                    if (!startDateStr) return '-';
+                    const date = new Date(startDateStr);
+                    date.setDate(date.getDate() + (monthIndex - 1) * 30);
+                    return this.formatDate(date);
+                },
+                getPersonalSessionLabel(status) { return status === 'completed' ? 'בוצע' : (status === 'scheduled' ? 'נקבע' : 'ממתין'); },
+                getPersonalSessionClass(status) { return status === 'completed' ? 'bg-emerald-950/60 text-emerald-400 border-emerald-800' : (status === 'scheduled' ? 'bg-blue-950/60 text-blue-400 border-blue-800' : 'bg-slate-950 text-slate-400 border-slate-800'); },
+                
+                getChartDataPoints() {
+                    const client = this.currentClient;
+                    if (!client || !client.checkins || client.checkins.length === 0) return [];
+                    const validCheckins = client.checkins.filter(c => {
+                        if (this.chartMetric === 'weight') return c.weight !== undefined && c.weight !== null;
+                        if (this.chartMetric === 'bodyFat') return c.bodyFat !== undefined && c.bodyFat !== null;
+                        return c.waist !== undefined && c.waist !== null;
+                    });
+                    if (validCheckins.length < 2) return [];
+                    const values = validCheckins.map(c => this.chartMetric === 'weight' ? c.weight : (this.chartMetric === 'bodyFat' ? c.bodyFat : c.waist));
+                    const minV = Math.min(...values) - 0.5;
+                    const maxV = Math.max(...values) + 0.5;
+                    const vRange = maxV - minV || 1;
+                    const width = 600, height = 200, paddingX = 40, paddingY = 30;
+                    const activeW = width - (paddingX * 2), activeH = height - (paddingY * 2);
+                    return validCheckins.map((c, idx) => {
+                        const val = this.chartMetric === 'weight' ? c.weight : (this.chartMetric === 'bodyFat' ? c.bodyFat : c.waist);
+                        return { x: (paddingX + (idx * (activeW / (validCheckins.length - 1)))).toFixed(1), y: (height - paddingY - (((val - minV) / vRange) * activeH)).toFixed(1), value: val, date: c.date, isDrop: c.isDrop };
+                    });
+                },
+                getChartPoints() { return this.getChartDataPoints().map(p => `${p.x},${p.y}`).join(' '); },
+                getMetricDelta() {
+                    const client = this.currentClient;
+                    if (!client || !client.checkins) return '0';
+                    const validCheckins = client.checkins.filter(c => {
+                        if (this.chartMetric === 'weight') return c.weight !== undefined && c.weight !== null;
+                        if (this.chartMetric === 'bodyFat') return c.bodyFat !== undefined && c.bodyFat !== null;
+                        return c.waist !== undefined && c.waist !== null;
+                    });
+                    if (validCheckins.length < 2) return '0';
+                    const getVal = (c) => this.chartMetric === 'weight' ? c.weight : (this.chartMetric === 'bodyFat' ? c.bodyFat : c.waist);
+                    const delta = getVal(validCheckins[validCheckins.length - 1]) - getVal(validCheckins[0]);
+                    return (delta > 0 ? '+' : '') + delta.toFixed(1) + (this.chartMetric === 'weight' ? ' ק״ג' : (this.chartMetric === 'bodyFat' ? '%' : ' ס״מ'));
+                }
+            };
+        }
+    </script>
+</body>
+</html>
