@@ -1141,9 +1141,9 @@
                                     <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
                                         <template x-if="currentClient?.mealPlanPdfUrl">
                                             <div class="flex items-center gap-2 w-full sm:w-auto">
-                                                <a :href="currentClient.mealPlanPdfUrl" target="_blank" class="flex-1 sm:flex-none justify-center bg-emerald-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg">
+                                                <a :href="currentClient.mealPlanPdfUrl" target="_blank" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:bg-slate-900 text-slate-200 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition">
                                                     <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                                                    <span>פתח תפריט (PDF)</span>
+                                                    <span>פתח במסך מלא</span>
                                                 </a>
                                                 <button @click="deleteMealPlanPdf()" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:border-red-900 text-red-450 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition">
                                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -1165,6 +1165,13 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- תצוגה מובנית של ה-PDF ישירות באתר -->
+                                <template x-if="currentClient?.mealPlanPdfUrl">
+                                    <div class="mt-4 border border-slate-800 rounded-xl overflow-hidden h-[600px] w-full bg-slate-950 shadow-inner relative">
+                                        <iframe :src="currentClient.mealPlanPdfUrl" class="w-full h-full border-0" type="application/pdf"></iframe>
+                                    </div>
+                                </template>
                             </div>
 
                             <!-- השוואת יעדים -->
