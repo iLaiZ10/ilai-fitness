@@ -11,17 +11,59 @@
             theme: {
                 extend: {
                     colors: {
+                        // Override slate with warm luxury beige/charcoal
+                        slate: {
+                            50: '#faf9f6',
+                            100: '#f5f2eb',
+                            200: '#e8e2d5',
+                            300: '#d7cebc',
+                            400: '#bcae97', // Muted beige
+                            500: '#9e8f77',
+                            600: '#7f715c',
+                            700: '#615645',
+                            800: '#302b23', // Border color
+                            900: '#1b1915', // Card background
+                            950: '#0f0e0c'  // Deep warm dark background
+                        },
+                        // Override emerald with luxury gold
+                        emerald: {
+                            50: '#fdfbf7',
+                            100: '#fbf7ed',
+                            200: '#f4ebd2',
+                            300: '#ebd8a7',
+                            400: '#dfc075', // Soft gold
+                            500: '#d4af37', // Luxury Gold
+                            600: '#c59b27', // Darker gold
+                            700: '#a37e1c',
+                            800: '#806114',
+                            900: '#5e460d',
+                            950: '#2d2105'
+                        },
+                        // Override blue with luxury light blue (תכלת)
+                        blue: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8', // Light blue (תכלת)
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49'
+                        },
                         brand: {
-                            50: '#f4fbf7',
-                            100: '#e8f7ee',
-                            500: '#10b981', // Emerald green accent
-                            600: '#059669',
-                            700: '#047857',
-                            950: '#022c22'
+                            50: '#faf9f6',
+                            100: '#f5f2eb',
+                            500: '#d4af37',
+                            600: '#c59b27',
+                            700: '#a37e1c',
+                            950: '#2d2105'
                         },
                         accent: {
-                            500: '#a3e635', // Lime/Neon green highlight
-                            600: '#84cc16'
+                            500: '#38bdf8',
+                            600: '#0ea5e9'
                         }
                     }
                 }
