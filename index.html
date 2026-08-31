@@ -2083,7 +2083,33 @@
                 ],
                 
                 get currentClient() {
-                    return this.clients.find(c => c.id === this.selectedClientId) || null;
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (client) return client;
+                    return {
+                        id: '',
+                        name: '',
+                        phone: '',
+                        email: '',
+                        goal: '',
+                        notes: '',
+                        age: '',
+                        height: '',
+                        sleepHours: '',
+                        activityLevel: '',
+                        experience: '',
+                        weeklyWorkouts: '',
+                        trainingLocation: '',
+                        dietPreference: '',
+                        mealsPerDay: '',
+                        hatedFoods: '',
+                        motivation: '',
+                        biggestChallenge: '',
+                        macroCalculated: { targetCalories: '', targetProtein: '', targetCarbs: '', targetFat: '' },
+                        workoutPlan: { days: [] },
+                        mealPlan: { meals: [] },
+                        checkins: [],
+                        payments: []
+                    };
                 },
 
                 initApp() {
