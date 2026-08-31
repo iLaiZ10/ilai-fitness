@@ -1387,15 +1387,15 @@
                                 
                                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                     <div class="space-y-1">
-                                        <p class="text-xs text-slate-350">תוכל להעלות לכאן קובץ PDF של תפריט התזונה העדכני של המתאמן או להדביק קישור חיצוני.</p>
+                                        <p class="text-xs text-slate-350">הדבק קישור לקובץ PDF (למשל מ-Google Drive) כדי להציג את תפריט התזונה העדכני של המתאמן.</p>
                                         <template x-if="currentClient?.mealPlanPdfUrl">
                                             <div class="text-[10px] text-emerald-450 font-bold flex items-center gap-1">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                <span>קובץ תפריט PDF מצורף ומסונכרן</span>
+                                                <span>קישור לתפריט PDF מצורף ומסונכרן</span>
                                             </div>
                                         </template>
                                         <template x-if="!currentClient?.mealPlanPdfUrl">
-                                            <div class="text-[10px] text-slate-500 italic">טרם צורף תפריט PDF</div>
+                                            <div class="text-[10px] text-slate-500 italic">טרם צורף קישור לתפריט PDF</div>
                                         </template>
                                     </div>
 
@@ -1406,22 +1406,17 @@
                                                     <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                                                     <span>פתח במסך מלא</span>
                                                 </a>
-                                                <button @click="deleteMealPlanPdf()" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:border-red-900 text-red-450 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition">
+                                                <button @click="deleteMealPlanPdf()" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:border-red-900 text-red-450 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                                    <span>הסר קובץ</span>
+                                                    <span>הסר קישור</span>
                                                 </button>
                                             </div>
                                         </template>
                                         
                                         <div class="flex items-center gap-2 w-full sm:w-auto" x-show="!currentClient?.mealPlanPdfUrl">
-                                            <label class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:bg-slate-900 text-slate-200 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer transition select-none">
-                                                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-                                                <span x-text="pdfUploading ? 'מעלה קובץ...' : 'העלה PDF מהמכשיר'"></span>
-                                                <input type="file" accept="application/pdf" @change="uploadMealPlanPdf($event)" class="hidden" :disabled="pdfUploading">
-                                            </label>
-                                            <button @click="setMealPlanPdfLink()" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:bg-slate-900 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition">
-                                                <i data-lucide="link" class="w-3.5 h-3.5"></i>
-                                                <span>הדבק קישור</span>
+                                            <button @click="setMealPlanPdfLink()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg cursor-pointer">
+                                                <i data-lucide="link" class="w-4 h-4"></i>
+                                                <span>הדבק קישור לתפריט PDF</span>
                                             </button>
                                         </div>
                                     </div>
