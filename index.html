@@ -1430,7 +1430,7 @@
                                 <!-- תצוגה מובנית של ה-PDF ישירות באתר -->
                                 <template x-if="currentClient?.mealPlanPdfUrl">
                                     <div class="mt-4 border border-slate-800 rounded-xl overflow-hidden h-[600px] w-full bg-slate-950 shadow-inner relative">
-                                        <iframe :src="currentClient.mealPlanPdfUrl" class="w-full h-full border-0" type="application/pdf"></iframe>
+                                        <iframe :src="getCleanPdfUrl(currentClient.mealPlanPdfUrl)" class="w-full h-full border-0" type="application/pdf"></iframe>
                                     </div>
                                 </template>
                             </div>
@@ -2725,6 +2725,16 @@
                         return;
                     }
                     
+                    // Check file size (1.5MB warning threshold)
+                    const maxSize = 1.5 * 1024 * 1024;
+                    if (file.size > maxSize) {
+                        const confirmUpload = confirm(`שים לב: קובץ ה-PDF שבחרת גדול מ-1.5MB (גודלו: ${(file.size / (1024 * 1024)).toFixed(2)}MB).\nשמירת קבצים גדולים במחשב או העלאתם לאינטרנט איטי עלולים להוביל להקפאת הדפדפן או לשגיאות טעינה.\n\nמומלץ להעלות את הקובץ לגוגל דרייב ולהדביק קישור ידני במקום.\nהאם להמשיך בהעלאה בכל זאת?`);
+                        if (!confirmUpload) {
+                            event.target.value = ''; // Reset file input
+                            return;
+                        }
+                    }
+
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (!client) return;
 
@@ -2758,6 +2768,13 @@
                         }
                     } else {
                         // Offline/Local mode: Convert to base64 and save in localStorage
+                        const confirmLocal = confirm("אתה עובד במצב מקומי (ללא סנכרון ענן).\nקובץ ה-PDF יישמר ישירות בזיכרון המקומי של הדפדפן שלך.\nדפדפנים מגבילים את הזיכרון לכ-5MB סה\"כ עבור כל המידע באתר.\n\nהאם ברצונך להמשיך בשמירת הקובץ מקומית?");
+                        if (!confirmLocal) {
+                            this.pdfUploading = false;
+                            event.target.value = '';
+                            return;
+                        }
+
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             client.mealPlanPdfUrl = e.target.result;
@@ -2771,6 +2788,15 @@
                         };
                         reader.readAsDataURL(file);
                     }
+                },
+
+                getCleanPdfUrl(url) {
+                    if (!url) return '';
+                    // Convert Google Drive view links to preview embeds
+                    if (url.includes('drive.google.com') && url.includes('/view')) {
+                        return url.split('/view')[0] + '/preview';
+                    }
+                    return url;
                 },
 
                 deleteMealPlanPdf() {
@@ -2790,8 +2816,9 @@
                 setMealPlanPdfLink() {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (!client) return;
-                    const url = prompt("הדבק כאן קישור ישיר לקובץ ה-PDF (למשל מתוך Google Drive):", client.mealPlanPdfUrl || "");
+                    let url = prompt("הדבק כאן קישור ישיר לקובץ ה-PDF (למשל מתוך Google Drive):", client.mealPlanPdfUrl || "");
                     if (url !== null) {
+                        url = this.getCleanPdfUrl(url);
                         client.mealPlanPdfUrl = url;
                         if (this.isCloudSynced && this.db) {
                             this.db.collection("clients").doc(client.id).set(client);
