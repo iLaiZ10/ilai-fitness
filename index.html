@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ILAI FITNESS - ניהול מתאמנים</title>
+    <title>IlaiCo - ניהול מתאמנים</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -134,7 +134,7 @@
                     <!-- לוגו וכותרת -->
                     <div class="flex justify-between items-center border-b-2 border-emerald-600 pb-4 mb-6">
                         <div>
-                            <h1 class="text-3xl font-extrabold text-emerald-800 tracking-wider">ILAI FITNESS</h1>
+                            <h1 class="text-3xl font-extrabold text-emerald-800 tracking-wider">IlaiCo</h1>
                             <p class="text-sm text-gray-500 font-semibold">ליווי אונליין ואימונים אישיים</p>
                         </div>
                         <div class="text-left">
@@ -237,7 +237,7 @@
                         <!-- כותרת עמוד 2 -->
                         <div class="flex justify-between items-center border-b-2 border-emerald-600 pb-4 mb-6 mt-8">
                             <div>
-                                <h1 class="text-3xl font-extrabold text-emerald-800 tracking-wider">ILAI FITNESS</h1>
+                                <h1 class="text-3xl font-extrabold text-emerald-800 tracking-wider">IlaiCo</h1>
                                 <p class="text-sm text-gray-500 font-semibold">תוכנית תזונה מותאמת אישית</p>
                             </div>
                             <div class="text-left">
@@ -303,7 +303,7 @@
         <aside x-show="activeTab !== 'intake'" class="hidden md:flex w-64 bg-slate-900 border-l border-slate-800 flex-col shrink-0">
             <!-- לוגו מותג -->
             <div class="p-6 border-b border-slate-800 flex flex-col items-center justify-center">
-                <span class="text-2xl font-black tracking-wider text-emerald-500">ILAI FITNESS</span>
+                <span class="text-2xl font-black tracking-wider text-emerald-500">IlaiCo</span>
                 <span class="text-xs text-slate-400 font-medium tracking-widest mt-1">מערכת ניהול מתאמנים</span>
             </div>
 
@@ -418,10 +418,24 @@
                 <!-- 0. טאב שאלון קליטה דיגיטלי ללקוח -->
                 <div x-show="activeTab === 'intake'" x-cloak class="max-w-xl mx-auto py-6 md:py-12 space-y-6">
                     <div class="text-center space-y-2">
-                        <span class="text-2xl font-black tracking-wider text-emerald-500">ILAI FITNESS</span>
+                        <span class="text-2xl font-black tracking-wider text-emerald-500">IlaiCo</span>
                         <h2 class="text-xl md:text-2xl font-black text-white">שאלון קליטה דיגיטלי למתאמן</h2>
                         <p class="text-xs text-slate-400">מאמן ראשי: אילאי. מלא את הפרטים הבאים כדי להתחיל את הליווי שלך בצורה הטובה ביותר.</p>
                     </div>
+
+                    <!-- מד התקדמות (Progress Indicator) -->
+                    <template x-if="!intakeSuccess">
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-[9px] sm:text-[10px] text-slate-450 font-bold px-1">
+                                <span :class="intakeStep >= 1 ? 'text-emerald-400' : ''">1. פרטים אישיים</span>
+                                <span :class="intakeStep >= 2 ? 'text-emerald-400' : ''">2. כושר ותזונה</span>
+                                <span :class="intakeStep >= 3 ? 'text-emerald-400' : ''">3. מנטלי ובריאות</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-slate-900 border border-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500 transition-all duration-300" :style="'width: ' + (intakeStep === 1 ? '33.3%' : (intakeStep === 2 ? '66.6%' : '100%'))"></div>
+                            </div>
+                        </div>
+                    </template>
 
                     <!-- מסך הצלחה -->
                     <template x-if="intakeSuccess">
@@ -439,42 +453,163 @@
                     <!-- טופס ההזנה -->
                     <template x-if="!intakeSuccess">
                         <form @submit.prevent="submitIntakeForm()" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-5 text-xs md:text-sm">
-                            <div class="space-y-1">
-                                <label class="block text-[10px] font-bold text-slate-400">שם מלא</label>
-                                <input type="text" x-model="newIntake.name" required placeholder="ישראל ישראלי" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                            
+                            <!-- שלב 1: פרטים אישיים ואורח חיים -->
+                            <div x-show="intakeStep === 1" class="space-y-4">
+                                <div class="space-y-1">
+                                    <label class="block text-[10px] font-bold text-slate-400">שם מלא *</label>
+                                    <input type="text" x-model="newIntake.name" required placeholder="ישראל ישראלי" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">מספר טלפון *</label>
+                                        <input type="tel" x-model="newIntake.phone" required placeholder="0501234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold text-left">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">אימייל (אופציונלי)</label>
+                                        <input type="email" x-model="newIntake.email" placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold text-left">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">גיל</label>
+                                        <input type="number" x-model="newIntake.age" placeholder="למשל: 25" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">גובה (ס"מ)</label>
+                                        <input type="number" x-model="newIntake.height" placeholder="למשל: 175" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">שעות שינה</label>
+                                        <input type="number" x-model="newIntake.sleepHours" placeholder="למשל: 7" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label class="block text-[10px] font-bold text-slate-400">רמת פעילות יומיומית</label>
+                                    <select x-model="newIntake.activityLevel" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                        <option value="יושבני (עבודה משרדית, מעט תנועה)">יושבני (עבודה משרדית, מעט תנועה)</option>
+                                        <option value="פעילות קלה (עמידה ממושכת, הליכה קלה)">פעילות קלה (עמידה ממושכת, הליכה קלה)</option>
+                                        <option value="פעילות בינונית (תנועה מרובה, עבודה פיזית קלה)">פעילות בינונית (תנועה מרובה, עבודה פיזית קלה)</option>
+                                        <option value="פעילות גבוהה (עבודה פיזית קשה, סבלות)">פעילות גבוהה (עבודה פיזית קשה, סבלות)</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex justify-end pt-2">
+                                    <button type="button" @click="if (newIntake.name && newIntake.phone) { intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50); } else { alert('אנא מלא שם מלא ומספר טלפון!') }" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                        <span>המשך לשלב הבא</span>
+                                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">מספר טלפון</label>
-                                    <input type="tel" x-model="newIntake.phone" required placeholder="0501234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold text-left">
+                            <!-- שלב 2: כושר ותזונה -->
+                            <div x-show="intakeStep === 2" class="space-y-4" x-cloak>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">משקל נוכחי (ק"ג)</label>
+                                        <input type="number" step="0.1" x-model="newIntake.startWeight" placeholder="למשל: 80" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">מטרה עיקרית</label>
+                                        <input type="text" x-model="newIntake.goal" placeholder="חיטוב, מסה, שיפור כושר..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                    </div>
                                 </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">ניסיון ספורטיבי</label>
+                                        <select x-model="newIntake.experience" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                            <option value="מתחיל (ללא ניסיון או פחות מחצי שנה)">מתחיל (פחות מחצי שנה)</option>
+                                            <option value="בינוני (חצי שנה עד שנתיים)">בינוני (חצי שנה עד שנתיים)</option>
+                                            <option value="מתקדם (מעל שנתיים של אימון עקבי)">מתקדם (מעל שנתיים)</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">מיקום אימונים</label>
+                                        <select x-model="newIntake.trainingLocation" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                            <option value="חדר כושר">חדר כושר</option>
+                                            <option value="בית">בית (משקל גוף/ציוד קל)</option>
+                                            <option value="פארק / באוויר הפתוח">פארק / באוויר הפתוח</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">אימונים בשבוע</label>
+                                        <select x-model="newIntake.weeklyWorkouts" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                            <option value="2 אימונים בשבוע">2 אימונים בשבוע</option>
+                                            <option value="3 אימונים בשבוע">3 אימונים בשבוע</option>
+                                            <option value="4 אימונים בשבוע">4 אימונים בשבוע</option>
+                                            <option value="5 אימונים בשבוע">5 אימונים בשבוע</option>
+                                            <option value="6 אימונים בשבוע">6 אימונים בשבוע</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">העדפה תזונתית</label>
+                                        <select x-model="newIntake.dietPreference" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                            <option value="ללא מגבלות">ללא מגבלות (אוכל הכל)</option>
+                                            <option value="כשר">כשר</option>
+                                            <option value="צמחוני">צמחוני</option>
+                                            <option value="טבעוני">טבעוני</option>
+                                            <option value="ללא גלוטן">ללא גלוטן</option>
+                                            <option value="ללא לקטוז">ללא לקטוז</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-slate-400">מספר ארוחות ביום</label>
+                                        <input type="text" x-model="newIntake.mealsPerDay" placeholder="למשל: 3 ארוחות גדולות וביניים" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                    </div>
+                                </div>
+
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">אימייל (אופציונלי)</label>
-                                    <input type="email" x-model="newIntake.email" placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold text-left">
+                                    <label class="block text-[10px] font-bold text-slate-400">מאכלים שאתה שונא או אלרגי אליהם</label>
+                                    <input type="text" x-model="newIntake.hatedFoods" placeholder="למשל: כוסברה, טונה, בצל חי..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                </div>
+
+                                <div class="flex justify-between pt-2">
+                                    <button type="button" @click="intakeStep = 1; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-slate-950 border border-slate-800 text-slate-350 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
+                                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                        <span>חזור</span>
+                                    </button>
+                                    <button type="button" @click="intakeStep = 3; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                        <span>המשך לשלב הבא</span>
+                                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- שלב 3: מנטלי ובריאות -->
+                            <div x-show="intakeStep === 3" class="space-y-4" x-cloak>
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">משקל נוכחי (ק"ג)</label>
-                                    <input type="number" step="0.1" x-model="newIntake.startWeight" placeholder="למשל: 80" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                    <label class="block text-[10px] font-bold text-slate-400">מצב בריאותי, פציעות או הערות מיוחדות</label>
+                                    <textarea x-model="newIntake.notes" placeholder="פרט כאן רגישויות, בעיות גב/ברכיים, העדפות תזונה וכדומה..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold resize-none h-20"></textarea>
                                 </div>
+
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">מטרה עיקרית</label>
-                                    <input type="text" x-model="newIntake.goal" placeholder="חיטוב, מסה, שיפור כושר..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold">
+                                    <label class="block text-[10px] font-bold text-slate-400">למה דווקא עכשיו החלטת לעשות שינוי? (מוטיבציה) *</label>
+                                    <textarea x-model="newIntake.motivation" required placeholder="מה מניע אותך להתחיל את התהליך עכשיו?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold resize-none h-20"></textarea>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label class="block text-[10px] font-bold text-slate-400">מה האתגר/הקושי הכי גדול שלך כיום בתזונה או באימונים? *</label>
+                                    <textarea x-model="newIntake.biggestChallenge" required placeholder="מתוקים, חוסר זמן, התמדה, קושי לתכנן ארוחות..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold resize-none h-20"></textarea>
+                                </div>
+
+                                <div class="flex justify-between pt-2">
+                                    <button type="button" @click="intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-slate-950 border border-slate-800 text-slate-355 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
+                                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                        <span>חזור</span>
+                                    </button>
+                                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                        <i data-lucide="send" class="w-4 h-4"></i>
+                                        <span>שלח שאלון קליטה</span>
+                                    </button>
                                 </div>
                             </div>
-
-                            <div class="space-y-1">
-                                <label class="block text-[10px] font-bold text-slate-400">מצב בריאותי, פציעות או הערות מיוחדות</label>
-                                <textarea x-model="newIntake.notes" placeholder="פרט כאן רגישויות, בעיות גב/ברכיים, העדפות תזונה וכדומה..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold resize-none h-24"></textarea>
-                            </div>
-
-                            <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black py-2.5 rounded-xl transition shadow-lg text-sm flex items-center justify-center gap-1.5 mt-2">
-                                <i data-lucide="send" class="w-4 h-4"></i>
-                                <span>שלח שאלון קליטה</span>
-                            </button>
                         </form>
                     </template>
                 </div>
@@ -921,6 +1056,76 @@
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col space-y-4 shadow-xl">
                                     <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2">הערות ומגבלות גופניות</h4>
                                     <textarea x-model="currentClient.notes" @input="saveData()" placeholder="הקלד כאן פציעות, דגשים מיוחדים ובעיות רפואיות..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-200 focus:outline-none focus:border-emerald-500 text-sm transition h-32 resize-none"></textarea>
+                                </div>
+
+                                <!-- שאלון קליטה מורחב -->
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4" x-data="{ openIntake: false }">
+                                    <button @click="openIntake = !openIntake; setTimeout(() => window.lucide.createIcons(), 50);" class="w-full flex justify-between items-center text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 text-right focus:outline-none">
+                                        <div class="flex items-center gap-2">
+                                            <i data-lucide="file-heart" class="w-4 h-4 text-emerald-500"></i>
+                                            <span>תשובות שאלון קליטה מורחב</span>
+                                        </div>
+                                        <i :data-lucide="openIntake ? 'chevron-up' : 'chevron-down'" class="w-4 h-4 text-slate-400"></i>
+                                    </button>
+                                    
+                                    <div x-show="openIntake" class="space-y-4 text-xs md:text-sm pt-2" x-cloak>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">גיל</span>
+                                                <span class="text-slate-200 font-bold" x-text="currentClient?.age || '-'"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">גובה (ס"מ)</span>
+                                                <span class="text-slate-200 font-bold" x-text="currentClient?.height || '-'"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">שעות שינה בלילה</span>
+                                                <span class="text-slate-200 font-bold" x-text="currentClient?.sleepHours || '-'"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">רמת פעילות יומית</span>
+                                                <span class="text-slate-200 font-bold" x-text="currentClient?.activityLevel || '-'"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="border-t border-slate-800/60 pt-3 grid grid-cols-2 gap-4">
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">ניסיון ספורטיבי</span>
+                                                <span class="text-slate-200 font-bold" x-text="currentClient?.experience || '-'"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">מיקום אימונים</span>
+                                                <span class="text-slate-200 font-bold" x-text="currentClient?.trainingLocation || '-'"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">אימונים בשבוע</span>
+                                                <span class="text-slate-200 font-bold" x-text="currentClient?.weeklyWorkouts || '-'"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">העדפה תזונתית</span>
+                                                <span class="text-slate-200 font-bold" x-text="currentClient?.dietPreference || '-'"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="border-t border-slate-800/60 pt-3 space-y-3">
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">מספר ארוחות מועדף ביום</span>
+                                                <span class="text-slate-200 font-semibold" x-text="currentClient?.mealsPerDay || '-'"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">רגישויות או מאכלים ששונא</span>
+                                                <span class="text-slate-200 font-semibold" x-text="currentClient?.hatedFoods || '-'"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">למה דווקא עכשיו? (מוטיבציה)</span>
+                                                <p class="text-slate-300 italic bg-slate-950 border border-slate-800 p-2.5 rounded-xl mt-1 leading-relaxed" x-text="currentClient?.motivation || '-'"></p>
+                                            </div>
+                                            <div>
+                                                <span class="text-slate-550 text-[10px] block">האתגר הכי גדול כרגע</span>
+                                                <p class="text-slate-300 italic bg-slate-950 border border-slate-800 p-2.5 rounded-xl mt-1 leading-relaxed" x-text="currentClient?.biggestChallenge || '-'"></p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1833,7 +2038,13 @@
                 newCheckin: { date: '', weight: '', bodyFat: '', waist: '', adherenceNutrition: 5, adherenceTraining: 5, notes: '', isDrop: false },
                 newEvent: { clientId: '', type: 'zoom', date: '', time: '' },
                 newTransaction: { type: 'expense', amount: '', description: '', date: '' },
-                newIntake: { name: '', phone: '', email: '', startWeight: '', goal: '', notes: '' },
+                newIntake: { 
+                    name: '', phone: '', email: '', age: '', height: '', startWeight: '', 
+                    sleepHours: '', activityLevel: 'יושבני', experience: 'מתחיל', weeklyWorkouts: '3 אימונים בשבוע', 
+                    trainingLocation: 'חדר כושר', dietPreference: 'ללא מגבלות', mealsPerDay: '', 
+                    hatedFoods: '', notes: '', motivation: '', biggestChallenge: '' 
+                },
+                intakeStep: 1,
                 intakeSuccess: false,
                 pdfUploading: false,
                 
@@ -2731,6 +2942,21 @@
                         personalSessionStatus: 'pending', 
                         personalSessionDate: '', 
                         notes: this.newIntake.notes || '',
+                        
+                        // Extended intake fields
+                        age: this.newIntake.age || '',
+                        height: this.newIntake.height || '',
+                        sleepHours: this.newIntake.sleepHours || '',
+                        activityLevel: this.newIntake.activityLevel || '',
+                        experience: this.newIntake.experience || '',
+                        weeklyWorkouts: this.newIntake.weeklyWorkouts || '',
+                        trainingLocation: this.newIntake.trainingLocation || '',
+                        dietPreference: this.newIntake.dietPreference || '',
+                        mealsPerDay: this.newIntake.mealsPerDay || '',
+                        hatedFoods: this.newIntake.hatedFoods || '',
+                        motivation: this.newIntake.motivation || '',
+                        biggestChallenge: this.newIntake.biggestChallenge || '',
+
                         pricePerMonth: price,
                         paymentMonths: months,
                         payments: paymentList,
