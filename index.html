@@ -2047,6 +2047,7 @@
                 intakeStep: 1,
                 intakeSuccess: false,
                 pdfUploading: false,
+                pdfBlobUrlCache: null,
                 
                 intakePasteText: '',
                 chartMetric: 'weight',
@@ -2792,6 +2793,32 @@
 
                 getCleanPdfUrl(url) {
                     if (!url) return '';
+                    // Convert local base64 PDFs to blob URLs to bypass Chrome security restrictions in iframes
+                    if (url.startsWith('data:application/pdf')) {
+                        try {
+                            if (this.pdfBlobUrlCache && this.pdfBlobUrlCache.source === url) {
+                                return this.pdfBlobUrlCache.blobUrl;
+                            }
+                            const arr = url.split(',');
+                            const mime = arr[0].match(/:(.*?);/)[1];
+                            const bstr = atob(arr[1]);
+                            let n = bstr.length;
+                            const u8arr = new Uint8Array(n);
+                            while (n--) {
+                                u8arr[n] = bstr.charCodeAt(n);
+                            }
+                            const blob = new Blob([u8arr], { type: mime });
+                            const blobUrl = URL.createObjectURL(blob);
+                            this.pdfBlobUrlCache = {
+                                source: url,
+                                blobUrl: blobUrl
+                            };
+                            return blobUrl;
+                        } catch (e) {
+                            console.error("Base64 to Blob URL conversion error:", e);
+                            return url;
+                        }
+                    }
                     // Convert Google Drive view links to preview embeds
                     if (url.includes('drive.google.com') && url.includes('/view')) {
                         return url.split('/view')[0] + '/preview';
