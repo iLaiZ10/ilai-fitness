@@ -11,59 +11,95 @@
             theme: {
                 extend: {
                     colors: {
-                        // Override slate with warm luxury beige/charcoal
+                        // Deep modern slate & crisp white
                         slate: {
-                            50: '#faf9f6',
-                            100: '#f5f2eb',
-                            200: '#e8e2d5',
-                            300: '#d7cebc',
-                            400: '#bcae97', // Muted beige
-                            500: '#9e8f77',
-                            600: '#7f715c',
-                            700: '#615645',
-                            800: '#302b23', // Border color
-                            900: '#1b1915', // Card background
-                            950: '#0f0e0c'  // Deep warm dark background
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b', // Card border
+                            900: '#0f172a', // Card background
+                            950: '#070b14'  // Deep sleek midnight background
                         },
-                        // Override emerald with luxury gold
-                        emerald: {
-                            50: '#fdfbf7',
-                            100: '#fbf7ed',
-                            200: '#f4ebd2',
-                            300: '#ebd8a7',
-                            400: '#dfc075', // Soft gold
-                            500: '#d4af37', // Luxury Gold
-                            600: '#c59b27', // Darker gold
-                            700: '#a37e1c',
-                            800: '#806114',
-                            900: '#5e460d',
-                            950: '#2d2105'
-                        },
-                        // Override blue with luxury light blue (תכלת)
-                        blue: {
+                        // תכלת (Sky Blue / Cyan)
+                        sky: {
                             50: '#f0f9ff',
                             100: '#e0f2fe',
                             200: '#bae6fd',
                             300: '#7dd3fc',
-                            400: '#38bdf8', // Light blue (תכלת)
-                            500: '#0ea5e9',
+                            400: '#38bdf8', // תכלת זוהר
+                            500: '#0ea5e9', // תכלת ראשי
                             600: '#0284c7',
                             700: '#0369a1',
                             800: '#075985',
                             900: '#0c4a6e',
                             950: '#082f49'
                         },
-                        brand: {
-                            50: '#faf9f6',
-                            100: '#f5f2eb',
-                            500: '#d4af37',
-                            600: '#c59b27',
-                            700: '#a37e1c',
-                            950: '#2d2105'
+                        // סגלגל (Lavender / Soft Purple / Lilac)
+                        purple: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe', // סגלגל רך
+                            400: '#c084fc', // לבנדר בהיר
+                            500: '#a855f7', // סגול אלגנטי
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                            950: '#3b0764'
                         },
-                        accent: {
-                            500: '#38bdf8',
-                            600: '#0ea5e9'
+                        // נגיעות בז' (Beige / Warm Sand / Champagne)
+                        beige: {
+                            50: '#fdfbf7',
+                            100: '#fbf7ee',
+                            200: '#f5ebd7', // בז' בהיר
+                            300: '#ecd9be', // בז' חם ויוקרתי
+                            400: '#dfc29f', // חול זהוב
+                            500: '#cfab7e', // בז' עשיר
+                            600: '#b88f5d',
+                            700: '#977145',
+                            800: '#795836',
+                            900: '#5c4128',
+                            950: '#332213'
+                        },
+                        // Alias emerald -> תכלת (Sky Blue)
+                        emerald: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8', // תכלת
+                            500: '#0ea5e9', // תכלת ראשי
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49'
+                        },
+                        // Alias amber -> שילוב סגלגל ובז'
+                        amber: {
+                            50: '#fdfbf7',
+                            100: '#fbf7ee',
+                            200: '#f5ebd7', // בז'
+                            300: '#ecd9be', // בז'
+                            400: '#38bdf8', // תכלת
+                            500: '#a855f7', // סגלגל
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                            950: '#3b0764'
+                        },
+                        brand: {
+                            sky: '#38bdf8',
+                            purple: '#c084fc',
+                            beige: '#f5ebd7',
+                            white: '#ffffff'
                         }
                     }
                 }
@@ -617,63 +653,73 @@
                 <!-- 0.1 טאב אפליקציית המתאמן האישית (Client Portal) -->
                 <div x-show="activeTab === 'portal'" x-cloak class="max-w-2xl mx-auto py-2 md:py-6 space-y-6">
                     
+                    <!-- סרגל חזרה ל-CRM עבור המאמן (כאשר צופים מתוך הניהול) -->
+                    <div class="flex items-center justify-between px-2 text-xs">
+                        <button @click="activeTab = 'clients'; selectedClientId = portalClientId" class="text-slate-400 hover:text-sky-400 flex items-center gap-1.5 font-bold transition">
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            <span>חזור ל-CRM של אילאי</span>
+                        </button>
+                        <span class="text-[10px] text-beige-300 bg-beige-200/10 px-2.5 py-1 rounded-full border border-beige-300/20 font-bold">📱 אפליקציית מתאמן אישית</span>
+                    </div>
+
                     <!-- באנר כותרת מותג וברכה אישית מאילאי -->
-                    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-amber-500/30 rounded-3xl p-5 md:p-7 shadow-2xl space-y-5 relative overflow-hidden">
-                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#070b14] border border-sky-500/30 rounded-3xl p-5 md:p-7 shadow-2xl space-y-5 relative overflow-hidden">
+                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
                         
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div class="space-y-1">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-xl md:text-2xl font-black tracking-wider text-amber-400">IlaiCo</span>
-                                    <span class="text-[10px] bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-500/30">ליווי פרימיום</span>
+                                    <span class="text-2xl md:text-3xl font-black tracking-wider bg-gradient-to-r from-sky-400 via-purple-300 to-beige-200 bg-clip-text text-transparent">IlaiCo</span>
+                                    <span class="text-[10px] bg-beige-200/15 text-beige-200 font-bold px-2.5 py-0.5 rounded-full border border-beige-300/30">ליווי פרימיום</span>
                                 </div>
                                 <h2 class="text-xl md:text-2xl font-black text-white" x-text="'היי ' + (portalClient?.name || 'מתאמן') + '! 👋'"></h2>
-                                <p class="text-xs text-slate-350" x-text="portalClient?.goal ? 'מטרה: ' + portalClient.goal : 'ברוך הבא לאפליקציית הליווי האישית שלך'"></p>
+                                <p class="text-xs text-slate-300" x-text="portalClient?.goal ? 'מטרה: ' + portalClient.goal : 'ברוך הבא לאפליקציית הליווי האישית שלך'"></p>
                             </div>
 
                             <!-- כרטיס המאמן אילאי וקשר ישיר -->
                             <div class="flex items-center gap-3 bg-slate-950/80 border border-slate-800 p-3 rounded-2xl">
-                                <div class="w-11 h-11 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-black text-base flex items-center justify-center shadow-inner">
+                                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-sky-500/20 to-purple-500/20 border border-sky-400/40 text-sky-300 font-black text-base flex items-center justify-center shadow-inner">
                                     א
                                 </div>
                                 <div class="space-y-0.5">
                                     <div class="flex items-center gap-1.5">
-                                        <span class="text-xs font-black text-slate-150">אילאי</span>
-                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                        <span class="text-xs font-black text-white">אילאי</span>
+                                        <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
                                     </div>
-                                    <span class="text-[10px] text-slate-400 block">המאמן האישי שלך</span>
+                                    <span class="text-[10px] text-beige-300 block font-medium">המאמן האישי שלך</span>
                                 </div>
-                                <a :href="'https://wa.me/972500000000?text=' + encodeURIComponent('היי אילאי, כאן ' + (portalClient?.name || 'המתאמן שלך') + '!')" target="_blank" class="mr-auto bg-emerald-500 hover:bg-emerald-600 text-slate-950 p-2.5 rounded-xl text-xs font-bold transition shadow-lg" title="שלח וואטסאפ לאילאי">
+                                <a :href="'https://wa.me/972500000000?text=' + encodeURIComponent('היי אילאי, כאן ' + (portalClient?.name || 'המתאמן שלך') + '!')" target="_blank" class="mr-auto bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-400 hover:to-purple-500 text-white p-2.5 rounded-xl text-xs font-bold transition shadow-lg" title="שלח וואטסאפ לאילאי">
                                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                                 </a>
                             </div>
                         </div>
 
                         <!-- תפריט ניווט 4 לשוניות למתאמן -->
-                        <div class="grid grid-cols-4 gap-1 bg-slate-950 p-1.5 rounded-2xl border border-slate-800/80 text-center">
+                        <div class="grid grid-cols-4 gap-1.5 bg-slate-950/90 p-1.5 rounded-2xl border border-slate-800 text-center">
                             <button @click="portalActiveSubTab = 'workouts'" 
-                                    :class="portalActiveSubTab === 'workouts' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-slate-200'"
+                                    :class="portalActiveSubTab === 'workouts' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-black shadow-lg shadow-sky-500/25' : 'text-slate-300 hover:text-white'"
                                     class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
                                 <i data-lucide="dumbbell" class="w-3.5 h-3.5"></i>
                                 <span>אימונים</span>
                             </button>
                             
                             <button @click="portalActiveSubTab = 'nutrition'" 
-                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-slate-200'"
+                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-black shadow-lg shadow-sky-500/25' : 'text-slate-300 hover:text-white'"
                                     class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
                                 <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
                                 <span>תזונה</span>
                             </button>
                             
                             <button @click="portalActiveSubTab = 'checkin'" 
-                                    :class="portalActiveSubTab === 'checkin' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-slate-200'"
+                                    :class="portalActiveSubTab === 'checkin' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-black shadow-lg shadow-sky-500/25' : 'text-slate-300 hover:text-white'"
                                     class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
                                 <i data-lucide="scale" class="w-3.5 h-3.5"></i>
                                 <span>שקילה</span>
                             </button>
                             
                             <button @click="portalActiveSubTab = 'drive'" 
-                                    :class="portalActiveSubTab === 'drive' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-slate-200'"
+                                    :class="portalActiveSubTab === 'drive' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-black shadow-lg shadow-sky-500/25' : 'text-slate-300 hover:text-white'"
                                     class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
                                 <i data-lucide="folder" class="w-3.5 h-3.5"></i>
                                 <span>Drive & אוכל</span>
@@ -685,13 +731,13 @@
                     <div x-show="portalActiveSubTab === 'workouts'" x-cloak class="space-y-4">
                         <!-- טבלת Google Sheets אישית למתאמן (אם צורפה) -->
                         <template x-if="portalClient?.googleSheetsUrl">
-                            <div class="bg-slate-900 border border-emerald-500/30 rounded-3xl p-4 md:p-5 shadow-xl space-y-3">
+                            <div class="bg-slate-900 border border-sky-500/30 rounded-3xl p-4 md:p-5 shadow-xl space-y-3">
                                 <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
                                     <div class="flex items-center gap-2">
-                                        <i data-lucide="table" class="w-4 h-4 text-emerald-400"></i>
+                                        <i data-lucide="table" class="w-4 h-4 text-sky-400"></i>
                                         <h4 class="text-xs md:text-sm font-bold text-white">טבלת מעקב ותוכנית (Google Sheets)</h4>
                                     </div>
-                                    <a :href="portalClient.googleSheetsUrl" target="_blank" class="bg-slate-950 border border-slate-800 text-emerald-300 hover:bg-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition">
+                                    <a :href="portalClient.googleSheetsUrl" target="_blank" class="bg-sky-500/10 border border-sky-500/30 text-sky-300 hover:bg-sky-500/20 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition">
                                         <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                                         <span>פתח ב-Google Sheets</span>
                                     </a>
@@ -714,7 +760,7 @@
                             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-6 shadow-xl space-y-4">
                                 <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                                     <div class="flex items-center gap-2">
-                                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
                                         <h3 class="text-sm md:text-base font-black text-white" x-text="day.dayName || ('יום אימון ' + (dayIdx + 1))"></h3>
                                     </div>
                                     <span class="text-[10px] bg-slate-950 text-slate-400 px-2.5 py-1 rounded-full border border-slate-800" x-text="(day.exercises ? day.exercises.length : 0) + ' תרגילים'"></span>
@@ -725,9 +771,9 @@
                                         <div class="bg-slate-950 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-3.5 md:p-4 space-y-2.5 transition">
                                             <div class="flex items-start justify-between gap-2">
                                                 <div>
-                                                    <h4 class="text-xs md:text-sm font-black text-slate-150" x-text="ex.name"></h4>
+                                                    <h4 class="text-xs md:text-sm font-black text-white" x-text="ex.name"></h4>
                                                     <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
-                                                        <span class="text-amber-400 font-bold" x-text="ex.sets + ' סטים × ' + ex.reps + ' חזרות'"></span>
+                                                        <span class="text-sky-400 font-bold" x-text="ex.sets + ' סטים × ' + ex.reps + ' חזרות'"></span>
                                                         <template x-if="ex.rest">
                                                             <span x-text="'• מנוחה: ' + ex.rest"></span>
                                                         </template>
@@ -736,7 +782,7 @@
 
                                                 <!-- כפתור וידאו הדרכה -->
                                                 <template x-if="ex.video">
-                                                    <a :href="ex.video" target="_blank" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center gap-1 transition shrink-0">
+                                                    <a :href="ex.video" target="_blank" class="bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center gap-1 transition shrink-0">
                                                         <i data-lucide="play" class="w-3 h-3"></i>
                                                         <span>וידאו</span>
                                                     </a>
@@ -744,7 +790,7 @@
                                             </div>
 
                                             <template x-if="ex.notes">
-                                                <div class="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-xl border border-slate-800/50" x-text="'💡 דגש מאילאי: ' + ex.notes"></div>
+                                                <div class="text-[10px] text-beige-200 bg-beige-200/5 p-2 rounded-xl border border-beige-300/20" x-text="'💡 דגש מאילאי: ' + ex.notes"></div>
                                             </template>
 
                                             <!-- צ'קבוקסים לסימון סטים שבוצעו -->
@@ -752,10 +798,10 @@
                                                 <span class="text-[9px] text-slate-500">סטים שבוצעו:</span>
                                                 <div class="flex items-center gap-1.5">
                                                     <template x-for="s in parseInt(ex.sets || 3)" :key="s">
-                                                        <label class="flex items-center justify-center w-6 h-6 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500 cursor-pointer text-[10px] text-slate-400 hover:text-amber-300 font-bold transition">
+                                                        <label class="flex items-center justify-center w-6 h-6 rounded-lg bg-slate-900 border border-slate-800 hover:border-sky-400 cursor-pointer text-[10px] text-slate-400 hover:text-sky-300 font-bold transition">
                                                             <input type="checkbox" class="hidden peer">
                                                             <span class="peer-checked:hidden" x-text="s"></span>
-                                                            <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 hidden peer-checked:block"></i>
+                                                            <i data-lucide="check" class="w-3.5 h-3.5 text-sky-400 hidden peer-checked:block"></i>
                                                         </label>
                                                     </template>
                                                 </div>
@@ -773,28 +819,28 @@
                         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
                             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                                 <h3 class="text-xs md:text-sm font-bold text-white flex items-center gap-1.5">
-                                    <i data-lucide="target" class="w-4 h-4 text-amber-400"></i>
+                                    <i data-lucide="target" class="w-4 h-4 text-sky-400"></i>
                                     <span>היעדים התזונתיים היומיים שלך</span>
                                 </h3>
-                                <span class="text-[10px] text-emerald-400 font-bold">הותאם אישית</span>
+                                <span class="text-[10px] text-beige-300 bg-beige-200/10 px-2 py-0.5 rounded-full border border-beige-300/20 font-bold">הותאם אישית</span>
                             </div>
 
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                                 <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
                                     <span class="text-[10px] text-slate-400 block mb-0.5">יעד קלוריות</span>
-                                    <span class="text-base font-black text-amber-400" x-text="(portalClient?.macroCalculated?.targetCalories || '0') + ' קל\''"></span>
+                                    <span class="text-base font-black text-sky-400" x-text="(portalClient?.macroCalculated?.targetCalories || '0') + ' קל\''"></span>
                                 </div>
                                 <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
                                     <span class="text-[10px] text-slate-400 block mb-0.5">יעד חלבון</span>
-                                    <span class="text-base font-black text-blue-400" x-text="(portalClient?.macroCalculated?.targetProtein || '0') + ' גרם'"></span>
+                                    <span class="text-base font-black text-purple-300" x-text="(portalClient?.macroCalculated?.targetProtein || '0') + ' גרם'"></span>
                                 </div>
                                 <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
                                     <span class="text-[10px] text-slate-400 block mb-0.5">יעד פחמימה</span>
-                                    <span class="text-base font-black text-emerald-400" x-text="(portalClient?.macroCalculated?.targetCarbs || '0') + ' גרם'"></span>
+                                    <span class="text-base font-black text-sky-300" x-text="(portalClient?.macroCalculated?.targetCarbs || '0') + ' גרם'"></span>
                                 </div>
                                 <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
                                     <span class="text-[10px] text-slate-400 block mb-0.5">יעד שומן</span>
-                                    <span class="text-base font-black text-rose-400" x-text="(portalClient?.macroCalculated?.targetFat || '0') + ' גרם'"></span>
+                                    <span class="text-base font-black text-beige-300" x-text="(portalClient?.macroCalculated?.targetFat || '0') + ' גרם'"></span>
                                 </div>
                             </div>
                         </div>
@@ -804,7 +850,7 @@
                             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">
-                                        <i data-lucide="file-text" class="w-4 h-4 text-emerald-400"></i>
+                                        <i data-lucide="file-text" class="w-4 h-4 text-sky-400"></i>
                                         <h4 class="text-xs md:text-sm font-bold text-white">תפריט התזונה המלא שלך (PDF)</h4>
                                     </div>
                                     <a :href="portalClient.mealPlanPdfUrl" target="_blank" class="bg-slate-950 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 hover:bg-slate-800 transition">
@@ -824,20 +870,20 @@
                                 <template x-for="(meal, mIdx) in portalClient.mealPlan.meals" :key="mIdx">
                                     <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-5 shadow-xl space-y-3">
                                         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                                            <h4 class="text-xs md:text-sm font-black text-amber-300" x-text="meal.name || ('ארוחה ' + (mIdx + 1))"></h4>
+                                            <h4 class="text-xs md:text-sm font-black text-sky-300" x-text="meal.name || ('ארוחה ' + (mIdx + 1))"></h4>
                                             <span class="text-[10px] text-slate-400" x-text="(meal.items ? meal.items.length : 0) + ' פריטים'"></span>
                                         </div>
                                         <div class="space-y-2">
                                             <template x-for="(item, iIdx) in (meal.items || [])" :key="iIdx">
                                                 <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5 flex items-center justify-between text-xs">
                                                     <div class="space-y-0.5">
-                                                        <span class="font-bold text-slate-200 block" x-text="item.food"></span>
+                                                        <span class="font-bold text-white block" x-text="item.food"></span>
                                                         <span class="text-[10px] text-slate-400" x-text="item.quantity"></span>
                                                     </div>
                                                     <div class="flex items-center gap-2 text-[10px] text-slate-400">
-                                                        <span class="font-bold text-amber-400" x-text="item.calories + ' קל\''"></span>
+                                                        <span class="font-bold text-sky-400" x-text="item.calories + ' קל\''"></span>
                                                         <span>•</span>
-                                                        <span class="text-blue-400" x-text="'ח: ' + item.protein + 'ג\''"></span>
+                                                        <span class="text-purple-300" x-text="'ח: ' + item.protein + 'ג\''"></span>
                                                     </div>
                                                 </div>
                                             </template>
@@ -851,10 +897,10 @@
                     <!-- תוכן לשונית 3: הזנת שקילה ומעקב שבועי -->
                     <div x-show="portalActiveSubTab === 'checkin'" x-cloak class="space-y-4">
                         <!-- טופס הזנת שקילה עצמאית -->
-                        <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                        <div class="bg-slate-900 border border-sky-500/30 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                             <div class="border-b border-slate-800 pb-3">
                                 <h3 class="text-sm md:text-base font-black text-white flex items-center gap-2">
-                                    <i data-lucide="scale" class="w-5 h-5 text-amber-400"></i>
+                                    <i data-lucide="scale" class="w-5 h-5 text-sky-400"></i>
                                     <span>עדכון שקילה שבועי</span>
                                 </h3>
                                 <p class="text-[10px] text-slate-400 mt-1">הזן את משקלך היום. הנתונים יתעדכנו ישירות במערכת המעקב של אילאי!</p>
@@ -862,10 +908,10 @@
 
                             <!-- הודעת הצלחה -->
                             <template x-if="portalCheckinSuccess">
-                                <div class="bg-emerald-950/80 border border-emerald-500/50 p-4 rounded-2xl text-center space-y-1 text-emerald-300 animate-fade-in">
-                                    <i data-lucide="check-circle" class="w-6 h-6 mx-auto text-emerald-400 mb-1"></i>
-                                    <h4 class="text-xs font-bold">השקילה נשלחה בהצלחה! 💪</h4>
-                                    <p class="text-[10px] text-emerald-400/80">אילאי קיבל את העדכון שלך במערכת.</p>
+                                <div class="bg-sky-950/80 border border-sky-400/50 p-4 rounded-2xl text-center space-y-1 text-sky-200 animate-fade-in">
+                                    <i data-lucide="check-circle" class="w-6 h-6 mx-auto text-sky-400 mb-1"></i>
+                                    <h4 class="text-xs font-bold text-white">השקילה נשלחה בהצלחה! 💪</h4>
+                                    <p class="text-[10px] text-sky-300">אילאי קיבל את העדכון שלך במערכת.</p>
                                 </div>
                             </template>
 
@@ -873,11 +919,11 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <div>
                                         <label class="block text-[10px] font-bold text-slate-300 mb-1">משקל שקילה עדכני (ק"ג) *</label>
-                                        <input type="number" step="0.1" required x-model="portalNewCheckin.weight" placeholder="למשל: 78.4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-amber-300 font-bold text-base focus:outline-none focus:border-amber-500 text-center">
+                                        <input type="number" step="0.1" required x-model="portalNewCheckin.weight" placeholder="למשל: 78.4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sky-300 font-bold text-base focus:outline-none focus:border-sky-400 text-center">
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-bold text-slate-300 mb-1">היקף מותניים (ס"מ) - אופציונלי</label>
-                                        <input type="number" step="0.5" x-model="portalNewCheckin.waist" placeholder="למשל: 82" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 font-bold text-base focus:outline-none focus:border-amber-500 text-center">
+                                        <input type="number" step="0.5" x-model="portalNewCheckin.waist" placeholder="למשל: 82" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 font-bold text-base focus:outline-none focus:border-sky-400 text-center">
                                     </div>
                                 </div>
 
@@ -885,26 +931,26 @@
                                     <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
                                         <div class="flex justify-between text-[10px] font-bold">
                                             <span class="text-slate-300">ציון התמדה בתזונה השבוע</span>
-                                            <span class="text-amber-400" x-text="portalNewCheckin.adherenceNutrition + '/10'"></span>
+                                            <span class="text-sky-400" x-text="portalNewCheckin.adherenceNutrition + '/10'"></span>
                                         </div>
-                                        <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceNutrition" class="w-full accent-amber-400">
+                                        <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceNutrition" class="w-full accent-sky-400">
                                     </div>
 
                                     <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
                                         <div class="flex justify-between text-[10px] font-bold">
                                             <span class="text-slate-300">ציון התמדה באימונים השבוע</span>
-                                            <span class="text-amber-400" x-text="portalNewCheckin.adherenceTraining + '/10'"></span>
+                                            <span class="text-purple-400" x-text="portalNewCheckin.adherenceTraining + '/10'"></span>
                                         </div>
-                                        <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceTraining" class="w-full accent-amber-400">
+                                        <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceTraining" class="w-full accent-purple-400">
                                     </div>
                                 </div>
 
                                 <div>
                                     <label class="block text-[10px] font-bold text-slate-300 mb-1">איך עבר עליך השבוע? הערות / שאלות לאילאי</label>
-                                    <textarea x-model="portalNewCheckin.notes" placeholder="ספר על תחושות, אנרגיה באימונים, חריגות או אתגרים..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500 h-24 resize-none"></textarea>
+                                    <textarea x-model="portalNewCheckin.notes" placeholder="ספר על תחושות, אנרגיה באימונים, חריגות או אתגרים..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-sky-400 h-24 resize-none"></textarea>
                                 </div>
 
-                                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg transition">
+                                <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-400 hover:to-purple-500 text-white font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-xl shadow-sky-500/25 transition">
                                     <i data-lucide="send" class="w-4 h-4"></i>
                                     <span>שלח שקילה שבועית לאילאי</span>
                                 </button>
@@ -913,17 +959,17 @@
 
                         <!-- היסטוריית שקילות -->
                         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
-                            <h4 class="text-xs font-bold text-slate-200 border-b border-slate-800 pb-2">היסטוריית השקילות האחרונות</h4>
+                            <h4 class="text-xs font-bold text-white border-b border-slate-800 pb-2">היסטוריית השקילות האחרונות</h4>
                             <div class="space-y-2">
                                 <template x-for="(c, cIdx) in (portalClient?.checkins || []).slice().reverse()" :key="cIdx">
                                     <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-3 flex items-center justify-between text-xs">
                                         <div class="space-y-0.5">
-                                            <span class="font-bold text-slate-200" x-text="formatDate(c.date)"></span>
-                                            <span class="text-[10px] text-slate-500 block" x-text="c.notes || 'ללא הערות'"></span>
+                                            <span class="font-bold text-white" x-text="formatDate(c.date)"></span>
+                                            <span class="text-[10px] text-slate-400 block" x-text="c.notes || 'ללא הערות'"></span>
                                         </div>
                                         <div class="text-right">
-                                            <span class="font-black text-amber-400 text-sm block" x-text="c.weight + ' ק״ג'"></span>
-                                            <span class="text-[9px] text-slate-400" x-text="c.waist ? 'מותן: ' + c.waist + ' ס״מ' : ''"></span>
+                                            <span class="font-black text-sky-400 text-sm block" x-text="c.weight + ' ק״ג'"></span>
+                                            <span class="text-[9px] text-beige-300" x-text="c.waist ? 'מותן: ' + c.waist + ' ס״מ' : ''"></span>
                                         </div>
                                     </div>
                                 </template>
@@ -934,9 +980,9 @@
                     <!-- תוכן לשונית 4: Google Drive ויומן אכילה -->
                     <div x-show="portalActiveSubTab === 'drive'" x-cloak class="space-y-4">
                         <!-- קישור ל-Google Drive -->
-                        <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                        <div class="bg-slate-900 border border-sky-500/30 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                             <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                                <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                                <div class="p-2.5 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-400">
                                     <i data-lucide="folder-up" class="w-6 h-6"></i>
                                 </div>
                                 <div>
@@ -947,7 +993,7 @@
 
                             <template x-if="portalClient?.googleDriveUrl">
                                 <div class="space-y-3">
-                                    <a :href="portalClient.googleDriveUrl" target="_blank" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black py-3.5 px-4 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 shadow-xl transition">
+                                    <a :href="portalClient.googleDriveUrl" target="_blank" class="w-full bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:from-sky-400 hover:to-purple-500 text-white font-black py-3.5 px-4 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 shadow-xl shadow-sky-500/25 transition">
                                         <i data-lucide="external-link" class="w-4 h-4"></i>
                                         <span>פתח את תיקיית ה-Google Drive שלך להעלאת תמונות</span>
                                     </a>
@@ -957,14 +1003,14 @@
                             <template x-if="!portalClient?.googleDriveUrl">
                                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl text-center space-y-2">
                                     <i data-lucide="folder" class="w-8 h-8 text-slate-600 mx-auto"></i>
-                                    <p class="text-xs text-slate-300 font-bold">טרם הוגדר קישור לתיקיית Drive אישית</p>
+                                    <p class="text-xs text-white font-bold">טרם הוגדר קישור לתיקיית Drive אישית</p>
                                     <p class="text-[10px] text-slate-400">אילאי יעדכן בקרוב את הקישור לתיקייה שלך, ובינתיים תוכל לשלוח תמונות בוואטסאפ.</p>
                                 </div>
                             </template>
 
                             <!-- הדרכה קצרה -->
                             <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-2xl space-y-2 text-[11px] text-slate-300">
-                                <h4 class="font-bold text-amber-300 flex items-center gap-1.5">
+                                <h4 class="font-bold text-beige-300 flex items-center gap-1.5">
                                     <i data-lucide="info" class="w-3.5 h-3.5"></i>
                                     <span>איך עובד מעקב התמונות?</span>
                                 </h4>
@@ -979,19 +1025,19 @@
                         <!-- יומן אכילה יומי (מה אכלתי היום) -->
                         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
                             <h4 class="text-xs md:text-sm font-bold text-white flex items-center gap-1.5">
-                                <i data-lucide="edit-3" class="w-4 h-4 text-amber-400"></i>
+                                <i data-lucide="edit-3" class="w-4 h-4 text-sky-400"></i>
                                 <span>יומן אכילה והערות יומיות</span>
                             </h4>
                             <p class="text-[10px] text-slate-400">כתוב כאן מה אכלת היום או הערות מיוחדות כדי שאילאי יוכל לקרוא בכרטיס שלך:</p>
                             
                             <template x-if="portalJournalSaved">
-                                <div class="bg-emerald-950/80 border border-emerald-500/50 p-2.5 rounded-xl text-center text-[10px] text-emerald-300 font-bold animate-fade-in">
+                                <div class="bg-sky-950/80 border border-sky-400/50 p-2.5 rounded-xl text-center text-[10px] text-sky-200 font-bold animate-fade-in">
                                     היומן נשמר ונשלח לכרטיס שלך אצל אילאי! ✨
                                 </div>
                             </template>
 
-                            <textarea x-model="portalTodayJournal" placeholder="למשל: בוקר: 2 ביצים + 2 לחם קל. צהריים: 150 גרם חזה עוף ואורז. הרגשתי שבע..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500 h-28 resize-none"></textarea>
-                            <button @click="savePortalTodayJournal()" class="w-full bg-slate-950 hover:bg-slate-850 border border-slate-800 hover:border-amber-500/50 text-amber-300 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                            <textarea x-model="portalTodayJournal" placeholder="למשל: בוקר: 2 ביצים + 2 לחם קל. צהריים: 150 גרם חזה עוף ואורז. הרגשתי שבע..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-sky-400 h-28 resize-none"></textarea>
+                            <button @click="savePortalTodayJournal()" class="w-full bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-sky-400/50 text-sky-300 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
                                 <i data-lucide="save" class="w-3.5 h-3.5"></i>
                                 <span>שמור יומן יומי</span>
                             </button>
@@ -1308,6 +1354,10 @@
                             <div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <h3 class="text-lg md:text-2xl font-black text-white" x-text="currentClient?.name"></h3>
+                                    <span class="text-[9px] bg-slate-950 text-slate-400 px-2 py-0.5 rounded-full border border-slate-800 flex items-center gap-1 font-bold">
+                                        <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i>
+                                        <span>פאנל ניהול מאמן בלבד (חסוי למתאמן)</span>
+                                    </span>
                                     <button 
                                         @click="toggleClientAttention(currentClient.id)" 
                                         :class="currentClient?.needsAttention ? 'bg-red-600 text-white border-red-500' : 'bg-slate-950 text-slate-400 border-slate-800'"
@@ -1320,7 +1370,11 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-2 w-full md:w-auto">
+                        <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+                            <button @click="activeTab = 'portal'; portalClientId = currentClient.id; setTimeout(() => window.lucide.createIcons(), 50)" class="flex-1 md:flex-none justify-center bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 px-3.5 py-2 rounded-xl text-xs md:text-sm font-black flex items-center gap-1.5 transition shadow-lg">
+                                <i data-lucide="smartphone" class="w-4 h-4"></i>
+                                <span>👁️ פתח אפליקציית מתאמן</span>
+                            </button>
                             <a :href="'https://wa.me/972' + cleanPhone(currentClient?.phone)" target="_blank" class="flex-1 md:flex-none justify-center bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs md:text-sm font-bold flex items-center gap-1.5">
                                 <i data-lucide="message-circle" class="w-4 h-4"></i>
                                 <span class="hidden sm:inline">וואטסאפ חופשי</span>
@@ -2470,10 +2524,10 @@
 
     <!-- מודל 5: ספריית מזונות חכמה וחישוב מאקרו אוטומטי -->
     <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm no-print" x-cloak>
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-3xl shadow-2xl flex flex-col mx-2 max-h-[90vh] overflow-hidden" @click.away="openFoodLibraryModal = false">
+        <div class="bg-slate-900 border border-sky-500/30 w-full max-w-xl rounded-3xl shadow-2xl flex flex-col mx-2 max-h-[90vh] overflow-hidden" @click.away="openFoodLibraryModal = false">
             <div class="p-4 md:p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-500/20 to-purple-500/20 border border-sky-400/40 flex items-center justify-center text-sky-400">
                         <i data-lucide="sparkles" class="w-4 h-4"></i>
                     </div>
                     <div>
@@ -2490,18 +2544,18 @@
                 <!-- שורת חיפוש וסינון -->
                 <div class="space-y-2">
                     <div class="relative">
-                        <input type="text" x-model="foodSearchQuery" placeholder="חפש מאכל (למשל: חזה עוף, אורז, יוגורט PRO...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 pr-9 pl-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                        <input type="text" x-model="foodSearchQuery" placeholder="חפש מאכל (למשל: חזה עוף, אורז, יוגורט PRO...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 pr-9 pl-3 text-xs text-slate-100 focus:outline-none focus:border-sky-400">
                         <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute right-3 top-2.5"></i>
                     </div>
 
                     <!-- טאבים לקטגוריות -->
                     <div class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px]">
-                        <button @click="foodCategoryFilter = 'all'" :class="foodCategoryFilter === 'all' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-3 py-1 rounded-lg shrink-0 transition">הכל</button>
-                        <button @click="foodCategoryFilter = 'protein'" :class="foodCategoryFilter === 'protein' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-3 py-1 rounded-lg shrink-0 transition">🍗 חלבון</button>
-                        <button @click="foodCategoryFilter = 'carb'" :class="foodCategoryFilter === 'carb' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-3 py-1 rounded-lg shrink-0 transition">🍚 פחמימה</button>
-                        <button @click="foodCategoryFilter = 'dairy'" :class="foodCategoryFilter === 'dairy' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-3 py-1 rounded-lg shrink-0 transition">🥛 חלב וגבינות</button>
-                        <button @click="foodCategoryFilter = 'fat'" :class="foodCategoryFilter === 'fat' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-3 py-1 rounded-lg shrink-0 transition">🥑 שומן בריא</button>
-                        <button @click="foodCategoryFilter = 'fruit'" :class="foodCategoryFilter === 'fruit' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-3 py-1 rounded-lg shrink-0 transition">🍎 פירות</button>
+                        <button @click="foodCategoryFilter = 'all'" :class="foodCategoryFilter === 'all' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">הכל</button>
+                        <button @click="foodCategoryFilter = 'protein'" :class="foodCategoryFilter === 'protein' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍗 חלבון</button>
+                        <button @click="foodCategoryFilter = 'carb'" :class="foodCategoryFilter === 'carb' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍚 פחמימה</button>
+                        <button @click="foodCategoryFilter = 'dairy'" :class="foodCategoryFilter === 'dairy' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥛 חלב וגבינות</button>
+                        <button @click="foodCategoryFilter = 'fat'" :class="foodCategoryFilter === 'fat' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥑 שומן בריא</button>
+                        <button @click="foodCategoryFilter = 'fruit'" :class="foodCategoryFilter === 'fruit' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍎 פירות</button>
                     </div>
                 </div>
 
@@ -2509,15 +2563,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
                     <template x-for="item in getFilteredFoodDatabase()" :key="item.name">
                         <button @click="selectFoodItem(item)" 
-                                :class="selectedFoodItem?.name === item.name ? 'border-amber-500 bg-amber-500/10' : 'border-slate-800/80 bg-slate-950 hover:border-slate-700'"
+                                :class="selectedFoodItem?.name === item.name ? 'border-sky-400 bg-sky-500/10 shadow-md shadow-sky-500/10' : 'border-slate-800/80 bg-slate-950 hover:border-slate-700'"
                                 class="p-2.5 rounded-xl border text-right transition flex items-center justify-between">
                             <div>
-                                <span class="text-xs font-bold text-slate-200 block" x-text="item.name"></span>
+                                <span class="text-xs font-bold text-white block" x-text="item.name"></span>
                                 <span class="text-[9px] text-slate-400" x-text="'ערכים ל-' + (item.unit === 'גרם' || item.unit === 'מ&quot;ל' ? '100 ' + item.unit : '1 ' + item.unit)"></span>
                             </div>
                             <div class="text-left text-[10px]">
-                                <span class="font-bold text-amber-400 block" x-text="item.cal + ' קל\''"></span>
-                                <span class="text-blue-400" x-text="'ח: ' + item.pro + 'ג\''"></span>
+                                <span class="font-bold text-sky-400 block" x-text="item.cal + ' קל\''"></span>
+                                <span class="text-purple-300" x-text="'ח: ' + item.pro + 'ג\''"></span>
                             </div>
                         </button>
                     </template>
@@ -2525,12 +2579,12 @@
 
                 <!-- הגדרת כמות ותצוגת חישוב חי -->
                 <template x-if="selectedFoodItem">
-                    <div class="bg-slate-950 border border-amber-500/30 p-3.5 rounded-2xl space-y-3">
+                    <div class="bg-slate-950 border border-sky-500/30 p-3.5 rounded-2xl space-y-3">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-amber-300" x-text="'נבחר: ' + selectedFoodItem.name"></span>
+                            <span class="text-xs font-bold text-sky-300" x-text="'נבחר: ' + selectedFoodItem.name"></span>
                             <div class="flex items-center gap-2">
                                 <label class="text-[10px] text-slate-400 font-bold">כמות (<span x-text="selectedFoodItem.unit"></span>):</label>
-                                <input type="number" step="any" x-model="foodCustomAmount" class="w-20 bg-slate-900 border border-slate-800 rounded-lg py-1 px-2 text-center text-xs text-amber-300 font-bold focus:outline-none focus:border-amber-500">
+                                <input type="number" step="any" x-model="foodCustomAmount" class="w-20 bg-slate-900 border border-slate-800 rounded-lg py-1 px-2 text-center text-xs text-sky-300 font-bold focus:outline-none focus:border-sky-400">
                             </div>
                         </div>
 
@@ -2538,19 +2592,19 @@
                         <div class="grid grid-cols-4 gap-2 text-center text-xs">
                             <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
                                 <span class="text-[9px] text-slate-400 block">קלוריות</span>
-                                <span class="text-sm font-black text-amber-400" x-text="calculateSelectedFoodMacros().calories"></span>
+                                <span class="text-sm font-black text-sky-400" x-text="calculateSelectedFoodMacros().calories"></span>
                             </div>
                             <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
                                 <span class="text-[9px] text-slate-400 block">חלבון</span>
-                                <span class="text-sm font-black text-blue-400" x-text="calculateSelectedFoodMacros().protein + 'ג\''"></span>
+                                <span class="text-sm font-black text-purple-300" x-text="calculateSelectedFoodMacros().protein + 'ג\''"></span>
                             </div>
                             <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
                                 <span class="text-[9px] text-slate-400 block">פחמימה</span>
-                                <span class="text-sm font-black text-emerald-400" x-text="calculateSelectedFoodMacros().carbs + 'ג\''"></span>
+                                <span class="text-sm font-black text-sky-300" x-text="calculateSelectedFoodMacros().carbs + 'ג\''"></span>
                             </div>
                             <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
                                 <span class="text-[9px] text-slate-400 block">שומן</span>
-                                <span class="text-sm font-black text-rose-400" x-text="calculateSelectedFoodMacros().fat + 'ג\''"></span>
+                                <span class="text-sm font-black text-beige-300" x-text="calculateSelectedFoodMacros().fat + 'ג\''"></span>
                             </div>
                         </div>
                     </div>
@@ -2559,7 +2613,7 @@
 
             <div class="p-4 border-t border-slate-800 flex justify-end gap-2 bg-slate-950/50">
                 <button type="button" @click="openFoodLibraryModal = false" class="bg-slate-900 border border-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold">ביטול</button>
-                <button type="button" @click="addSelectedFoodToMeal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
+                <button type="button" @click="addSelectedFoodToMeal()" class="bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-400 hover:to-purple-500 text-white font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-xl shadow-sky-500/25 transition">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     <span>הוסף לתפריט</span>
                 </button>
