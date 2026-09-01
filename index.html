@@ -900,6 +900,26 @@
                             </div>
                         </div>
 
+                        <!-- באנר רצף התמדה יומי חי ותגים -->
+                        <div class="bg-[#051c17] border border-[#1b5e50] p-3 rounded-2xl flex items-center justify-between shadow-inner relative z-10 gap-2">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 text-slate-950 flex items-center justify-center font-black text-base shadow-md shadow-amber-500/20 animate-pulse shrink-0">
+                                    🔥
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        <span class="text-xs sm:text-sm font-black text-[#fbf8f2]" x-text="getClientStreak(portalClient) + ' ימי התמדה ברצף!'"></span>
+                                        <span class="text-[9px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded border border-amber-400/30 font-bold">אש 🔥</span>
+                                    </div>
+                                    <p class="text-[10px] text-[#93c7bb]" x-text="getClientStreakMessage(portalClient)"></p>
+                                </div>
+                            </div>
+                            <button @click="openBadgesModal = true; setTimeout(() => window.lucide.createIcons(), 50)" class="bg-[#13443a] hover:bg-[#1b5e50] text-[#86efac] px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold flex items-center gap-1 transition border border-[#1b5e50] shrink-0 cursor-pointer">
+                                <i data-lucide="award" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                <span>הישגים ותגים 🎖️</span>
+                            </button>
+                        </div>
+
                         <!-- תפריט ניווט 4 לשוניות למתאמן -->
                         <div class="grid grid-cols-4 gap-1.5 bg-[#051c17]/90 p-1.5 rounded-2xl border border-[#133d35] text-center relative z-10">
                             <button @click="portalActiveSubTab = 'workouts'" 
@@ -1160,6 +1180,133 @@
 
                     <!-- תוכן לשונית 2: תזונה ויעדים -->
                     <div x-show="portalActiveSubTab === 'nutrition'" x-cloak class="space-y-4">
+                        <!-- מחשבון תזונה AI וגרף עוגת קלוריות ומאקרו -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4">
+                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                        <i data-lucide="sparkles" class="w-5 h-5 text-[#86efac]"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">מחשבון תזונה AI וגרף עוגת מאקרו 🤖</h4>
+                                        <p class="text-[10px] text-[#5f756e]">כתוב בחופשיות מה אכלת וקבל ניתוח קלוריות, חלבון, פחמימה ושומן</p>
+                                    </div>
+                                </div>
+                                <span class="bg-[#86efac]/20 text-[#082722] text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-[#86efac]/40">AI חכם ✨</span>
+                            </div>
+
+                            <!-- שדה הזנה חופשית -->
+                            <div class="space-y-2">
+                                <div class="relative">
+                                    <input type="text" 
+                                           x-model="aiFoodQuery" 
+                                           @keydown.enter.prevent="analyzeFoodWithAi()"
+                                           placeholder="למשל: 150 גרם חזה עוף, 120 גרם אורז, כף טחינה וסלט ירקות" 
+                                           class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl px-4 py-3 text-xs text-[#082722] font-semibold focus:outline-none focus:border-[#22c55e] pr-4 pl-28 shadow-inner">
+                                    <button @click="analyzeFoodWithAi()" 
+                                            :disabled="isAiAnalyzing"
+                                            class="absolute left-1.5 top-1.5 bottom-1.5 bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3.5 rounded-xl text-xs font-black flex items-center gap-1 transition border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
+                                        <span x-show="!isAiAnalyzing">חשב ב-AI ✨</span>
+                                        <span x-show="isAiAnalyzing" class="flex items-center gap-1">
+                                            <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>
+                                            <span>מנתח...</span>
+                                        </span>
+                                    </button>
+                                </div>
+                                <p class="text-[9px] text-[#5f756e] italic">טיפ: אפשר לציין כמויות בגרמים או יחידות (למשל: 2 ביצים, קופסת טונה, 2 פרוסות לחם, כף שמן זית, תפוח).</p>
+                            </div>
+
+                            <!-- תוצאות הניתוח וגרף עוגה -->
+                            <template x-if="aiAnalyzedMeal">
+                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-5 space-y-4 animate-scale-up">
+                                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-[#e5dfd3] pb-4">
+                                        <!-- גרף עוגה SVG Donut -->
+                                        <div class="flex items-center gap-4">
+                                            <div class="relative w-24 h-24 shrink-0">
+                                                <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90 transform">
+                                                    <!-- Background ring -->
+                                                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#f0eae1" stroke-width="12"></circle>
+                                                    <!-- Protein sector (Emerald) -->
+                                                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#22c55e" stroke-width="12"
+                                                            :stroke-dasharray="(aiAnalyzedMeal.pProtein / 100 * 238.76) + ' 238.76'"
+                                                            stroke-dashoffset="0"></circle>
+                                                    <!-- Carbs sector (Sky Blue) -->
+                                                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#38bdf8" stroke-width="12"
+                                                            :stroke-dasharray="(aiAnalyzedMeal.pCarbs / 100 * 238.76) + ' 238.76'"
+                                                            :stroke-dashoffset="-(aiAnalyzedMeal.pProtein / 100 * 238.76)"></circle>
+                                                    <!-- Fat sector (Amber) -->
+                                                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#fbbf24" stroke-width="12"
+                                                            :stroke-dasharray="(aiAnalyzedMeal.pFat / 100 * 238.76) + ' 238.76'"
+                                                            :stroke-dashoffset="-((aiAnalyzedMeal.pProtein + aiAnalyzedMeal.pCarbs) / 100 * 238.76)"></circle>
+                                                </svg>
+                                                <!-- מרכז העוגה -->
+                                                <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                                                    <span class="text-xs font-black text-[#082722]" x-text="aiAnalyzedMeal.calories"></span>
+                                                    <span class="text-[8px] text-[#5f756e] font-bold">קלוריות</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- מקרא גרף עוגה -->
+                                            <div class="space-y-1.5 text-xs">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-3 h-3 rounded-full bg-[#22c55e] shrink-0"></span>
+                                                    <span class="font-bold text-[#082722]">חלבון:</span>
+                                                    <span class="font-black text-[#082722]" x-text="aiAnalyzedMeal.protein + ' גרם (' + aiAnalyzedMeal.pProtein + '%)'"></span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-3 h-3 rounded-full bg-[#38bdf8] shrink-0"></span>
+                                                    <span class="font-bold text-[#082722]">פחמימות:</span>
+                                                    <span class="font-black text-[#082722]" x-text="aiAnalyzedMeal.carbs + ' גרם (' + aiAnalyzedMeal.pCarbs + '%)'"></span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-3 h-3 rounded-full bg-[#fbbf24] shrink-0"></span>
+                                                    <span class="font-bold text-[#082722]">שומנים:</span>
+                                                    <span class="font-black text-[#082722]" x-text="aiAnalyzedMeal.fat + ' גרם (' + aiAnalyzedMeal.pFat + '%)'"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- השוואה ליעד יומי -->
+                                        <template x-if="portalClient?.macroCalculated?.targetCalories">
+                                            <div class="bg-white border border-[#e5dfd3] p-3 rounded-2xl text-center space-y-1 sm:w-44 shrink-0 shadow-sm">
+                                                <span class="text-[9px] text-[#5f756e] block font-bold">כיסוי מהיעד היומי שלך</span>
+                                                <div class="text-lg font-black text-[#082722]" x-text="Math.round((aiAnalyzedMeal.calories / (portalClient.macroCalculated.targetCalories || 2000)) * 100) + '%'"></div>
+                                                <span class="text-[9px] text-[#22c55e] font-bold block" x-text="'מתוך ' + portalClient.macroCalculated.targetCalories + ' קל\''"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <!-- פירוק הפריטים שזוהו והמלצות החלפה -->
+                                    <div class="space-y-2">
+                                        <h5 class="font-black text-xs text-[#082722]">פירוק מצרכים והצעות לתחליפים שווי ערך:</h5>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            <template x-for="item in aiAnalyzedMeal.items" :key="item.name">
+                                                <div class="bg-white border border-[#e5dfd3] p-3 rounded-xl space-y-1.5 shadow-sm text-xs">
+                                                    <div class="flex items-center justify-between font-bold text-[#082722]">
+                                                        <span x-text="item.name"></span>
+                                                        <span class="text-[#22c55e] font-black" x-text="item.cal + ' קל\''"></span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
+                                                        <span x-text="'ח: ' + item.pro + 'ג\''"></span>
+                                                        <span>•</span>
+                                                        <span x-text="'פ: ' + item.carb + 'ג\''"></span>
+                                                        <span>•</span>
+                                                        <span x-text="'ש: ' + item.fat + 'ג\''"></span>
+                                                    </div>
+                                                    <template x-if="item.swap">
+                                                        <div class="bg-emerald-50/70 border border-emerald-200/60 p-2 rounded-lg text-[10px] text-emerald-900 mt-1">
+                                                            <span class="font-bold block text-[9px] text-emerald-800">🔄 תחליף אפשרי שווה ערך:</span>
+                                                            <span x-text="item.swap"></span>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
                         <!-- כפתור רשימת קניות מהירה לסופר -->
                         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3">
                             <div class="flex items-center gap-2.5">
@@ -2142,6 +2289,10 @@
                         </div>
 
                         <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+                            <button @click="openMonthlySummary(currentClient)" class="flex-1 md:flex-none justify-center bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] px-3.5 py-2 rounded-xl text-xs md:text-sm font-black flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-[#082722]"></i>
+                                <span>✨ סיכום התקדמות לוואטסאפ</span>
+                            </button>
                             <button @click="activeTab = 'portal'; portalClientId = currentClient.id; setTimeout(() => window.lucide.createIcons(), 50)" class="flex-1 md:flex-none justify-center bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3.5 py-2 rounded-xl text-xs md:text-sm font-black flex items-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15">
                                 <i data-lucide="smartphone" class="w-4 h-4 text-[#86efac]"></i>
                                 <span>👁️ פתח אפליקציית מתאמן</span>
@@ -3277,6 +3428,94 @@
         </template>
     </datalist>
 
+    <!-- מודל היכל תגי הצלחה והישגים -->
+    <div x-show="openBadgesModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBadgesModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="award" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">היכל התגים וההישגים שלך 🏆</h3>
+                        <p class="text-xs text-[#5f756e]">ההתקדמות והפרסים שלך במסע עם אילאי</p>
+                    </div>
+                </div>
+                <button @click="openBadgesModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-3 text-xs">
+                <template x-for="badge in getClientBadges(portalClient)" :key="badge.id">
+                    <div :class="badge.unlocked ? 'bg-gradient-to-r from-[#fbf8f2] to-emerald-50/50 border-[#22c55e]/40 shadow-sm' : 'bg-slate-50 border-slate-200 opacity-60'" class="border p-3.5 rounded-2xl flex items-center justify-between gap-3 transition">
+                        <div class="flex items-center gap-3">
+                            <div :class="badge.unlocked ? 'bg-[#082722] text-2xl shadow-md shadow-emerald-500/20' : 'bg-slate-200 text-xl grayscale'" class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0">
+                                <span x-text="badge.icon"></span>
+                            </div>
+                            <div class="space-y-0.5">
+                                <div class="flex items-center gap-1.5">
+                                    <h4 class="font-black text-xs text-[#082722]" x-text="badge.title"></h4>
+                                    <template x-if="badge.unlocked">
+                                        <span class="bg-emerald-100 text-emerald-800 text-[9px] px-1.5 py-0.2 rounded font-bold">הושג! ✅</span>
+                                    </template>
+                                    <template x-if="!badge.unlocked">
+                                        <span class="bg-slate-200 text-slate-600 text-[9px] px-1.5 py-0.2 rounded font-bold">נעול 🔒</span>
+                                    </template>
+                                </div>
+                                <p class="text-[10px] text-[#5f756e]" x-text="badge.desc"></p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
+                <button type="button" @click="openBadgesModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור היכל תגים
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל מחולל סיכום חודשי אישי לוואטסאפ -->
+    <div x-show="openMonthlySummaryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openMonthlySummaryModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-[#86efac]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">מחולל סיכום התקדמות חודשי ✨</h3>
+                        <p class="text-xs text-[#5f756e]">מחושב ומנוסח אוטומטית עבור <span x-text="monthlySummaryClient?.name" class="font-bold text-[#082722]"></span></p>
+                    </div>
+                </div>
+                <button @click="openMonthlySummaryModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-3 text-xs">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-[#082722]">תצוגה מקדימה ועריכת הודעת הסיכום:</label>
+                    <textarea x-model="monthlySummaryText" rows="11" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 text-xs text-[#082722] font-mono leading-relaxed focus:outline-none focus:border-[#22c55e] resize-none shadow-inner"></textarea>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex flex-col sm:flex-row justify-between gap-2 shrink-0">
+                <button @click="copyMonthlySummary()" class="bg-[#fbf8f2] hover:bg-[#f0eae1] border border-[#e5dfd3] text-[#082722] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    <span>העתק סיכום ללוח</span>
+                </button>
+                <a :href="getSendMonthlySummaryWhatsAppLink()" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-emerald-500/20 cursor-pointer">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    <span>שלח עכשיו בוואטסאפ 🚀</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- מודל מחולל רשימת קניות לסופר -->
     <div x-show="openGroceryListModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openGroceryListModal = false">
         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
@@ -3943,6 +4182,19 @@
                 openOneRmModal: false,
                 oneRmWeight: 100,
                 oneRmReps: 5,
+
+                // רצפים ותגים למתאמן
+                openBadgesModal: false,
+
+                // מחולל סיכום חודשי אישי לוואטסאפ
+                openMonthlySummaryModal: false,
+                monthlySummaryClient: null,
+                monthlySummaryText: '',
+
+                // מחשבון תזונה AI וגרף עוגת מאקרו
+                aiFoodQuery: '',
+                aiAnalyzedMeal: null,
+                isAiAnalyzing: false,
 
                 // ספריית מזונות חכמה
                 foodSearchQuery: '',
@@ -5933,6 +6185,242 @@
 
                 getClientsPendingFridayReflection() {
                     return this.clients.filter(c => c.status === 'active' && !this.hasRecentReflection(c));
+                },
+
+                // --- מתודות רצף ימי התמדה ותגי הישגים ---
+                getClientStreak(client) {
+                    if (!client) return 1;
+                    if (client.streakDays) return client.streakDays;
+                    const checkinsCount = (client.checkins || []).length;
+                    const foodLogsCount = (client.mealPhotoLogs || []).length;
+                    const waterDays = (client.dailyWater || 0) > 0 ? 1 : 0;
+                    const streak = Math.max(1, checkinsCount + foodLogsCount + waterDays);
+                    return Math.min(30, streak);
+                },
+
+                getClientStreakMessage(client) {
+                    const s = this.getClientStreak(client);
+                    if (s >= 14) return 'רצף אגדי! אתה בליגה של הגדולים 👑';
+                    if (s >= 7) return 'שבוע שלם של התמדה מדהימה! המשך כך 🔥';
+                    if (s >= 3) return 'רצף מצוין! התנופה שלך בשיאה 💪';
+                    return 'התחלה מעולה! סמן מים ואימונים לשמירה על הרצף ✨';
+                },
+
+                getClientBadges(client) {
+                    if (!client) return [];
+                    const checkins = client.checkins || [];
+                    const firstWeight = checkins.length > 0 ? checkins[0].weight : parseFloat(client.startWeight || 80);
+                    const lastWeight = checkins.length > 0 ? checkins[checkins.length - 1].weight : firstWeight;
+                    const weightLost = Math.max(0, Math.round((firstWeight - lastWeight) * 10) / 10);
+                    const photosCount = (client.mealPhotoLogs || []).length;
+                    const checkinsCount = checkins.length;
+                    const water = client.dailyWater || 0;
+
+                    return [
+                        {
+                            id: 'first_step',
+                            icon: '🚀',
+                            title: 'צעד ראשון במסע',
+                            desc: 'הצטרפות לתוכנית הליווי והשלמת שאלון קליטה',
+                            unlocked: true
+                        },
+                        {
+                            id: 'loss_3kg',
+                            icon: '🥉',
+                            title: 'מועדון 3 ק״ג פחות',
+                            desc: 'ירידה של 3 ק״ג ומעלה מתחילת הדרך',
+                            unlocked: weightLost >= 3
+                        },
+                        {
+                            id: 'loss_5kg',
+                            icon: '🥇',
+                            title: 'מועדון 5 ק״ג פחות',
+                            desc: 'ירידה מרשימה של 5 ק״ג ומעלה',
+                            unlocked: weightLost >= 5
+                        },
+                        {
+                            id: 'water_master',
+                            icon: '💧',
+                            title: 'מאסטר שתיית מים',
+                            desc: 'הגעה ליעד מים יומי מלא (2,500 מ״ל+)',
+                            unlocked: water >= 2500
+                        },
+                        {
+                            id: 'workout_champion',
+                            icon: '🏋️‍♂️',
+                            title: 'אלוף האימונים',
+                            desc: 'ביצוע והתמדה ב-4+ שקילות ומעקבים שבועיים',
+                            unlocked: checkinsCount >= 4
+                        },
+                        {
+                            id: 'food_logger',
+                            icon: '📸',
+                            title: 'יומן ארוחות מצטיין',
+                            desc: 'העלאת 3+ תמונות ארוחה ליומן האכילה',
+                            unlocked: photosCount >= 3
+                        },
+                        {
+                            id: 'month_complete',
+                            icon: '👑',
+                            title: 'בוגר חודש ראשון',
+                            desc: 'השלמת חודש ליווי מלא בתוכנית',
+                            unlocked: checkinsCount >= 4
+                        }
+                    ];
+                },
+
+                // --- מתודות מחולל סיכום חודשי אישי לוואטסאפ ---
+                openMonthlySummary(client) {
+                    const c = client || this.currentClient || this.clients.find(cl => cl.id === this.selectedClientId);
+                    if (!c) return;
+                    this.monthlySummaryClient = c;
+                    
+                    const checkins = c.checkins || [];
+                    const firstWeight = checkins.length > 0 ? checkins[0].weight : parseFloat(c.startWeight || 80);
+                    const lastWeight = checkins.length > 0 ? checkins[checkins.length - 1].weight : firstWeight;
+                    const delta = Math.round((firstWeight - lastWeight) * 10) / 10;
+                    const streak = this.getClientStreak(c);
+                    const checkinCount = checkins.length;
+                    const avgTraining = checkins.length > 0 ? (checkins.reduce((acc, cur) => acc + (parseFloat(cur.adherenceTraining) || 5), 0) / checkins.length).toFixed(1) : '9.0';
+                    const avgNutrition = checkins.length > 0 ? (checkins.reduce((acc, cur) => acc + (parseFloat(cur.adherenceNutrition) || 5), 0) / checkins.length).toFixed(1) : '9.0';
+
+                    let deltaText = delta > 0 ? `ירידה של ${delta} ק״ג 📉` : (delta < 0 ? `עלייה מבוקרת של ${Math.abs(delta)} ק״ג במסת שריר 📈` : `שמירה על משקל יציב וחיטוב ⚖️`);
+
+                    this.monthlySummaryText = `✨ *סיכום התקדמות אישי - ${c.name}* ✨\nמאמן אישי: אילאי | IlaiCo Fitness 💪\n\nאלופה/אלוף! הנה סיכום ההישגים והעבודה הקשה שלך:\n\n📊 *שינוי במשקל:* ${deltaText}\n🏋️‍♂️ *ציון התמדה באימונים:* ${avgTraining}/10\n🥗 *ציון התמדה בתזונה:* ${avgNutrition}/10\n🔥 *רצף ימי התמדה:* ${streak} ימים ברצף!\n📝 *שקילות שנרשמו במערכת:* ${checkinCount} מעקבים\n🎯 *יעד לתקופה הבאה:* ${c.goal || 'חיטוב, ירידה באחוזי שומן ושיפור כושר'}\n\nאני סופר גאה בך על המחויבות, המשמעת והתוצאות בשטח. ממשיכים קדימה בשיא הכוח! 👑🔥`;
+
+                    this.openMonthlySummaryModal = true;
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                copyMonthlySummary() {
+                    navigator.clipboard.writeText(this.monthlySummaryText).then(() => {
+                        alert("הודעת הסיכום החודשי הועתקה בהצלחה ללוח!");
+                    }).catch(() => {
+                        prompt("העתק את הודעת הסיכום:", this.monthlySummaryText);
+                    });
+                },
+
+                getSendMonthlySummaryWhatsAppLink() {
+                    if (!this.monthlySummaryClient) return '#';
+                    const cleanPhone = (this.monthlySummaryClient.phone || '').replace(/\D/g, '');
+                    const israelPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
+                    const msg = encodeURIComponent(this.monthlySummaryText);
+                    return israelPhone ? `https://wa.me/${israelPhone}?text=${msg}` : `https://wa.me/?text=${msg}`;
+                },
+
+                // --- מתודות מחשבון תזונה AI וגרף עוגת מאקרו ---
+                analyzeFoodWithAi() {
+                    if (!this.aiFoodQuery || !this.aiFoodQuery.trim()) {
+                        alert("אנא הקלד מה אכלת!");
+                        return;
+                    }
+                    this.isAiAnalyzing = true;
+
+                    setTimeout(() => {
+                        const text = this.aiFoodQuery.toLowerCase();
+                        const items = [];
+                        let totalCal = 0, totalPro = 0, totalCarb = 0, totalFat = 0;
+
+                        const db = [
+                            { keys: ['חזה עוף', 'עוף', 'שניצל'], name: 'חזה עוף', defaultGrams: 150, calPer100: 165, proPer100: 31, carbPer100: 0, fatPer100: 3.6, swap: '160 גרם פילה סלמון / 2 קופסאות טונה במים / 180 גרם טופו' },
+                            { keys: ['בקר', 'אנטריקוט', 'סינטה', 'בשר'], name: 'בשר בקר רזה', defaultGrams: 150, calPer100: 210, proPer100: 26, carbPer100: 0, fatPer100: 11, swap: '170 גרם פרגית / 150 גרם סלמון' },
+                            { keys: ['טונה', 'טונה במים', 'קופסת טונה'], name: 'טונה במים', defaultGrams: 110, calPer100: 116, proPer100: 26, carbPer100: 0, fatPer100: 1, swap: '100 גרם חזה עוף / גביע קוטג\' 1%' },
+                            { keys: ['ביצה', 'ביצים'], name: 'ביצים (L)', defaultGrams: 120, calPer100: 143, proPer100: 12.6, carbPer100: 0.7, fatPer100: 9.5, swap: '150 גרם חלבון ביצה נוזלי / גביע יוגורט פרו 20ג\'' },
+                            { keys: ['סלמון', 'דג'], name: 'פילה סלמון', defaultGrams: 150, calPer100: 208, proPer100: 20, carbPer100: 0, fatPer100: 13, swap: '150 גרם חזה עוף + 10 גרם שמן זית' },
+                            { keys: ['קוטג', 'גבינה לבנה', 'גבינה'], name: 'קוטג\' / גבינה 5%', defaultGrams: 125, calPer100: 90, proPer100: 11, carbPer100: 3, fatPer100: 5, swap: 'גביע יוגורט יווני 0% / 150 גרם ריקוטה קלה' },
+                            { keys: ['יוגורט', 'פרו', 'יוגורט חלבון'], name: 'יוגורט חלבון PRO', defaultGrams: 200, calPer100: 60, proPer100: 10, carbPer100: 3.5, fatPer100: 0.5, swap: 'סקופ אבקת חלבון עם מים / גביע קוטג\' 1%' },
+                            { keys: ['חלבון', 'אבקת חלבון', 'סקופ'], name: 'אבקת חלבון (סקופ)', defaultGrams: 30, calPer100: 380, proPer100: 80, carbPer100: 5, fatPer100: 3, swap: 'גביע יוגורט פרו 25ג\' / 100 גרם חזה עוף' },
+                            { keys: ['אורז', 'אורז בסמטי', 'אורז לבן'], name: 'אורז מבושל', defaultGrams: 120, calPer100: 130, proPer100: 2.7, carbPer100: 28, fatPer100: 0.3, swap: '150 גרם תפוח אדמה אפוי / 120 גרם קינואה / 4 פריכיות אורז' },
+                            { keys: ['שיבולת שועל', 'קוואקר', 'דייסה'], name: 'שיבולת שועל', defaultGrams: 50, calPer100: 389, proPer100: 16.9, carbPer100: 66, fatPer100: 6.9, swap: '2 פרוסות לחם מלא / 50 גרם פריכיות / 120 גרם בטטה' },
+                            { keys: ['לחם', 'לחם קל', 'פרוסות', 'פרוסה', 'טוסט'], name: 'לחם (2 פרוסות)', defaultGrams: 60, calPer100: 220, proPer100: 8, carbPer100: 42, fatPer100: 2, swap: '100 גרם אורז מבושל / 1 טורטיה קלה / 3 פריכיות' },
+                            { keys: ['בטטה', 'תפוח אדמה', 'תפו״א'], name: 'בטטה / תפוח אדמה', defaultGrams: 150, calPer100: 86, proPer100: 1.6, carbPer100: 20, fatPer100: 0.1, swap: '100 גרם אורז מבושל / 2 פרוסות לחם קל' },
+                            { keys: ['פסטה', 'פתיתים'], name: 'פסטה מבושלת', defaultGrams: 120, calPer100: 158, proPer100: 5.8, carbPer100: 31, fatPer100: 0.9, swap: '120 גרם אורז מבושל / 150 גרם תפו״א' },
+                            { keys: ['פריכיות', 'פריכית'], name: 'פריכיות אורז (3 יח\')', defaultGrams: 30, calPer100: 380, proPer100: 8, carbPer100: 80, fatPer100: 2.5, swap: 'פרוסת לחם מלא / 70 גרם אורז' },
+                            { keys: ['טחינה', 'טחינה גולמית'], name: 'טחינה גולמית (כף)', defaultGrams: 15, calPer100: 650, proPer100: 24, carbPer100: 21, fatPer100: 56, swap: '15 גרם שמן זית / 25 גרם אבוקדו / 12 שקדים' },
+                            { keys: ['שמן', 'שמן זית'], name: 'שמן זית (כף)', defaultGrams: 10, calPer100: 884, proPer100: 0, carbPer100: 0, fatPer100: 100, swap: '12 גרם טחינה גולמית / 15 גרם חמאת בוטנים טבעית' },
+                            { keys: ['אבוקדו'], name: 'אבוקדו', defaultGrams: 50, calPer100: 160, proPer100: 2, carbPer100: 9, fatPer100: 15, swap: '15 גרם טחינה גולמית / 15 שקדים' },
+                            { keys: ['שקדים', 'אגוזים', 'בוטנים'], name: 'שקדים / אגוזי מלך', defaultGrams: 20, calPer100: 579, proPer100: 21, carbPer100: 22, fatPer100: 50, swap: 'כף טחינה גולמית / 40 גרם אבוקדו' },
+                            { keys: ['תפוח', 'תפוח עץ'], name: 'תפוח עץ בינוני', defaultGrams: 150, calPer100: 52, proPer100: 0.3, carbPer100: 14, fatPer100: 0.2, swap: 'בננה קטנה / 150 גרם פירות יער' },
+                            { keys: ['בננה'], name: 'בננה בינונית', defaultGrams: 110, calPer100: 89, proPer100: 1.1, carbPer100: 23, fatPer100: 0.3, swap: 'תפוח גדול / 1 כוס ענבים' },
+                            { keys: ['סלט', 'מלפפון', 'עגבניה', 'חסה', 'ירקות'], name: 'סלט ירקות עשיר', defaultGrams: 200, calPer100: 25, proPer100: 1.2, carbPer100: 4.5, fatPer100: 0.2, swap: 'ירקות מאודים (ברוקולי/שעועית ירוקה)' }
+                        ];
+
+                        let matched = false;
+                        db.forEach(entry => {
+                            for (let k of entry.keys) {
+                                if (text.includes(k)) {
+                                    const regex = new RegExp(`(\\d+)\\s*(?:גרם|ג|g)?\\s*(?:של)?\\s*${k}|${k}\\s*(?:של)?\\s*(\\d+)`, 'i');
+                                    const match = text.match(regex);
+                                    let grams = entry.defaultGrams;
+                                    if (match) {
+                                        const val = parseInt(match[1] || match[2]);
+                                        if (val > 0 && val < 1000) grams = val;
+                                    }
+
+                                    const factor = grams / 100;
+                                    const c = Math.round(entry.calPer100 * factor);
+                                    const p = Math.round(entry.proPer100 * factor * 10) / 10;
+                                    const cb = Math.round(entry.carbPer100 * factor * 10) / 10;
+                                    const f = Math.round(entry.fatPer100 * factor * 10) / 10;
+
+                                    items.push({
+                                        name: `${entry.name} (~${grams} גרם)`,
+                                        cal: c,
+                                        pro: p,
+                                        carb: cb,
+                                        fat: f,
+                                        swap: entry.swap
+                                    });
+
+                                    totalCal += c;
+                                    totalPro += p;
+                                    totalCarb += cb;
+                                    totalFat += f;
+                                    matched = true;
+                                    break;
+                                }
+                            }
+                        });
+
+                        if (!matched) {
+                            totalCal = 450;
+                            totalPro = 30;
+                            totalCarb = 50;
+                            totalFat = 14;
+                            items.push({
+                                name: 'ארוחה מעורבת מוערכת ב-AI',
+                                cal: 450,
+                                pro: 30,
+                                carb: 50,
+                                fat: 14,
+                                swap: 'ניתן לדייק את הפירוט ע״י ציון סוגי החלבון (עוף/טונה/ביצים) והפחמימה'
+                            });
+                        }
+
+                        const proCal = totalPro * 4;
+                        const carbCal = totalCarb * 4;
+                        const fatCal = totalFat * 9;
+                        const sumCal = proCal + carbCal + fatCal || 1;
+
+                        const pPro = Math.round((proCal / sumCal) * 100);
+                        const pCarb = Math.round((carbCal / sumCal) * 100);
+                        const pFat = Math.max(0, 100 - pPro - pCarb);
+
+                        this.aiAnalyzedMeal = {
+                            query: this.aiFoodQuery,
+                            calories: totalCal,
+                            protein: Math.round(totalPro * 10) / 10,
+                            carbs: Math.round(totalCarb * 10) / 10,
+                            fat: Math.round(totalFat * 10) / 10,
+                            pProtein: pPro,
+                            pCarbs: pCarb,
+                            pFat: pFat,
+                            items: items
+                        };
+
+                        this.isAiAnalyzing = false;
+                        setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                    }, 600);
                 },
 
                 copyOnboardingQuestionnaire() {
