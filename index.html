@@ -924,31 +924,37 @@
                     <div x-show="portalActiveSubTab === 'workouts'" x-cloak class="space-y-4">
                         <!-- טבלת Google Sheets אישית למתאמן (אם צורפה) -->
                         <template x-if="portalClient?.googleSheetsUrl">
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-3.5">
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-[#e5dfd3] pb-3">
-                                    <div class="flex items-center gap-2">
-                                        <div class="p-2 rounded-xl bg-[#082722] text-[#86efac]">
-                                            <i data-lucide="table" class="w-4 h-4"></i>
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="table" class="w-5 h-5"></i>
                                         </div>
                                         <div>
-                                            <h4 class="text-xs md:text-sm font-extrabold text-[#082722]">טבלת מעקב ותוכנית (Google Sheets)</h4>
-                                            <p class="text-[10px] text-[#5f756e]">טבלה חיה המסונכרנת ישירות מול גוגל</p>
+                                            <h4 class="text-sm md:text-base font-black text-[#082722]">תוכנית אימונים אישית (Google Sheets)</h4>
+                                            <p class="text-[11px] text-[#5f756e]">טבלה חיה המסונכרנת ישירות מול אילאי</p>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <a :href="portalClient.googleSheetsUrl" target="_blank" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition border border-[#174e43] shadow-sm">
-                                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                                            <span>פתח ישירות ב-Google Sheets ↗</span>
-                                        </a>
-                                    </div>
+                                    <a :href="portalClient.googleSheetsUrl" target="_blank" class="w-full sm:w-auto justify-center bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black px-4 py-2.5 rounded-2xl text-xs flex items-center gap-2 shadow-md shadow-[#86efac]/20 transition">
+                                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                                        <span>פתח מסך מלא ב-Google Sheets ↗</span>
+                                    </a>
                                 </div>
                                 
-                                <div class="h-[480px] w-full rounded-2xl overflow-hidden border border-[#e5dfd3] bg-[#fbf8f2] shadow-inner relative">
+                                <div class="h-[520px] w-full rounded-2xl overflow-hidden border border-[#e5dfd3] bg-[#fbf8f2] shadow-inner relative">
                                     <iframe :src="getCleanGoogleSheetsUrl(portalClient.googleSheetsUrl)" 
                                             class="w-full h-full border-0" 
                                             allowfullscreen="true"
                                             loading="lazy">
                                     </iframe>
+                                </div>
+
+                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3.5 rounded-2xl flex items-center justify-between gap-3 text-[11px] text-[#5f756e]">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="info" class="w-4 h-4 text-[#082722] shrink-0"></i>
+                                        <span>אם הטבלה מבקשת הרשאה, לחץ על הכפתור למעלה לפתיחה ישירה, או שנה בגוגל שיטס ל-"כל מי שיש לו קישור".</span>
+                                    </div>
+                                    <a :href="portalClient.googleSheetsUrl" target="_blank" class="text-[#082722] font-bold underline shrink-0">פתח ישירות</a>
                                 </div>
                             </div>
                         </template>
@@ -4320,12 +4326,16 @@
                     if (url.includes('docs.google.com/spreadsheets/d/')) {
                         const match = url.match(/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
                         if (match && match[1]) {
+                            const id = match[1];
                             let gidParam = '';
                             const gidMatch = url.match(/[#&?]gid=([0-9]+)/);
                             if (gidMatch && gidMatch[1]) {
                                 gidParam = `&gid=${gidMatch[1]}`;
                             }
-                            return `https://docs.google.com/spreadsheets/d/${match[1]}/htmlembed?widget=true&headers=false${gidParam}`;
+                            if (url.includes('/pubhtml') || url.includes('/preview')) {
+                                return url;
+                            }
+                            return `https://docs.google.com/spreadsheets/d/${id}/preview`;
                         }
                     }
                     return url;
