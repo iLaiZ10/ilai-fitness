@@ -1170,70 +1170,256 @@
                         </div>
                     </div>
 
-                    <!-- תוכן לשונית 4: Google Drive ויומן אכילה -->
+                    <!-- תוכן לשונית 4: יומן אכילה עם תמונות, שיקוף שבועי לאילאי ו-Drive -->
                     <div x-show="portalActiveSubTab === 'drive'" x-cloak class="space-y-4">
-                        <!-- קישור ל-Google Drive -->
-                        <div class="bg-slate-900 border border-sky-500/30 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                                <div class="p-2.5 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-400">
-                                    <i data-lucide="folder-up" class="w-6 h-6"></i>
+                        
+                        <!-- סרגל מעבר פנימי 3 אופציות -->
+                        <div class="grid grid-cols-3 gap-1 bg-white p-1.5 rounded-2xl border border-[#e5dfd3] text-center shadow-sm">
+                            <button @click="portalJournalSection = 'food'" 
+                                    :class="portalJournalSection === 'food' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
+                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition">
+                                <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                                <span>יומן אכילה & תמונות</span>
+                            </button>
+                            
+                            <button @click="portalJournalSection = 'reflection'" 
+                                    :class="portalJournalSection === 'reflection' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
+                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                                <span>שיקוף שבועי לאילאי</span>
+                            </button>
+                            
+                            <button @click="portalJournalSection = 'drive'" 
+                                    :class="portalJournalSection === 'drive' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
+                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition">
+                                <i data-lucide="folder" class="w-3.5 h-3.5"></i>
+                                <span>Google Drive</span>
+                            </button>
+                        </div>
+
+                        <!-- 1. יומן אכילה והעלאת תמונות צלחת -->
+                        <div x-show="portalJournalSection === 'food'" class="space-y-4">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <div class="flex items-center gap-3 border-b border-[#e5dfd3] pb-3">
+                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                        <i data-lucide="camera" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm md:text-base font-extrabold text-[#082722]">הזנת מה אכלתי + תמונת צלחת 📸</h3>
+                                        <p class="text-[11px] text-[#5f756e]">צלם או בחר תמונה של הארוחה שלך וכתוב מה אכלת</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 class="text-sm md:text-base font-black text-white">תיקיית Google Drive של הארוחות וההתקדמות</h3>
-                                    <p class="text-[10px] text-slate-400">העלה לכאן תמונות ארוחות יומיות ותמונות שקילה עבור אילאי</p>
+
+                                <template x-if="portalFoodLogSaved">
+                                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-3 rounded-2xl text-center text-xs font-bold animate-fade-in flex items-center justify-center gap-2">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                                        <span>הארוחה והתמונה נשמרו ונשלחו לאילאי! 👑</span>
+                                    </div>
+                                </template>
+
+                                <div class="space-y-3">
+                                    <!-- בחירת סוג ארוחה -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סוג הארוחה:</label>
+                                        <div class="grid grid-cols-5 gap-1 text-center">
+                                            <template x-for="mType in ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ביניים', 'ארוחת ערב', 'ארוחת לילה']" :key="mType">
+                                                <button type="button" 
+                                                        @click="portalMealType = mType" 
+                                                        :class="portalMealType === mType ? 'bg-[#082722] text-[#86efac] font-black border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-semibold'"
+                                                        class="py-1.5 px-1 rounded-xl text-[10px] border transition"
+                                                        x-text="mType">
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <!-- תיאור הארוחה -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מה אכלת בארוחה זו? (מצרכים וכמויות):</label>
+                                        <textarea x-model="portalMealDescription" placeholder="למשל: 200 גרם חזה עוף, כוס אורז בסמטי מבושל, סלט ירקות גדול וכפית שמן זית..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#082722] h-20 resize-none font-semibold"></textarea>
+                                    </div>
+
+                                    <!-- העלאת/צילום תמונה -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תמונת הצלחת / הארוחה:</label>
+                                        <div class="flex items-center gap-3">
+                                            <label class="flex-1 cursor-pointer bg-[#fbf8f2] hover:bg-[#f5efe0] border-2 border-dashed border-[#e5dfd3] hover:border-[#082722] p-3 rounded-2xl text-center transition flex flex-col items-center justify-center gap-1.5">
+                                                <i data-lucide="image-plus" class="w-6 h-6 text-[#22c55e]"></i>
+                                                <span class="text-xs font-black text-[#082722]">צלם במצלמה או העלה תמונה</span>
+                                                <span class="text-[10px] text-[#5f756e]">תמונה תישמר ותוצג לאילאי בכרטיס שלך</span>
+                                                <input type="file" accept="image/*" class="hidden" @change="handleMealPhotoUpload($event)">
+                                            </label>
+
+                                            <!-- תצוגה מקדימה של התמונה שנבחרה -->
+                                            <template x-if="portalMealPhoto">
+                                                <div class="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-[#86efac] shadow-md shrink-0">
+                                                    <img :src="portalMealPhoto" class="w-full h-full object-cover" />
+                                                    <button type="button" @click="portalMealPhoto = ''" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 shadow-md hover:bg-red-700">
+                                                        <i data-lucide="x" class="w-3 h-3"></i>
+                                                    </button>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" @click="savePortalFoodLog()" class="w-full bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#86efac]/20 transition">
+                                        <i data-lucide="save" class="w-4 h-4"></i>
+                                        <span>שמור ארוחה ותמונה ביומן</span>
+                                    </button>
                                 </div>
                             </div>
 
-                            <template x-if="portalClient?.googleDriveUrl">
-                                <div class="space-y-3">
-                                    <a :href="portalClient.googleDriveUrl" target="_blank" class="w-full bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:from-sky-400 hover:to-purple-500 text-white font-black py-3.5 px-4 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 shadow-xl shadow-sky-500/25 transition">
-                                        <i data-lucide="external-link" class="w-4 h-4"></i>
-                                        <span>פתח את תיקיית ה-Google Drive שלך להעלאת תמונות</span>
-                                    </a>
-                                </div>
-                            </template>
-
-                            <template x-if="!portalClient?.googleDriveUrl">
-                                <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl text-center space-y-2">
-                                    <i data-lucide="folder" class="w-8 h-8 text-slate-600 mx-auto"></i>
-                                    <p class="text-xs text-white font-bold">טרם הוגדר קישור לתיקיית Drive אישית</p>
-                                    <p class="text-[10px] text-slate-400">אילאי יעדכן בקרוב את הקישור לתיקייה שלך, ובינתיים תוכל לשלוח תמונות בוואטסאפ.</p>
-                                </div>
-                            </template>
-
-                            <!-- הדרכה קצרה -->
-                            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-2xl space-y-2 text-[11px] text-slate-300">
-                                <h4 class="font-bold text-beige-300 flex items-center gap-1.5">
-                                    <i data-lucide="info" class="w-3.5 h-3.5"></i>
-                                    <span>איך עובד מעקב התמונות?</span>
+                            <!-- היסטוריית ארוחות ותמונות -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <h4 class="text-xs md:text-sm font-extrabold text-[#082722] border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
+                                    <span>הארוחות והתמונות האחרונות שלך</span>
+                                    <span class="text-[10px] text-[#5f756e] font-normal" x-text="(portalClient?.foodLogs?.length || 0) + ' ארוחות'"></span>
                                 </h4>
-                                <ul class="list-disc list-inside space-y-1 text-slate-400">
-                                    <li>צלם את הצלחת שלך לפני כל ארוחה עיקרית.</li>
-                                    <li>פתח את תיקיית ה-Drive בלחיצה על הכפתור למעלה והעלה את התמונות.</li>
-                                    <li>אילאי יעבור על התמונות וייתן לך דגשים ומשוב לשיפור התוצאות!</li>
-                                </ul>
+
+                                <template x-if="!portalClient?.foodLogs || portalClient.foodLogs.length === 0">
+                                    <div class="py-8 text-center text-slate-400 text-xs italic">
+                                        טרם הזנת ארוחות או תמונות. צלם את הארוחה הראשונה שלך למעלה! 🥗
+                                    </div>
+                                </template>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <template x-for="log in (portalClient?.foodLogs || [])" :key="log.id">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3 space-y-2 relative group shadow-sm">
+                                            <div class="flex items-center justify-between text-xs border-b border-[#e5dfd3] pb-1.5">
+                                                <span class="bg-[#082722] text-[#86efac] font-black px-2 py-0.5 rounded-lg text-[10px]" x-text="log.mealType"></span>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-[10px] text-[#5f756e]" x-text="formatDate(log.date) + ' • ' + (log.time || '')"></span>
+                                                    <button type="button" @click="deletePortalFoodLog(log.id)" class="text-slate-400 hover:text-red-500 transition" title="מחק">
+                                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <template x-if="log.photo">
+                                                <div class="w-full h-40 rounded-xl overflow-hidden bg-black/10 relative">
+                                                    <img :src="log.photo" class="w-full h-full object-cover" loading="lazy" />
+                                                </div>
+                                            </template>
+
+                                            <p class="text-xs text-[#082722] font-semibold" x-text="log.description || 'ללא פירוט'"></p>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- יומן אכילה יומי (מה אכלתי היום) -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
-                            <h4 class="text-xs md:text-sm font-bold text-white flex items-center gap-1.5">
-                                <i data-lucide="edit-3" class="w-4 h-4 text-sky-400"></i>
-                                <span>יומן אכילה והערות יומיות</span>
-                            </h4>
-                            <p class="text-[10px] text-slate-400">כתוב כאן מה אכלת היום או הערות מיוחדות כדי שאילאי יוכל לקרוא בכרטיס שלך:</p>
-                            
-                            <template x-if="portalJournalSaved">
-                                <div class="bg-sky-950/80 border border-sky-400/50 p-2.5 rounded-xl text-center text-[10px] text-sky-200 font-bold animate-fade-in">
-                                    היומן נשמר ונשלח לכרטיס שלך אצל אילאי! ✨
+                        <!-- 2. יומן כתיבה ושיקוף שבועי לאילאי (לסופ"ש) -->
+                        <div x-show="portalJournalSection === 'reflection'" class="space-y-4">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <div class="flex items-center gap-3 border-b border-[#e5dfd3] pb-3">
+                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm md:text-base font-extrabold text-[#082722]">יומן תהליך ושיקוף שבועי לאילאי 👑</h3>
+                                        <p class="text-[11px] text-[#5f756e]">ספר לאילאי איך עבר עליך השבוע, והוא יעבור על זה בסופ״ש וייתן לך משוב אישי!</p>
+                                    </div>
                                 </div>
-                            </template>
 
-                            <textarea x-model="portalTodayJournal" placeholder="למשל: בוקר: 2 ביצים + 2 לחם קל. צהריים: 150 גרם חזה עוף ואורז. הרגשתי שבע..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-sky-400 h-28 resize-none"></textarea>
-                            <button @click="savePortalTodayJournal()" class="w-full bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-sky-400/50 text-sky-300 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
-                                <i data-lucide="save" class="w-3.5 h-3.5"></i>
-                                <span>שמור יומן יומי</span>
-                            </button>
+                                <template x-if="portalReflectionSaved">
+                                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-3 rounded-2xl text-center text-xs font-bold animate-fade-in flex items-center justify-center gap-2">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                                        <span>השיקוף השבועי נשלח בהצלחה לאילאי! הוא יעבור עליו בסופ״ש ויגיב כאן. 👑</span>
+                                    </div>
+                                </template>
+
+                                <div class="space-y-3">
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl text-[11px] text-[#5f756e] space-y-1">
+                                        <span class="font-bold text-[#082722] block">💡 נושאים שמומלץ לשתף בהם:</span>
+                                        <ul class="list-disc list-inside space-y-0.5">
+                                            <li>איך הרגשת באימונים השבוע? רמות אנרגיה וכוח.</li>
+                                            <li>איך היה עם התזונה? שובע, חשקים למתוק או חריגות.</li>
+                                            <li>אתגרים, הצלחות אישיות או שאלות שיש לך לאילאי.</li>
+                                        </ul>
+                                    </div>
+
+                                    <div>
+                                        <textarea x-model="portalWeeklyReflectionText" placeholder="כתוב כאן בחופשיות לאילאי על השבוע שלך..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3.5 text-xs text-[#082722] focus:outline-none focus:border-[#082722] h-32 resize-none font-semibold"></textarea>
+                                    </div>
+
+                                    <button type="button" @click="savePortalReflection()" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 transition border border-[#174e43] shadow-md">
+                                        <i data-lucide="send" class="w-4 h-4 text-[#86efac]"></i>
+                                        <span>שלח שיקוף שבועי לאילאי</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- היסטוריית שיקופים ומשוב של אילאי -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <h4 class="text-xs md:text-sm font-extrabold text-[#082722] border-b border-[#e5dfd3] pb-2">
+                                    שיקופים קודמים ומשוב המאמן
+                                </h4>
+
+                                <template x-if="!portalClient?.reflectionLogs || portalClient.reflectionLogs.length === 0">
+                                    <div class="py-8 text-center text-slate-400 text-xs italic">
+                                        טרם שלחת שיקופים שבועיים. כתוב את השיקוף הראשון שלך למעלה! ✍️
+                                    </div>
+                                </template>
+
+                                <div class="space-y-4">
+                                    <template x-for="ref in (portalClient?.reflectionLogs || [])" :key="ref.id">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm">
+                                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
+                                                <span class="font-extrabold text-xs text-[#082722]" x-text="'השיקוף שלך • ' + formatDate(ref.date)"></span>
+                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" x-text="ref.reviewed ? 'נבדק ע״י אילאי ✅' : 'ממתין לבדיקת סופ״ש ⏳'"></span>
+                                            </div>
+
+                                            <div class="text-xs font-semibold text-[#082722] whitespace-pre-line bg-white p-3 rounded-xl border border-[#e5dfd3]" x-text="ref.text"></div>
+
+                                            <!-- תגובת המאמן אילאי אם קיימת -->
+                                            <template x-if="ref.coachFeedback">
+                                                <div class="bg-[#082722] text-[#fbf8f2] p-4 rounded-xl space-y-1.5 border border-[#133d35]">
+                                                    <div class="flex items-center justify-between">
+                                                        <span class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
+                                                            <i data-lucide="crown" class="w-4 h-4"></i>
+                                                            <span>משוב והנחיות מהמאמן אילאי:</span>
+                                                        </span>
+                                                        <span class="text-[10px] text-[#93c7bb]" x-text="ref.reviewedAt ? formatDate(ref.reviewedAt) : ''"></span>
+                                                    </div>
+                                                    <p class="text-xs font-semibold text-[#fbf8f2] whitespace-pre-line" x-text="ref.coachFeedback"></p>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. קישור ל-Google Drive -->
+                        <div x-show="portalJournalSection === 'drive'" class="space-y-4">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <div class="flex items-center gap-3 border-b border-[#e5dfd3] pb-3">
+                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                        <i data-lucide="folder-up" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm md:text-base font-extrabold text-[#082722]">תיקיית Google Drive האישית שלך</h3>
+                                        <p class="text-[10px] text-[#5f756e]">גישה ישירה לתיקיית התמונות והקבצים המשותפת עם אילאי</p>
+                                    </div>
+                                </div>
+
+                                <template x-if="portalClient?.googleDriveUrl">
+                                    <div class="space-y-3">
+                                        <a :href="portalClient.googleDriveUrl" target="_blank" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3.5 px-4 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 border border-[#174e43] shadow-md transition">
+                                            <i data-lucide="external-link" class="w-4 h-4 text-[#86efac]"></i>
+                                            <span>פתח את תיקיית ה-Google Drive שלך</span>
+                                        </a>
+                                    </div>
+                                </template>
+
+                                <template x-if="!portalClient?.googleDriveUrl">
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-6 rounded-2xl text-center space-y-2">
+                                        <i data-lucide="folder" class="w-8 h-8 text-[#7a918a] mx-auto"></i>
+                                        <p class="text-xs text-[#082722] font-bold">טרם הוגדר קישור לתיקיית Drive אישית</p>
+                                        <p class="text-[10px] text-[#5f756e]">אילאי יעדכן בקרוב את הקישור לתיקייה שלך, ובינתיים תוכל להעלות תמונות ישירות בלשונית "יומן אכילה & תמונות".</p>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1586,11 +1772,19 @@
 
                     <!-- תפריט מחליק פנימי בנייד -->
                     <div class="flex border-b border-[#e5dfd3] gap-1 overflow-x-auto pb-1 scrollbar-none whitespace-nowrap flex-nowrap">
-                        <button @click="detailSubTab = 'profile'" :class="detailSubTab === 'profile' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">פרופיל & תזונה</button>
-                        <button @click="detailSubTab = 'checkins'" :class="detailSubTab === 'checkins' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">מעקב מדדים</button>
-                        <button @click="detailSubTab = 'workout'" :class="detailSubTab === 'workout' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית אימונים</button>
-                        <button @click="detailSubTab = 'mealplan'" :class="detailSubTab === 'mealplan' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית תזונה</button>
-                        <button @click="detailSubTab = 'payments'" :class="detailSubTab === 'payments' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תשלומים</button>
+                        <button @click="detailSubTab = 'profile'" :class="detailSubTab === 'profile' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">פרופיל & תזונה</button>
+                        <button @click="detailSubTab = 'checkins'" :class="detailSubTab === 'checkins' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">מעקב מדדים</button>
+                        <button @click="detailSubTab = 'workout'" :class="detailSubTab === 'workout' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית אימונים</button>
+                        <button @click="detailSubTab = 'mealplan'" :class="detailSubTab === 'mealplan' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית תזונה</button>
+                        <button @click="detailSubTab = 'foodlogs'" :class="detailSubTab === 'foodlogs' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1">
+                            <i data-lucide="camera" class="w-3.5 h-3.5 text-[#22c55e]"></i>
+                            <span>תמונות ארוחות</span>
+                        </button>
+                        <button @click="detailSubTab = 'reflections'" :class="detailSubTab === 'reflections' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#eab308]"></i>
+                            <span>שיקוף סופ״ש</span>
+                        </button>
+                        <button @click="detailSubTab = 'payments'" :class="detailSubTab === 'payments' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תשלומים</button>
                     </div>
 
                     <!-- תוכן הטאבים הפנימיים -->
@@ -2891,6 +3085,15 @@
                 portalCheckinSuccess: false,
                 portalJournalSaved: false,
 
+                // יומן אכילה ותמונות + שיקוף שבועי
+                portalJournalSection: 'food',
+                portalMealType: 'ארוחת צהריים',
+                portalMealDescription: '',
+                portalMealPhoto: '',
+                portalWeeklyReflectionText: '',
+                portalFoodLogSaved: false,
+                portalReflectionSaved: false,
+
                 // מאגר מזונות ישראלי מכויל (ערכים ל-100 גרם או ליחידה)
                 foodDatabase: [
                     // חלבונים
@@ -3105,45 +3308,9 @@
                         this.isCoachAuthenticated = false;
                     }
 
-                    // וידוא קיום יורי בוטקביץ עם קישור ה-Google Sheets שלו
-                    const yuri = this.clients.find(c => c.name.includes('יורי') || c.id === 'client_yuri');
-                    if (!yuri) {
-                        const yuriClient = {
-                            id: 'client_yuri',
-                            name: 'יורי בוטקביץ',
-                            phone: '0501234567',
-                            email: 'yuri@example.com',
-                            startDate: this.getTodayDate(),
-                            startWeight: '78',
-                            goal: 'תוכנית אימונים ומעקב מדדים שבועי',
-                            pricePerMonth: 350,
-                            paymentMonths: 3,
-                            status: 'active',
-                            googleSheetsUrl: 'https://docs.google.com/spreadsheets/d/11ATEDM1gxldBTrsKWABGSFcQwAaHJ8ysSX1JeBNZO-k/edit?usp=sharing',
-                            googleDriveUrl: '',
-                            mealPlanPdfUrl: '',
-                            macroCalculated: { targetCalories: '2400', targetProtein: '160', targetCarbs: '250', targetFat: '70' },
-                            workoutPlan: { days: [] },
-                            mealPlan: { meals: [] },
-                            checkins: [
-                                { date: this.getTodayDate(), weight: 78, waist: 82, adherenceNutrition: 10, adherenceTraining: 10, notes: 'תחילת תוכנית' }
-                            ],
-                            payments: [
-                                { month: 1, amount: 350, status: 'paid' },
-                                { month: 2, amount: 350, status: 'pending' },
-                                { month: 3, amount: 350, status: 'pending' }
-                            ]
-                        };
-                        this.clients.unshift(yuriClient);
-                        if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(yuriClient.id).set(yuriClient);
-                        }
-                        this.saveData();
-                    } else if (!yuri.googleSheetsUrl) {
-                        yuri.googleSheetsUrl = 'https://docs.google.com/spreadsheets/d/11ATEDM1gxldBTrsKWABGSFcQwAaHJ8ysSX1JeBNZO-k/edit?usp=sharing';
-                        if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(yuri.id).set(yuri);
-                        }
+                    // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
+                    if (this.clients.length === 0) {
+                        this.loadDefaultData();
                         this.saveData();
                     }
                     
@@ -4552,6 +4719,134 @@
                     this.intakePasteText = '';
                     this.selectClient(newClientObj.id);
                     alert(`המתאמן ${name} נוצר בהצלחה משאלון הקליטה! 🚀`);
+                },
+                
+                // --- שיטות יומן אכילה, העלאת תמונות ושיקוף שבועי ---
+                handleMealPhotoUpload(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    this.compressImage(file, (base64) => {
+                        this.portalMealPhoto = base64;
+                    });
+                },
+
+                compressImage(file, callback) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const maxDim = 800;
+                            if (width > height && width > maxDim) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            } else if (height > maxDim) {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            const compressed = canvas.toDataURL('image/jpeg', 0.72);
+                            callback(compressed);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                },
+
+                savePortalFoodLog() {
+                    const client = this.portalClient;
+                    if (!client || !client.id) return;
+                    if (!this.portalMealDescription && !this.portalMealPhoto) {
+                        alert("אנא הזן פירוט של מה אכלת או העלה תמונה!");
+                        return;
+                    }
+                    if (!client.foodLogs) client.foodLogs = [];
+                    
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+                    const logObj = {
+                        id: 'fl_' + Date.now(),
+                        date: this.getTodayDate(),
+                        time: timeStr,
+                        mealType: this.portalMealType || 'ארוחה',
+                        description: this.portalMealDescription || '',
+                        photo: this.portalMealPhoto || ''
+                    };
+                    
+                    client.foodLogs.unshift(logObj);
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    
+                    this.portalMealDescription = '';
+                    this.portalMealPhoto = '';
+                    this.portalFoodLogSaved = true;
+                    setTimeout(() => { this.portalFoodLogSaved = false; }, 4000);
+                },
+
+                deletePortalFoodLog(logId) {
+                    if (confirm("האם למחוק דיווח ארוחה זה?")) {
+                        const client = this.portalClient;
+                        if (client && client.foodLogs) {
+                            client.foodLogs = client.foodLogs.filter(l => l.id !== logId);
+                            if (this.isCloudSynced && this.db) {
+                                this.db.collection("clients").doc(client.id).set(client);
+                            }
+                            this.saveData();
+                        }
+                    }
+                },
+
+                savePortalReflection() {
+                    const client = this.portalClient;
+                    if (!client || !client.id) return;
+                    if (!this.portalWeeklyReflectionText.trim()) {
+                        alert("אנא כתוב את תוכן השיקוף לפני השליחה!");
+                        return;
+                    }
+                    if (!client.reflectionLogs) client.reflectionLogs = [];
+                    
+                    const refObj = {
+                        id: 'ref_' + Date.now(),
+                        date: this.getTodayDate(),
+                        text: this.portalWeeklyReflectionText.trim(),
+                        coachFeedback: '',
+                        reviewed: false,
+                        reviewedAt: ''
+                    };
+                    
+                    client.reflectionLogs.unshift(refObj);
+                    client.needsAttention = true; // Alerts coach on dashboard
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    
+                    this.portalWeeklyReflectionText = '';
+                    this.portalReflectionSaved = true;
+                    setTimeout(() => { this.portalReflectionSaved = false; }, 5000);
+                },
+
+                saveCoachFeedback(clientId, refId, feedbackText) {
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (!client || !client.reflectionLogs) return;
+                    const ref = client.reflectionLogs.find(r => r.id === refId);
+                    if (ref) {
+                        ref.coachFeedback = feedbackText;
+                        ref.reviewed = true;
+                        ref.reviewedAt = this.getTodayDate();
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
+                        alert("משוב המאמן נשמר ונשלח למתאמן בהצלחה! 👑");
+                    }
                 },
                 
                 resetDatabase() {
