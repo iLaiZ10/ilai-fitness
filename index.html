@@ -2255,16 +2255,55 @@
                         </div>
                     </div>
 
-                    <!-- גרף הכנסות ורווחים -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
-                        <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 mb-3">רווח נקי חודשי (חצי שנה אחרונה)</h4>
-                        <div class="w-full h-44 bg-slate-950 rounded-xl p-3 flex flex-col justify-between">
-                            <div class="flex items-end justify-around h-32 pt-4">
+                    <!-- גרף הכנסות ורווחים מעוצב עם אנימציה יוקרתית -->
+                    <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-7 shadow-xl space-y-4">
+                        <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
+                            <div>
+                                <h4 class="text-sm md:text-base font-extrabold text-[#082722]">רווח נקי חודשי (חצי שנה אחרונה)</h4>
+                                <p class="text-[11px] text-[#5f756e]">מעקב הכנסות שנגבו בניכוי הוצאות לפי חודשים</p>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="flex items-center gap-1.5 text-[11px] font-bold text-[#082722] bg-[#f5efe0] px-2.5 py-1 rounded-full border border-[#e5dfd3]">
+                                    <span class="w-2 h-2 rounded-full bg-[#22c55e]"></span>
+                                    <span>רווח נקי (₪)</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-6 relative overflow-hidden">
+                            <!-- קווי רשת עדינים ברקע -->
+                            <div class="absolute inset-x-4 top-6 border-b border-dashed border-[#e5dfd3]/80 pointer-events-none"></div>
+                            <div class="absolute inset-x-4 top-20 border-b border-dashed border-[#e5dfd3]/80 pointer-events-none"></div>
+                            <div class="absolute inset-x-4 bottom-14 border-b border-dashed border-[#e5dfd3]/80 pointer-events-none"></div>
+
+                            <div class="flex items-end justify-around h-48 pt-6 pb-2 relative z-10">
                                 <template x-for="item in getMonthlyFinancialData()" :key="item.name">
-                                    <div class="flex flex-col items-center gap-1.5 w-12">
-                                        <div class="w-5 bg-emerald-500 rounded-t-md transition-all" :style="'height: ' + Math.max(4, Math.min(100, (item.value / 10000) * 100)) + 'px;'"></div>
-                                        <span class="text-[9px] text-slate-400 font-bold" x-text="item.name"></span>
-                                        <span class="text-[8px] text-slate-500" x-text="item.value + ' ₪'"></span>
+                                    <div class="flex flex-col items-center justify-end h-full group cursor-pointer relative" style="width: 14%;">
+                                        <!-- תגית סכום מעל העמודה -->
+                                        <div class="mb-2 transition-all duration-300 transform group-hover:-translate-y-1">
+                                            <span :class="item.value > 0 ? 'bg-[#082722] text-[#86efac] font-black border border-[#133d35] shadow-md' : 'bg-white text-[#5f756e] border border-[#e5dfd3] font-bold'"
+                                                  class="text-[10px] sm:text-xs px-2 py-0.5 rounded-lg whitespace-nowrap block text-center"
+                                                  x-text="item.value + ' ₪'">
+                                            </span>
+                                        </div>
+
+                                        <!-- עמודת הגרף עם אנימציית עלייה חלקה -->
+                                        <div class="w-full max-w-[38px] bg-[#e5dfd3]/50 rounded-t-xl overflow-hidden flex items-end h-32 p-0.5">
+                                            <div class="w-full rounded-t-lg transition-all duration-700 ease-out relative overflow-hidden shadow-sm"
+                                                 :class="item.value > 0 ? 'bg-gradient-to-t from-[#082722] via-[#0b332b] to-[#22c55e] shadow-md shadow-[#22c55e]/20' : 'bg-[#dcd5c4]'"
+                                                 :style="'height: ' + getBarHeightPercentage(item.value) + '%;'">
+                                                <!-- קו זוהר בראש העמודה -->
+                                                <template x-if="item.value > 0">
+                                                    <div class="w-full h-1 bg-[#86efac] rounded-t-lg shadow-sm"></div>
+                                                </template>
+                                            </div>
+                                        </div>
+
+                                        <!-- שם החודש -->
+                                        <span class="text-[11px] font-bold mt-2.5 block text-center"
+                                              :class="item.value > 0 ? 'text-[#082722] font-black' : 'text-[#5f756e]'"
+                                              x-text="item.name">
+                                        </span>
                                     </div>
                                 </template>
                             </div>
@@ -3544,35 +3583,55 @@
                         
                         this.clients.forEach(c => {
                             if (!c.startDate) return;
-                            const start = new Date(c.startDate);
+                            const parts = c.startDate.split('-').map(Number);
+                            const sYear = parts[0];
+                            const sMonth = parts[1] - 1;
+                            const sDay = parts[2] || 1;
+                            
                             (c.payments || []).forEach((p, idx) => {
                                 if (p.status !== 'paid') return;
-                                const payDate = new Date(start);
-                                payDate.setDate(start.getDate() + idx * 30);
+                                const payDate = new Date(sYear, sMonth, sDay + (idx * 30));
                                 if (payDate.getFullYear() === year && payDate.getMonth() === month) {
-                                    collected += p.amount;
+                                    collected += (parseFloat(p.amount) || 0);
                                 }
                             });
                         });
                         
                         this.transactions.forEach(t => {
                             if (!t.date) return;
-                            const tDate = new Date(t.date);
-                            if (tDate.getFullYear() === year && tDate.getMonth() === month) {
+                            const parts = t.date.split('-').map(Number);
+                            const tYear = parts[0];
+                            const tMonth = parts[1] - 1;
+                            if (tYear === year && tMonth === month) {
                                 if (t.type === 'income') {
-                                    collected += t.amount;
+                                    collected += (parseFloat(t.amount) || 0);
                                 } else {
-                                    expenses += t.amount;
+                                    expenses += (parseFloat(t.amount) || 0);
                                 }
                             }
                         });
                         
                         data.push({
                             name: monthName,
+                            year: year,
+                            month: month,
                             value: Math.max(0, collected - expenses)
                         });
                     }
                     return data;
+                },
+
+                getFinancialChartMax() {
+                    const data = this.getMonthlyFinancialData();
+                    const max = Math.max(...data.map(d => d.value), 0);
+                    return max > 0 ? max : 500;
+                },
+
+                getBarHeightPercentage(value) {
+                    if (!value || value <= 0) return 4;
+                    const max = this.getFinancialChartMax();
+                    const pct = Math.round((value / max) * 92);
+                    return Math.max(16, Math.min(100, pct));
                 },
 
                 getCompletedPersonalSessions() { return this.scheduleEvents.filter(e => e.status === 'completed').length; },
