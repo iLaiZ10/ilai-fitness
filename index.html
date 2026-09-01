@@ -616,12 +616,13 @@
                                 <input 
                                     type="password" 
                                     inputmode="numeric" 
-                                    maxlength="8" 
+                                    pattern="[0-9]*"
+                                    maxlength="4" 
                                     required 
                                     autofocus 
                                     x-model="coachPinInput" 
                                     placeholder="••••" 
-                                    class="w-full bg-[#051c17] border border-[#174e43] rounded-2xl py-3 px-4 text-center tracking-[0.4em] text-2xl font-black text-[#86efac] focus:outline-none focus:border-[#86efac] transition">
+                                    class="w-full bg-[#051c17] border border-[#174e43] rounded-2xl py-3.5 px-4 text-center tracking-[0.5em] text-2xl font-black text-[#86efac] focus:outline-none focus:border-[#86efac] focus:ring-2 focus:ring-[#86efac]/30 transition shadow-inner">
                             </div>
 
                             <template x-if="coachPinError">
@@ -2878,7 +2879,7 @@
                 targetMealIndex: null,
 
                 // אימות ונעילת מאמן (קוד 1236)
-                isCoachAuthenticated: true,
+                isCoachAuthenticated: false,
                 coachPinInput: '',
                 coachPinError: false,
 
@@ -3063,12 +3064,12 @@
                         this.isCoachAuthenticated = true;
                         this.coachPinError = false;
                         this.coachPinInput = '';
-                        localStorage.setItem('ilaico_coach_authenticated', 'true_1236');
                         setTimeout(() => {
                             if (window.lucide) window.lucide.createIcons();
                         }, 50);
                     } else {
                         this.coachPinError = true;
+                        this.coachPinInput = '';
                     }
                 },
 
@@ -3076,7 +3077,6 @@
                     this.isCoachAuthenticated = false;
                     this.coachPinInput = '';
                     this.coachPinError = false;
-                    localStorage.removeItem('ilaico_coach_authenticated');
                     this.activeTab = 'dashboard';
                     this.selectedClientId = null;
                     setTimeout(() => {
@@ -3101,8 +3101,8 @@
                         this.selectedClientId = this.portalClientId;
                         this.isCoachAuthenticated = false;
                     } else {
-                        // כניסה ישירה ל-CRM כמאמן
-                        this.isCoachAuthenticated = true;
+                        // תמיד דורש הזנת קוד 1236 בכניסה לקישור
+                        this.isCoachAuthenticated = false;
                     }
 
                     // וידוא קיום יורי בוטקביץ עם קישור ה-Google Sheets שלו
