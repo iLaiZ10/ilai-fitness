@@ -2340,6 +2340,43 @@
                         <!-- טאב 1: פרופיל ומחשבון מאקרו -->
                         <div x-show="detailSubTab === 'profile'" x-cloak class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             <div class="space-y-6 lg:col-span-1">
+                                <!-- מעקב מים וצעדים חי של המתאמן -->
+                                <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 shadow-xl space-y-3">
+                                    <h4 class="text-xs md:text-sm font-black text-[#082722] border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
+                                        <span class="flex items-center gap-1.5">
+                                            <i data-lucide="activity" class="w-4 h-4 text-[#22c55e]"></i>
+                                            <span>מעקב יומי חי (מים וצעדים)</span>
+                                        </span>
+                                        <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">סנכרון ענן ⚡</span>
+                                    </h4>
+                                    
+                                    <div class="grid grid-cols-2 gap-2 text-xs">
+                                        <!-- מים -->
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-xl space-y-1.5 text-center">
+                                            <div class="flex items-center justify-center gap-1 text-[11px] font-bold text-[#082722]">
+                                                <i data-lucide="droplet" class="w-3.5 h-3.5 text-[#22c55e]"></i>
+                                                <span>שתיית מים היום</span>
+                                            </div>
+                                            <div class="text-base font-black text-[#082722]" x-text="(currentClient?.dailyWater || 0) + ' / ' + (currentClient?.waterTarget || 3000) + ' מ״ל'"></div>
+                                            <div class="h-1.5 w-full bg-[#e5dfd3] rounded-full overflow-hidden">
+                                                <div class="h-full bg-[#22c55e] rounded-full transition-all duration-300" :style="'width: ' + Math.min(100, Math.round(((currentClient?.dailyWater || 0) / (currentClient?.waterTarget || 3000)) * 100)) + '%'"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- צעדים -->
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-xl space-y-1.5 text-center">
+                                            <div class="flex items-center justify-center gap-1 text-[11px] font-bold text-[#082722]">
+                                                <i data-lucide="footprints" class="w-3.5 h-3.5 text-amber-500"></i>
+                                                <span>צעדים היום</span>
+                                            </div>
+                                            <div class="text-base font-black text-[#082722]" x-text="(currentClient?.dailySteps || 0) + ' / ' + (currentClient?.stepsTarget || 10000)"></div>
+                                            <div class="h-1.5 w-full bg-[#e5dfd3] rounded-full overflow-hidden">
+                                                <div class="h-full bg-amber-500 rounded-full transition-all duration-300" :style="'width: ' + Math.min(100, Math.round(((currentClient?.dailySteps || 0) / (currentClient?.stepsTarget || 10000)) * 100)) + '%'"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
                                     <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2">פרטים אישיים</h4>
                                     <div class="space-y-3 text-xs md:text-sm">
@@ -3105,6 +3142,121 @@
                                         </div>
                                     </div>
                                 </template>
+                            </div>
+                        </div>
+
+                        <!-- טאב 6: יומן תמונות ארוחות של המתאמן -->
+                        <div x-show="detailSubTab === 'foodlogs'" x-cloak class="space-y-6">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="camera" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-base md:text-lg font-black text-[#082722]">יומן תמונות ארוחות — <span x-text="currentClient?.name"></span> 📸</h3>
+                                            <p class="text-xs text-[#5f756e]">כל הארוחות והתמונות שהמתאמן העלה מהטלפון שלו בזמן אמת</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3.5 py-1.5 rounded-xl text-xs font-bold self-start sm:self-auto" x-text="(currentClient?.foodLogs?.length || 0) + ' דיווחי ארוחות במערכת'"></span>
+                                </div>
+
+                                <template x-if="!currentClient?.foodLogs || currentClient.foodLogs.length === 0">
+                                    <div class="p-12 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
+                                        <i data-lucide="camera-off" class="w-8 h-8 mx-auto text-[#7a918a]"></i>
+                                        <p class="font-bold text-xs text-[#082722]">טרם הועלו תמונות ארוחות ע״י המתאמן</p>
+                                        <p class="text-[10px]">כאשר המתאמן יצלם ארוחה באפליקציה שלו, היא תופיע כאן אוטומטית עם שעת הדיווח והפירוט!</p>
+                                    </div>
+                                </template>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <template x-for="log in (currentClient?.foodLogs || [])" :key="log.id">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm hover:border-[#22c55e]/50 transition">
+                                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
+                                                <span class="bg-[#082722] text-[#86efac] font-black px-2.5 py-1 rounded-xl text-[10px]" x-text="log.mealType || 'ארוחה'"></span>
+                                                <span class="text-[10px] text-[#5f756e] font-semibold" x-text="formatDate(log.date) + ' • ' + (log.time || '')"></span>
+                                            </div>
+
+                                            <template x-if="log.photo">
+                                                <div class="w-full h-48 rounded-xl overflow-hidden bg-black/5 relative group cursor-pointer border border-[#e5dfd3]">
+                                                    <img :src="log.photo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" />
+                                                </div>
+                                            </template>
+
+                                            <div class="bg-white p-3 rounded-xl border border-[#e5dfd3] space-y-1">
+                                                <span class="text-[9px] text-[#5f756e] block font-bold">פירוט המנה:</span>
+                                                <p class="text-xs font-bold text-[#082722] whitespace-pre-line" x-text="log.description || 'ללא פירוט מילולי'"></p>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- טאב 7: יומן שיקופים שבועיים של המתאמן ומשוב מאמן -->
+                        <div x-show="detailSubTab === 'reflections'" x-cloak class="space-y-6">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-5">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700">
+                                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-base md:text-lg font-black text-[#082722]">שיקופי סופ״ש ומשוב המאמן — <span x-text="currentClient?.name"></span> 📝</h3>
+                                            <p class="text-xs text-[#5f756e]">מעקב אחר סיכומי השבוע שהמתאמן הגיש באפליקציה האישית שלו</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3.5 py-1.5 rounded-xl text-xs font-bold self-start sm:self-auto" x-text="(currentClient?.reflectionLogs?.length || 0) + ' שיקופים הוגשו'"></span>
+                                </div>
+
+                                <template x-if="!currentClient?.reflectionLogs || currentClient.reflectionLogs.length === 0">
+                                    <div class="p-12 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
+                                        <i data-lucide="file-question" class="w-8 h-8 mx-auto text-[#7a918a]"></i>
+                                        <p class="font-bold text-xs text-[#082722]">טרם הוגשו שיקופים שבועיים ע״י המתאמן</p>
+                                        <p class="text-[10px]">שלח לו תזכורת שיקוף סופ״ש בוואטסאפ מלוח הבקרה כדי שימלא את הסיכום השבועי!</p>
+                                    </div>
+                                </template>
+
+                                <div class="space-y-4">
+                                    <template x-for="ref in (currentClient?.reflectionLogs || [])" :key="ref.id">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-5 space-y-4 shadow-sm" x-data="{ feedbackText: ref.coachFeedback || '' }">
+                                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5dfd3] pb-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="font-black text-xs md:text-sm text-[#082722]" x-text="'שיקוף מתאמן • ' + formatDate(ref.date)"></span>
+                                                </div>
+                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-3 py-0.5 rounded-full font-bold border self-start sm:self-auto" x-text="ref.reviewed ? 'נבדק ונשלח משוב ✅' : 'ממתין למשוב המאמן ⏳'"></span>
+                                            </div>
+
+                                            <!-- תוכן השיקוף של המתאמן -->
+                                            <div class="bg-white p-4 rounded-xl border border-[#e5dfd3] space-y-1">
+                                                <span class="text-[10px] text-[#5f756e] font-bold block">תוכן השיקוף שנכתב על ידי המתאמן:</span>
+                                                <p class="text-xs font-semibold text-[#082722] whitespace-pre-line leading-relaxed" x-text="ref.text"></p>
+                                            </div>
+
+                                            <!-- טופס כתיבת משוב מאמן -->
+                                            <div class="bg-[#082722] border border-[#133d35] p-4 rounded-2xl space-y-3 text-[#fbf8f2]">
+                                                <div class="flex items-center justify-between">
+                                                    <h5 class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
+                                                        <i data-lucide="crown" class="w-4 h-4"></i>
+                                                        <span>משוב והנחיות המאמן אילאי לשבוע הבא:</span>
+                                                    </h5>
+                                                    <template x-if="ref.reviewedAt">
+                                                        <span class="text-[9px] text-[#93c7bb]" x-text="'נשמר בתאריך: ' + formatDate(ref.reviewedAt)"></span>
+                                                    </template>
+                                                </div>
+                                                
+                                                <textarea x-model="feedbackText" placeholder="כתוב כאן משוב אישי, חיזוקים ודגשים למתאמן לשבוע הקרוב..." class="w-full bg-[#051c17] border border-[#1b5e50] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#86efac] h-24 resize-none leading-relaxed font-semibold"></textarea>
+                                                
+                                                <div class="flex justify-end">
+                                                    <button type="button" @click="saveCoachFeedback(currentClient.id, ref.id, feedbackText)" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
+                                                        <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                                        <span>שמור ושלח משוב למתאמן 👑</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
                         </div>
 
