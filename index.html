@@ -379,7 +379,7 @@
     <div class="flex flex-col md:flex-row h-full no-print">
         
         <!-- סרגל צד (Sidebar) - Desktop -->
-        <aside x-show="activeTab !== 'intake' && activeTab !== 'portal'" class="hidden md:flex w-64 bg-slate-900 border-l border-slate-800 flex-col shrink-0">
+        <aside x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="hidden md:flex w-64 bg-slate-900 border-l border-slate-800 flex-col shrink-0" x-cloak>
             <!-- לוגו מותג -->
             <div class="p-6 border-b border-slate-800 flex flex-col items-center justify-center">
                 <span class="text-2xl font-black tracking-wider bg-gradient-to-r from-sky-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">IlaiCo</span>
@@ -429,17 +429,22 @@
                 </button>
             </nav>
 
-            <div class="p-4 border-t border-slate-800 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-sky-500/15 to-purple-500/15 border border-sky-300 text-sky-600 flex items-center justify-center font-bold">א</div>
-                <div class="flex flex-col">
-                    <span class="text-sm font-bold text-slate-900">אילאי מאמן ראשי</span>
-                    <span class="text-xs text-slate-400">מחשבון ענן פעיל</span>
+            <div class="p-4 border-t border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-sky-500/15 to-purple-500/15 border border-sky-300 text-sky-600 flex items-center justify-center font-bold">א</div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-bold text-slate-900">אילאי מאמן</span>
+                        <span class="text-xs text-slate-400">CRM מחובר</span>
+                    </div>
                 </div>
+                <button @click="logoutCoach()" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg transition" title="התנתק">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                </button>
             </div>
         </aside>
 
         <!-- סרגל ניווט תחתון לנייד (Mobile Bottom Nav) -->
-        <div x-show="activeTab !== 'intake' && activeTab !== 'portal'" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-md border-t border-slate-800 flex items-center justify-around z-50 shadow-lg">
+        <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-md border-t border-slate-800 flex items-center justify-around z-50 shadow-lg" x-cloak>
             <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-sky-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">לוח בקרה</span>
@@ -456,9 +461,9 @@
                 <i data-lucide="credit-card" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">פיננסים</span>
             </button>
-            <button @click="activeTab = 'settings'; selectedClientId = null" :class="activeTab === 'settings' ? 'text-sky-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center flex-1 py-1">
-                <i data-lucide="settings" class="w-5 h-5"></i>
-                <span class="text-[9px] mt-0.5 font-bold">הגדרות</span>
+            <button @click="logoutCoach()" class="flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-rose-600">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span class="text-[9px] mt-0.5 font-bold">התנתק</span>
             </button>
         </div>
 
@@ -466,7 +471,7 @@
         <main class="flex-1 bg-slate-950 overflow-y-auto flex flex-col pb-20 md:pb-0">
             
             <!-- סרגל עליון (Top Header) -->
-            <header x-show="activeTab !== 'intake' && activeTab !== 'portal'" class="h-16 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+            <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="h-16 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40" x-cloak>
                 <h2 class="text-base md:text-lg font-black text-slate-900" x-text="getTabTitle()"></h2>
                 
                 <div class="flex items-center gap-3">
@@ -476,6 +481,12 @@
                         class="bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 text-white font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition shadow-md shadow-sky-500/20">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         <span>חדש</span>
+                    </button>
+                    <button 
+                        @click="logoutCoach()" 
+                        class="text-slate-400 hover:text-rose-600 p-2 rounded-xl border border-slate-800 bg-white hover:bg-rose-50 transition" 
+                        title="התנתק מניהול מאמן">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
                 </div>
             </header>
@@ -493,6 +504,53 @@
 
             <!-- גוף התוכן לפי הטאב הפעיל -->
             <div class="p-4 md:p-8 flex-1">
+                
+                <!-- מסך כניסה ואימות מאמן (קוד 1236) -->
+                <div x-show="activeTab !== 'portal' && activeTab !== 'intake' && !isCoachAuthenticated" x-cloak class="min-h-[75vh] w-full flex items-center justify-center p-4">
+                    <div class="bg-white border border-slate-200 shadow-2xl rounded-3xl p-6 md:p-8 max-w-sm w-full text-center space-y-6 relative overflow-hidden">
+                        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-sky-100/60 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-purple-100/60 rounded-full blur-2xl pointer-events-none"></div>
+
+                        <div class="space-y-2">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-sky-500/15 to-purple-500/15 border border-sky-300 text-sky-600 flex items-center justify-center text-xl font-bold shadow-inner">
+                                <i data-lucide="lock" class="w-6 h-6"></i>
+                            </div>
+                            <h2 class="text-2xl font-black bg-gradient-to-r from-sky-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">IlaiCo</h2>
+                            <h3 class="text-base font-bold text-slate-900">כניסת מאמן בלבד 🔒</h3>
+                            <p class="text-xs text-slate-500">הזן קוד גישה אישי לפתיחת מערכת ה-CRM</p>
+                        </div>
+
+                        <form @submit.prevent="loginCoach()" class="space-y-4">
+                            <div>
+                                <input 
+                                    type="password" 
+                                    inputmode="numeric" 
+                                    maxlength="8" 
+                                    required 
+                                    autofocus 
+                                    x-model="coachPinInput" 
+                                    placeholder="••••" 
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-center tracking-[0.4em] text-2xl font-black text-slate-900 focus:outline-none focus:border-sky-500 focus:bg-white transition">
+                            </div>
+
+                            <template x-if="coachPinError">
+                                <div class="bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold p-2.5 rounded-xl flex items-center justify-center gap-1.5 animate-shake">
+                                    <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                                    <span>קוד גישה שגוי, נסה שנית</span>
+                                </div>
+                            </template>
+
+                            <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 text-white font-black py-3 rounded-2xl text-sm shadow-lg shadow-sky-500/25 transition flex items-center justify-center gap-2">
+                                <i data-lucide="unlock" class="w-4 h-4"></i>
+                                <span>התחבר למערכת</span>
+                            </button>
+                        </form>
+
+                        <div class="text-[10px] text-slate-400 border-t border-slate-100 pt-3">
+                            IlaiCo Coach CRM • מאובטח
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- 0. טאב שאלון קליטה דיגיטלי ללקוח -->
                 <div x-show="activeTab === 'intake'" x-cloak class="max-w-xl mx-auto py-6 md:py-12 space-y-6">
@@ -696,13 +754,13 @@
                 <!-- 0.1 טאב אפליקציית המתאמן האישית (Client Portal) -->
                 <div x-show="activeTab === 'portal'" x-cloak class="max-w-2xl mx-auto py-2 md:py-6 space-y-6">
                     
-                    <!-- סרגל חזרה ל-CRM עבור המאמן (כאשר צופים מתוך הניהול) -->
-                    <div class="flex items-center justify-between px-2 text-xs">
-                        <button @click="activeTab = 'clients'; selectedClientId = portalClientId" class="text-slate-400 hover:text-sky-400 flex items-center gap-1.5 font-bold transition">
+                    <!-- סרגל חזרה ל-CRM עבור המאמן (מוצג אך ורק אם המאמן מחובר) -->
+                    <div x-show="isCoachAuthenticated" class="flex items-center justify-between px-2 text-xs">
+                        <button @click="activeTab = 'clients'; selectedClientId = portalClientId" class="text-slate-500 hover:text-sky-600 flex items-center gap-1.5 font-bold transition">
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             <span>חזור ל-CRM של אילאי</span>
                         </button>
-                        <span class="text-[10px] text-beige-300 bg-beige-200/10 px-2.5 py-1 rounded-full border border-beige-300/20 font-bold">📱 אפליקציית מתאמן אישית</span>
+                        <span class="text-[10px] text-sky-700 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-200 font-bold">👁️ תצוגה מקדימה של אפליקציית המתאמן</span>
                     </div>
 
                     <!-- באנר כותרת מותג וברכה אישית מאילאי -->
@@ -1089,7 +1147,7 @@
                 </div>
 
                 <!-- 1. טאב לוח בקרה -->
-                <div x-show="activeTab === 'dashboard' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'dashboard' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
@@ -1201,7 +1259,7 @@
                 </div>
 
                 <!-- 2. טאב רשימת מתאמנים -->
-                <div x-show="activeTab === 'clients' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'clients' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <!-- חיפוש ופילטרים -->
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col gap-4 shadow-xl">
                         <div class="flex flex-col md:flex-row gap-4 justify-between items-center w-full">
@@ -1336,7 +1394,7 @@
                 </div>
 
                 <!-- 3. טאב יומן שבועי -->
-                <div x-show="activeTab === 'schedule' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'schedule' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
                         <div class="flex items-center gap-4 justify-between w-full md:w-auto">
                             <h3 class="text-sm md:text-xl font-bold text-slate-200">יומן אימונים ושיחות</h3>
@@ -1388,7 +1446,7 @@
                 </div>
 
                 <!-- 4. כרטיס מתאמן מפורט -->
-                <div x-show="selectedClientId" x-cloak class="space-y-6">
+                <div x-show="selectedClientId && isCoachAuthenticated && activeTab !== 'portal'" x-cloak class="space-y-6">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
                         <div class="flex items-center gap-3">
                             <button @click="selectedClientId = null" class="bg-slate-950 border border-slate-800 text-slate-300 p-2 rounded-xl">
@@ -2103,7 +2161,7 @@
                 </div>
 
                 <!-- 5. טאב מעקב פיננסי -->
-                <div x-show="activeTab === 'finances' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'finances' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     
                     <!-- סיכום פיננסי מעורב -->
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -2265,7 +2323,7 @@
                 </div>
 
                 <!-- 6. טאב הגדרות וסנכרון ענן -->
-                <div x-show="activeTab === 'settings' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'settings' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
                         <!-- חיבור לסנכרון ענן (Firebase) -->
@@ -2689,6 +2747,11 @@
                 selectedFoodItem: null,
                 targetMealIndex: null,
 
+                // אימות ונעילת מאמן (קוד 1236)
+                isCoachAuthenticated: false,
+                coachPinInput: '',
+                coachPinError: false,
+
                 // פורטל מתאמן אישי
                 portalClientId: null,
                 portalActiveSubTab: 'workouts',
@@ -2858,7 +2921,41 @@
                     };
                 },
 
+                checkCoachAuth() {
+                    const authSaved = localStorage.getItem('ilaico_coach_authenticated');
+                    if (authSaved === 'true_1236') {
+                        this.isCoachAuthenticated = true;
+                    }
+                },
+
+                loginCoach() {
+                    if (this.coachPinInput === '1236') {
+                        this.isCoachAuthenticated = true;
+                        this.coachPinError = false;
+                        this.coachPinInput = '';
+                        localStorage.setItem('ilaico_coach_authenticated', 'true_1236');
+                        setTimeout(() => {
+                            if (window.lucide) window.lucide.createIcons();
+                        }, 50);
+                    } else {
+                        this.coachPinError = true;
+                    }
+                },
+
+                logoutCoach() {
+                    this.isCoachAuthenticated = false;
+                    this.coachPinInput = '';
+                    this.coachPinError = false;
+                    localStorage.removeItem('ilaico_coach_authenticated');
+                    this.activeTab = 'dashboard';
+                    this.selectedClientId = null;
+                    setTimeout(() => {
+                        if (window.lucide) window.lucide.createIcons();
+                    }, 50);
+                },
+
                 initApp() {
+                    this.checkCoachAuth();
                     this.loadFirebaseConfig();
                     this.resetNewClientForm();
                     this.resetNewCheckinForm();
