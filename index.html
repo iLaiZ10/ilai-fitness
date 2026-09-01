@@ -932,8 +932,130 @@
                         </div>
                     </div>
 
+                    <!-- מעקב מים וצעדים יומי (Daily Wellness Matrix) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <!-- 1. מעקב שתיית מים -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-lg space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
+                                        <i data-lucide="droplet" class="w-4 h-4 text-[#86efac]"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">מעקב שתיית מים</h4>
+                                        <p class="text-[10px] text-[#5f756e]" x-text="'יעד יומי: ' + (portalClient?.waterTarget || 3000) + ' מ״ל'"></p>
+                                    </div>
+                                </div>
+                                <div class="text-left">
+                                    <span class="text-sm md:text-base font-black text-[#082722]" x-text="(portalClient?.dailyWater || 0) + ' מ״ל'"></span>
+                                    <span class="text-[9px] text-[#5f756e] block" x-text="Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></span>
+                                </div>
+                            </div>
+
+                            <!-- מד התקדמות מים -->
+                            <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-[#86efac] to-[#22c55e] transition-all duration-300 rounded-full"
+                                     :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></div>
+                            </div>
+
+                            <!-- כפתורי שתיית מים מהירים -->
+                            <div class="flex items-center gap-1.5 pt-1">
+                                <button @click="addWater(250)" class="flex-1 bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold py-1.5 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                    <span>+250 מ״ל 🥛</span>
+                                </button>
+                                <button @click="addWater(500)" class="flex-1 bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold py-1.5 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                    <span>+500 מ״ל 🍶</span>
+                                </button>
+                                <button @click="resetWater()" class="bg-[#fbf8f2] hover:bg-rose-50 border border-[#e5dfd3] hover:border-rose-200 text-[#5f756e] hover:text-rose-600 p-1.5 rounded-xl text-[10px] transition cursor-pointer" title="איפוס מים">
+                                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 2. מעקב צעדים יומי -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-lg space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
+                                        <i data-lucide="footprints" class="w-4 h-4 text-[#86efac]"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">מעקב צעדים יומי</h4>
+                                        <p class="text-[10px] text-[#5f756e]" x-text="'יעד יומי: ' + (portalClient?.stepsTarget || 10000) + ' צעדים'"></p>
+                                    </div>
+                                </div>
+                                <div class="text-left">
+                                    <span class="text-sm md:text-base font-black text-[#082722]" x-text="(portalClient?.dailySteps || 0) + ' 🚶'"></span>
+                                    <span class="text-[9px] text-[#5f756e] block" x-text="Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></span>
+                                </div>
+                            </div>
+
+                            <!-- מד התקדמות צעדים -->
+                            <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-amber-400 to-[#22c55e] transition-all duration-300 rounded-full"
+                                     :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></div>
+                            </div>
+
+                            <!-- עדכון צעדים -->
+                            <div class="flex items-center gap-1.5 pt-1">
+                                <input type="number" 
+                                       :value="portalClient?.dailySteps || ''" 
+                                       @change="updateSteps($event.target.value)" 
+                                       placeholder="הזן כמות צעדים..." 
+                                       class="flex-1 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1.5 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e] text-center">
+                                <button @click="updateSteps((portalClient?.dailySteps || 0) + 1000)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs transition cursor-pointer">
+                                    +1,000
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- תוכן לשונית 1: אימונים אינטראקטיביים -->
                     <div x-show="portalActiveSubTab === 'workouts'" x-cloak class="space-y-4">
+                        <!-- טיימר מנוחה חכם בין סטים -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-xl space-y-3">
+                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2.5">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
+                                        <i data-lucide="timer" class="w-4 h-4 text-[#86efac]"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">סטופר מנוחה בין סטים ⏱️</h4>
+                                        <p class="text-[10px] text-[#5f756e]">מדידת זמן מדויקת עם צליל התראה בסיום המנוחה</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xl md:text-2xl font-black font-mono px-3 py-1 bg-[#082722] text-[#86efac] rounded-2xl border border-[#133d35] shadow-inner tracking-widest"
+                                          x-text="formatTimerSeconds(restTimerSeconds)"></span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between gap-2 flex-wrap pt-1">
+                                <!-- כפתורי קיצור מהירים -->
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <button @click="startRestTimer(30)" :class="restTimerTotal === 30 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac]' : 'bg-[#fbf8f2] text-[#082722]'" class="border border-[#e5dfd3] px-2.5 py-1 rounded-xl text-[10px] font-bold transition cursor-pointer">30 שנ׳</button>
+                                    <button @click="startRestTimer(60)" :class="restTimerTotal === 60 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac]' : 'bg-[#fbf8f2] text-[#082722]'" class="border border-[#e5dfd3] px-2.5 py-1 rounded-xl text-[10px] font-bold transition cursor-pointer">60 שנ׳</button>
+                                    <button @click="startRestTimer(90)" :class="restTimerTotal === 90 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac]' : 'bg-[#fbf8f2] text-[#082722]'" class="border border-[#e5dfd3] px-2.5 py-1 rounded-xl text-[10px] font-bold transition cursor-pointer">90 שנ׳</button>
+                                    <button @click="startRestTimer(120)" :class="restTimerTotal === 120 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac]' : 'bg-[#fbf8f2] text-[#082722]'" class="border border-[#e5dfd3] px-2.5 py-1 rounded-xl text-[10px] font-bold transition cursor-pointer">120 שנ׳</button>
+                                </div>
+
+                                <!-- בקרי הפעלה ועצירה -->
+                                <div class="flex items-center gap-1.5 mr-auto">
+                                    <button x-show="!isRestTimerRunning" @click="startRestTimer()" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-md shadow-emerald-500/20 cursor-pointer">
+                                        <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                                        <span>הפעל</span>
+                                    </button>
+                                    <button x-show="isRestTimerRunning" @click="pauseRestTimer()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-md shadow-amber-500/20 cursor-pointer">
+                                        <i data-lucide="pause" class="w-3.5 h-3.5 fill-current"></i>
+                                        <span>השהה</span>
+                                    </button>
+                                    <button @click="resetRestTimer()" class="bg-[#fbf8f2] hover:bg-slate-100 border border-[#e5dfd3] text-[#5f756e] font-bold px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer" title="איפוס">
+                                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- טבלת Google Sheets אישית למתאמן (אם צורפה) -->
                         <template x-if="portalClient?.googleSheetsUrl">
                             <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4">
@@ -1038,6 +1160,23 @@
 
                     <!-- תוכן לשונית 2: תזונה ויעדים -->
                     <div x-show="portalActiveSubTab === 'nutrition'" x-cloak class="space-y-4">
+                        <!-- כפתור רשימת קניות מהירה לסופר -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
+                                    <i data-lucide="shopping-cart" class="w-4 h-4 text-[#86efac]"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs md:text-sm font-black text-[#082722]">רשימת קניות חכמה לסופר 🛒</h4>
+                                    <p class="text-[10px] text-[#5f756e]">ריכוז כל המצרכים מהתפריט שלך לקנייה מהירה</p>
+                                </div>
+                            </div>
+                            <button @click="openGroceryListForClient(portalClient)" class="w-full sm:w-auto bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
+                                <i data-lucide="list-checks" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                <span>פתח רשימת קניות לסופר</span>
+                            </button>
+                        </div>
+
                         <!-- יעדים יומיים -->
                         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
                             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
@@ -1562,6 +1701,53 @@
                                     </div>
                                 </template>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- רכזת תזכורות שיקוף סופ״ש חכמה למאמן (Friday Reflection Dispatch Hub) -->
+                    <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4" x-data="{ openFridayHub: true }">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700">
+                                    <i data-lucide="bell-ring" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h3 class="text-sm md:text-base font-black text-[#082722]">תזכורות שיקוף סופ״ש בוואטסאפ 📝</h3>
+                                        <span class="bg-amber-100 text-amber-800 text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-amber-300" 
+                                              x-text="getClientsPendingFridayReflection().length + ' מתאמנים ממתינים לתזכורת'"></span>
+                                    </div>
+                                    <p class="text-[11px] text-[#5f756e]">שליחה מהירה בלחיצה אחת לכל מתאמן שטרם הגיש שיקוף שבועי לאילאי</p>
+                                </div>
+                            </div>
+                            <button @click="openFridayHub = !openFridayHub" class="text-xs text-[#5f756e] hover:text-[#082722] font-bold flex items-center gap-1 self-end sm:self-auto cursor-pointer">
+                                <span x-text="openFridayHub ? 'צמצם' : 'הצג מתאמנים'"></span>
+                                <i :data-lucide="openFridayHub ? 'chevron-up' : 'chevron-down'" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <div x-show="openFridayHub" class="space-y-3" x-cloak>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                <template x-for="client in getClientsPendingFridayReflection()" :key="client.id">
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3.5 rounded-2xl flex items-center justify-between gap-2 shadow-sm hover:border-[#22c55e]/50 transition">
+                                        <div class="space-y-0.5">
+                                            <span class="font-bold text-xs text-[#082722] block" x-text="client.name"></span>
+                                            <span class="text-[10px] text-[#5f756e] block" x-text="'טלפון: ' + client.phone"></span>
+                                        </div>
+                                        <a :href="getFridayReflectionWhatsAppLink(client)" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm shadow-emerald-600/20 transition cursor-pointer">
+                                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                            <span>שלח תזכורת</span>
+                                        </a>
+                                    </div>
+                                </template>
+                            </div>
+                            
+                            <template x-if="getClientsPendingFridayReflection().length === 0">
+                                <div class="p-4 bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl text-center text-xs text-emerald-800 font-bold flex items-center justify-center gap-2">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-[#22c55e]"></i>
+                                    <span>כל המתאמנים הגישו שיקוף שבועי לסופ״ש הקרוב! 👑</span>
+                                </div>
+                            </template>
                         </div>
                     </div>
 
@@ -2502,15 +2688,19 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                                    <button @click="saveCurrentWorkoutAsTemplate()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap">
+                                    <button @click="openOneRmModal = true; setTimeout(() => window.lucide.createIcons(), 50)" class="flex-1 md:flex-none justify-center bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3 py-1.5 rounded-xl text-[10px] font-black flex items-center gap-1.5 whitespace-nowrap border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
+                                        <i data-lucide="calculator" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                        <span>מחשבון 1RM</span>
+                                    </button>
+                                    <button @click="saveCurrentWorkoutAsTemplate()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="save" class="w-3.5 h-3.5"></i>
                                         <span>שמור תבנית</span>
                                     </button>
-                                    <button @click="addWorkoutDay()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap">
+                                    <button @click="addWorkoutDay()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                         <span>הוסף יום</span>
                                     </button>
-                                    <button @click="printWorkout(currentClient)" class="flex-1 md:flex-none justify-center bg-emerald-500 text-slate-950 px-3.5 py-1.5 rounded-xl text-[10px] font-black whitespace-nowrap">
+                                    <button @click="printWorkout(currentClient)" class="flex-1 md:flex-none justify-center bg-emerald-500 text-slate-950 px-3.5 py-1.5 rounded-xl text-[10px] font-black whitespace-nowrap cursor-pointer">
                                         <span>הדפס PDF</span>
                                     </button>
                                 </div>
@@ -2609,15 +2799,19 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                                    <button @click="saveCurrentMealPlanAsTemplate()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap">
+                                    <button @click="openGroceryListForClient(currentClient)" class="flex-1 md:flex-none justify-center bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3 py-1.5 rounded-xl text-[10px] font-black flex items-center gap-1.5 whitespace-nowrap border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
+                                        <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                        <span>רשימת קניות לסופר</span>
+                                    </button>
+                                    <button @click="saveCurrentMealPlanAsTemplate()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="save" class="w-3.5 h-3.5"></i>
                                         <span>שמור תבנית</span>
                                     </button>
-                                    <button @click="addMeal()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap">
+                                    <button @click="addMeal()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                         <span>הוסף ארוחה</span>
                                     </button>
-                                    <button @click="printWorkout(currentClient)" class="flex-1 md:flex-none justify-center bg-emerald-500 text-slate-950 px-3.5 py-1.5 rounded-xl text-[10px] font-black whitespace-nowrap">
+                                    <button @click="printWorkout(currentClient)" class="flex-1 md:flex-none justify-center bg-emerald-500 text-slate-950 px-3.5 py-1.5 rounded-xl text-[10px] font-black whitespace-nowrap cursor-pointer">
                                         <span>הדפס PDF</span>
                                     </button>
                                 </div>
@@ -3082,6 +3276,135 @@
             <option :value="ex.name"></option>
         </template>
     </datalist>
+
+    <!-- מודל מחולל רשימת קניות לסופר -->
+    <div x-show="openGroceryListModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openGroceryListModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">רשימת קניות לסופר — <span x-text="groceryListTraineeName"></span> 🛒</h3>
+                        <p class="text-xs text-[#5f756e]">מרוכזת וממוינת אוטומטית מתוך תפריט התזונה</p>
+                    </div>
+                </div>
+                <button @click="openGroceryListModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs">
+                <template x-if="groceryListItems.length === 0">
+                    <div class="p-6 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3]">
+                        <i data-lucide="info" class="w-6 h-6 mx-auto mb-2 text-[#082722]/40"></i>
+                        <span>לא נמצאו מצרכים בתפריט התזונה. הוסף פריטים לתפריט כדי להפיק רשימת קניות!</span>
+                    </div>
+                </template>
+
+                <template x-for="cat in groceryListItems" :key="cat.name">
+                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-2 shadow-sm">
+                        <h4 class="font-black text-[#082722] text-xs border-b border-[#e5dfd3] pb-1.5 flex items-center justify-between">
+                            <span x-text="cat.name"></span>
+                            <span class="text-[10px] text-[#5f756e] font-normal" x-text="cat.items.length + ' מוצרים'"></span>
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            <template x-for="item in cat.items" :key="item">
+                                <div class="flex items-center gap-2 bg-white border border-[#e5dfd3] p-2 rounded-xl text-[11px] text-[#082722] font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e]"></span>
+                                    <span x-text="item"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex flex-col sm:flex-row justify-between gap-2 shrink-0">
+                <button @click="copyGroceryList()" class="bg-[#fbf8f2] hover:bg-[#f0eae1] border border-[#e5dfd3] text-[#082722] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    <span>העתק רשימת קניות ללוח</span>
+                </button>
+                <a :href="getSendGroceryWhatsAppLink(currentClient?.phone || portalClient?.phone)" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-emerald-500/20 cursor-pointer">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    <span>שלח עכשיו בוואטסאפ 🚀</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל מחשבון משקלי עבודה ו-1RM -->
+    <div x-show="openOneRmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openOneRmModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="calculator" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">מחשבון 1RM ומשקלי עבודה 🧮</h3>
+                        <p class="text-xs text-[#5f756e]">חישוב מקסימום חזרה אחת וטבלת אחוזי אימון</p>
+                    </div>
+                </div>
+                <button @click="openOneRmModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs">
+                <!-- שדות הזנה -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל שהורם (ק״ג):</label>
+                            <input type="number" step="0.5" x-model.number="oneRmWeight" placeholder="100" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-3 py-2 text-sm font-black text-[#082722] text-center focus:outline-none focus:border-[#22c55e]">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">כמות חזרות שבוצעו:</label>
+                            <input type="number" min="1" max="30" x-model.number="oneRmReps" placeholder="5" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-3 py-2 text-sm font-black text-[#082722] text-center focus:outline-none focus:border-[#22c55e]">
+                        </div>
+                    </div>
+
+                    <!-- תוצאת 1RM משוער -->
+                    <div class="bg-[#082722] border border-[#133d35] rounded-2xl p-4 text-center space-y-1 shadow-inner text-[#fbf8f2]">
+                        <span class="text-[10px] text-[#86efac] font-bold block uppercase tracking-wider">1RM משוער (מקסימום חזרה אחת)</span>
+                        <div class="text-2xl md:text-3xl font-black text-white" x-text="calculateOneRm() + ' ק״ג'"></div>
+                        <span class="text-[9px] text-[#93c7bb]">מחושב לפי מודל Brzycki / Epley</span>
+                    </div>
+                </div>
+
+                <!-- טבלת אחוזי עבודה מלאה -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-2">
+                    <h4 class="font-black text-[#082722] text-xs border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
+                        <span>טבלת אחוזי עבודה וטווחי חזרות</span>
+                        <span class="text-[10px] text-[#5f756e] font-normal">המלצות אימון</span>
+                    </h4>
+                    
+                    <div class="space-y-1.5 pt-1">
+                        <template x-for="p in getOneRmPercentages()" :key="p.percent">
+                            <div class="flex items-center justify-between bg-white border border-[#e5dfd3] p-2.5 rounded-xl text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-9 text-center font-black text-[#082722] bg-[#f0eae1] px-1.5 py-0.5 rounded-lg text-[11px]" x-text="p.percent + '%'"></span>
+                                    <div>
+                                        <span class="font-bold text-[#082722] block text-xs" x-text="p.desc"></span>
+                                        <span class="text-[10px] text-[#5f756e]" x-text="p.reps"></span>
+                                    </div>
+                                </div>
+                                <span class="font-black text-sm text-[#082722]" x-text="p.weight + ' ק״ג'"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
+                <button type="button" @click="openOneRmModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור מחשבון
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- מודל 0: שליחת שאלון קליטה מורחב למתאמן חדש -->
     <div x-show="openSendIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openSendIntakeModal = false">
@@ -3598,6 +3921,28 @@
                 openAddEventModal: false,
                 openImportIntakeModal: false,
                 openFoodLibraryModal: false,
+
+                // מעקב מים וצעדים יומי בפורטל
+                portalDailyWater: 0,
+                portalWaterTarget: 3000,
+                portalDailySteps: 0,
+                portalStepsTarget: 10000,
+
+                // טיימר מנוחה בין סטים
+                restTimerSeconds: 60,
+                restTimerTotal: 60,
+                restTimerInterval: null,
+                isRestTimerRunning: false,
+
+                // מחולל רשימת קניות לסופר
+                openGroceryListModal: false,
+                groceryListItems: [],
+                groceryListTraineeName: '',
+
+                // מחשבון 1RM ומשקלי עבודה
+                openOneRmModal: false,
+                oneRmWeight: 100,
+                oneRmReps: 5,
 
                 // ספריית מזונות חכמה
                 foodSearchQuery: '',
@@ -5363,6 +5708,231 @@
                     this.saveData();
                     this.openEditIntakeModal = false;
                     alert(`שאלון הקליטה של ${client.name} עודכן ונשמר בהצלחה! 👑`);
+                },
+
+                // --- מתודות מעקב שתיית מים וצעדים ---
+                addWater(amount) {
+                    const client = this.portalClient;
+                    if (!client) return;
+                    if (!client.dailyWater) client.dailyWater = 0;
+                    client.dailyWater = Math.max(0, client.dailyWater + amount);
+                    this.portalDailyWater = client.dailyWater;
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                },
+
+                resetWater() {
+                    const client = this.portalClient;
+                    if (!client) return;
+                    client.dailyWater = 0;
+                    this.portalDailyWater = 0;
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                },
+
+                updateSteps(steps) {
+                    const client = this.portalClient;
+                    if (!client) return;
+                    client.dailySteps = parseInt(steps) || 0;
+                    this.portalDailySteps = client.dailySteps;
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                },
+
+                // --- מתודות סטופר וטיימר מנוחה בין סטים ---
+                startRestTimer(seconds) {
+                    if (seconds) {
+                        this.restTimerTotal = seconds;
+                        this.restTimerSeconds = seconds;
+                    } else if (this.restTimerSeconds === 0) {
+                        this.restTimerSeconds = this.restTimerTotal;
+                    }
+                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
+                    this.isRestTimerRunning = true;
+                    
+                    this.restTimerInterval = setInterval(() => {
+                        if (this.restTimerSeconds > 0) {
+                            this.restTimerSeconds--;
+                        } else {
+                            this.stopRestTimer();
+                            this.playTimerChime();
+                        }
+                    }, 1000);
+                },
+
+                pauseRestTimer() {
+                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
+                    this.isRestTimerRunning = false;
+                },
+
+                stopRestTimer() {
+                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
+                    this.isRestTimerRunning = false;
+                    this.restTimerSeconds = 0;
+                },
+
+                resetRestTimer() {
+                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
+                    this.isRestTimerRunning = false;
+                    this.restTimerSeconds = this.restTimerTotal;
+                },
+
+                formatTimerSeconds(totalSeconds) {
+                    const s = parseInt(totalSeconds) || 0;
+                    const mins = Math.floor(s / 60);
+                    const secs = s % 60;
+                    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                },
+
+                playTimerChime() {
+                    try {
+                        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                        if (!AudioCtx) return;
+                        const ctx = new AudioCtx();
+                        const now = ctx.currentTime;
+                        
+                        const osc1 = ctx.createOscillator();
+                        const gain1 = ctx.createGain();
+                        osc1.type = 'sine';
+                        osc1.frequency.setValueAtTime(587.33, now);
+                        gain1.gain.setValueAtTime(0.3, now);
+                        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                        osc1.connect(gain1);
+                        gain1.connect(ctx.destination);
+                        osc1.start(now);
+                        osc1.stop(now + 0.3);
+
+                        const osc2 = ctx.createOscillator();
+                        const gain2 = ctx.createGain();
+                        osc2.type = 'sine';
+                        osc2.frequency.setValueAtTime(880.00, now + 0.15);
+                        gain2.gain.setValueAtTime(0.4, now + 0.15);
+                        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                        osc2.connect(gain2);
+                        gain2.connect(ctx.destination);
+                        osc2.start(now + 0.15);
+                        osc2.stop(now + 0.6);
+                    } catch(e) {
+                        console.log("Audio chime error:", e);
+                    }
+                },
+
+                // --- מתודות מחולל רשימת קניות לסופר ---
+                openGroceryListForClient(client) {
+                    const c = client || this.portalClient || this.clients.find(cl => cl.id === this.selectedClientId);
+                    if (!c) return;
+                    this.groceryListTraineeName = c.name || '';
+                    
+                    const categories = {
+                        proteins: { name: '🥩 חלבונים, בשרים ומוצרי חלב', items: [] },
+                        carbs: { name: '🍚 פחמימות, דגנים ולחמים', items: [] },
+                        fats: { name: '🥑 שמנים בריאים, אגוזים וטחינה', items: [] },
+                        vegFruit: { name: '🥦 ירקות, עלים ירוקים ופירות', items: [] },
+                        other: { name: '🧂 שונות, תבלינים ומצרכים כלליים', items: [] }
+                    };
+
+                    const allItems = [];
+                    if (c.mealPlan && c.mealPlan.meals) {
+                        c.mealPlan.meals.forEach(m => {
+                            if (m.items) {
+                                m.items.forEach(i => {
+                                    if (i.food && !allItems.includes(i.food)) {
+                                        allItems.push(i.food);
+                                        const fLower = i.food.toLowerCase();
+                                        
+                                        if (fLower.includes('עוף') || fLower.includes('בקר') || fLower.includes('חזה') || fLower.includes('ביצה') || fLower.includes('ביצים') || fLower.includes('טונה') || fLower.includes('קוטג') || fLower.includes('גבינ') || fLower.includes('יוגורט') || fLower.includes('דג') || fLower.includes('סלמון') || fLower.includes('חלבון') || fLower.includes('טופו') || fLower.includes('פרו')) {
+                                            categories.proteins.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
+                                        } else if (fLower.includes('אורז') || fLower.includes('שיבולת') || fLower.includes('לחם') || fLower.includes('פסטה') || fLower.includes('תפוח אדמה') || fLower.includes('בטטה') || fLower.includes('פריכיות') || fLower.includes('קינואה') || fLower.includes('כוסמת') || fLower.includes('פתיתים') || fLower.includes('טורטיה')) {
+                                            categories.carbs.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
+                                        } else if (fLower.includes('טחינה') || fLower.includes('שמן') || fLower.includes('אבוקדו') || fLower.includes('שקדים') || fLower.includes('אגוז') || fLower.includes('בוטנים') || fLower.includes('קשיו') || fLower.includes('זרעי')) {
+                                            categories.fats.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
+                                        } else if (fLower.includes('מלפפון') || fLower.includes('עגבני') || fLower.includes('חסה') || fLower.includes('פלפל') || fLower.includes('גזר') || fLower.includes('תפוח') || fLower.includes('בננה') || fLower.includes('פירות') || fLower.includes('תרד') || fLower.includes('כרוב') || fLower.includes('פטריות') || fLower.includes('ברוקולי')) {
+                                            categories.vegFruit.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
+                                        } else {
+                                            categories.other.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                    this.groceryListItems = Object.values(categories).filter(cat => cat.items.length > 0);
+                    this.openGroceryListModal = true;
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                getGroceryListText() {
+                    let text = `🛒 *רשימת קניות לסופר - ${this.groceryListTraineeName}*\nמאמן: אילאי | IlaiCo Fitness 💪\n\n`;
+                    this.groceryListItems.forEach(cat => {
+                        text += `*${cat.name}:*\n`;
+                        cat.items.forEach(item => {
+                            text += `• ${item}\n`;
+                        });
+                        text += `\n`;
+                    });
+                    text += `קנייה נעימה ובהצלחה ביעדי התזונה! 👑`;
+                    return text;
+                },
+
+                copyGroceryList() {
+                    const text = this.getGroceryListText();
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert("רשימת הקניות הועתקה בהצלחה ללוח!");
+                    }).catch(() => {
+                        prompt("העתק את רשימת הקניות:", text);
+                    });
+                },
+
+                getSendGroceryWhatsAppLink(phone) {
+                    const cleanPhone = (phone || '').replace(/\D/g, '');
+                    const israelPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
+                    const msg = encodeURIComponent(this.getGroceryListText());
+                    return israelPhone ? `https://wa.me/${israelPhone}?text=${msg}` : `https://wa.me/?text=${msg}`;
+                },
+
+                // --- מתודות מחשבון 1RM ומשקלי עבודה ---
+                calculateOneRm() {
+                    const w = parseFloat(this.oneRmWeight) || 0;
+                    const r = parseInt(this.oneRmReps) || 1;
+                    if (w <= 0 || r <= 0) return 0;
+                    if (r === 1) return Math.round(w * 10) / 10;
+                    const epley = w * (1 + r / 30);
+                    return Math.round(epley * 10) / 10;
+                },
+
+                getOneRmPercentages() {
+                    const oneRm = this.calculateOneRm();
+                    if (!oneRm) return [];
+                    return [
+                        { percent: 95, reps: '1-2 חזרות', desc: 'כוח מקסימלי', weight: Math.round(oneRm * 0.95 * 10) / 10 },
+                        { percent: 90, reps: '3-4 חזרות', desc: 'כוח כבד', weight: Math.round(oneRm * 0.90 * 10) / 10 },
+                        { percent: 85, reps: '5-6 חזרות', desc: 'היפרטרופיה כבדה', weight: Math.round(oneRm * 0.85 * 10) / 10 },
+                        { percent: 80, reps: '7-8 חזרות', desc: 'היפרטרופיה קלאסית', weight: Math.round(oneRm * 0.80 * 10) / 10 },
+                        { percent: 75, reps: '9-10 חזרות', desc: 'נפח והיפרטרופיה', weight: Math.round(oneRm * 0.75 * 10) / 10 },
+                        { percent: 70, reps: '11-12 חזרות', desc: 'סיבולת שריר', weight: Math.round(oneRm * 0.70 * 10) / 10 },
+                        { percent: 65, reps: '13-15 חזרות', desc: 'חימום וסיבולת', weight: Math.round(oneRm * 0.65 * 10) / 10 }
+                    ];
+                },
+
+                // --- מתודות תזכורת שיקוף סופ״ש ---
+                getFridayReflectionWhatsAppLink(client) {
+                    if (!client) return '#';
+                    const cleanPhone = (client.phone || '').replace(/\D/g, '');
+                    const israelPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
+                    const portalUrl = this.getClientPortalUrl(client.id);
+                    const msg = encodeURIComponent(`היי ${client.name}! כאן אילאי מאמן הכושר והתזונה שלך 💪\n\nסוף השבוע כבר כאן וזה הזמן לשיקוף השבועי שלנו! 📝\nהיכנס לאפליקציה האישית שלך בקישור:\n${portalUrl}\n\nובלשונית "Drive & אוכל" -> "שיקוף שבועי לאילאי", כתוב לי איך עבר השבוע (אימונים, תזונה, איך ההרגשה ומה נשפר לשבוע הבא). אעבור על הכל בסופ״ש כדי לדייק אותך לשבוע הבא! 🔥👑`);
+                    return israelPhone ? `https://wa.me/${israelPhone}?text=${msg}` : `https://wa.me/?text=${msg}`;
+                },
+
+                getClientsPendingFridayReflection() {
+                    return this.clients.filter(c => c.status === 'active' && !this.hasRecentReflection(c));
                 },
 
                 copyOnboardingQuestionnaire() {
