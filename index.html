@@ -2071,9 +2071,10 @@
                                     <p class="text-[11px] text-[#5f756e]">שליחה מהירה בלחיצה אחת לכל מתאמן שטרם הגיש שיקוף שבועי לאילאי</p>
                                 </div>
                             </div>
-                            <button @click="openFridayHub = !openFridayHub" class="text-xs text-[#5f756e] hover:text-[#082722] font-bold flex items-center gap-1 self-end sm:self-auto cursor-pointer">
+                            <button @click="openFridayHub = !openFridayHub; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" class="text-xs text-[#5f756e] hover:text-[#082722] font-bold flex items-center gap-1 self-end sm:self-auto cursor-pointer">
                                 <span x-text="openFridayHub ? 'צמצם' : 'הצג מתאמנים'"></span>
-                                <i :data-lucide="openFridayHub ? 'chevron-up' : 'chevron-down'" class="w-4 h-4"></i>
+                                <i x-show="openFridayHub" data-lucide="chevron-up" class="w-4 h-4"></i>
+                                <i x-show="!openFridayHub" data-lucide="chevron-down" class="w-4 h-4"></i>
                             </button>
                         </div>
 
@@ -2179,7 +2180,12 @@
                                             <!-- שקילה שבועית -->
                                             <td class="py-3.5 px-3 text-center">
                                                 <span :class="isClientCheckedInThisWeek(client) ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-flex items-center gap-1">
-                                                    <i :data-lucide="isClientCheckedInThisWeek(client) ? 'check-circle-2' : 'clock'" class="w-3 h-3"></i>
+                                                    <template x-if="isClientCheckedInThisWeek(client)">
+                                                        <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-700"></i>
+                                                    </template>
+                                                    <template x-if="!isClientCheckedInThisWeek(client)">
+                                                        <i data-lucide="clock" class="w-3 h-3 text-amber-700"></i>
+                                                    </template>
                                                     <span x-text="isClientCheckedInThisWeek(client) ? 'נשקל השבוע' : 'ממתין לשקילה'"></span>
                                                 </span>
                                                 <span class="text-[9px] text-[#7a918a] block mt-0.5" x-text="getClientLastCheckinDate(client)"></span>
@@ -2759,10 +2765,11 @@
                                 <!-- שאלון קליטה מורחב -->
                                 <div class="bg-white border border-[#e5dfd3] rounded-2xl p-5 shadow-xl space-y-4" x-data="{ openIntake: false }">
                                     <div class="flex justify-between items-center border-b border-[#e5dfd3] pb-3">
-                                        <button @click="openIntake = !openIntake; setTimeout(() => window.lucide.createIcons(), 50);" class="flex items-center gap-2 text-xs md:text-sm font-black text-[#082722] text-right focus:outline-none">
+                                        <button @click="openIntake = !openIntake; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" class="flex items-center gap-2 text-xs md:text-sm font-black text-[#082722] text-right focus:outline-none cursor-pointer">
                                             <i data-lucide="file-heart" class="w-4 h-4 text-[#22c55e]"></i>
                                             <span>תשובות שאלון קליטה מורחב</span>
-                                            <i :data-lucide="openIntake ? 'chevron-up' : 'chevron-down'" class="w-4 h-4 text-slate-400 mr-1"></i>
+                                            <i x-show="openIntake" data-lucide="chevron-up" class="w-4 h-4 text-slate-400 mr-1"></i>
+                                            <i x-show="!openIntake" data-lucide="chevron-down" class="w-4 h-4 text-slate-400 mr-1"></i>
                                         </button>
                                         <div class="flex items-center gap-2">
                                             <button @click="openEditIntake(currentClient)" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 transition">
@@ -6324,8 +6331,14 @@
                     }
                 },
 
-                isCurrentMonthPaid(client) { return !client.payments.find(p => p.status === 'pending'); },
-                getClientPaidSum(client) { return client.payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0); },
+                isCurrentMonthPaid(client) { 
+                    if (!client || !client.payments) return false;
+                    return !client.payments.find(p => p.status === 'pending'); 
+                },
+                getClientPaidSum(client) { 
+                    if (!client || !client.payments) return 0;
+                    return client.payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0); 
+                },
                 
                 // --- שיטות פוקוס שבועי, אימונים, תזונה וייבוא ---
                 markPersonalSessionDone(clientId) {
@@ -6743,6 +6756,13 @@
                     const portalUrl = this.getClientPortalUrl(client.id);
                     const msg = encodeURIComponent(`היי ${client.name}! כאן אילאי מאמן הכושר והתזונה שלך 💪\n\nסוף השבוע כבר כאן וזה הזמן לשיקוף השבועי שלנו! 📝\nהיכנס לאפליקציה האישית שלך בקישור:\n${portalUrl}\n\nובלשונית "Drive & אוכל" -> "שיקוף שבועי לאילאי", כתוב לי איך עבר השבוע (אימונים, תזונה, איך ההרגשה ומה נשפר לשבוע הבא). אעבור על הכל בסופ״ש כדי לדייק אותך לשבוע הבא! 🔥👑`);
                     return israelPhone ? `https://wa.me/${israelPhone}?text=${msg}` : `https://wa.me/?text=${msg}`;
+                },
+
+                hasRecentReflection(client) {
+                    if (!client || !client.reflectionLogs || client.reflectionLogs.length === 0) return false;
+                    const now = new Date();
+                    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    return client.reflectionLogs.some(r => r && r.date && new Date(r.date) >= oneWeekAgo);
                 },
 
                 getClientsPendingFridayReflection() {
@@ -7415,15 +7435,24 @@
                 },
 
                 getTodayScorecard(client) {
-                    if (!client || !client.dailyScorecards || client.dailyScorecards.length === 0) return null;
+                    if (!client || !client.dailyScorecards) return null;
                     const todayStr = this.getTodayDate();
-                    return client.dailyScorecards.find(sc => sc.date === todayStr) || null;
+                    if (Array.isArray(client.dailyScorecards)) {
+                        return client.dailyScorecards.find(sc => sc && sc.date === todayStr) || null;
+                    }
+                    if (typeof client.dailyScorecards === 'object') {
+                        return client.dailyScorecards[todayStr] || null;
+                    }
+                    return null;
                 },
 
                 saveDailyScorecard() {
                     const client = this.portalClient;
                     if (!client || !client.id) return;
                     if (!client.dailyScorecards) client.dailyScorecards = [];
+                    if (!Array.isArray(client.dailyScorecards)) {
+                        client.dailyScorecards = Object.values(client.dailyScorecards);
+                    }
 
                     const todayStr = this.getTodayDate();
                     const waterTarget = client.waterTarget || 3000;
@@ -7494,13 +7523,25 @@
                         { name: "לחיצת כתפיים (Overhead Press)", weight: 0, reps: 0, date: null }
                     ];
 
-                    if (!client || !client.personalRecords || client.personalRecords.length === 0) {
+                    if (!client || !client.personalRecords) {
                         return defaultExercises;
                     }
 
                     const res = [];
                     const clientPrMap = {};
-                    client.personalRecords.forEach(pr => { clientPrMap[pr.name] = pr; });
+
+                    if (Array.isArray(client.personalRecords)) {
+                        client.personalRecords.forEach(pr => {
+                            if (pr && pr.name) clientPrMap[pr.name] = pr;
+                        });
+                    } else if (typeof client.personalRecords === 'object') {
+                        Object.keys(client.personalRecords).forEach(k => {
+                            const val = client.personalRecords[k];
+                            if (val && typeof val === 'object') {
+                                clientPrMap[k] = { name: val.name || k, ...val };
+                            }
+                        });
+                    }
 
                     defaultExercises.forEach(def => {
                         if (clientPrMap[def.name]) {
@@ -7512,7 +7553,7 @@
                     });
 
                     Object.values(clientPrMap).forEach(customPr => {
-                        res.push(customPr);
+                        if (customPr && customPr.name) res.push(customPr);
                     });
 
                     return res;
