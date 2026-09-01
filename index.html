@@ -565,8 +565,14 @@
             <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="h-16 border-b border-[#e5dfd3] flex items-center justify-between px-4 md:px-8 bg-white/90 backdrop-blur-md sticky top-0 z-40" x-cloak>
                 <h2 class="text-base md:text-lg font-black text-[#082722]" x-text="getTabTitle()"></h2>
                 
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2.5">
                     <div class="hidden sm:block text-xs text-[#5f756e] font-semibold" x-text="getTodayFormattedDate()"></div>
+                    <button 
+                        @click="openSendIntakeForClient(null)" 
+                        class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-3 py-1.5 md:px-3.5 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition shadow-md shadow-emerald-500/20">
+                        <i data-lucide="send" class="w-4 h-4 text-white"></i>
+                        <span>שלח שאלון קליטה 🚀</span>
+                    </button>
                     <button 
                         @click="openAddClientModal = true" 
                         class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-3.5 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15">
@@ -668,13 +674,19 @@
 
                     <!-- מסך הצלחה -->
                     <template x-if="intakeSuccess">
-                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 text-center space-y-6 shadow-2xl animate-fade-in">
-                            <div class="w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 text-emerald-450 rounded-full flex items-center justify-center mx-auto">
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-8 text-center space-y-6 shadow-2xl animate-fade-in">
+                            <div class="w-16 h-16 bg-[#082722] text-[#86efac] rounded-full flex items-center justify-center mx-auto shadow-lg shadow-[#082722]/20">
                                 <i data-lucide="check" class="w-8 h-8"></i>
                             </div>
                             <div class="space-y-2">
-                                <h3 class="text-lg font-bold text-slate-200">השאלון נשלח בהצלחה!</h3>
-                                <p class="text-xs text-slate-400 leading-relaxed">הפרטים שלך נקלטו בהצלחה במערכת של אילאי. ניפגש בקרוב לתחילת העבודה המשותפת 💪</p>
+                                <h3 class="text-xl font-black text-[#082722]">השאלון נשלח בהצלחה לאילאי! 🚀</h3>
+                                <p class="text-xs text-[#5f756e] leading-relaxed max-w-md mx-auto">הפרטים שלך נקלטו בהצלחה במערכת הליווי של אילאי. התוכנית המותאמת אישית שלך מתחילה עכשיו!</p>
+                            </div>
+                            <div class="pt-2">
+                                <a :href="'https://wa.me/972509172005?text=' + encodeURIComponent('היי אילאי! סיימתי כרגע למלא את שאלון הקליטה המורחב באפליקציה 💪')" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black py-3.5 px-6 rounded-2xl text-xs inline-flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                    <span>עדכן את אילאי בוואטסאפ שסיימת 👑</span>
+                                </a>
                             </div>
                         </div>
                     </template>
@@ -1750,22 +1762,22 @@
                             </div>
                         </div>
 
-                        <!-- שאלון קליטה מהיר -->
-                        <div class="border-t border-slate-800/80 pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
-                            <div class="text-right text-slate-400">
-                                <span class="font-bold text-slate-200 block mb-0.5">שאלון קליטה למתאמן</span>
-                                <span>שלח למתאמן שאלון טקסטואלי, או קישור לשאלון דיגיטלי שימולא ישירות לאתר!</span>
+                        <!-- שאלון קליטה מהיר ושליחה -->
+                        <div class="border-t border-[#e5dfd3] pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
+                            <div class="text-right text-[#5f756e]">
+                                <span class="font-black text-[#082722] block mb-0.5 text-xs sm:text-sm">שאלון קליטה מורחב למתאמן 📋</span>
+                                <span>שלח קישור ישיר לוואטסאפ של מתאמן חדש — המערכת תיצור את הכרטיס שלו אוטומטית כשיסיים!</span>
                             </div>
                             <div class="flex items-center gap-2 w-full sm:w-auto flex-wrap">
-                                <button @click="copyIntakeLink()" class="flex-1 sm:flex-initial bg-emerald-500 text-slate-950 font-bold px-3 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg">
-                                    <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
-                                    <span>העתק קישור לשאלון דיגיטלי</span>
+                                <button @click="openSendIntakeForClient(null)" class="flex-1 sm:flex-initial bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20">
+                                    <i data-lucide="send" class="w-3.5 h-3.5 text-white"></i>
+                                    <span>שלח שאלון בוואטסאפ 🚀</span>
                                 </button>
-                                <button @click="copyOnboardingQuestionnaire()" class="flex-1 sm:flex-initial bg-slate-950 border border-slate-800 text-slate-300 font-bold px-3 py-2 rounded-xl transition flex items-center justify-center gap-1.5">
-                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                                    <span>העתק שאלון טקסט</span>
+                                <button @click="copyIntakeLink()" class="flex-1 sm:flex-initial bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 border border-[#174e43]">
+                                    <i data-lucide="copy" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                    <span>העתק קישור לשאלון</span>
                                 </button>
-                                <button @click="openImportIntakeModal = true" class="flex-1 sm:flex-initial bg-slate-950 border border-slate-800 text-slate-300 font-bold px-3 py-2 rounded-xl transition flex items-center justify-center gap-1.5">
+                                <button @click="openImportIntakeModal = true" class="flex-1 sm:flex-initial bg-white border border-[#e5dfd3] text-[#082722] hover:bg-slate-50 font-bold px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5">
                                     <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                                     <span>ייבא שאלון טקסט</span>
                                 </button>
@@ -2934,6 +2946,64 @@
         </template>
     </datalist>
 
+    <!-- מודל 0: שליחת שאלון קליטה מורחב למתאמן חדש -->
+    <div x-show="openSendIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openSendIntakeModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">שליחת שאלון קליטה מורחב 🚀</h3>
+                        <p class="text-xs text-[#5f756e]">המתאמן ימלא, והכרטיס שלו ייפתח אוטומטית במערכת!</p>
+                    </div>
+                </div>
+                <button @click="openSendIntakeModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- טופס שליחה מהירה בוואטסאפ -->
+            <div class="space-y-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-[#082722]">שם המתאמן (אופציונלי):</label>
+                        <input type="text" x-model="sendIntakeClientName" placeholder="למשל: דניאל" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3.5 py-2.5 text-xs text-[#082722] font-semibold focus:outline-none focus:border-[#22c55e]">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-[#082722]">טלפון לשליחה בוואטסאפ:</label>
+                        <input type="tel" x-model="sendIntakeClientPhone" placeholder="050-1234567" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3.5 py-2.5 text-xs text-[#082722] font-semibold text-left focus:outline-none focus:border-[#22c55e]">
+                    </div>
+                </div>
+
+                <!-- תצוגה מקדימה של ההודעה -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-2 text-[#233d36]">
+                    <span class="font-bold text-[11px] text-[#5f756e] block">תצוגה מקדימה של ההודעה שתישלח:</span>
+                    <p class="leading-relaxed whitespace-pre-line text-xs font-medium" x-text="getSendIntakeMessageText()"></p>
+                </div>
+
+                <!-- כפתורי פעולה -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                    <a :href="getSendIntakeWhatsAppLink()" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>שלח עכשיו בוואטסאפ 🚀</span>
+                    </a>
+                    <button type="button" @click="copyIntakeLink()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#174e43] transition">
+                        <i data-lucide="copy" class="w-4 h-4 text-[#86efac]"></i>
+                        <span>העתק קישור לשאלון</span>
+                    </button>
+                </div>
+
+                <div class="border-t border-[#e5dfd3] pt-3 text-center">
+                    <button type="button" @click="openSendIntakeModal = false; activeTab = 'intake'; intakeStep = 1; setTimeout(() => window.lucide.createIcons(), 50)" class="text-xs text-[#5f756e] hover:text-[#082722] font-bold underline">
+                        או פתח את השאלון למילוי ישיר יחד עם המתאמן 📝
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- מודל 1: הוספת מתאמן חדש -->
     <div x-show="openAddClientModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
         <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col mx-4" @click.away="openAddClientModal = false">
@@ -3253,6 +3323,9 @@
                 statusFilter: 'all',
                 
                 // מודלים
+                openSendIntakeModal: false,
+                sendIntakeClientName: '',
+                sendIntakeClientPhone: '',
                 openAddClientModal: false,
                 openEditModal: false,
                 openAddEventModal: false,
@@ -4924,6 +4997,59 @@
                         }
                         this.saveData();
                     }
+                },
+
+                // --- שיטות שליחת שאלון קליטה דיגיטלי ---
+                getIntakeUrl() {
+                    return window.location.origin + window.location.pathname + '?intake=true';
+                },
+
+                getSendIntakeMessageText() {
+                    const namePart = this.sendIntakeClientName ? ` ${this.sendIntakeClientName}` : '';
+                    const link = this.getIntakeUrl();
+                    return `היי${namePart}! כאן אילאי מאמן הכושר והתזונה שלך 💪\n\nכדי שאוכל לבנות עבורך תוכנית אימונים ותפריט תזונה מותאמים אישית ב-100%, הכנתי עבורך שאלון קליטה קצר ומדויק בקישור הבא:\n${link}\n\nזה לוקח 2 דקות בלבד. ברגע שתסיים אקבל את הפרטים במערכת ונתחיל בעבודה המשותפת! 👑`;
+                },
+
+                getSendIntakeWhatsAppLink(phone, name) {
+                    const p = phone !== undefined ? phone : this.sendIntakeClientPhone;
+                    const n = name !== undefined ? name : this.sendIntakeClientName;
+                    const cleanPhone = (p || '').replace(/\D/g, '');
+                    const israelPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
+                    const namePart = n ? ` ${n}` : '';
+                    const link = this.getIntakeUrl();
+                    const msg = encodeURIComponent(`היי${namePart}! כאן אילאי מאמן הכושר והתזונה שלך 💪\n\nכדי שאוכל לבנות עבורך תוכנית אימונים ותפריט תזונה מותאמים אישית ב-100%, הכנתי עבורך שאלון קליטה קצר ומדויק בקישור הבא:\n${link}\n\nזה לוקח 2 דקות בלבד. ברגע שתסיים אקבל את הפרטים במערכת ונתחיל בעבודה המשותפת! 👑`);
+                    return israelPhone ? `https://wa.me/${israelPhone}?text=${msg}` : `https://wa.me/?text=${msg}`;
+                },
+
+                copyIntakeLink() {
+                    const link = this.getIntakeUrl();
+                    navigator.clipboard.writeText(link).then(() => {
+                        alert("קישור שאלון הקליטה הועתק בהצלחה ללוח!\n\n" + link);
+                    }).catch(() => {
+                        prompt("העתק את קישור שאלון הקליטה:", link);
+                    });
+                },
+
+                openSendIntakeForClient(client) {
+                    if (client) {
+                        this.sendIntakeClientName = client.name || '';
+                        this.sendIntakeClientPhone = client.phone || '';
+                    } else {
+                        this.sendIntakeClientName = '';
+                        this.sendIntakeClientPhone = '';
+                    }
+                    this.openSendIntakeModal = true;
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                copyOnboardingQuestionnaire() {
+                    const link = this.getIntakeUrl();
+                    const text = `📋 *שאלון קליטה - אילאי אימונים ותזונה*\n\nכדי שנתחיל ברגל ימין, אנא מלא את השאלון הדיגיטלי בקישור:\n${link}\n\nאו השב על השאלות הבאות:\n1. שם מלא:\n2. מספר טלפון:\n3. גיל, גובה ומשקל נוכחי:\n4. שעות שינה ממוצעות:\n5. רמת פעילות יומיומית:\n6. היסטוריית אימונים ופציעות:\n7. מטרות ראשיות:\n8. מזונות מועדפים / לא אהובים:\n\nנשתמע בהקדם! 💪`;
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert("טקסט שאלון הקליטה הועתק ללוח בהצלחה!");
+                    }).catch(() => {
+                        prompt("העתק את טקסט השאלון:", text);
+                    });
                 },
 
                 parseAndCreateClientFromIntake() {
