@@ -300,7 +300,7 @@
     <div class="flex flex-col md:flex-row h-full no-print">
         
         <!-- סרגל צד (Sidebar) - Desktop -->
-        <aside x-show="activeTab !== 'intake'" class="hidden md:flex w-64 bg-slate-900 border-l border-slate-800 flex-col shrink-0">
+        <aside x-show="activeTab !== 'intake' && activeTab !== 'portal'" class="hidden md:flex w-64 bg-slate-900 border-l border-slate-800 flex-col shrink-0">
             <!-- לוגו מותג -->
             <div class="p-6 border-b border-slate-800 flex flex-col items-center justify-center">
                 <span class="text-2xl font-black tracking-wider text-emerald-500">IlaiCo</span>
@@ -360,7 +360,7 @@
         </aside>
 
         <!-- סרגל ניווט תחתון לנייד (Mobile Bottom Nav) -->
-        <div x-show="activeTab !== 'intake'" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900 border-t border-slate-800/80 flex items-center justify-around z-50 shadow-2xl">
+        <div x-show="activeTab !== 'intake' && activeTab !== 'portal'" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900 border-t border-slate-800/80 flex items-center justify-around z-50 shadow-2xl">
             <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-emerald-400' : 'text-slate-400'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">לוח בקרה</span>
@@ -387,7 +387,7 @@
         <main class="flex-1 bg-slate-950 overflow-y-auto flex flex-col pb-20 md:pb-0">
             
             <!-- סרגל עליון (Top Header) -->
-            <header x-show="activeTab !== 'intake'" class="h-16 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 bg-slate-900/40 backdrop-blur-md sticky top-0 z-40">
+            <header x-show="activeTab !== 'intake' && activeTab !== 'portal'" class="h-16 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 bg-slate-900/40 backdrop-blur-md sticky top-0 z-40">
                 <h2 class="text-base md:text-lg font-bold text-slate-200" x-text="getTabTitle()"></h2>
                 
                 <div class="flex items-center gap-3">
@@ -612,6 +612,372 @@
                             </div>
                         </form>
                     </template>
+                </div>
+
+                <!-- 0.1 טאב אפליקציית המתאמן האישית (Client Portal) -->
+                <div x-show="activeTab === 'portal'" x-cloak class="max-w-2xl mx-auto py-2 md:py-6 space-y-6">
+                    
+                    <!-- באנר כותרת מותג וברכה אישית מאילאי -->
+                    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-amber-500/30 rounded-3xl p-5 md:p-7 shadow-2xl space-y-5 relative overflow-hidden">
+                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                        
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xl md:text-2xl font-black tracking-wider text-amber-400">IlaiCo</span>
+                                    <span class="text-[10px] bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-500/30">ליווי פרימיום</span>
+                                </div>
+                                <h2 class="text-xl md:text-2xl font-black text-white" x-text="'היי ' + (portalClient?.name || 'מתאמן') + '! 👋'"></h2>
+                                <p class="text-xs text-slate-350" x-text="portalClient?.goal ? 'מטרה: ' + portalClient.goal : 'ברוך הבא לאפליקציית הליווי האישית שלך'"></p>
+                            </div>
+
+                            <!-- כרטיס המאמן אילאי וקשר ישיר -->
+                            <div class="flex items-center gap-3 bg-slate-950/80 border border-slate-800 p-3 rounded-2xl">
+                                <div class="w-11 h-11 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-black text-base flex items-center justify-center shadow-inner">
+                                    א
+                                </div>
+                                <div class="space-y-0.5">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-xs font-black text-slate-150">אילאי</span>
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400 block">המאמן האישי שלך</span>
+                                </div>
+                                <a :href="'https://wa.me/972500000000?text=' + encodeURIComponent('היי אילאי, כאן ' + (portalClient?.name || 'המתאמן שלך') + '!')" target="_blank" class="mr-auto bg-emerald-500 hover:bg-emerald-600 text-slate-950 p-2.5 rounded-xl text-xs font-bold transition shadow-lg" title="שלח וואטסאפ לאילאי">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- תפריט ניווט 4 לשוניות למתאמן -->
+                        <div class="grid grid-cols-4 gap-1 bg-slate-950 p-1.5 rounded-2xl border border-slate-800/80 text-center">
+                            <button @click="portalActiveSubTab = 'workouts'" 
+                                    :class="portalActiveSubTab === 'workouts' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-slate-200'"
+                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
+                                <i data-lucide="dumbbell" class="w-3.5 h-3.5"></i>
+                                <span>אימונים</span>
+                            </button>
+                            
+                            <button @click="portalActiveSubTab = 'nutrition'" 
+                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-slate-200'"
+                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
+                                <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
+                                <span>תזונה</span>
+                            </button>
+                            
+                            <button @click="portalActiveSubTab = 'checkin'" 
+                                    :class="portalActiveSubTab === 'checkin' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-slate-200'"
+                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
+                                <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                                <span>שקילה</span>
+                            </button>
+                            
+                            <button @click="portalActiveSubTab = 'drive'" 
+                                    :class="portalActiveSubTab === 'drive' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'text-slate-400 hover:text-slate-200'"
+                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
+                                <i data-lucide="folder" class="w-3.5 h-3.5"></i>
+                                <span>Drive & אוכל</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- תוכן לשונית 1: אימונים אינטראקטיביים -->
+                    <div x-show="portalActiveSubTab === 'workouts'" x-cloak class="space-y-4">
+                        <template x-if="!portalClient?.workoutPlan?.days || portalClient.workoutPlan.days.length === 0">
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-3">
+                                <i data-lucide="dumbbell" class="w-10 h-10 text-slate-600 mx-auto"></i>
+                                <h3 class="text-sm font-bold text-slate-300">אילאי עובד כרגע על בניית תוכנית האימונים שלך</h3>
+                                <p class="text-xs text-slate-400">התוכנית תופיע כאן ברגע שהיא תהיה מוכנה!</p>
+                            </div>
+                        </template>
+
+                        <template x-for="(day, dayIdx) in (portalClient?.workoutPlan?.days || [])" :key="dayIdx">
+                            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-6 shadow-xl space-y-4">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                                        <h3 class="text-sm md:text-base font-black text-white" x-text="day.dayName || ('יום אימון ' + (dayIdx + 1))"></h3>
+                                    </div>
+                                    <span class="text-[10px] bg-slate-950 text-slate-400 px-2.5 py-1 rounded-full border border-slate-800" x-text="(day.exercises ? day.exercises.length : 0) + ' תרגילים'"></span>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <template x-for="(ex, exIdx) in (day.exercises || [])" :key="exIdx">
+                                        <div class="bg-slate-950 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-3.5 md:p-4 space-y-2.5 transition">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <div>
+                                                    <h4 class="text-xs md:text-sm font-black text-slate-150" x-text="ex.name"></h4>
+                                                    <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                                                        <span class="text-amber-400 font-bold" x-text="ex.sets + ' סטים × ' + ex.reps + ' חזרות'"></span>
+                                                        <template x-if="ex.rest">
+                                                            <span x-text="'• מנוחה: ' + ex.rest"></span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+
+                                                <!-- כפתור וידאו הדרכה -->
+                                                <template x-if="ex.video">
+                                                    <a :href="ex.video" target="_blank" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center gap-1 transition shrink-0">
+                                                        <i data-lucide="play" class="w-3 h-3"></i>
+                                                        <span>וידאו</span>
+                                                    </a>
+                                                </template>
+                                            </div>
+
+                                            <template x-if="ex.notes">
+                                                <div class="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-xl border border-slate-800/50" x-text="'💡 דגש מאילאי: ' + ex.notes"></div>
+                                            </template>
+
+                                            <!-- צ'קבוקסים לסימון סטים שבוצעו -->
+                                            <div class="flex items-center gap-2 pt-1 border-t border-slate-800/50">
+                                                <span class="text-[9px] text-slate-500">סטים שבוצעו:</span>
+                                                <div class="flex items-center gap-1.5">
+                                                    <template x-for="s in parseInt(ex.sets || 3)" :key="s">
+                                                        <label class="flex items-center justify-center w-6 h-6 rounded-lg bg-slate-900 border border-slate-800 hover:border-amber-500 cursor-pointer text-[10px] text-slate-400 hover:text-amber-300 font-bold transition">
+                                                            <input type="checkbox" class="hidden peer">
+                                                            <span class="peer-checked:hidden" x-text="s"></span>
+                                                            <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 hidden peer-checked:block"></i>
+                                                        </label>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- תוכן לשונית 2: תזונה ויעדים -->
+                    <div x-show="portalActiveSubTab === 'nutrition'" x-cloak class="space-y-4">
+                        <!-- יעדים יומיים -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <h3 class="text-xs md:text-sm font-bold text-white flex items-center gap-1.5">
+                                    <i data-lucide="target" class="w-4 h-4 text-amber-400"></i>
+                                    <span>היעדים התזונתיים היומיים שלך</span>
+                                </h3>
+                                <span class="text-[10px] text-emerald-400 font-bold">הותאם אישית</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
+                                    <span class="text-[10px] text-slate-400 block mb-0.5">יעד קלוריות</span>
+                                    <span class="text-base font-black text-amber-400" x-text="(portalClient?.macroCalculated?.targetCalories || '0') + ' קל\''"></span>
+                                </div>
+                                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
+                                    <span class="text-[10px] text-slate-400 block mb-0.5">יעד חלבון</span>
+                                    <span class="text-base font-black text-blue-400" x-text="(portalClient?.macroCalculated?.targetProtein || '0') + ' גרם'"></span>
+                                </div>
+                                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
+                                    <span class="text-[10px] text-slate-400 block mb-0.5">יעד פחמימה</span>
+                                    <span class="text-base font-black text-emerald-400" x-text="(portalClient?.macroCalculated?.targetCarbs || '0') + ' גרם'"></span>
+                                </div>
+                                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
+                                    <span class="text-[10px] text-slate-400 block mb-0.5">יעד שומן</span>
+                                    <span class="text-base font-black text-rose-400" x-text="(portalClient?.macroCalculated?.targetFat || '0') + ' גרם'"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- תפריט PDF (אם צורף) -->
+                        <template x-if="portalClient?.mealPlanPdfUrl">
+                            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="file-text" class="w-4 h-4 text-emerald-400"></i>
+                                        <h4 class="text-xs md:text-sm font-bold text-white">תפריט התזונה המלא שלך (PDF)</h4>
+                                    </div>
+                                    <a :href="portalClient.mealPlanPdfUrl" target="_blank" class="bg-slate-950 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 hover:bg-slate-800 transition">
+                                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                        <span>פתח במסך מלא</span>
+                                    </a>
+                                </div>
+                                <div class="h-96 w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-950">
+                                    <iframe :src="getCleanPdfUrl(portalClient.mealPlanPdfUrl)" class="w-full h-full border-0" type="application/pdf"></iframe>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- פירוט ארוחות מובנות (אם הוגדרו) -->
+                        <template x-if="portalClient?.mealPlan?.meals && portalClient.mealPlan.meals.length > 0">
+                            <div class="space-y-3">
+                                <template x-for="(meal, mIdx) in portalClient.mealPlan.meals" :key="mIdx">
+                                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-5 shadow-xl space-y-3">
+                                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                            <h4 class="text-xs md:text-sm font-black text-amber-300" x-text="meal.name || ('ארוחה ' + (mIdx + 1))"></h4>
+                                            <span class="text-[10px] text-slate-400" x-text="(meal.items ? meal.items.length : 0) + ' פריטים'"></span>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <template x-for="(item, iIdx) in (meal.items || [])" :key="iIdx">
+                                                <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5 flex items-center justify-between text-xs">
+                                                    <div class="space-y-0.5">
+                                                        <span class="font-bold text-slate-200 block" x-text="item.food"></span>
+                                                        <span class="text-[10px] text-slate-400" x-text="item.quantity"></span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2 text-[10px] text-slate-400">
+                                                        <span class="font-bold text-amber-400" x-text="item.calories + ' קל\''"></span>
+                                                        <span>•</span>
+                                                        <span class="text-blue-400" x-text="'ח: ' + item.protein + 'ג\''"></span>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- תוכן לשונית 3: הזנת שקילה ומעקב שבועי -->
+                    <div x-show="portalActiveSubTab === 'checkin'" x-cloak class="space-y-4">
+                        <!-- טופס הזנת שקילה עצמאית -->
+                        <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                            <div class="border-b border-slate-800 pb-3">
+                                <h3 class="text-sm md:text-base font-black text-white flex items-center gap-2">
+                                    <i data-lucide="scale" class="w-5 h-5 text-amber-400"></i>
+                                    <span>עדכון שקילה שבועי</span>
+                                </h3>
+                                <p class="text-[10px] text-slate-400 mt-1">הזן את משקלך היום. הנתונים יתעדכנו ישירות במערכת המעקב של אילאי!</p>
+                            </div>
+
+                            <!-- הודעת הצלחה -->
+                            <template x-if="portalCheckinSuccess">
+                                <div class="bg-emerald-950/80 border border-emerald-500/50 p-4 rounded-2xl text-center space-y-1 text-emerald-300 animate-fade-in">
+                                    <i data-lucide="check-circle" class="w-6 h-6 mx-auto text-emerald-400 mb-1"></i>
+                                    <h4 class="text-xs font-bold">השקילה נשלחה בהצלחה! 💪</h4>
+                                    <p class="text-[10px] text-emerald-400/80">אילאי קיבל את העדכון שלך במערכת.</p>
+                                </div>
+                            </template>
+
+                            <form @submit.prevent="submitClientPortalCheckin()" class="space-y-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-300 mb-1">משקל שקילה עדכני (ק"ג) *</label>
+                                        <input type="number" step="0.1" required x-model="portalNewCheckin.weight" placeholder="למשל: 78.4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-amber-300 font-bold text-base focus:outline-none focus:border-amber-500 text-center">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-300 mb-1">היקף מותניים (ס"מ) - אופציונלי</label>
+                                        <input type="number" step="0.5" x-model="portalNewCheckin.waist" placeholder="למשל: 82" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 font-bold text-base focus:outline-none focus:border-amber-500 text-center">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+                                        <div class="flex justify-between text-[10px] font-bold">
+                                            <span class="text-slate-300">ציון התמדה בתזונה השבוע</span>
+                                            <span class="text-amber-400" x-text="portalNewCheckin.adherenceNutrition + '/10'"></span>
+                                        </div>
+                                        <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceNutrition" class="w-full accent-amber-400">
+                                    </div>
+
+                                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+                                        <div class="flex justify-between text-[10px] font-bold">
+                                            <span class="text-slate-300">ציון התמדה באימונים השבוע</span>
+                                            <span class="text-amber-400" x-text="portalNewCheckin.adherenceTraining + '/10'"></span>
+                                        </div>
+                                        <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceTraining" class="w-full accent-amber-400">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-300 mb-1">איך עבר עליך השבוע? הערות / שאלות לאילאי</label>
+                                    <textarea x-model="portalNewCheckin.notes" placeholder="ספר על תחושות, אנרגיה באימונים, חריגות או אתגרים..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500 h-24 resize-none"></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg transition">
+                                    <i data-lucide="send" class="w-4 h-4"></i>
+                                    <span>שלח שקילה שבועית לאילאי</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- היסטוריית שקילות -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+                            <h4 class="text-xs font-bold text-slate-200 border-b border-slate-800 pb-2">היסטוריית השקילות האחרונות</h4>
+                            <div class="space-y-2">
+                                <template x-for="(c, cIdx) in (portalClient?.checkins || []).slice().reverse()" :key="cIdx">
+                                    <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-3 flex items-center justify-between text-xs">
+                                        <div class="space-y-0.5">
+                                            <span class="font-bold text-slate-200" x-text="formatDate(c.date)"></span>
+                                            <span class="text-[10px] text-slate-500 block" x-text="c.notes || 'ללא הערות'"></span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="font-black text-amber-400 text-sm block" x-text="c.weight + ' ק״ג'"></span>
+                                            <span class="text-[9px] text-slate-400" x-text="c.waist ? 'מותן: ' + c.waist + ' ס״מ' : ''"></span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- תוכן לשונית 4: Google Drive ויומן אכילה -->
+                    <div x-show="portalActiveSubTab === 'drive'" x-cloak class="space-y-4">
+                        <!-- קישור ל-Google Drive -->
+                        <div class="bg-slate-900 border border-amber-500/30 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                                <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                                    <i data-lucide="folder-up" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm md:text-base font-black text-white">תיקיית Google Drive של הארוחות וההתקדמות</h3>
+                                    <p class="text-[10px] text-slate-400">העלה לכאן תמונות ארוחות יומיות ותמונות שקילה עבור אילאי</p>
+                                </div>
+                            </div>
+
+                            <template x-if="portalClient?.googleDriveUrl">
+                                <div class="space-y-3">
+                                    <a :href="portalClient.googleDriveUrl" target="_blank" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black py-3.5 px-4 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 shadow-xl transition">
+                                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                                        <span>פתח את תיקיית ה-Google Drive שלך להעלאת תמונות</span>
+                                    </a>
+                                </div>
+                            </template>
+
+                            <template x-if="!portalClient?.googleDriveUrl">
+                                <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl text-center space-y-2">
+                                    <i data-lucide="folder" class="w-8 h-8 text-slate-600 mx-auto"></i>
+                                    <p class="text-xs text-slate-300 font-bold">טרם הוגדר קישור לתיקיית Drive אישית</p>
+                                    <p class="text-[10px] text-slate-400">אילאי יעדכן בקרוב את הקישור לתיקייה שלך, ובינתיים תוכל לשלוח תמונות בוואטסאפ.</p>
+                                </div>
+                            </template>
+
+                            <!-- הדרכה קצרה -->
+                            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-2xl space-y-2 text-[11px] text-slate-300">
+                                <h4 class="font-bold text-amber-300 flex items-center gap-1.5">
+                                    <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                                    <span>איך עובד מעקב התמונות?</span>
+                                </h4>
+                                <ul class="list-disc list-inside space-y-1 text-slate-400">
+                                    <li>צלם את הצלחת שלך לפני כל ארוחה עיקרית.</li>
+                                    <li>פתח את תיקיית ה-Drive בלחיצה על הכפתור למעלה והעלה את התמונות.</li>
+                                    <li>אילאי יעבור על התמונות וייתן לך דגשים ומשוב לשיפור התוצאות!</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- יומן אכילה יומי (מה אכלתי היום) -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+                            <h4 class="text-xs md:text-sm font-bold text-white flex items-center gap-1.5">
+                                <i data-lucide="edit-3" class="w-4 h-4 text-amber-400"></i>
+                                <span>יומן אכילה והערות יומיות</span>
+                            </h4>
+                            <p class="text-[10px] text-slate-400">כתוב כאן מה אכלת היום או הערות מיוחדות כדי שאילאי יוכל לקרוא בכרטיס שלך:</p>
+                            
+                            <template x-if="portalJournalSaved">
+                                <div class="bg-emerald-950/80 border border-emerald-500/50 p-2.5 rounded-xl text-center text-[10px] text-emerald-300 font-bold animate-fade-in">
+                                    היומן נשמר ונשלח לכרטיס שלך אצל אילאי! ✨
+                                </div>
+                            </template>
+
+                            <textarea x-model="portalTodayJournal" placeholder="למשל: בוקר: 2 ביצים + 2 לחם קל. צהריים: 150 גרם חזה עוף ואורז. הרגשתי שבע..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500 h-28 resize-none"></textarea>
+                            <button @click="savePortalTodayJournal()" class="w-full bg-slate-950 hover:bg-slate-850 border border-slate-800 hover:border-amber-500/50 text-amber-300 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                                <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                                <span>שמור יומן יומי</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 1. טאב לוח בקרה -->
@@ -1021,7 +1387,41 @@
                                             </div>
                                             <i data-lucide="chevron-left" class="w-3.5 h-3.5 text-slate-500"></i>
                                         </a>
+                                <!-- שיתוף פורטל אישי למתאמן -->
+                                <div class="bg-slate-900 border border-amber-500/30 rounded-2xl p-5 space-y-3 shadow-xl">
+                                    <h4 class="text-xs md:text-sm font-bold text-amber-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                                        <i data-lucide="smartphone" class="w-4 h-4 text-amber-400"></i>
+                                        <span>אפליקציית המתאמן האישית (Client Portal)</span>
+                                    </h4>
+                                    <p class="text-[10px] text-slate-400 leading-relaxed">שלח למתאמן קישור אישי ייעודי שמאפשר לו לראות את התוכנית, סרטוני האימון, התפריט, ולהזין שקילות עצמאית מהטלפון.</p>
+                                    <div class="flex flex-col sm:flex-row gap-2 pt-1">
+                                        <button @click="copyClientPortalLink(currentClient.id)" class="flex-1 bg-slate-950 hover:bg-slate-850 border border-amber-500/40 text-amber-300 font-bold px-3 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                            <span>העתק קישור לפורטל</span>
+                                        </button>
+                                        <a :href="getWhatsAppPortalLink(currentClient)" target="_blank" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-3 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg">
+                                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                            <span>שלח קישור בוואטסאפ</span>
+                                        </a>
                                     </div>
+                                </div>
+
+                                <!-- תיקיית Google Drive משותפת -->
+                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
+                                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                        <h4 class="text-xs md:text-sm font-bold text-slate-200 flex items-center gap-1.5">
+                                            <i data-lucide="folder" class="w-4 h-4 text-emerald-400"></i>
+                                            <span>תיקיית Google Drive לתמונות ארוחות</span>
+                                        </h4>
+                                        <template x-if="currentClient?.googleDriveUrl">
+                                            <a :href="currentClient.googleDriveUrl" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-[10px] font-bold flex items-center gap-1">
+                                                <span>פתח בדרייב</span>
+                                                <i data-lucide="external-link" class="w-3 h-3"></i>
+                                            </a>
+                                        </template>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 leading-relaxed">הדבק כאן קישור לתיקיית Google Drive משותפת של המתאמן. המתאמן יוכל לפתוח אותה בלחיצה מפורטל המתאמן ולהעלות תמונות ארוחות ושקילות.</p>
+                                    <input type="url" x-model="currentClient.googleDriveUrl" @input="saveData()" placeholder="https://drive.google.com/drive/folders/..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-slate-200 text-xs focus:outline-none focus:border-emerald-500 font-mono">
                                 </div>
                             </div>
 
@@ -1502,10 +1902,16 @@
                                             </table>
                                         </div>
                                         
-                                        <button @click="addMealItem(mIdx)" class="text-emerald-400 hover:text-emerald-300 text-[10px] font-bold flex items-center gap-1.5 mt-1">
-                                            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-                                            <span>הוסף מאכל</span>
-                                        </button>
+                                        <div class="flex items-center gap-2 mt-2 flex-wrap">
+                                            <button @click="addMealItem(mIdx)" class="text-slate-400 hover:text-slate-200 text-[10px] font-bold flex items-center gap-1.5 bg-slate-950 border border-slate-800 px-2.5 py-1.5 rounded-lg transition">
+                                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                                <span>הוסף שורה ריקה</span>
+                                            </button>
+                                            <button @click="openFoodModal(mIdx)" class="text-amber-300 hover:text-amber-200 text-[10px] font-black flex items-center gap-1.5 bg-amber-950/40 border border-amber-500/40 hover:bg-amber-900/40 px-3 py-1.5 rounded-lg transition shadow-sm">
+                                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+                                                <span>בחר מספרית מזונות (חישוב אוטומטי)</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </template>
                             </div>
@@ -2000,6 +2406,109 @@
         </div>
     </div>
 
+    <!-- מודל 5: ספריית מזונות חכמה וחישוב מאקרו אוטומטי -->
+    <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm no-print" x-cloak>
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col mx-4 max-h-[90vh] overflow-hidden" @click.away="openFoodLibraryModal = false">
+            <div class="p-4 md:p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950/60">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                        <i data-lucide="apple" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm md:text-base font-black text-white">ספריית מזונות חכמה</h3>
+                        <p class="text-[10px] text-slate-400">בחר מאכל, הזן כמות, והערכים יחושבו אוטומטית</p>
+                    </div>
+                </div>
+                <button @click="openFoodLibraryModal = false" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <div class="p-4 space-y-4 flex-1 overflow-y-auto">
+                <!-- חיפוש וסינון קטגוריות -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="w-4 h-4 absolute right-3 top-3 text-slate-500"></i>
+                        <input type="text" x-model="foodSearchQuery" placeholder="חפש מאכל (למשל: חזה עוף, אורז, קוטג')..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pr-9 pl-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500/60 font-semibold">
+                    </div>
+                    <div class="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none">
+                        <button @click="foodCategoryFilter = 'all'" :class="foodCategoryFilter === 'all' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition">הכל</button>
+                        <button @click="foodCategoryFilter = 'protein'" :class="foodCategoryFilter === 'protein' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition">חלבון</button>
+                        <button @click="foodCategoryFilter = 'carbs'" :class="foodCategoryFilter === 'carbs' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition">פחמימה</button>
+                        <button @click="foodCategoryFilter = 'dairy'" :class="foodCategoryFilter === 'dairy' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition">מוצרי חלב</button>
+                        <button @click="foodCategoryFilter = 'fat'" :class="foodCategoryFilter === 'fat' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition">שומנים</button>
+                        <button @click="foodCategoryFilter = 'fruits'" :class="foodCategoryFilter === 'fruits' ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-950 text-slate-400 border border-slate-800'" class="px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition">פירות</button>
+                    </div>
+                </div>
+
+                <!-- רשימת המאכלים -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-56 overflow-y-auto p-1">
+                    <template x-for="item in getFilteredFoodDatabase()" :key="item.name">
+                        <div @click="selectFoodItem(item)" 
+                             :class="selectedFoodItem?.name === item.name ? 'border-amber-500 bg-amber-950/20 ring-1 ring-amber-500/50' : 'border-slate-800 bg-slate-950 hover:border-slate-700'"
+                             class="p-3 rounded-xl border cursor-pointer transition flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <span class="text-xs font-bold text-slate-200" x-text="item.name"></span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400" x-text="'ל-' + (item.baseQty ? item.baseQty + ' ' : '100 ') + item.unit"></span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-2 text-[10px] text-slate-400 border-t border-slate-800/60 pt-1.5">
+                                <span class="font-bold text-amber-400" x-text="item.cal + ' קל\''"></span>
+                                <span>•</span>
+                                <span class="text-blue-400" x-text="'ח: ' + item.pro + 'ג\''"></span>
+                                <span>•</span>
+                                <span class="text-emerald-400" x-text="'פ: ' + item.carb + 'ג\''"></span>
+                                <span>•</span>
+                                <span class="text-rose-400" x-text="'ש: ' + item.fat + 'ג\''"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- חישוב הכמות והמאקרו בזמן אמת -->
+                <template x-if="selectedFoodItem">
+                    <div class="bg-slate-950 border border-amber-500/30 rounded-xl p-4 space-y-3">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <div>
+                                <span class="text-xs text-amber-300 font-bold block" x-text="'הגדרת כמות עבור: ' + selectedFoodItem.name"></span>
+                                <span class="text-[10px] text-slate-400">הזן את הכמות המדויקת שנאכלה</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="number" step="1" min="1" x-model="foodCustomAmount" class="w-24 bg-slate-900 border border-slate-700 text-amber-300 font-bold text-center text-sm rounded-lg p-2 focus:outline-none focus:border-amber-500">
+                                <span class="text-xs font-bold text-slate-300" x-text="selectedFoodItem.unit"></span>
+                            </div>
+                        </div>
+
+                        <!-- תוצאה מחושבת -->
+                        <div class="grid grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-center">
+                            <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                                <span class="text-[9px] text-slate-400 block">קלוריות</span>
+                                <span class="text-xs font-black text-amber-400" x-text="calculateSelectedFoodMacros().calories"></span>
+                            </div>
+                            <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                                <span class="text-[9px] text-slate-400 block">חלבון</span>
+                                <span class="text-xs font-black text-blue-400" x-text="calculateSelectedFoodMacros().protein + 'ג\''"></span>
+                            </div>
+                            <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                                <span class="text-[9px] text-slate-400 block">פחמימה</span>
+                                <span class="text-xs font-black text-emerald-400" x-text="calculateSelectedFoodMacros().carbs + 'ג\''"></span>
+                            </div>
+                            <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                                <span class="text-[9px] text-slate-400 block">שומן</span>
+                                <span class="text-xs font-black text-rose-400" x-text="calculateSelectedFoodMacros().fat + 'ג\''"></span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="p-4 border-t border-slate-800 flex justify-end gap-2 bg-slate-950/60">
+                <button type="button" @click="openFoodLibraryModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-900 transition">ביטול</button>
+                <button type="button" @click="addSelectedFoodToMeal()" :disabled="!selectedFoodItem" class="bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-slate-950 font-black px-6 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>הוסף לארוחה</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- לוגיקת האפליקציה ב-JavaScript -->
     <script>
         function fitnessApp() {
@@ -2049,12 +2558,74 @@
                 
                 printClient: null,
 
+                // משתני פורטל אישי למתאמן
+                portalClientId: null,
+                portalActiveSubTab: 'workouts',
+                portalNewCheckin: { weight: '', waist: '', adherenceNutrition: 10, adherenceTraining: 10, notes: '' },
+                portalCheckinSuccess: false,
+                portalTodayJournal: '',
+                portalJournalSaved: false,
+
+                // משתני ספריית מזונות חכמה
+                openFoodLibraryModal: false,
+                targetMealIndex: null,
+                foodSearchQuery: '',
+                foodCategoryFilter: 'all',
+                selectedFoodItem: null,
+                foodCustomAmount: 100,
+
                 // סנכרון ענן (Firebase)
                 isCloudSynced: false,
                 firebaseConfig: null,
                 firebaseInput: { apiKey: '', authDomain: '', projectId: '', storageBucket: '', messagingSenderId: '', appId: '' },
                 db: null,
                 cloudError: null,
+
+                // מאגר מזונות ישראלי עשיר ומחושב
+                foodDatabase: [
+                    // חלבונים
+                    { name: "חזה עוף מבושל / צלוי", category: "protein", cal: 165, pro: 31, carb: 0, fat: 3.6, unit: "גרם" },
+                    { name: "בקר רזה / סינטה צלויה", category: "protein", cal: 180, pro: 28, carb: 0, fat: 7, unit: "גרם" },
+                    { name: "פילה סלמון אפוי בתנור", category: "protein", cal: 206, pro: 22, carb: 0, fat: 12.3, unit: "גרם" },
+                    { name: "טונה במים (קופסה מסוננת)", category: "protein", cal: 116, pro: 26, carb: 0, fat: 1, unit: "גרם" },
+                    { name: "ביצה שלמה (גודל L)", category: "protein", cal: 75, pro: 6.5, carb: 0.5, fat: 5, unit: "יחידות", baseQty: 1 },
+                    { name: "חלבון ביצה (לבן בלבד)", category: "protein", cal: 17, pro: 3.6, carb: 0.2, fat: 0, unit: "יחידות", baseQty: 1 },
+                    { name: "אבקת חלבון WHEY (סקופ)", category: "protein", cal: 125, pro: 25, carb: 2, fat: 1.5, unit: "סקופים", baseQty: 1 },
+                    { name: "טופו טבעי במים", category: "protein", cal: 120, pro: 13, carb: 2, fat: 7, unit: "גרם" },
+                    { name: "חזה הודו צלוי / פסטרמה דלת שומן", category: "protein", cal: 120, pro: 24, carb: 1, fat: 2, unit: "גרם" },
+                    
+                    // מוצרי חלב
+                    { name: "יוגורט דנונה PRO 20g", category: "dairy", cal: 120, pro: 20, carb: 6, fat: 0, unit: "גביעים", baseQty: 1 },
+                    { name: "גבינת קוטג' 5%", category: "dairy", cal: 95, pro: 11, carb: 2, fat: 5, unit: "גרם" },
+                    { name: "גבינה לבנה 5%", category: "dairy", cal: 90, pro: 10, carb: 3.5, fat: 5, unit: "גרם" },
+                    { name: "גבינה צהובה 9% (נועם/עמק)", category: "dairy", cal: 200, pro: 30, carb: 0, fat: 9, unit: "גרם" },
+                    { name: "חלב 3% / משקה סויה ללא סוכר", category: "dairy", cal: 58, pro: 3.2, carb: 4.8, fat: 3, unit: "מ\"ל" },
+
+                    // פחמימות
+                    { name: "אורז בסמטי / יסמין מבושל", category: "carbs", cal: 130, pro: 2.7, carb: 28, fat: 0.3, unit: "גרם" },
+                    { name: "שיבולת שועל (קוואקר)", category: "carbs", cal: 370, pro: 13.5, carb: 60, fat: 7, unit: "גרם" },
+                    { name: "בטטה אפויה", category: "carbs", cal: 90, pro: 2, carb: 21, fat: 0.1, unit: "גרם" },
+                    { name: "תפוח אדמה אפוי / מבושל", category: "carbs", cal: 87, pro: 2, carb: 20, fat: 0.1, unit: "גרם" },
+                    { name: "לחם קל (פרוסה)", category: "carbs", cal: 45, pro: 3.5, carb: 7.5, fat: 0.5, unit: "פרוסות", baseQty: 1 },
+                    { name: "פסטה מחיטת דורום מבושלת", category: "carbs", cal: 140, pro: 5, carb: 28, fat: 0.5, unit: "גרם" },
+                    { name: "קינואה מבושלת", category: "carbs", cal: 120, pro: 4.4, carb: 21.3, fat: 1.9, unit: "גרם" },
+                    { name: "פריכיות אורז (יחידה)", category: "carbs", cal: 28, pro: 0.6, carb: 6, fat: 0.2, unit: "יחידות", baseQty: 1 },
+                    { name: "דגני בוקר פייבר 1 (Fiber One)", category: "carbs", cal: 220, pro: 8, carb: 44, fat: 3.5, unit: "גרם" },
+
+                    // שומנים בריאים
+                    { name: "שמן זית כתית מעולה", category: "fat", cal: 884, pro: 0, carb: 0, fat: 100, unit: "גרם" },
+                    { name: "טחינה גולמית משומשום מלא", category: "fat", cal: 630, pro: 20, carb: 10, fat: 55, unit: "גרם" },
+                    { name: "אבוקדו טרי", category: "fat", cal: 160, pro: 2, carb: 8.5, fat: 14.7, unit: "גרם" },
+                    { name: "חמאת בוטנים טבעית 100%", category: "fat", cal: 590, pro: 25, carb: 15, fat: 50, unit: "גרם" },
+                    { name: "שקדים טבעיים", category: "fat", cal: 575, pro: 21, carb: 21, fat: 49, unit: "גרם" },
+                    { name: "אגוזי מלך", category: "fat", cal: 654, pro: 15, carb: 14, fat: 65, unit: "גרם" },
+
+                    // פירות
+                    { name: "בננה בינונית", category: "fruits", cal: 105, pro: 1.3, carb: 27, fat: 0.3, unit: "יחידות", baseQty: 1 },
+                    { name: "תפוח עץ בינוני", category: "fruits", cal: 80, pro: 0.4, carb: 20, fat: 0.2, unit: "יחידות", baseQty: 1 },
+                    { name: "פירות יער קפואים / תותים", category: "fruits", cal: 45, pro: 1, carb: 9, fat: 0.5, unit: "גרם" },
+                    { name: "תמר מג'הול (יחידה)", category: "fruits", cal: 66, pro: 0.4, carb: 18, fat: 0, unit: "יחידות", baseQty: 1 }
+                ],
 
                 exerciseLibrary: [
                     { name: "סקווט עם מוט (Barbell Squat)", muscle: "legs", video: "https://www.youtube.com/watch?v=ultWZbUMPL8" },
@@ -2087,6 +2658,7 @@
                         email: '',
                         goal: '',
                         notes: '',
+                        googleDriveUrl: '',
                         age: '',
                         height: '',
                         sleepHours: '',
@@ -2107,6 +2679,13 @@
                     };
                 },
 
+                get portalClient() {
+                    if (this.portalClientId) {
+                        return this.clients.find(c => c.id === this.portalClientId) || this.currentClient;
+                    }
+                    return this.currentClient;
+                },
+
                 initApp() {
                     this.loadFirebaseConfig();
                     this.resetNewClientForm();
@@ -2117,6 +2696,10 @@
                     const params = new URLSearchParams(window.location.search);
                     if (params.get('intake') === 'true') {
                         this.activeTab = 'intake';
+                    } else if (params.get('client') || params.get('c')) {
+                        this.activeTab = 'portal';
+                        this.portalClientId = params.get('client') || params.get('c');
+                        this.selectedClientId = this.portalClientId;
                     }
                     
                     setTimeout(() => {
@@ -2357,6 +2940,7 @@
 
                 getTabTitle() {
                     switch (this.activeTab) {
+                        case 'portal': return 'אפליקציית מתאמן אישית';
                         case 'intake': return 'שאלון קליטה דיגיטלי';
                         case 'dashboard': return 'לוח בקרה';
                         case 'clients': return this.selectedClientId ? 'ניהול מתאמן' : 'רשימת מתאמנים';
@@ -2873,6 +3457,170 @@
                         }
                         this.saveData();
                     }
+                },
+
+                // --- שיטות ספריית מזונות חכמה ---
+                openFoodModal(mIdx) {
+                    this.targetMealIndex = mIdx;
+                    this.foodSearchQuery = '';
+                    this.foodCategoryFilter = 'all';
+                    this.foodCustomAmount = 100;
+                    this.selectedFoodItem = this.foodDatabase[0] || null;
+                    this.openFoodLibraryModal = true;
+                    setTimeout(() => {
+                        if (window.lucide) window.lucide.createIcons();
+                    }, 50);
+                },
+
+                getFilteredFoodDatabase() {
+                    return this.foodDatabase.filter(item => {
+                        const matchesCat = this.foodCategoryFilter === 'all' || item.category === this.foodCategoryFilter;
+                        const matchesSearch = !this.foodSearchQuery || item.name.toLowerCase().includes(this.foodSearchQuery.toLowerCase());
+                        return matchesCat && matchesSearch;
+                    });
+                },
+
+                selectFoodItem(item) {
+                    this.selectedFoodItem = item;
+                    if (item.unit === 'גרם' || item.unit === 'מ"ל') {
+                        this.foodCustomAmount = 100;
+                    } else {
+                        this.foodCustomAmount = 1;
+                    }
+                },
+
+                calculateSelectedFoodMacros() {
+                    if (!this.selectedFoodItem) return { calories: 0, protein: 0, carbs: 0, fat: 0 };
+                    const amount = parseFloat(this.foodCustomAmount) || 0;
+                    let ratio = 1;
+                    if (this.selectedFoodItem.unit === 'גרם' || this.selectedFoodItem.unit === 'מ"ל') {
+                        ratio = amount / 100;
+                    } else {
+                        ratio = amount;
+                    }
+                    return {
+                        calories: Math.round(this.selectedFoodItem.cal * ratio),
+                        protein: Math.round(this.selectedFoodItem.pro * ratio * 10) / 10,
+                        carbs: Math.round(this.selectedFoodItem.carb * ratio * 10) / 10,
+                        fat: Math.round(this.selectedFoodItem.fat * ratio * 10) / 10
+                    };
+                },
+
+                addSelectedFoodToMeal() {
+                    if (!this.selectedFoodItem || this.targetMealIndex === null) return;
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client || !client.mealPlan || !client.mealPlan.meals[this.targetMealIndex]) return;
+                    
+                    const macros = this.calculateSelectedFoodMacros();
+                    const amount = this.foodCustomAmount;
+                    const unit = this.selectedFoodItem.unit;
+                    
+                    const newItem = {
+                        food: this.selectedFoodItem.name,
+                        quantity: `${amount} ${unit}`,
+                        calories: macros.calories,
+                        protein: macros.protein,
+                        carbs: macros.carbs,
+                        fat: macros.fat
+                    };
+
+                    if (!client.mealPlan.meals[this.targetMealIndex].items) {
+                        client.mealPlan.meals[this.targetMealIndex].items = [];
+                    }
+                    client.mealPlan.meals[this.targetMealIndex].items.push(newItem);
+                    
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    this.openFoodLibraryModal = false;
+                },
+
+                // --- שיטות פורטל מתאמן ו-Google Drive ---
+                getClientPortalUrl(clientId) {
+                    const id = clientId || this.selectedClientId;
+                    return window.location.origin + window.location.pathname + '?client=' + id;
+                },
+
+                copyClientPortalLink(clientId) {
+                    const url = this.getClientPortalUrl(clientId);
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert("הקישור לאפליקציית המתאמן הועתק ללוח בהצלחה!\n\n" + url);
+                    }).catch(() => {
+                        prompt("העתק את הקישור לאפליקציית המתאמן:", url);
+                    });
+                },
+
+                getWhatsAppPortalLink(client) {
+                    if (!client) return '#';
+                    const url = this.getClientPortalUrl(client.id);
+                    const cleanPhone = (client.phone || '').replace(/\D/g, '');
+                    const israelPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
+                    const msg = encodeURIComponent(`היי ${client.name}!\nכאן אילאי 💪\n\nזהו הקישור האישי שלך לאפליקציית המתאמן של IlaiCo:\n${url}\n\nתוכל לצפות בתוכנית האימונים, בתפריט התזונה, ולהזין ישירות את השקילה השבועית שלך! בהצלחה! 👑`);
+                    return `https://wa.me/${israelPhone}?text=${msg}`;
+                },
+
+                submitClientPortalCheckin() {
+                    const client = this.portalClient;
+                    if (!client || !client.id) {
+                        alert("שגיאה: לא זוהה מתאמן מחובר.");
+                        return;
+                    }
+                    if (!this.portalNewCheckin.weight) {
+                        alert("אנא הזן משקל בשדה המשקל.");
+                        return;
+                    }
+
+                    const checkinObj = {
+                        date: new Date().toISOString().split('T')[0],
+                        weight: parseFloat(this.portalNewCheckin.weight),
+                        waist: this.portalNewCheckin.waist ? parseFloat(this.portalNewCheckin.waist) : null,
+                        bodyFat: null,
+                        adherenceNutrition: parseInt(this.portalNewCheckin.adherenceNutrition) || 10,
+                        adherenceTraining: parseInt(this.portalNewCheckin.adherenceTraining) || 10,
+                        notes: this.portalNewCheckin.notes || 'הוזן עצמאית מפורטל המתאמן',
+                        isDrop: false
+                    };
+
+                    if (!client.checkins) client.checkins = [];
+                    client.checkins.push(checkinObj);
+                    client.checkins.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    client.needsAttention = false;
+
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    this.portalCheckinSuccess = true;
+                    this.portalNewCheckin.weight = '';
+                    this.portalNewCheckin.waist = '';
+                    this.portalNewCheckin.notes = '';
+                    setTimeout(() => {
+                        this.portalCheckinSuccess = false;
+                        if (window.lucide) window.lucide.createIcons();
+                    }, 4000);
+                },
+
+                savePortalTodayJournal() {
+                    const client = this.portalClient;
+                    if (!client || !client.id) return;
+                    if (!this.portalTodayJournal.trim()) {
+                        alert("אנא כתוב פירוט ביומן לפני השמירה.");
+                        return;
+                    }
+                    const todayStr = new Date().toLocaleDateString('he-IL');
+                    const journalEntry = `[יומן תזונה ${todayStr}]: ${this.portalTodayJournal.trim()}`;
+                    client.notes = (client.notes ? client.notes + '\n\n' : '') + journalEntry;
+                    
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    this.portalJournalSaved = true;
+                    this.portalTodayJournal = '';
+                    setTimeout(() => {
+                        this.portalJournalSaved = false;
+                    }, 4000);
                 },
 
                 toggleClientAttention(id) {
