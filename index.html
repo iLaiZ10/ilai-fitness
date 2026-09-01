@@ -4,107 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IlaiCo - ניהול מתאמנים</title>
+    <!-- Google Fonts: Assistant & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Assistant', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'Assistant', 'sans-serif']
+                    },
                     colors: {
-                        // ערכת נושא יוקרתית על רקע לבן
+                        // ערכת נושא פרימיום: שמנת שיבולת שועל, ירוק יער עמוק ומנטה זוהרת
                         slate: {
                             50: '#ffffff',
                             100: '#334155',
-                            150: '#0f172a',
-                            200: '#0f172a', // כותרות כהות עמוקות
-                            250: '#1e293b',
-                            300: '#334155', // טקסט תוכן
-                            350: '#475569',
-                            355: '#475569',
-                            400: '#64748b', // טקסט משני מעודן
-                            500: '#94a3b8',
-                            550: '#64748b',
-                            600: '#cbd5e1',
-                            700: '#e2e8f0',
-                            800: '#e2e8f0', // מסגרות בהירות נקיות
-                            850: '#f1f5f9', // שדות רקע פנימיים
+                            150: '#082722',
+                            200: '#082722', // כותרות כהות בירוק יער עמוק
+                            250: '#143831',
+                            300: '#233d36', // טקסט תוכן אלגנטי
+                            350: '#3d5c54',
+                            355: '#3d5c54',
+                            400: '#5f756e', // טקסט משני רך
+                            500: '#8ba19b',
+                            550: '#5f756e',
+                            600: '#cbd5cf',
+                            700: '#e5dfd3',
+                            800: '#e5dfd3', // מסגרות שמנת עדינות
+                            850: '#f5f0e4', // שדות רקע פנימיים בשמנת
                             900: '#ffffff', // כרטיסים לבנים נקיים
-                            950: '#f8fafc'  // רקע דף פנינה בהיר
+                            950: '#fbf8f2'  // רקע דף שמנת חם (Oatmeal Cream)
                         },
-                        // תכלת (Sky Blue / Cyan)
+                        // ירוק יער עמוק ויוקרתי (Forest Teal Obsidian)
+                        forest: {
+                            50: '#f2f8f6',
+                            100: '#deeeea',
+                            200: '#c0dfd7',
+                            300: '#93c7bb',
+                            400: '#5fa799',
+                            500: '#3d8c7e',
+                            600: '#2b7064',
+                            700: '#1e554d',
+                            800: '#0f3830',
+                            900: '#082722', // צבע יער עמוק ראשי
+                            950: '#041714'
+                        },
+                        // ירוק מנטה זוהר (Electric Sage / Mint)
+                        mint: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac', // מנטה זוהרת
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16'
+                        },
+                        // גווני שמנת חמה ובז' (Oatmeal & Cream)
+                        cream: {
+                            50: '#fdfbf7',
+                            100: '#fbf8f2',
+                            200: '#f5efe0',
+                            300: '#ebdcc5',
+                            400: '#d6be99',
+                            500: '#b48a4c'
+                        },
+                        // Alias sky -> ירוק יער עמוק ומנטה
                         sky: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#0284c7',
-                            400: '#0ea5e9', // תכלת עז
-                            500: '#0284c7', // תכלת ראשי יוקרתי
-                            600: '#0369a1',
-                            700: '#075985',
-                            800: '#0c4a6e',
-                            900: '#082f49',
-                            950: '#f0f9ff'
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#082722', // כפתורי פעולה יער
+                            600: '#0b332b',
+                            700: '#06211d',
+                            800: '#041714',
+                            900: '#020d0b',
+                            950: '#fbf8f2'
                         },
-                        // סגלגל (Lavender / Soft Purple / Lilac)
+                        // Alias purple -> ירוק יער עמוק
                         purple: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#7c3aed', // סגלגל מודגש
-                            400: '#8b5cf6',
-                            500: '#7c3aed',
-                            600: '#6d28d9',
-                            700: '#5b21b6',
-                            800: '#4c1d95',
-                            900: '#2e1065',
-                            950: '#faf5ff'
+                            50: '#f2f8f6',
+                            100: '#deeeea',
+                            200: '#c0dfd7',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#082722',
+                            600: '#0b332b',
+                            700: '#06211d',
+                            800: '#041714',
+                            900: '#020d0b',
+                            950: '#fbf8f2'
                         },
-                        // נגיעות בז' (Beige / Warm Sand / Champagne)
+                        // Alias beige -> שמנת
                         beige: {
                             50: '#fdfbf7',
-                            100: '#fbf7ee',
-                            200: '#f5ebd7', // בז' בהיר
-                            300: '#b48a4c', // בז' מוזהב עשיר
-                            400: '#977145',
-                            500: '#855e34',
-                            600: '#6e4c27',
-                            700: '#573b1d',
-                            800: '#402a13',
-                            900: '#2a1a0b',
-                            950: '#fdfbf7'
+                            100: '#fbf8f2',
+                            200: '#f5ebd7',
+                            300: '#86efac',
+                            400: '#082722',
+                            500: '#0b332b',
+                            600: '#06211d',
+                            700: '#041714',
+                            800: '#020d0b',
+                            900: '#020d0b',
+                            950: '#fbf8f2'
                         },
-                        // Alias emerald -> תכלת (Sky Blue)
+                        // Alias emerald -> מנטה ירוקה
                         emerald: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#0284c7',
-                            400: '#0ea5e9',
-                            500: '#0284c7',
-                            600: '#0369a1',
-                            700: '#075985',
-                            800: '#0c4a6e',
-                            900: '#082f49',
-                            950: '#f0f9ff'
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16'
                         },
-                        // Alias amber -> שילוב סגלגל ובז'
+                        // Alias amber -> נגיעות זהב ושמנת
                         amber: {
                             50: '#fdfbf7',
-                            100: '#fbf7ee',
+                            100: '#fbf8f2',
                             200: '#f5ebd7',
-                            300: '#b48a4c', // בז' מוזהב
-                            400: '#0ea5e9', // תכלת
-                            500: '#7c3aed', // סגלגל
-                            600: '#6d28d9',
-                            700: '#5b21b6',
-                            800: '#4c1d95',
-                            900: '#2e1065',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#082722',
+                            600: '#0b332b',
+                            700: '#06211d',
+                            800: '#041714',
+                            900: '#020d0b',
                             950: '#fdfbf7'
                         },
                         brand: {
-                            sky: '#0284c7',
-                            purple: '#7c3aed',
-                            beige: '#b48a4c',
+                            forest: '#082722',
+                            mint: '#86efac',
+                            cream: '#fbf8f2',
                             white: '#ffffff'
                         }
                     }
@@ -126,41 +172,59 @@
     <style>
         [x-cloak] { display: none !important; }
         
-        /* סגנון רקע לבן יוקרתי */
+        /* סגנון טיפוגרפיה ורקע שמנת יוקרתי */
         body {
-            background-color: #f8fafc;
-            color: #0f172a;
+            background-color: #fbf8f2;
+            color: #082722;
+            font-family: 'Assistant', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            letter-spacing: -0.01em;
         }
 
-        /* הצללות פרימיום לכרטיסים לבנים */
+        /* הצללות פרימיום לכרטיסים */
         .bg-slate-900 {
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
-            border-color: #e2e8f0;
+            box-shadow: 0 10px 30px -5px rgba(8, 39, 34, 0.04), 0 2px 6px -1px rgba(8, 39, 34, 0.02);
+            border-color: #e5dfd3;
         }
 
-        /* כותרות בכרטיסים הופכות לכהות חדות */
+        /* כרטיס יער יוקרתי (Dark Forest Luxury Card) */
+        .card-forest {
+            background-color: #082722;
+            color: #fbf8f2;
+            border: 1px solid #133d35;
+            box-shadow: 0 20px 40px -10px rgba(8, 39, 34, 0.25);
+        }
+
+        /* כותרות בכרטיסים */
         .bg-slate-900 h1, .bg-slate-900 h2, .bg-slate-900 h3, .bg-slate-900 h4,
         .bg-slate-950 h1, .bg-slate-950 h2, .bg-slate-950 h3, .bg-slate-950 h4 {
-            color: #0f172a;
+            color: #082722;
+            font-weight: 800;
         }
 
-        /* שמירה על טקסט לבן בכפתורים ותגיות גרדיאנט */
+        /* שמירה על טקסט לבן בכפתורי יער */
         button.text-white, a.text-white, .text-white.font-black,
-        .bg-emerald-600.text-white, .bg-sky-500.text-white, .bg-sky-600.text-white,
-        .bg-gradient-to-r, .bg-gradient-to-br {
+        .bg-sky-500.text-white, .bg-sky-600.text-white {
             color: #ffffff;
         }
 
-        /* שדות קלט בהירים ויוקרתיים */
+        /* אינטראקציה טקטילית לכפתורים */
+        button, a, input[type="submit"] {
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        button:active, a:active {
+            transform: scale(0.98);
+        }
+
+        /* שדות קלט נקיים ויוקרתיים */
         input:not([type="checkbox"]):not([type="range"]), select, textarea {
-            background-color: #f8fafc !important;
-            border-color: #e2e8f0 !important;
-            color: #0f172a !important;
+            background-color: #ffffff !important;
+            border-color: #e5dfd3 !important;
+            color: #082722 !important;
         }
         input:not([type="checkbox"]):not([type="range"]):focus, select:focus, textarea:focus {
             background-color: #ffffff !important;
-            border-color: #0284c7 !important;
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12) !important;
+            border-color: #082722 !important;
+            box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.3) !important;
         }
 
         /* הסרת סרגל גלילה בטאבים לנייד */
@@ -379,18 +443,18 @@
     <div class="flex flex-col md:flex-row h-full no-print">
         
         <!-- סרגל צד (Sidebar) - Desktop -->
-        <aside x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="hidden md:flex w-64 bg-slate-900 border-l border-slate-800 flex-col shrink-0" x-cloak>
+        <aside x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="hidden md:flex w-64 bg-[#082722] border-l border-[#133d35] flex-col shrink-0 text-[#fbf8f2]" x-cloak>
             <!-- לוגו מותג -->
-            <div class="p-6 border-b border-slate-800 flex flex-col items-center justify-center">
-                <span class="text-2xl font-black tracking-wider bg-gradient-to-r from-sky-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">IlaiCo</span>
-                <span class="text-xs text-slate-400 font-medium tracking-widest mt-1">מערכת ניהול מתאמנים</span>
+            <div class="p-6 border-b border-[#133d35] flex flex-col items-center justify-center">
+                <span class="text-2xl font-black tracking-wider text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></span>
+                <span class="text-[11px] text-[#93c7bb] font-semibold tracking-widest mt-1">מערכת ניהול מתאמנים</span>
             </div>
 
             <!-- ניווט טאבים -->
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <button 
                     @click="activeTab = 'dashboard'; selectedClientId = null"
-                    :class="activeTab === 'dashboard' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'text-slate-600 hover:bg-slate-850 hover:text-slate-900 font-medium'"
+                    :class="activeTab === 'dashboard' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>לוח בקרה</span>
@@ -398,7 +462,7 @@
                 
                 <button 
                     @click="activeTab = 'clients'; selectedClientId = null"
-                    :class="activeTab === 'clients' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'text-slate-600 hover:bg-slate-850 hover:text-slate-900 font-medium'"
+                    :class="activeTab === 'clients' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="users" class="w-5 h-5"></i>
                     <span>רשימת מתאמנים</span>
@@ -406,7 +470,7 @@
 
                 <button 
                     @click="activeTab = 'schedule'; selectedClientId = null"
-                    :class="activeTab === 'schedule' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'text-slate-600 hover:bg-slate-850 hover:text-slate-900 font-medium'"
+                    :class="activeTab === 'schedule' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="calendar-days" class="w-5 h-5"></i>
                     <span>יומן שבועי</span>
@@ -414,7 +478,7 @@
 
                 <button 
                     @click="activeTab = 'finances'; selectedClientId = null"
-                    :class="activeTab === 'finances' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'text-slate-600 hover:bg-slate-850 hover:text-slate-900 font-medium'"
+                    :class="activeTab === 'finances' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
                     <span>מעקב פיננסי</span>
@@ -422,46 +486,46 @@
 
                 <button 
                     @click="activeTab = 'settings'; selectedClientId = null"
-                    :class="activeTab === 'settings' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'text-slate-600 hover:bg-slate-850 hover:text-slate-900 font-medium'"
+                    :class="activeTab === 'settings' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="settings" class="w-5 h-5"></i>
                     <span>הגדרות וסנכרון</span>
                 </button>
             </nav>
 
-            <div class="p-4 border-t border-slate-800 flex items-center justify-between">
+            <div class="p-4 border-t border-[#133d35] flex items-center justify-between bg-[#051c17]/60">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-sky-500/15 to-purple-500/15 border border-sky-300 text-sky-600 flex items-center justify-center font-bold">א</div>
+                    <div class="w-10 h-10 rounded-full bg-[#13443a] border border-[#86efac]/40 text-[#86efac] flex items-center justify-center font-black text-sm">א</div>
                     <div class="flex flex-col">
-                        <span class="text-sm font-bold text-slate-900">אילאי מאמן</span>
-                        <span class="text-xs text-slate-400">CRM מחובר</span>
+                        <span class="text-sm font-bold text-[#fbf8f2]">אילאי מאמן</span>
+                        <span class="text-[10px] text-[#86efac] font-semibold">CRM מחובר</span>
                     </div>
                 </div>
-                <button @click="logoutCoach()" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg transition" title="התנתק">
+                <button @click="logoutCoach()" class="text-[#93c7bb] hover:text-rose-400 p-1.5 rounded-lg transition" title="התנתק">
                     <i data-lucide="log-out" class="w-4 h-4"></i>
                 </button>
             </div>
         </aside>
 
         <!-- סרגל ניווט תחתון לנייד (Mobile Bottom Nav) -->
-        <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-md border-t border-slate-800 flex items-center justify-around z-50 shadow-lg" x-cloak>
-            <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-sky-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center flex-1 py-1">
+        <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#082722]/95 backdrop-blur-md border-t border-[#133d35] flex items-center justify-around z-50 shadow-2xl text-[#93c7bb]" x-cloak>
+            <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">לוח בקרה</span>
             </button>
-            <button @click="activeTab = 'clients'; selectedClientId = null" :class="activeTab === 'clients' ? 'text-sky-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'clients'; selectedClientId = null" :class="activeTab === 'clients' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="users" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">מתאמנים</span>
             </button>
-            <button @click="activeTab = 'schedule'; selectedClientId = null" :class="activeTab === 'schedule' ? 'text-sky-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'schedule'; selectedClientId = null" :class="activeTab === 'schedule' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="calendar-days" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">יומן</span>
             </button>
-            <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'text-sky-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="credit-card" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">פיננסים</span>
             </button>
-            <button @click="logoutCoach()" class="flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-rose-600">
+            <button @click="logoutCoach()" class="flex flex-col items-center justify-center flex-1 py-1 text-[#93c7bb] hover:text-rose-400">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">התנתק</span>
             </button>
@@ -471,20 +535,20 @@
         <main class="flex-1 bg-slate-950 overflow-y-auto flex flex-col pb-20 md:pb-0">
             
             <!-- סרגל עליון (Top Header) -->
-            <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="h-16 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40" x-cloak>
-                <h2 class="text-base md:text-lg font-black text-slate-900" x-text="getTabTitle()"></h2>
+            <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="h-16 border-b border-[#e5dfd3] flex items-center justify-between px-4 md:px-8 bg-white/90 backdrop-blur-md sticky top-0 z-40" x-cloak>
+                <h2 class="text-base md:text-lg font-black text-[#082722]" x-text="getTabTitle()"></h2>
                 
                 <div class="flex items-center gap-3">
-                    <div class="hidden sm:block text-xs text-slate-400 font-medium" x-text="getTodayFormattedDate()"></div>
+                    <div class="hidden sm:block text-xs text-[#5f756e] font-semibold" x-text="getTodayFormattedDate()"></div>
                     <button 
                         @click="openAddClientModal = true" 
-                        class="bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 text-white font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition shadow-md shadow-sky-500/20">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        <span>חדש</span>
+                        class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-3.5 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15">
+                        <i data-lucide="plus" class="w-4 h-4 text-[#86efac]"></i>
+                        <span>מתאמן חדש</span>
                     </button>
                     <button 
                         @click="logoutCoach()" 
-                        class="text-slate-400 hover:text-rose-600 p-2 rounded-xl border border-slate-800 bg-white hover:bg-rose-50 transition" 
+                        class="text-[#5f756e] hover:text-rose-600 p-2 rounded-xl border border-[#e5dfd3] bg-white hover:bg-rose-50 transition" 
                         title="התנתק מניהול מאמן">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
@@ -507,17 +571,17 @@
                 
                 <!-- מסך כניסה ואימות מאמן (קוד 1236) -->
                 <div x-show="activeTab !== 'portal' && activeTab !== 'intake' && !isCoachAuthenticated" x-cloak class="min-h-[75vh] w-full flex items-center justify-center p-4">
-                    <div class="bg-white border border-slate-200 shadow-2xl rounded-3xl p-6 md:p-8 max-w-sm w-full text-center space-y-6 relative overflow-hidden">
-                        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-sky-100/60 rounded-full blur-2xl pointer-events-none"></div>
-                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-purple-100/60 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="bg-[#082722] border border-[#133d35] text-[#fbf8f2] shadow-2xl rounded-3xl p-6 md:p-8 max-w-sm w-full text-center space-y-6 relative overflow-hidden">
+                        <div class="absolute -left-10 -bottom-10 w-36 h-36 bg-[#86efac]/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute -right-10 -top-10 w-36 h-36 bg-[#4ade80]/10 rounded-full blur-2xl pointer-events-none"></div>
 
                         <div class="space-y-2">
-                            <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-sky-500/15 to-purple-500/15 border border-sky-300 text-sky-600 flex items-center justify-center text-xl font-bold shadow-inner">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-[#051c17] border border-[#174e43] text-[#86efac] flex items-center justify-center text-xl font-bold shadow-inner">
                                 <i data-lucide="lock" class="w-6 h-6"></i>
                             </div>
-                            <h2 class="text-2xl font-black bg-gradient-to-r from-sky-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">IlaiCo</h2>
-                            <h3 class="text-base font-bold text-slate-900">כניסת מאמן בלבד 🔒</h3>
-                            <p class="text-xs text-slate-500">הזן קוד גישה אישי לפתיחת מערכת ה-CRM</p>
+                            <h2 class="text-2xl font-black text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></h2>
+                            <h3 class="text-base font-bold text-[#fbf8f2]">כניסת מאמן בלבד 🔒</h3>
+                            <p class="text-xs text-[#93c7bb]">הזן קוד גישה אישי לפתיחת מערכת ה-CRM</p>
                         </div>
 
                         <form @submit.prevent="loginCoach()" class="space-y-4">
@@ -530,23 +594,23 @@
                                     autofocus 
                                     x-model="coachPinInput" 
                                     placeholder="••••" 
-                                    class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-center tracking-[0.4em] text-2xl font-black text-slate-900 focus:outline-none focus:border-sky-500 focus:bg-white transition">
+                                    class="w-full bg-[#051c17] border border-[#174e43] rounded-2xl py-3 px-4 text-center tracking-[0.4em] text-2xl font-black text-[#86efac] focus:outline-none focus:border-[#86efac] transition">
                             </div>
 
                             <template x-if="coachPinError">
-                                <div class="bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold p-2.5 rounded-xl flex items-center justify-center gap-1.5 animate-shake">
+                                <div class="bg-rose-950/80 border border-rose-800 text-rose-300 text-xs font-bold p-2.5 rounded-xl flex items-center justify-center gap-1.5 animate-shake">
                                     <i data-lucide="alert-circle" class="w-4 h-4"></i>
                                     <span>קוד גישה שגוי, נסה שנית</span>
                                 </div>
                             </template>
 
-                            <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 text-white font-black py-3 rounded-2xl text-sm shadow-lg shadow-sky-500/25 transition flex items-center justify-center gap-2">
+                            <button type="submit" class="w-full bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 rounded-2xl text-sm shadow-lg shadow-[#86efac]/20 transition flex items-center justify-center gap-2">
                                 <i data-lucide="unlock" class="w-4 h-4"></i>
                                 <span>התחבר למערכת</span>
                             </button>
                         </form>
 
-                        <div class="text-[10px] text-slate-400 border-t border-slate-100 pt-3">
+                        <div class="text-[10px] text-[#93c7bb] border-t border-[#133d35] pt-3">
                             IlaiCo Coach CRM • מאובטח
                         </div>
                     </div>
@@ -763,64 +827,64 @@
                         <span class="text-[10px] text-sky-700 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-200 font-bold">👁️ תצוגה מקדימה של אפליקציית המתאמן</span>
                     </div>
 
-                    <!-- באנר כותרת מותג וברכה אישית מאילאי -->
-                    <div class="bg-gradient-to-br from-white via-sky-50/40 to-purple-50/40 border border-sky-200 rounded-3xl p-5 md:p-7 shadow-xl shadow-sky-500/5 space-y-5 relative overflow-hidden">
-                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-sky-200/30 rounded-full blur-3xl pointer-events-none"></div>
-                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-purple-200/30 rounded-full blur-3xl pointer-events-none"></div>
+                    <!-- באנר כותרת מותג וברכה אישית מאילאי (Dark Forest Luxury App Card) -->
+                    <div class="bg-[#082722] border border-[#133d35] rounded-3xl p-5 md:p-7 shadow-2xl shadow-[#082722]/30 space-y-5 relative overflow-hidden text-[#fbf8f2]">
+                        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-[#86efac]/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute -right-10 -top-10 w-48 h-48 bg-[#4ade80]/10 rounded-full blur-2xl pointer-events-none"></div>
                         
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                             <div class="space-y-1">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-2xl md:text-3xl font-black tracking-wider bg-gradient-to-r from-sky-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">IlaiCo</span>
-                                    <span class="text-[10px] bg-amber-50 text-amber-800 font-bold px-2.5 py-0.5 rounded-full border border-amber-200">ליווי פרימיום</span>
+                                    <span class="text-2xl md:text-3xl font-black tracking-wider text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></span>
+                                    <span class="text-[10px] bg-[#13443a] text-[#86efac] font-bold px-2.5 py-0.5 rounded-full border border-[#1b5e50]">ליווי פרימיום</span>
                                 </div>
-                                <h2 class="text-xl md:text-2xl font-black text-slate-900" x-text="'היי ' + (portalClient?.name || 'מתאמן') + '! 👋'"></h2>
-                                <p class="text-xs text-slate-500 font-medium" x-text="portalClient?.goal ? 'מטרה: ' + portalClient.goal : 'ברוך הבא לאפליקציית הליווי האישית שלך'"></p>
+                                <h2 class="text-xl md:text-2xl font-black text-white" x-text="'היי ' + (portalClient?.name || 'מתאמן') + '! 👋'"></h2>
+                                <p class="text-xs text-[#93c7bb] font-medium" x-text="portalClient?.goal ? 'מטרה: ' + portalClient.goal : 'ברוך הבא לאפליקציית הליווי האישית שלך'"></p>
                             </div>
 
                             <!-- כרטיס המאמן אילאי וקשר ישיר -->
-                            <div class="flex items-center gap-3 bg-white/90 border border-slate-200 p-3 rounded-2xl shadow-sm">
-                                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-sky-500/15 to-purple-500/15 border border-sky-300 text-sky-600 font-black text-base flex items-center justify-center shadow-inner">
+                            <div class="flex items-center gap-3 bg-[#051c17] border border-[#133d35] p-3 rounded-2xl shadow-inner">
+                                <div class="w-11 h-11 rounded-full bg-[#13443a] border border-[#86efac]/40 text-[#86efac] font-black text-base flex items-center justify-center shadow-md">
                                     א
                                 </div>
                                 <div class="space-y-0.5">
                                     <div class="flex items-center gap-1.5">
-                                        <span class="text-xs font-black text-slate-900">אילאי</span>
-                                        <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+                                        <span class="text-xs font-black text-[#fbf8f2]">אילאי</span>
+                                        <span class="w-2 h-2 rounded-full bg-[#86efac] animate-pulse"></span>
                                     </div>
-                                    <span class="text-[10px] text-amber-800 block font-bold">המאמן האישי שלך</span>
+                                    <span class="text-[10px] text-[#93c7bb] block font-medium">המאמן האישי שלך</span>
                                 </div>
-                                <a :href="'https://wa.me/972500000000?text=' + encodeURIComponent('היי אילאי, כאן ' + (portalClient?.name || 'המתאמן שלך') + '!')" target="_blank" class="mr-auto bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 text-white p-2.5 rounded-xl text-xs font-bold transition shadow-md shadow-sky-500/20" title="שלח וואטסאפ לאילאי">
+                                <a :href="'https://wa.me/972500000000?text=' + encodeURIComponent('היי אילאי, כאן ' + (portalClient?.name || 'המתאמן שלך') + '!')" target="_blank" class="mr-auto bg-[#86efac] hover:bg-[#4ade80] text-[#082722] p-2.5 rounded-xl text-xs font-black transition shadow-md shadow-[#86efac]/20" title="שלח וואטסאפ לאילאי">
                                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                                 </a>
                             </div>
                         </div>
 
                         <!-- תפריט ניווט 4 לשוניות למתאמן -->
-                        <div class="grid grid-cols-4 gap-1.5 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200 text-center">
+                        <div class="grid grid-cols-4 gap-1.5 bg-[#051c17]/90 p-1.5 rounded-2xl border border-[#133d35] text-center relative z-10">
                             <button @click="portalActiveSubTab = 'workouts'" 
-                                    :class="portalActiveSubTab === 'workouts' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-black shadow-md shadow-sky-500/25' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                                    :class="portalActiveSubTab === 'workouts' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
                                     class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
                                 <i data-lucide="dumbbell" class="w-3.5 h-3.5"></i>
                                 <span>אימונים</span>
                             </button>
                             
                             <button @click="portalActiveSubTab = 'nutrition'" 
-                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-black shadow-md shadow-sky-500/25' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
                                     class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
                                 <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
                                 <span>תזונה</span>
                             </button>
                             
                             <button @click="portalActiveSubTab = 'checkin'" 
-                                    :class="portalActiveSubTab === 'checkin' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-black shadow-md shadow-sky-500/25' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                                    :class="portalActiveSubTab === 'checkin' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
                                     class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
                                 <i data-lucide="scale" class="w-3.5 h-3.5"></i>
                                 <span>שקילה</span>
                             </button>
                             
                             <button @click="portalActiveSubTab = 'drive'" 
-                                    :class="portalActiveSubTab === 'drive' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-black shadow-md shadow-sky-500/25' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                                    :class="portalActiveSubTab === 'drive' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
                                     class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
                                 <i data-lucide="folder" class="w-3.5 h-3.5"></i>
                                 <span>Drive & אוכל</span>
@@ -1472,16 +1536,16 @@
                         </div>
 
                         <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
-                            <button @click="activeTab = 'portal'; portalClientId = currentClient.id; setTimeout(() => window.lucide.createIcons(), 50)" class="flex-1 md:flex-none justify-center bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 text-white px-3.5 py-2 rounded-xl text-xs md:text-sm font-black flex items-center gap-1.5 transition shadow-md shadow-sky-500/20">
-                                <i data-lucide="smartphone" class="w-4 h-4"></i>
+                            <button @click="activeTab = 'portal'; portalClientId = currentClient.id; setTimeout(() => window.lucide.createIcons(), 50)" class="flex-1 md:flex-none justify-center bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3.5 py-2 rounded-xl text-xs md:text-sm font-black flex items-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15">
+                                <i data-lucide="smartphone" class="w-4 h-4 text-[#86efac]"></i>
                                 <span>👁️ פתח אפליקציית מתאמן</span>
                             </button>
-                            <a :href="'https://wa.me/972' + cleanPhone(currentClient?.phone)" target="_blank" class="flex-1 md:flex-none justify-center bg-sky-600 hover:bg-sky-700 text-white px-3 py-2 rounded-xl text-xs md:text-sm font-bold flex items-center gap-1.5 shadow-sm">
+                            <a :href="'https://wa.me/972' + cleanPhone(currentClient?.phone)" target="_blank" class="flex-1 md:flex-none justify-center bg-[#22c55e] hover:bg-[#16a34a] text-white px-3 py-2 rounded-xl text-xs md:text-sm font-bold flex items-center gap-1.5 shadow-sm">
                                 <i data-lucide="message-circle" class="w-4 h-4"></i>
                                 <span class="hidden sm:inline">וואטסאפ חופשי</span>
                                 <span class="sm:hidden">צ'אט</span>
                             </a>
-                            <button @click="openEditClientModal(currentClient)" class="flex-1 md:flex-none justify-center bg-slate-850 hover:bg-slate-200 border border-slate-800 text-slate-800 px-3 py-2 rounded-xl text-xs md:text-sm font-bold flex items-center gap-1.5 transition">
+                            <button @click="openEditClientModal(currentClient)" class="flex-1 md:flex-none justify-center bg-white hover:bg-slate-50 border border-[#e5dfd3] text-[#082722] px-3 py-2 rounded-xl text-xs md:text-sm font-bold flex items-center gap-1.5 transition">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                                 <span>עריכה</span>
                             </button>
@@ -1493,12 +1557,12 @@
                     </div>
 
                     <!-- תפריט מחליק פנימי בנייד -->
-                    <div class="flex border-b border-slate-800 gap-1 overflow-x-auto pb-1 scrollbar-none whitespace-nowrap flex-nowrap">
-                        <button @click="detailSubTab = 'profile'" :class="detailSubTab === 'profile' ? 'border-sky-600 text-sky-600 font-black' : 'border-transparent text-slate-500 hover:text-slate-900'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">פרופיל & תזונה</button>
-                        <button @click="detailSubTab = 'checkins'" :class="detailSubTab === 'checkins' ? 'border-sky-600 text-sky-600 font-black' : 'border-transparent text-slate-500 hover:text-slate-900'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">מעקב מדדים</button>
-                        <button @click="detailSubTab = 'workout'" :class="detailSubTab === 'workout' ? 'border-sky-600 text-sky-600 font-black' : 'border-transparent text-slate-500 hover:text-slate-900'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית אימונים</button>
-                        <button @click="detailSubTab = 'mealplan'" :class="detailSubTab === 'mealplan' ? 'border-sky-600 text-sky-600 font-black' : 'border-transparent text-slate-500 hover:text-slate-900'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית תזונה</button>
-                        <button @click="detailSubTab = 'payments'" :class="detailSubTab === 'payments' ? 'border-sky-600 text-sky-600 font-black' : 'border-transparent text-slate-500 hover:text-slate-900'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תשלומים</button>
+                    <div class="flex border-b border-[#e5dfd3] gap-1 overflow-x-auto pb-1 scrollbar-none whitespace-nowrap flex-nowrap">
+                        <button @click="detailSubTab = 'profile'" :class="detailSubTab === 'profile' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">פרופיל & תזונה</button>
+                        <button @click="detailSubTab = 'checkins'" :class="detailSubTab === 'checkins' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">מעקב מדדים</button>
+                        <button @click="detailSubTab = 'workout'" :class="detailSubTab === 'workout' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית אימונים</button>
+                        <button @click="detailSubTab = 'mealplan'" :class="detailSubTab === 'mealplan' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית תזונה</button>
+                        <button @click="detailSubTab = 'payments'" :class="detailSubTab === 'payments' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-4 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תשלומים</button>
                     </div>
 
                     <!-- תוכן הטאבים הפנימיים -->
