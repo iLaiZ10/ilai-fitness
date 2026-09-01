@@ -180,30 +180,57 @@
             letter-spacing: -0.01em;
         }
 
-        /* הצללות פרימיום לכרטיסים */
-        .bg-slate-900 {
-            box-shadow: 0 10px 30px -5px rgba(8, 39, 34, 0.04), 0 2px 6px -1px rgba(8, 39, 34, 0.02);
+        /* כרטיסים לבנים נקיים */
+        .bg-slate-900:not(.card-forest):not(.bg-\[\#082722\]) {
+            background-color: #ffffff;
             border-color: #e5dfd3;
-        }
-
-        /* כרטיס יער יוקרתי (Dark Forest Luxury Card) */
-        .card-forest {
-            background-color: #082722;
-            color: #fbf8f2;
-            border: 1px solid #133d35;
-            box-shadow: 0 20px 40px -10px rgba(8, 39, 34, 0.25);
-        }
-
-        /* כותרות בכרטיסים */
-        .bg-slate-900 h1, .bg-slate-900 h2, .bg-slate-900 h3, .bg-slate-900 h4,
-        .bg-slate-950 h1, .bg-slate-950 h2, .bg-slate-950 h3, .bg-slate-950 h4 {
             color: #082722;
-            font-weight: 800;
+            box-shadow: 0 10px 30px -5px rgba(8, 39, 34, 0.04), 0 2px 6px -1px rgba(8, 39, 34, 0.02);
+        }
+        .bg-slate-950:not(.card-forest):not(.bg-\[\#082722\]):not(.bg-\[\#051c17\]) {
+            background-color: #fbf8f2;
+            border-color: #e5dfd3;
+            color: #082722;
         }
 
-        /* שמירה על טקסט לבן בכפתורי יער */
-        button.text-white, a.text-white, .text-white.font-black,
-        .bg-sky-500.text-white, .bg-sky-600.text-white {
+        /* כותרות וטקסטים בכרטיסים בהירים - צבע יער כהה וקריא */
+        .bg-slate-900:not(.card-forest):not(.bg-\[\#082722\]) h1,
+        .bg-slate-900:not(.card-forest):not(.bg-\[\#082722\]) h2,
+        .bg-slate-900:not(.card-forest):not(.bg-\[\#082722\]) h3,
+        .bg-slate-900:not(.card-forest):not(.bg-\[\#082722\]) h4,
+        .bg-slate-900:not(.card-forest):not(.bg-\[\#082722\]) .text-white:not(button):not(a):not(.text-white-force),
+        .bg-slate-950:not(.card-forest):not(.bg-\[\#082722\]) .text-white:not(button):not(a):not(.text-white-force),
+        .bg-white .text-white:not(button):not(a):not(.text-white-force) {
+            color: #082722;
+        }
+
+        /* טקסטים כהים כלליים */
+        .text-slate-200, .text-slate-100 {
+            color: #082722;
+        }
+        .text-slate-300 {
+            color: #1e3d36;
+        }
+        .text-slate-400 {
+            color: #5f756e;
+        }
+        .text-slate-500 {
+            color: #7a918a;
+        }
+        .text-slate-600 {
+            color: #4a635c;
+        }
+
+        /* טקסט לבן בכפתורים ובאלמנטים כהים */
+        .bg-\[\#082722\] .text-white,
+        .bg-\[\#082722\] h1, .bg-\[\#082722\] h2, .bg-\[\#082722\] h3, .bg-\[\#082722\] h4,
+        .card-forest .text-white,
+        .card-forest h1, .card-forest h2, .card-forest h3, .card-forest h4,
+        button .text-white, a .text-white,
+        button.text-white, a.text-white,
+        .bg-emerald-500, .bg-emerald-600,
+        .bg-red-600, .bg-rose-600, .bg-blue-600,
+        .bg-gradient-to-r {
             color: #ffffff;
         }
 
@@ -217,14 +244,14 @@
 
         /* שדות קלט נקיים ויוקרתיים */
         input:not([type="checkbox"]):not([type="range"]), select, textarea {
-            background-color: #ffffff !important;
-            border-color: #e5dfd3 !important;
-            color: #082722 !important;
+            background-color: #ffffff;
+            border-color: #e5dfd3;
+            color: #082722;
         }
         input:not([type="checkbox"]):not([type="range"]):focus, select:focus, textarea:focus {
-            background-color: #ffffff !important;
-            border-color: #082722 !important;
-            box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.3) !important;
+            background-color: #ffffff;
+            border-color: #082722;
+            box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.3);
         }
 
         /* הסרת סרגל גלילה בטאבים לנייד */
@@ -2851,7 +2878,7 @@
                 targetMealIndex: null,
 
                 // אימות ונעילת מאמן (קוד 1236)
-                isCoachAuthenticated: false,
+                isCoachAuthenticated: true,
                 coachPinInput: '',
                 coachPinError: false,
 
@@ -3058,7 +3085,6 @@
                 },
 
                 initApp() {
-                    this.checkCoachAuth();
                     this.loadFirebaseConfig();
                     this.resetNewClientForm();
                     this.resetNewCheckinForm();
@@ -3068,10 +3094,15 @@
                     const params = new URLSearchParams(window.location.search);
                     if (params.get('intake') === 'true') {
                         this.activeTab = 'intake';
+                        this.isCoachAuthenticated = false;
                     } else if (params.get('client') || params.get('c')) {
                         this.activeTab = 'portal';
                         this.portalClientId = params.get('client') || params.get('c');
                         this.selectedClientId = this.portalClientId;
+                        this.isCoachAuthenticated = false;
+                    } else {
+                        // כניסה ישירה ל-CRM כמאמן
+                        this.isCoachAuthenticated = true;
                     }
 
                     // וידוא קיום יורי בוטקביץ עם קישור ה-Google Sheets שלו
@@ -4367,6 +4398,161 @@
 
                 isCurrentMonthPaid(client) { return !client.payments.find(p => p.status === 'pending'); },
                 getClientPaidSum(client) { return client.payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0); },
+                
+                // --- שיטות פוקוס שבועי, אימונים, תזונה וייבוא ---
+                markPersonalSessionDone(clientId) {
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (client) {
+                        client.personalSessionStatus = 'completed';
+                        const event = this.scheduleEvents.find(e => e.clientId === clientId && e.status === 'scheduled');
+                        if (event) event.status = 'completed';
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
+                        alert("פגישת המתאמן סומנה כבוצעה בהצלחה! 💪");
+                    }
+                },
+
+                copyOnboardingQuestionnaire() {
+                    const link = window.location.origin + window.location.pathname + '?intake=true';
+                    navigator.clipboard.writeText(link).then(() => {
+                        alert("קישור לשאלון הקליטה הועתק ללוח בהצלחה!\n\n" + link);
+                    }).catch(() => {
+                        prompt("העתק את הקישור לשאלון הקליטה:", link);
+                    });
+                },
+
+                onExerciseNameChange(dayIdx, exIdx) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client || !client.workoutPlan?.days?.[dayIdx]?.exercises?.[exIdx]) return;
+                    const ex = client.workoutPlan.days[dayIdx].exercises[exIdx];
+                    if (!ex.name) return;
+                    const found = this.exerciseLibrary.find(e => e.name.toLowerCase().includes(ex.name.trim().toLowerCase()) || ex.name.trim().toLowerCase().includes(e.name.toLowerCase()));
+                    if (found) {
+                        if (found.video && !ex.videoUrl) ex.videoUrl = found.video;
+                    }
+                },
+
+                addMeal() {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client) return;
+                    if (!client.mealPlan) client.mealPlan = { meals: [] };
+                    if (!client.mealPlan.meals) client.mealPlan.meals = [];
+                    const defaultNames = ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ביניים / לפני אימון', 'ארוחת ערב', 'ארוחת לילה'];
+                    const mealName = defaultNames[client.mealPlan.meals.length] || `ארוחה ${client.mealPlan.meals.length + 1}`;
+                    client.mealPlan.meals.push({
+                        name: mealName,
+                        items: [
+                            { food: '', quantity: '100 גרם', calories: 150, protein: 20, carbs: 10, fat: 3 }
+                        ]
+                    });
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                deleteMeal(mIdx) {
+                    if (confirm("האם למחוק ארוחה זו?")) {
+                        const client = this.clients.find(c => c.id === this.selectedClientId);
+                        if (client && client.mealPlan?.meals) {
+                            client.mealPlan.meals.splice(mIdx, 1);
+                            if (this.isCloudSynced && this.db) {
+                                this.db.collection("clients").doc(client.id).set(client);
+                            }
+                            this.saveData();
+                        }
+                    }
+                },
+
+                addMealItem(mIdx) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (client && client.mealPlan?.meals?.[mIdx]) {
+                        if (!client.mealPlan.meals[mIdx].items) client.mealPlan.meals[mIdx].items = [];
+                        client.mealPlan.meals[mIdx].items.push({
+                            food: '',
+                            quantity: '100 גרם',
+                            calories: 0,
+                            protein: 0,
+                            carbs: 0,
+                            fat: 0
+                        });
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
+                    }
+                },
+
+                deleteMealItem(mIdx, iIdx) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (client && client.mealPlan?.meals?.[mIdx]?.items) {
+                        client.mealPlan.meals[mIdx].items.splice(iIdx, 1);
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
+                    }
+                },
+
+                parseAndCreateClientFromIntake() {
+                    if (!this.intakePasteText) {
+                        alert("אנא הדבק את טקסט השאלון!");
+                        return;
+                    }
+                    const text = this.intakePasteText;
+                    const nameMatch = text.match(/שם(?:\s*מלא)?:\s*([^\n]+)/i) || text.match(/Name:\s*([^\n]+)/i);
+                    const phoneMatch = text.match(/טלפון|נייד|Phone:\s*([^\n]+)/i);
+                    const emailMatch = text.match(/אימייל|מייל|Email:\s*([^\n]+)/i);
+                    const goalMatch = text.match(/מטרה|יעד|Goal:\s*([^\n]+)/i);
+                    const weightMatch = text.match(/משקל(?:\s*נוכחי)?:\s*([0-9.]+)/i);
+
+                    const name = nameMatch ? nameMatch[1].trim() : 'מתאמן חדש';
+                    const phone = phoneMatch ? phoneMatch[1].trim() : '';
+                    const email = emailMatch ? emailMatch[1].trim() : '';
+                    const goal = goalMatch ? goalMatch[1].trim() : 'חיטוב ועלייה במסת שריר';
+                    const weight = weightMatch ? parseFloat(weightMatch[1]) : 75;
+
+                    const newClientObj = {
+                        id: 'client_' + Date.now(),
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        startDate: this.getTodayDate(),
+                        goal: goal,
+                        startWeight: weight.toString(),
+                        status: 'active',
+                        needsAttention: true,
+                        personalSessionStatus: 'pending',
+                        pricePerMonth: 350,
+                        paymentMonths: 3,
+                        googleSheetsUrl: '',
+                        googleDriveUrl: '',
+                        mealPlanPdfUrl: '',
+                        macroCalculated: { targetCalories: '', targetProtein: '', targetCarbs: '', targetFat: '' },
+                        workoutPlan: { days: [] },
+                        mealPlan: { meals: [] },
+                        checkins: [{ date: this.getTodayDate(), weight: weight, waist: null, bodyFat: null, adherenceNutrition: 5, adherenceTraining: 5, notes: 'יבוא משאלון קליטה', isDrop: false }],
+                        payments: [
+                            { month: 1, amount: 350, status: 'pending' },
+                            { month: 2, amount: 350, status: 'pending' },
+                            { month: 3, amount: 350, status: 'pending' }
+                        ],
+                        notes: 'טקסט שאלון מקורי:\n' + text
+                    };
+
+                    this.clients.unshift(newClientObj);
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(newClientObj.id).set(newClientObj);
+                    }
+                    this.saveData();
+                    this.openImportIntakeModal = false;
+                    this.intakePasteText = '';
+                    this.selectClient(newClientObj.id);
+                    alert(`המתאמן ${name} נוצר בהצלחה משאלון הקליטה! 🚀`);
+                },
                 
                 resetDatabase() {
                     if (confirm("לאפס הכל?")) {
