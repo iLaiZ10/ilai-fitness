@@ -655,8 +655,9 @@
                             </button>
                         </form>
 
-                        <div class="text-[10px] text-[#93c7bb] border-t border-[#133d35] pt-3">
-                            IlaiCo Coach CRM • מאובטח
+                        <div class="text-[10px] text-[#93c7bb] border-t border-[#133d35] pt-3 flex items-center justify-between">
+                            <span>IlaiCo Coach CRM • מאובטח</span>
+                            <button type="button" @click="openPrivacyModal = true" class="text-[#86efac] hover:underline cursor-pointer">תקנון ופרטיות 🛡️</button>
                         </div>
                     </div>
                 </div>
@@ -849,6 +850,18 @@
                                 <div class="space-y-1">
                                     <label class="block text-[10px] font-bold text-slate-400">מה האתגר/הקושי הכי גדול שלך כיום בתזונה או באימונים? *</label>
                                     <textarea x-model="newIntake.biggestChallenge" required placeholder="מתוקים, חוסר זמן, התמדה, קושי לתכנן ארוחות..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-semibold resize-none h-20"></textarea>
+                                </div>
+
+                                <!-- הסכמה לתנאי שימוש, הצהרת בריאות ומדיניות פרטיות (עמידה בחוק) -->
+                                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2">
+                                    <label class="flex items-start gap-2.5 cursor-pointer">
+                                        <input type="checkbox" x-model="newIntake.privacyConsent" required class="mt-1 w-4 h-4 rounded text-emerald-500 bg-slate-900 border-slate-700 focus:ring-emerald-500 cursor-pointer">
+                                        <span class="text-[11px] text-slate-300 font-semibold leading-relaxed">
+                                            קראתי ואני מאשר את 
+                                            <button type="button" @click="openPrivacyModal = true" class="text-emerald-400 font-bold underline hover:text-emerald-300">הצהרת הבריאות, תנאי השימוש ומדיניות הפרטיות</button> 
+                                            של ILAICO ומאשר כי מסרתי את הפרטים מרצוני החופשי לצורך התאמת הליווי. *
+                                        </span>
+                                    </label>
                                 </div>
 
                                 <div class="flex justify-between pt-2">
@@ -1917,6 +1930,17 @@
                                 </template>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- תחתית פורטל: הצהרת בריאות ומדיניות פרטיות -->
+                    <div class="text-center py-4 space-y-1.5 border-t border-[#e5dfd3] pt-4">
+                        <p class="text-[11px] text-[#5f756e]">
+                            <span>© ILAICO • אילאי אימונים ותזונה</span>
+                            <span class="mx-1">•</span>
+                            <button type="button" @click="openPrivacyModal = true" class="text-[#082722] hover:text-[#22c55e] font-bold underline cursor-pointer">
+                                הצהרת בריאות, תנאי שימוש ופרטיות 🛡️
+                            </button>
+                        </p>
                     </div>
                 </div>
 
@@ -4585,6 +4609,65 @@
         </div>
     </div>
 
+    <!-- מודל מדיניות פרטיות, תנאי שימוש והצהרת בריאות -->
+    <div x-show="openPrivacyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm no-print" x-cloak @click.self="openPrivacyModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-7 max-w-2xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col text-[#082722]">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base md:text-lg font-black text-[#082722]">הצהרת בריאות, תנאי שימוש ומדיניות פרטיות 🛡️</h3>
+                        <p class="text-xs text-[#5f756e]">ILAICO • אילאי אימונים ותזונה</p>
+                    </div>
+                </div>
+                <button @click="openPrivacyModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs leading-relaxed text-[#233d36]">
+                <!-- 1. הצהרת בריאות וכשירות גופנית -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-2">
+                    <h4 class="font-extrabold text-xs text-[#082722] flex items-center gap-1.5 border-b border-[#e5dfd3] pb-1.5">
+                        <i data-lucide="activity" class="w-4 h-4 text-emerald-600"></i>
+                        <span>1. הצהרת בריאות וכשירות לפעילות גופנית (חוק הספורט)</span>
+                    </h4>
+                    <p>המתאמן/ת מצהיר/ה בזאת כי הוא/היא כשיר/ה מבחינה גופנית ובריאותית להשתתף בתוכנית אימונים ותזונה, אינו/אינה סובל/ת ממחלות לב, לחץ דם, בעיות נשימה, פציעות אורתופדיות מגבילות או כל מגבלה רפואית אחרת המונעת פעילות גופנית מאומצת.</p>
+                    <p>ידוע למתאמן כי התוכנית, ההמלצות והתפריטים ניתנים כהנחיה מקצועית לאורח חיים בריא ואינם מהווים ייעוץ רפואי או תחליף לרופא. בכל מקרה של שינוי במצב הבריאותי, כאב חריג או ספק, חלה חובה להיוועץ ברופא ולהודיע למאמן באופן מיידי.</p>
+                </div>
+
+                <!-- 2. מדיניות פרטיות ואבטחת מידע -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-2">
+                    <h4 class="font-extrabold text-xs text-[#082722] flex items-center gap-1.5 border-b border-[#e5dfd3] pb-1.5">
+                        <i data-lucide="lock" class="w-4 h-4 text-[#082722]"></i>
+                        <span>2. מדיניות פרטיות והגנת מידע אישי (חוק הגנת הפרטיות התשמ"א-1981)</span>
+                    </h4>
+                    <p>• <strong>מטרת איסוף המידע:</strong> המידע שנמסר על ידי המתאמן (שם, טלפון, אימייל, גיל, גובה, משקל, מדדים, הרגלי תזונה ותמונות ארוחות) נאסף ונשמר אך ורק לצורך התאמת תוכניות אימון, תזונה ומעקב אישי על ידי המאמן אילאי.</p>
+                    <p>• <strong>סודיות ואי-העברה לצד ג':</strong> ILAICO מתחייבת לשמור על סודיות מוחלטת של המידע. המידע לא יימכר, לא יועבר ולא ישותף עם שום גורם מסחרי, מפרסם או צד שלישי.</p>
+                    <p>• <strong>אבטחת מידע:</strong> הנתונים מאוחסנים במסדי נתונים מאובטחים בטכנולוגיית ענן מוצפנת (Google Firebase / HTTPS) בסטנדרטים מחמירים של אבטחה.</p>
+                    <p>• <strong>זכות עיון, תיקון ומחיקה ("הזכות להישכח"):</strong> לכל מתאמן עומדת הזכות לעיין במידע שנאסף אודותיו, לעדכן אותו, או לדרוש את מחיקתו המלאה מהמערכת בכל עת בפנייה ישירה למאמן.</p>
+                </div>
+
+                <!-- 3. תנאי ליווי וביטולים -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-2">
+                    <h4 class="font-extrabold text-xs text-[#082722] flex items-center gap-1.5 border-b border-[#e5dfd3] pb-1.5">
+                        <i data-lucide="file-text" class="w-4 h-4 text-[#082722]"></i>
+                        <span>3. תנאי הליווי והתחייבות למשמעת</span>
+                    </h4>
+                    <p>הצלחת התהליך והשגת התוצאות תלויות במשמעת העצמית של המתאמן, הקפדה על דיווחים שבועיים, מעקב מים, צעדים, וביצוע התוכנית המותאמת. שירותי הליווי ניתנים במסלולי חודשים מוסכמים מראש.</p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
+                <button type="button" @click="openPrivacyModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2.5 rounded-xl text-xs transition border border-[#174e43] cursor-pointer shadow-md shadow-[#082722]/15">
+                    קראתי והבנתי ✓
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- לוגיקת האפליקציה ב-JavaScript -->
     <script>
         function fitnessApp() {
@@ -4597,6 +4680,7 @@
                 statusFilter: 'all',
                 
                 // מודלים
+                openPrivacyModal: false,
                 openSendIntakeModal: false,
                 sendIntakeClientName: '',
                 sendIntakeClientPhone: '',
@@ -4846,18 +4930,32 @@
                     };
                 },
 
+                async hashPin(pin) {
+                    if (!pin) return '';
+                    try {
+                        const msgBuffer = new TextEncoder().encode(pin);
+                        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                        const hashArray = Array.from(new Uint8Array(hashBuffer));
+                        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    } catch (e) {
+                        return pin;
+                    }
+                },
+
                 checkCoachAuth() {
-                    const authSaved = localStorage.getItem('ilaico_coach_authenticated');
-                    if (authSaved === 'true_1236') {
+                    const token = localStorage.getItem('ilaico_coach_auth_token') || localStorage.getItem('ilaico_coach_authenticated');
+                    if (token === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || token === 'true_1236') {
                         this.isCoachAuthenticated = true;
                     }
                 },
 
-                loginCoach() {
-                    if (this.coachPinInput === '1236') {
+                async loginCoach() {
+                    const hashed = await this.hashPin(this.coachPinInput);
+                    if (hashed === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394') {
                         this.isCoachAuthenticated = true;
                         this.coachPinError = false;
                         this.coachPinInput = '';
+                        localStorage.setItem('ilaico_coach_auth_token', hashed);
                         setTimeout(() => {
                             if (window.lucide) window.lucide.createIcons();
                         }, 50);
@@ -4869,6 +4967,8 @@
 
                 logoutCoach() {
                     this.isCoachAuthenticated = false;
+                    localStorage.removeItem('ilaico_coach_auth_token');
+                    localStorage.removeItem('ilaico_coach_authenticated');
                     this.coachPinInput = '';
                     this.coachPinError = false;
                     this.activeTab = 'dashboard';
@@ -6080,6 +6180,8 @@
                         hatedFoods: this.newIntake.hatedFoods || '',
                         motivation: this.newIntake.motivation || '',
                         biggestChallenge: this.newIntake.biggestChallenge || '',
+                        privacyConsent: !!this.newIntake.privacyConsent,
+                        privacyConsentDate: new Date().toISOString(),
 
                         pricePerMonth: price,
                         paymentMonths: months,
