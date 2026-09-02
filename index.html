@@ -946,278 +946,344 @@
 
                         <!-- תפריט ניווט 4 לשוניות למתאמן -->
                         <div class="grid grid-cols-4 gap-1.5 bg-[#051c17]/90 p-1.5 rounded-2xl border border-[#133d35] text-center relative z-10">
-                            <button @click="portalActiveSubTab = 'workouts'" 
+                            <button @click="portalActiveSubTab = 'home'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
+                                    :class="portalActiveSubTab === 'home' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
+                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition cursor-pointer">
+                                <i data-lucide="home" class="w-3.5 h-3.5"></i>
+                                <span>ראשי 🏠</span>
+                            </button>
+                            
+                            <button @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
                                     :class="portalActiveSubTab === 'workouts' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
-                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
+                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition cursor-pointer">
                                 <i data-lucide="dumbbell" class="w-3.5 h-3.5"></i>
-                                <span>אימונים</span>
+                                <span>אימונים 🏋️</span>
                             </button>
                             
-                            <button @click="portalActiveSubTab = 'nutrition'" 
+                            <button @click="portalActiveSubTab = 'nutrition'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
                                     :class="portalActiveSubTab === 'nutrition' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
-                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
+                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition cursor-pointer">
                                 <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
-                                <span>תזונה</span>
+                                <span>תזונה 🥗</span>
                             </button>
                             
-                            <button @click="portalActiveSubTab = 'checkin'" 
-                                    :class="portalActiveSubTab === 'checkin' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
-                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
-                                <i data-lucide="scale" class="w-3.5 h-3.5"></i>
-                                <span>שקילה</span>
-                            </button>
-                            
-                            <button @click="portalActiveSubTab = 'drive'" 
-                                    :class="portalActiveSubTab === 'drive' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
-                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition">
-                                <i data-lucide="folder" class="w-3.5 h-3.5"></i>
-                                <span>Drive & אוכל</span>
+                            <button @click="portalActiveSubTab = 'progress'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
+                                    :class="portalActiveSubTab === 'progress' ? 'bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black shadow-lg shadow-[#86efac]/20' : 'text-[#93c7bb] hover:text-[#fbf8f2] font-bold'"
+                                    class="py-2.5 px-1 rounded-xl text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-center gap-1 transition cursor-pointer">
+                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                                <span>התקדמות 📈</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- צ'ק-ליסט יומי של אלופים (Daily Champion Scorecard) -->
-                    <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4 relative overflow-hidden" x-data="{ openScorecardEdit: false }">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac] shadow-md shadow-[#082722]/15">
-                                    <i data-lucide="award" class="w-5 h-5"></i>
-                                </div>
-                                <div>
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <h3 class="text-sm md:text-base font-black text-[#082722]">צ'ק-ליסט יומי חי של אלופים 👑</h3>
-                                        <template x-if="!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()">
-                                            <span class="text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                <span>נשמר אוטומטית</span>
-                                            </span>
-                                        </template>
-                                        <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
-                                            <span class="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                                                <i data-lucide="calendar" class="w-3 h-3 text-amber-700"></i>
-                                                <span x-text="'דיווח קודם: ' + portalScorecardViewDate"></span>
-                                            </span>
-                                        </template>
+                    <!-- תוכן לשונית 1: מסך ראשי וצ'ק ליסט יומי (Home & Daily Scorecard) -->
+                    <div x-show="portalActiveSubTab === 'home'" x-cloak class="space-y-4">
+                        <!-- צ'ק-ליסט יומי של אלופים (Daily Champion Scorecard) -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4 relative overflow-hidden" x-data="{ openScorecardEdit: false }">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac] shadow-md shadow-[#082722]/15">
+                                        <i data-lucide="award" class="w-5 h-5"></i>
                                     </div>
-                                    <p class="text-[11px] text-[#5f756e]">הציון מתעדכן בזמן אמת וננעל אוטומטית בחצות (00:00) 🕛</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center gap-2">
-                                <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
-                                    <button type="button" @click="setScorecardViewDate(getTodayDate())" class="bg-[#fbf8f2] hover:bg-[#f0eae1] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
-                                        <span>חזור להיום ⚡</span>
-                                    </button>
-                                </template>
-                                <span class="bg-[#082722] text-[#86efac] font-black px-3.5 py-1.5 rounded-2xl text-xs flex items-center gap-1.5 shadow-sm">
-                                    <i data-lucide="sparkles" class="w-4 h-4 text-[#86efac]"></i>
-                                    <template x-if="!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()">
-                                        <span x-text="'ציון חי: ' + getLiveDailyScore(portalClient) + '% ⚡'"></span>
-                                    </template>
-                                    <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
-                                        <span x-text="'ציון היום: ' + (getScorecardForDate(portalClient, portalScorecardViewDate)?.score || getLiveDailyScore(portalClient)) + '% 🏆'"></span>
-                                    </template>
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- סרגל מעבר מהיר בין ימים (היום, אתמול, שלשום, והיסטוריה) -->
-                        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px] font-bold border-b border-[#e5dfd3] pt-0.5">
-                            <template x-for="day in getPastDatesList(7)" :key="day.date">
-                                <button type="button" 
-                                        @click="setScorecardViewDate(day.date)"
-                                        :class="(portalScorecardViewDate === day.date || (!portalScorecardViewDate && day.isToday)) ? 'bg-[#082722] text-[#86efac] border-[#082722] shadow-sm' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'"
-                                        class="px-3 py-1.5 rounded-xl border shrink-0 transition flex items-center gap-1.5 cursor-pointer">
-                                    <template x-if="getScorecardForDate(portalClient, day.date)">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                    </template>
-                                    <span x-text="day.label"></span>
-                                    <template x-if="getScorecardForDate(portalClient, day.date)">
-                                        <span class="text-[9px] font-black opacity-80" x-text="getScorecardForDate(portalClient, day.date).score + '%'"></span>
-                                    </template>
-                                </button>
-                            </template>
-                            <button type="button" @click="openScorecardHistoryModal = true; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="px-3 py-1.5 rounded-xl border border-[#e5dfd3] bg-white text-[#082722] hover:bg-slate-50 shrink-0 flex items-center gap-1.5 text-[11px] font-bold cursor-pointer">
-                                <i data-lucide="history" class="w-3.5 h-3.5 text-[#082722]"></i>
-                                <span>כל ההיסטוריה 📜</span>
-                            </button>
-                        </div>
-
-                        <!-- אם צופים ביום קודם שטרם הוזן בו דיווח -->
-                        <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate() && !getScorecardForDate(portalClient, portalScorecardViewDate)">
-                            <div class="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-                                <div class="flex items-center gap-2">
-                                    <i data-lucide="info" class="w-4 h-4 text-amber-700 shrink-0"></i>
-                                    <span>לא נשמר דיווח בתאריך זה (<strong x-text="portalScorecardViewDate"></strong>). תוכל להשלים אותו כעת רטרואקטיבית!</span>
-                                </div>
-                                <button type="button" @click="saveScorecardForDate(portalScorecardViewDate)" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3 py-1 rounded-xl text-[10px] cursor-pointer shrink-0">
-                                    שמור דיווח ליום זה ✍️
-                                </button>
-                            </div>
-                        </template>
-
-                        <!-- טופס הצ'ק-ליסט האינטראקטיבי -->
-                        <div class="space-y-4 pt-1">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                                <!-- 1. תזונה -->
-                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-2">
-                                    <span class="font-black text-[#082722] block flex items-center gap-1.5">
-                                        <i data-lucide="utensils" class="w-3.5 h-3.5 text-[#22c55e]"></i>
-                                        <span>1. עמידה ביעד התזונה והקלוריות:</span>
-                                    </span>
-                                    <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
-                                        <button type="button" @click="scorecardNutrition = 'yes'; autoSaveDailyScorecard(false);" :class="scorecardNutrition === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
-                                            100% בול ✅
-                                        </button>
-                                        <button type="button" @click="scorecardNutrition = 'almost'; autoSaveDailyScorecard(false);" :class="scorecardNutrition === 'almost' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
-                                            כמעט (~80%) 👍
-                                        </button>
-                                        <button type="button" @click="scorecardNutrition = 'no'; autoSaveDailyScorecard(false);" :class="scorecardNutrition === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
-                                            חרגתי ⚠️
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- 2. אימון -->
-                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-2">
-                                    <span class="font-black text-[#082722] block flex items-center gap-1.5">
-                                        <i data-lucide="dumbbell" class="w-3.5 h-3.5 text-[#22c55e]"></i>
-                                        <span>2. ביצוע אימון יומי:</span>
-                                    </span>
-                                    <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
-                                        <button type="button" @click="scorecardWorkout = 'yes'; autoSaveDailyScorecard(false);" :class="scorecardWorkout === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
-                                            התאמנתי! 🏋️‍♂️
-                                        </button>
-                                        <button type="button" @click="scorecardWorkout = 'rest'; autoSaveDailyScorecard(false);" :class="scorecardWorkout === 'rest' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
-                                            יום מנוחה 🧘
-                                        </button>
-                                        <button type="button" @click="scorecardWorkout = 'no'; autoSaveDailyScorecard(false);" :class="scorecardWorkout === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
-                                            דילגתי ❌
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 3. מים וצעדים (אינדיקציה אוטומטית) + שינה -->
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
                                     <div>
-                                        <span class="text-[10px] text-[#5f756e] block font-bold">3. שתיית מים:</span>
-                                        <span class="text-xs font-black text-[#082722]" x-text="(!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? ((portalClient?.dailyWater || 0) + ' / ' + (portalClient?.waterTarget || 3000) + ' מ״ל') : ((getScorecardForDate(portalClient, portalScorecardViewDate)?.water || portalClient?.waterTarget || 3000) + ' מ״ל')"></span>
-                                    </div>
-                                    <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
-                                        <span x-text="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'הושג! 💧' : 'בתהליך ⏳'"></span>
-                                    </span>
-                                </div>
-
-                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
-                                    <div>
-                                        <span class="text-[10px] text-[#5f756e] block font-bold">4. צעדים:</span>
-                                        <span class="text-xs font-black text-[#082722]" x-text="(!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? ((portalClient?.dailySteps || 0) + ' / ' + (portalClient?.stepsTarget || 10000)) : ((getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || portalClient?.stepsTarget || 10000) + ' צעדים')"></span>
-                                    </div>
-                                    <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
-                                        <span x-text="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'הושג! 🚶' : 'בתהליך ⏳'"></span>
-                                    </span>
-                                </div>
-
-                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
-                                    <div>
-                                        <span class="text-[10px] text-[#5f756e] block font-bold">5. איכות שינה / אנרגיה:</span>
-                                        <div class="flex items-center gap-1 mt-1">
-                                            <template x-for="star in [1,2,3,4,5]" :key="star">
-                                                <button type="button" @click="scorecardSleep = star; autoSaveDailyScorecard(false);" class="text-base focus:outline-none transition hover:scale-110 cursor-pointer" :class="star <= scorecardSleep ? 'text-amber-400' : 'text-slate-300'">★</button>
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <h3 class="text-sm md:text-base font-black text-[#082722]">צ'ק-ליסט יומי חי של אלופים 👑</h3>
+                                            <template x-if="!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()">
+                                                <span class="text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                    <span>נשמר אוטומטית</span>
+                                                </span>
+                                            </template>
+                                            <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
+                                                <span class="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                                    <i data-lucide="calendar" class="w-3 h-3 text-amber-700"></i>
+                                                    <span x-text="'דיווח קודם: ' + portalScorecardViewDate"></span>
+                                                </span>
                                             </template>
                                         </div>
+                                        <p class="text-[11px] text-[#5f756e]">הציון מתעדכן בזמן אמת וננעל אוטומטית בחצות (00:00) 🕛</p>
                                     </div>
-                                    <span class="text-xs font-black text-[#082722]" x-text="scorecardSleep + ' / 5 ⭐'"></span>
+                                </div>
+                                
+                                <div class="flex items-center gap-2">
+                                    <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
+                                        <button type="button" @click="setScorecardViewDate(getTodayDate())" class="bg-[#fbf8f2] hover:bg-[#f0eae1] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
+                                            <span>חזור להיום ⚡</span>
+                                        </button>
+                                    </template>
+                                    <span class="bg-[#082722] text-[#86efac] font-black px-3.5 py-1.5 rounded-2xl text-xs flex items-center gap-1.5 shadow-sm">
+                                        <i data-lucide="sparkles" class="w-4 h-4 text-[#86efac]"></i>
+                                        <template x-if="!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()">
+                                            <span x-text="'ציון חי: ' + getLiveDailyScore(portalClient) + '% ⚡'"></span>
+                                        </template>
+                                        <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
+                                            <span x-text="'ציון היום: ' + (getScorecardForDate(portalClient, portalScorecardViewDate)?.score || getLiveDailyScore(portalClient)) + '% 🏆'"></span>
+                                        </template>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- סרגל מעבר מהיר בין ימים (היום, אתמול, שלשום, והיסטוריה) -->
+                            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px] font-bold border-b border-[#e5dfd3] pt-0.5">
+                                <template x-for="day in getPastDatesList(7)" :key="day.date">
+                                    <button type="button" 
+                                            @click="setScorecardViewDate(day.date)"
+                                            :class="(portalScorecardViewDate === day.date || (!portalScorecardViewDate && day.isToday)) ? 'bg-[#082722] text-[#86efac] border-[#082722] shadow-sm' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'"
+                                            class="px-3 py-1.5 rounded-xl border shrink-0 transition flex items-center gap-1.5 cursor-pointer">
+                                        <template x-if="getScorecardForDate(portalClient, day.date)">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                        </template>
+                                        <span x-text="day.label"></span>
+                                        <template x-if="getScorecardForDate(portalClient, day.date)">
+                                            <span class="text-[9px] font-black opacity-80" x-text="getScorecardForDate(portalClient, day.date).score + '%'"></span>
+                                        </template>
+                                    </button>
+                                </template>
+                                <button type="button" @click="openScorecardHistoryModal = true; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="px-3 py-1.5 rounded-xl border border-[#e5dfd3] bg-white text-[#082722] hover:bg-slate-50 shrink-0 flex items-center gap-1.5 text-[11px] font-bold cursor-pointer">
+                                    <i data-lucide="history" class="w-3.5 h-3.5 text-[#082722]"></i>
+                                    <span>כל ההיסטוריה 📜</span>
+                                </button>
+                            </div>
+
+                            <!-- אם צופים ביום קודם שטרם הוזן בו דיווח -->
+                            <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate() && !getScorecardForDate(portalClient, portalScorecardViewDate)">
+                                <div class="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="info" class="w-4 h-4 text-amber-700 shrink-0"></i>
+                                        <span>לא נשמר דיווח בתאריך זה (<strong x-text="portalScorecardViewDate"></strong>). תוכל להשלים אותו כעת רטרואקטיבית!</span>
+                                    </div>
+                                    <button type="button" @click="saveScorecardForDate(portalScorecardViewDate)" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3 py-1 rounded-xl text-[10px] cursor-pointer shrink-0">
+                                        שמור דיווח ליום זה ✍️
+                                    </button>
+                                </div>
+                            </template>
+
+                            <!-- טופס הצ'ק-ליסט האינטראקטיבי -->
+                            <div class="space-y-4 pt-1">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                    <!-- 1. תזונה -->
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-2">
+                                        <span class="font-black text-[#082722] block flex items-center gap-1.5">
+                                            <i data-lucide="utensils" class="w-3.5 h-3.5 text-[#22c55e]"></i>
+                                            <span>1. עמידה ביעד התזונה והקלוריות:</span>
+                                        </span>
+                                        <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                                            <button type="button" @click="scorecardNutrition = 'yes'; autoSaveDailyScorecard(false);" :class="scorecardNutrition === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                                100% בול ✅
+                                            </button>
+                                            <button type="button" @click="scorecardNutrition = 'almost'; autoSaveDailyScorecard(false);" :class="scorecardNutrition === 'almost' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                                כמעט (~80%) 👍
+                                            </button>
+                                            <button type="button" @click="scorecardNutrition = 'no'; autoSaveDailyScorecard(false);" :class="scorecardNutrition === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                                חרגתי ⚠️
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- 2. אימון -->
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-2">
+                                        <span class="font-black text-[#082722] block flex items-center gap-1.5">
+                                            <i data-lucide="dumbbell" class="w-3.5 h-3.5 text-[#22c55e]"></i>
+                                            <span>2. ביצוע אימון יומי:</span>
+                                        </span>
+                                        <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                                            <button type="button" @click="scorecardWorkout = 'yes'; autoSaveDailyScorecard(false);" :class="scorecardWorkout === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                                התאמנתי! 🏋️‍♂️
+                                            </button>
+                                            <button type="button" @click="scorecardWorkout = 'rest'; autoSaveDailyScorecard(false);" :class="scorecardWorkout === 'rest' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                                יום מנוחה 🧘
+                                            </button>
+                                            <button type="button" @click="scorecardWorkout = 'no'; autoSaveDailyScorecard(false);" :class="scorecardWorkout === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                                דילגתי ❌
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 3. מים וצעדים (אינדיקציה אוטומטית) + שינה -->
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">3. שתיית מים:</span>
+                                            <span class="text-xs font-black text-[#082722]" x-text="(!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? ((portalClient?.dailyWater || 0) + ' / ' + (portalClient?.waterTarget || 3000) + ' מ״ל') : ((getScorecardForDate(portalClient, portalScorecardViewDate)?.water || portalClient?.waterTarget || 3000) + ' מ״ל')"></span>
+                                        </div>
+                                        <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
+                                            <span x-text="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'הושג! 💧' : 'בתהליך ⏳'"></span>
+                                        </span>
+                                    </div>
+
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">4. צעדים:</span>
+                                            <span class="text-xs font-black text-[#082722]" x-text="(!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? ((portalClient?.dailySteps || 0) + ' / ' + (portalClient?.stepsTarget || 10000)) : ((getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || portalClient?.stepsTarget || 10000) + ' צעדים')"></span>
+                                        </div>
+                                        <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
+                                            <span x-text="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'הושג! 🚶' : 'בתהליך ⏳'"></span>
+                                        </span>
+                                    </div>
+
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">5. איכות שינה / אנרגיה:</span>
+                                            <div class="flex items-center gap-1 mt-1">
+                                                <template x-for="star in [1,2,3,4,5]" :key="star">
+                                                    <button type="button" @click="scorecardSleep = star; autoSaveDailyScorecard(false);" class="text-base focus:outline-none transition hover:scale-110 cursor-pointer" :class="star <= scorecardSleep ? 'text-amber-400' : 'text-slate-300'">★</button>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs font-black text-[#082722]" x-text="scorecardSleep + ' / 5 ⭐'"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- מעקב מים וצעדים יומי (Daily Wellness Matrix) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                        <!-- 1. מעקב שתיית מים -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-lg space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
-                                        <i data-lucide="droplet" class="w-4 h-4 text-[#86efac]"></i>
+                        <!-- מעקב מים וצעדים יומי (Daily Wellness Matrix) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <!-- 1. מעקב שתיית מים -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-lg space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="droplet" class="w-4 h-4 text-[#86efac]"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-xs md:text-sm font-black text-[#082722]">מעקב שתיית מים</h4>
+                                            <p class="text-[10px] text-[#5f756e]" x-text="'יעד יומי: ' + (portalClient?.waterTarget || 3000) + ' מ״ל'"></p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">מעקב שתיית מים</h4>
-                                        <p class="text-[10px] text-[#5f756e]" x-text="'יעד יומי: ' + (portalClient?.waterTarget || 3000) + ' מ״ל'"></p>
+                                    <div class="text-left">
+                                        <span class="text-sm md:text-base font-black text-[#082722]" x-text="(portalClient?.dailyWater || 0) + ' מ״ל'"></span>
+                                        <span class="text-[9px] text-[#5f756e] block" x-text="Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></span>
                                     </div>
                                 </div>
-                                <div class="text-left">
-                                    <span class="text-sm md:text-base font-black text-[#082722]" x-text="(portalClient?.dailyWater || 0) + ' מ״ל'"></span>
-                                    <span class="text-[9px] text-[#5f756e] block" x-text="Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></span>
+
+                                <!-- מד התקדמות מים -->
+                                <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-[#86efac] to-[#22c55e] transition-all duration-300 rounded-full"
+                                         :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></div>
+                                </div>
+
+                                <!-- כפתורי שתיית מים מהירים -->
+                                <div class="flex items-center gap-1.5 pt-1">
+                                    <button @click="addWater(250)" class="flex-1 bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold py-1.5 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                        <span>+250 מ״ל 🥛</span>
+                                    </button>
+                                    <button @click="addWater(500)" class="flex-1 bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold py-1.5 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                        <span>+500 מ״ל 🍶</span>
+                                    </button>
+                                    <button @click="resetWater()" class="bg-[#fbf8f2] hover:bg-rose-50 border border-[#e5dfd3] hover:border-rose-200 text-[#5f756e] hover:text-rose-600 p-1.5 rounded-xl text-[10px] transition cursor-pointer" title="איפוס מים">
+                                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                                    </button>
                                 </div>
                             </div>
 
-                            <!-- מד התקדמות מים -->
-                            <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-[#86efac] to-[#22c55e] transition-all duration-300 rounded-full"
-                                     :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></div>
-                            </div>
+                            <!-- 2. מעקב צעדים יומי -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-lg space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="footprints" class="w-4 h-4 text-[#86efac]"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-xs md:text-sm font-black text-[#082722]">מעקב צעדים יומי</h4>
+                                            <p class="text-[10px] text-[#5f756e]" x-text="'יעד יומי: ' + (portalClient?.stepsTarget || 10000) + ' צעדים'"></p>
+                                        </div>
+                                    </div>
+                                    <div class="text-left">
+                                        <span class="text-sm md:text-base font-black text-[#082722]" x-text="(portalClient?.dailySteps || 0) + ' 🚶'"></span>
+                                        <span class="text-[9px] text-[#5f756e] block" x-text="Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></span>
+                                    </div>
+                                </div>
 
-                            <!-- כפתורי שתיית מים מהירים -->
-                            <div class="flex items-center gap-1.5 pt-1">
-                                <button @click="addWater(250)" class="flex-1 bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold py-1.5 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
-                                    <span>+250 מ״ל 🥛</span>
-                                </button>
-                                <button @click="addWater(500)" class="flex-1 bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold py-1.5 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
-                                    <span>+500 מ״ל 🍶</span>
-                                </button>
-                                <button @click="resetWater()" class="bg-[#fbf8f2] hover:bg-rose-50 border border-[#e5dfd3] hover:border-rose-200 text-[#5f756e] hover:text-rose-600 p-1.5 rounded-xl text-[10px] transition cursor-pointer" title="איפוס מים">
-                                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                                </button>
+                                <!-- מד התקדמות צעדים -->
+                                <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-amber-400 to-[#22c55e] transition-all duration-300 rounded-full"
+                                         :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></div>
+                                </div>
+
+                                <!-- עדכון צעדים -->
+                                <div class="flex items-center gap-1.5 pt-1">
+                                    <input type="number" 
+                                           :value="portalClient?.dailySteps || ''" 
+                                           @change="updateSteps($event.target.value)" 
+                                           placeholder="הזן כמות צעדים..." 
+                                           class="flex-1 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1.5 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e] text-center">
+                                    <button @click="updateSteps((portalClient?.dailySteps || 0) + 1000)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs transition cursor-pointer">
+                                        +1,000
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- 2. מעקב צעדים יומי -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-lg space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
-                                        <i data-lucide="footprints" class="w-4 h-4 text-[#86efac]"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">מעקב צעדים יומי</h4>
-                                        <p class="text-[10px] text-[#5f756e]" x-text="'יעד יומי: ' + (portalClient?.stepsTarget || 10000) + ' צעדים'"></p>
-                                    </div>
+                        <!-- כרטיסי ניווט מהיר למתאמן (Focus of the Day) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <div @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-gradient-to-br from-[#082722] to-[#123830] border border-[#174e43] rounded-3xl p-4 md:p-5 text-[#fbf8f2] shadow-xl hover:shadow-2xl transition cursor-pointer flex items-center justify-between group">
+                                <div class="space-y-1">
+                                    <span class="text-[10px] text-[#86efac] font-black uppercase tracking-wider block">תוכנית אימונים חיה 🏋️‍♂️</span>
+                                    <h4 class="text-sm md:text-base font-black text-white group-hover:text-[#86efac] transition">התחל אימון בחדר כושר</h4>
+                                    <p class="text-[11px] text-[#93c7bb]">רישום משקלים, טיימר מנוחה, חישוב פלטות ו-PRs</p>
                                 </div>
-                                <div class="text-left">
-                                    <span class="text-sm md:text-base font-black text-[#082722]" x-text="(portalClient?.dailySteps || 0) + ' 🚶'"></span>
-                                    <span class="text-[9px] text-[#5f756e] block" x-text="Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></span>
+                                <div class="p-3 rounded-2xl bg-[#13443a] text-[#86efac] group-hover:scale-110 transition shadow-md">
+                                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
                                 </div>
                             </div>
 
-                            <!-- מד התקדמות צעדים -->
-                            <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-amber-400 to-[#22c55e] transition-all duration-300 rounded-full"
-                                     :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></div>
-                            </div>
-
-                            <!-- עדכון צעדים -->
-                            <div class="flex items-center gap-1.5 pt-1">
-                                <input type="number" 
-                                       :value="portalClient?.dailySteps || ''" 
-                                       @change="updateSteps($event.target.value)" 
-                                       placeholder="הזן כמות צעדים..." 
-                                       class="flex-1 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1.5 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e] text-center">
-                                <button @click="updateSteps((portalClient?.dailySteps || 0) + 1000)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-bold px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs transition cursor-pointer">
-                                    +1,000
-                                </button>
+                            <div @click="portalActiveSubTab = 'nutrition'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 text-[#082722] shadow-xl hover:shadow-2xl transition cursor-pointer flex items-center justify-between group">
+                                <div class="space-y-1">
+                                    <span class="text-[10px] text-[#22c55e] font-black uppercase tracking-wider block">תפריט יומי & תמונות 🥗</span>
+                                    <h4 class="text-sm md:text-base font-black text-[#082722] group-hover:text-[#22c55e] transition">צפה בתפריט וצלם ארוחה</h4>
+                                    <p class="text-[11px] text-[#5f756e]">מחשבון מאקרו AI, תפריט מדויק והעלאת צלחת לאילאי</p>
+                                </div>
+                                <div class="p-3 rounded-2xl bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] group-hover:scale-110 transition shadow-md">
+                                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- תוכן לשונית 1: אימונים אינטראקטיביים -->
+                    <!-- תוכן לשונית 2: אימונים אינטראקטיביים (Gym Mode 2.0) -->
                     <div x-show="portalActiveSubTab === 'workouts'" x-cloak class="space-y-4">
-                        <!-- טיימר מנוחה חכם בין סטים -->
+                        
+                        <!-- סלקטור ימי אימון אינטראקטיבי A / B / C -->
+                        <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days.length > 0">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-3 shadow-lg">
+                                <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                                    <template x-for="(d, dIdx) in portalClient.workoutPlan.days" :key="dIdx">
+                                        <button type="button" 
+                                                @click="portalSelectedWorkoutDayIdx = dIdx; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
+                                                :class="portalSelectedWorkoutDayIdx === dIdx ? 'bg-[#082722] text-[#86efac] border-[#082722] shadow-md shadow-[#082722]/15' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'"
+                                                class="px-4 py-2.5 rounded-2xl border font-black text-xs shrink-0 transition flex items-center gap-2 cursor-pointer">
+                                            <i data-lucide="dumbbell" class="w-3.5 h-3.5"></i>
+                                            <span x-text="d.name || d.dayName || ('אימון ' + (dIdx + 1))"></span>
+                                            <span class="text-[9px] px-2 py-0.5 rounded-full font-bold" :class="portalSelectedWorkoutDayIdx === dIdx ? 'bg-[#13443a] text-[#86efac]' : 'bg-slate-200 text-[#082722]'" x-text="(d.exercises ? d.exercises.length : 0) + ' תר׳'"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- סרגל התקדמות ביצוע אימון חי -->
+                        <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days[portalSelectedWorkoutDayIdx]">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-xl space-y-2.5">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span class="text-xs font-black text-[#082722]">סטים שהושלמו באימון זה:</span>
+                                        <span class="text-xs font-black text-[#22c55e]" x-text="getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).completed + ' / ' + getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).total + ' סטים 🏋️‍♂️'"></span>
+                                    </div>
+                                    <span class="text-xs font-black text-[#082722] bg-[#fbf8f2] border border-[#e5dfd3] px-2.5 py-1 rounded-xl" x-text="getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '% הושלם'"></span>
+                                </div>
+                                <div class="h-2.5 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-[#86efac] to-[#22c55e] transition-all duration-300 rounded-full"
+                                         :style="'width: ' + getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- טיימר מנוחה חכם + מחשבון פלטות למוט -->
                         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-xl space-y-3">
-                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2.5">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-2.5">
                                 <div class="flex items-center gap-2.5">
                                     <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
                                         <i data-lucide="timer" class="w-4 h-4 text-[#86efac]"></i>
@@ -1228,6 +1294,10 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
+                                    <button type="button" @click="openPlateCalculatorModal = true; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] border border-[#174e43] px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition shadow-md shadow-[#082722]/15 cursor-pointer">
+                                        <i data-lucide="disc" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                        <span>מחשבון פלטות 🏋️</span>
+                                    </button>
                                     <span class="text-xl md:text-2xl font-black font-mono px-3 py-1 bg-[#082722] text-[#86efac] rounded-2xl border border-[#133d35] shadow-inner tracking-widest"
                                           x-text="formatTimerSeconds(restTimerSeconds)"></span>
                                 </div>
@@ -1350,7 +1420,7 @@
 
                         <!-- ימי אימון אינטראקטיביים (Live Gym Mode) -->
                         <template x-for="(day, dayIdx) in (portalClient?.workoutPlan?.days || [])" :key="dayIdx">
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-5" x-init="initLiveWorkout(portalClient, dayIdx)">
+                            <div x-show="portalSelectedWorkoutDayIdx === dayIdx" class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-5" x-init="initLiveWorkout(portalClient, dayIdx)">
                                 <!-- כותרת יום האימון + סטטוס ביצוע -->
                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-4">
                                     <div class="flex items-center gap-3">
@@ -1702,223 +1772,220 @@
                                 </template>
                             </div>
                         </template>
-                    </div>
-
-                    <!-- תוכן לשונית 3: הזנת שקילה ומעקב שבועי -->
-                    <div x-show="portalActiveSubTab === 'checkin'" x-cloak class="space-y-4">
-                        <!-- טופס הזנת שקילה עצמאית -->
-                        <div class="bg-slate-900 border border-sky-500/30 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                            <div class="border-b border-slate-800 pb-3">
-                                <h3 class="text-sm md:text-base font-black text-white flex items-center gap-2">
-                                    <i data-lucide="scale" class="w-5 h-5 text-sky-400"></i>
-                                    <span>עדכון שקילה שבועי</span>
-                                </h3>
-                                <p class="text-[10px] text-slate-400 mt-1">הזן את משקלך היום. הנתונים יתעדכנו ישירות במערכת המעקב של אילאי!</p>
+                        <!-- הזנת מה אכלתי + תמונת צלחת ישירות בלשונית תזונה -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                            <div class="flex items-center gap-3 border-b border-[#e5dfd3] pb-3">
+                                <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                    <i data-lucide="camera" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm md:text-base font-extrabold text-[#082722]">הזנת מה אכלתי + תמונת צלחת 📸</h3>
+                                    <p class="text-[11px] text-[#5f756e]">צלם או בחר תמונה של הארוחה שלך וכתוב מה אכלת</p>
+                                </div>
                             </div>
 
-                            <!-- הודעת הצלחה -->
-                            <template x-if="portalCheckinSuccess">
-                                <div class="bg-sky-950/80 border border-sky-400/50 p-4 rounded-2xl text-center space-y-1 text-sky-200 animate-fade-in">
-                                    <i data-lucide="check-circle" class="w-6 h-6 mx-auto text-sky-400 mb-1"></i>
-                                    <h4 class="text-xs font-bold text-white">השקילה נשלחה בהצלחה! 💪</h4>
-                                    <p class="text-[10px] text-sky-300">אילאי קיבל את העדכון שלך במערכת.</p>
+                            <template x-if="portalFoodLogSaved">
+                                <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-3 rounded-2xl text-center text-xs font-bold animate-fade-in flex items-center justify-center gap-2">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                                    <span>הארוחה והתמונה נשמרו ונשלחו לאילאי! 👑</span>
                                 </div>
                             </template>
 
-                            <form @submit.prevent="submitClientPortalCheckin()" class="space-y-4">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-slate-300 mb-1">משקל שקילה עדכני (ק"ג) *</label>
-                                        <input type="number" step="0.1" required x-model="portalNewCheckin.weight" placeholder="למשל: 78.4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sky-300 font-bold text-base focus:outline-none focus:border-sky-400 text-center">
-                                    </div>
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-slate-300 mb-1">היקף מותניים (ס"מ) - אופציונלי</label>
-                                        <input type="number" step="0.5" x-model="portalNewCheckin.waist" placeholder="למשל: 82" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 font-bold text-base focus:outline-none focus:border-sky-400 text-center">
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
-                                        <div class="flex justify-between text-[10px] font-bold">
-                                            <span class="text-slate-300">ציון התמדה בתזונה השבוע</span>
-                                            <span class="text-sky-400" x-text="portalNewCheckin.adherenceNutrition + '/10'"></span>
-                                        </div>
-                                        <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceNutrition" class="w-full accent-sky-400">
-                                    </div>
-
-                                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
-                                        <div class="flex justify-between text-[10px] font-bold">
-                                            <span class="text-slate-300">ציון התמדה באימונים השבוע</span>
-                                            <span class="text-purple-400" x-text="portalNewCheckin.adherenceTraining + '/10'"></span>
-                                        </div>
-                                        <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceTraining" class="w-full accent-purple-400">
-                                    </div>
-                                </div>
-
+                            <div class="space-y-3">
+                                <!-- בחירת סוג ארוחה -->
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-300 mb-1">איך עבר עליך השבוע? הערות / שאלות לאילאי</label>
-                                    <textarea x-model="portalNewCheckin.notes" placeholder="ספר על תחושות, אנרגיה באימונים, חריגות או אתגרים..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-sky-400 h-24 resize-none"></textarea>
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סוג הארוחה:</label>
+                                    <div class="grid grid-cols-5 gap-1 text-center">
+                                        <template x-for="mType in ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ביניים', 'ארוחת ערב', 'ארוחת לילה']" :key="mType">
+                                            <button type="button" 
+                                                    @click="portalMealType = mType" 
+                                                    :class="portalMealType === mType ? 'bg-[#082722] text-[#86efac] font-black border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-semibold'"
+                                                    class="py-1.5 px-1 rounded-xl text-[10px] border transition cursor-pointer"
+                                                    x-text="mType">
+                                            </button>
+                                        </template>
+                                    </div>
                                 </div>
 
-                                <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-400 hover:to-purple-500 text-white font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-xl shadow-sky-500/25 transition">
-                                    <i data-lucide="send" class="w-4 h-4"></i>
-                                    <span>שלח שקילה שבועית לאילאי</span>
+                                <!-- תיאור הארוחה -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מה אכלת בארוחה זו? (מצרכים וכמויות):</label>
+                                    <textarea x-model="portalMealDescription" placeholder="למשל: 200 גרם חזה עוף, כוס אורז בסמטי מבושל, סלט ירקות גדול וכפית שמן זית..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#082722] h-20 resize-none font-semibold"></textarea>
+                                </div>
+
+                                <!-- העלאת/צילום תמונה -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תמונת הצלחת / הארוחה:</label>
+                                    <div class="flex items-center gap-3">
+                                        <label class="flex-1 cursor-pointer bg-[#fbf8f2] hover:bg-[#f5efe0] border-2 border-dashed border-[#e5dfd3] hover:border-[#082722] p-3 rounded-2xl text-center transition flex flex-col items-center justify-center gap-1.5">
+                                            <i data-lucide="image-plus" class="w-6 h-6 text-[#22c55e]"></i>
+                                            <span class="text-xs font-black text-[#082722]">צלם במצלמה או העלה תמונה</span>
+                                            <span class="text-[10px] text-[#5f756e]">תמונה תישמר ותוצג לאילאי בכרטיס שלך</span>
+                                            <input type="file" accept="image/*" class="hidden" @change="handleMealPhotoUpload($event)">
+                                        </label>
+
+                                        <!-- תצוגה מקדימה של התמונה שנבחרה -->
+                                        <template x-if="portalMealPhoto">
+                                            <div class="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-[#86efac] shadow-md shrink-0">
+                                                <img :src="portalMealPhoto" class="w-full h-full object-cover" />
+                                                <button type="button" @click="portalMealPhoto = ''" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 shadow-md hover:bg-red-700">
+                                                    <i data-lucide="x" class="w-3 h-3"></i>
+                                                </button>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <button type="button" @click="savePortalFoodLog()" class="w-full bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#86efac]/20 transition cursor-pointer">
+                                    <i data-lucide="save" class="w-4 h-4"></i>
+                                    <span>שמור ארוחה ותמונה ביומן</span>
                                 </button>
-                            </form>
+                            </div>
                         </div>
 
-                        <!-- היסטוריית שקילות -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
-                            <h4 class="text-xs font-bold text-white border-b border-slate-800 pb-2">היסטוריית השקילות האחרונות</h4>
-                            <div class="space-y-2">
-                                <template x-for="(c, cIdx) in (portalClient?.checkins || []).slice().reverse()" :key="cIdx">
-                                    <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-3 flex items-center justify-between text-xs">
-                                        <div class="space-y-0.5">
-                                            <span class="font-bold text-white" x-text="formatDate(c.date)"></span>
-                                            <span class="text-[10px] text-slate-400 block" x-text="c.notes || 'ללא הערות'"></span>
+                        <!-- היסטוריית ארוחות ותמונות -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                            <h4 class="text-xs md:text-sm font-extrabold text-[#082722] border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
+                                <span>הארוחות והתמונות האחרונות שלך</span>
+                                <span class="text-[10px] text-[#5f756e] font-normal" x-text="(portalClient?.foodLogs?.length || 0) + ' ארוחות'"></span>
+                            </h4>
+
+                            <template x-if="!portalClient?.foodLogs || portalClient.foodLogs.length === 0">
+                                <div class="py-8 text-center text-slate-400 text-xs italic">
+                                    טרם הזנת ארוחות או תמונות. צלם את הארוחה הראשונה שלך למעלה! 🥗
+                                </div>
+                            </template>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <template x-for="log in (portalClient?.foodLogs || [])" :key="log.id">
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3 space-y-2 relative group shadow-sm">
+                                        <div class="flex items-center justify-between text-xs border-b border-[#e5dfd3] pb-1.5">
+                                            <span class="bg-[#082722] text-[#86efac] font-black px-2 py-0.5 rounded-lg text-[10px]" x-text="log.mealType"></span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[10px] text-[#5f756e]" x-text="formatDate(log.date) + ' • ' + (log.time || '')"></span>
+                                                <button type="button" @click="deletePortalFoodLog(log.id)" class="text-slate-400 hover:text-red-500 transition cursor-pointer" title="מחק">
+                                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="text-right">
-                                            <span class="font-black text-sky-400 text-sm block" x-text="c.weight + ' ק״ג'"></span>
-                                            <span class="text-[9px] text-beige-300" x-text="c.waist ? 'מותן: ' + c.waist + ' ס״מ' : ''"></span>
-                                        </div>
+
+                                        <template x-if="log.photo">
+                                            <div class="w-full h-40 rounded-xl overflow-hidden bg-black/10 relative">
+                                                <img :src="log.photo" class="w-full h-full object-cover" loading="lazy" />
+                                            </div>
+                                        </template>
+
+                                        <p class="text-xs text-[#082722] font-semibold" x-text="log.description || 'ללא פירוט'"></p>
                                     </div>
                                 </template>
                             </div>
                         </div>
                     </div>
 
-                    <!-- תוכן לשונית 4: יומן אכילה עם תמונות, שיקוף שבועי לאילאי ו-Drive -->
-                    <div x-show="portalActiveSubTab === 'drive'" x-cloak class="space-y-4">
+                    <!-- תוכן לשונית 4: התקדמות, שקילות, שיקוף שבועי לאילאי ו-Drive -->
+                    <div x-show="portalActiveSubTab === 'progress'" x-cloak class="space-y-4">
                         
                         <!-- סרגל מעבר פנימי 3 אופציות -->
                         <div class="grid grid-cols-3 gap-1 bg-white p-1.5 rounded-2xl border border-[#e5dfd3] text-center shadow-sm">
-                            <button @click="portalJournalSection = 'food'" 
-                                    :class="portalJournalSection === 'food' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition">
-                                <i data-lucide="camera" class="w-3.5 h-3.5"></i>
-                                <span>יומן אכילה & תמונות</span>
+                            <button @click="portalJournalSection = 'checkin'" 
+                                    :class="portalJournalSection === 'checkin' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
+                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                                <span>שקילה & מדדים</span>
                             </button>
                             
                             <button @click="portalJournalSection = 'reflection'" 
                                     :class="portalJournalSection === 'reflection' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition">
+                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
                                 <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
                                 <span>שיקוף שבועי לאילאי</span>
                             </button>
                             
                             <button @click="portalJournalSection = 'drive'" 
                                     :class="portalJournalSection === 'drive' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition">
+                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
                                 <i data-lucide="folder" class="w-3.5 h-3.5"></i>
                                 <span>Google Drive</span>
                             </button>
                         </div>
 
-                        <!-- 1. יומן אכילה והעלאת תמונות צלחת -->
-                        <div x-show="portalJournalSection === 'food'" class="space-y-4">
+                        <!-- 1. טופס הזנת שקילה עצמאית והיסטוריה -->
+                        <div x-show="portalJournalSection === 'checkin'" class="space-y-4">
+                            <!-- טופס הזנת שקילה עצמאית -->
                             <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                                <div class="flex items-center gap-3 border-b border-[#e5dfd3] pb-3">
-                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                                        <i data-lucide="camera" class="w-5 h-5"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm md:text-base font-extrabold text-[#082722]">הזנת מה אכלתי + תמונת צלחת 📸</h3>
-                                        <p class="text-[11px] text-[#5f756e]">צלם או בחר תמונה של הארוחה שלך וכתוב מה אכלת</p>
-                                    </div>
+                                <div class="border-b border-[#e5dfd3] pb-3">
+                                    <h3 class="text-sm md:text-base font-black text-[#082722] flex items-center gap-2">
+                                        <i data-lucide="scale" class="w-5 h-5 text-[#22c55e]"></i>
+                                        <span>עדכון שקילה שבועי ⚖️</span>
+                                    </h3>
+                                    <p class="text-[10px] text-[#5f756e] mt-1">הזן את משקלך היום. הנתונים יתעדכנו ישירות במערכת המעקב של אילאי!</p>
                                 </div>
 
-                                <template x-if="portalFoodLogSaved">
-                                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-3 rounded-2xl text-center text-xs font-bold animate-fade-in flex items-center justify-center gap-2">
-                                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
-                                        <span>הארוחה והתמונה נשמרו ונשלחו לאילאי! 👑</span>
+                                <!-- הודעת הצלחה -->
+                                <template x-if="portalCheckinSuccess">
+                                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-4 rounded-2xl text-center space-y-1 animate-fade-in">
+                                        <i data-lucide="check-circle" class="w-6 h-6 mx-auto text-emerald-600 mb-1"></i>
+                                        <h4 class="text-xs font-bold text-[#082722]">השקילה נשלחה בהצלחה! 💪</h4>
+                                        <p class="text-[10px] text-emerald-700">אילאי קיבל את העדכון שלך במערכת.</p>
                                     </div>
                                 </template>
 
-                                <div class="space-y-3">
-                                    <!-- בחירת סוג ארוחה -->
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סוג הארוחה:</label>
-                                        <div class="grid grid-cols-5 gap-1 text-center">
-                                            <template x-for="mType in ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ביניים', 'ארוחת ערב', 'ארוחת לילה']" :key="mType">
-                                                <button type="button" 
-                                                        @click="portalMealType = mType" 
-                                                        :class="portalMealType === mType ? 'bg-[#082722] text-[#86efac] font-black border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-semibold'"
-                                                        class="py-1.5 px-1 rounded-xl text-[10px] border transition"
-                                                        x-text="mType">
-                                                </button>
-                                            </template>
+                                <form @submit.prevent="submitClientPortalCheckin()" class="space-y-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל שקילה עדכני (ק"ג) *</label>
+                                            <input type="number" step="0.1" required x-model="portalNewCheckin.weight" placeholder="למשל: 78.4" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-3 text-[#082722] font-black text-base focus:outline-none focus:border-[#22c55e] text-center">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">היקף מותניים (ס"מ) - אופציונלי</label>
+                                            <input type="number" step="0.5" x-model="portalNewCheckin.waist" placeholder="למשל: 82" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-3 text-[#082722] font-bold text-base focus:outline-none focus:border-[#22c55e] text-center">
                                         </div>
                                     </div>
 
-                                    <!-- תיאור הארוחה -->
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מה אכלת בארוחה זו? (מצרכים וכמויות):</label>
-                                        <textarea x-model="portalMealDescription" placeholder="למשל: 200 גרם חזה עוף, כוס אורז בסמטי מבושל, סלט ירקות גדול וכפית שמן זית..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#082722] h-20 resize-none font-semibold"></textarea>
-                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div class="bg-[#fbf8f2] p-3 rounded-xl border border-[#e5dfd3] space-y-1.5">
+                                            <div class="flex justify-between text-[10px] font-bold">
+                                                <span class="text-[#5f756e]">ציון התמדה בתזונה השבוע</span>
+                                                <span class="text-[#22c55e] font-black" x-text="portalNewCheckin.adherenceNutrition + '/10'"></span>
+                                            </div>
+                                            <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceNutrition" class="w-full accent-emerald-500">
+                                        </div>
 
-                                    <!-- העלאת/צילום תמונה -->
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תמונת הצלחת / הארוחה:</label>
-                                        <div class="flex items-center gap-3">
-                                            <label class="flex-1 cursor-pointer bg-[#fbf8f2] hover:bg-[#f5efe0] border-2 border-dashed border-[#e5dfd3] hover:border-[#082722] p-3 rounded-2xl text-center transition flex flex-col items-center justify-center gap-1.5">
-                                                <i data-lucide="image-plus" class="w-6 h-6 text-[#22c55e]"></i>
-                                                <span class="text-xs font-black text-[#082722]">צלם במצלמה או העלה תמונה</span>
-                                                <span class="text-[10px] text-[#5f756e]">תמונה תישמר ותוצג לאילאי בכרטיס שלך</span>
-                                                <input type="file" accept="image/*" class="hidden" @change="handleMealPhotoUpload($event)">
-                                            </label>
-
-                                            <!-- תצוגה מקדימה של התמונה שנבחרה -->
-                                            <template x-if="portalMealPhoto">
-                                                <div class="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-[#86efac] shadow-md shrink-0">
-                                                    <img :src="portalMealPhoto" class="w-full h-full object-cover" />
-                                                    <button type="button" @click="portalMealPhoto = ''" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 shadow-md hover:bg-red-700">
-                                                        <i data-lucide="x" class="w-3 h-3"></i>
-                                                    </button>
-                                                </div>
-                                            </template>
+                                        <div class="bg-[#fbf8f2] p-3 rounded-xl border border-[#e5dfd3] space-y-1.5">
+                                            <div class="flex justify-between text-[10px] font-bold">
+                                                <span class="text-[#5f756e]">ציון התמדה באימונים השבוע</span>
+                                                <span class="text-emerald-700 font-black" x-text="portalNewCheckin.adherenceTraining + '/10'"></span>
+                                            </div>
+                                            <input type="range" min="1" max="10" x-model="portalNewCheckin.adherenceTraining" class="w-full accent-emerald-500">
                                         </div>
                                     </div>
 
-                                    <button type="button" @click="savePortalFoodLog()" class="w-full bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#86efac]/20 transition">
-                                        <i data-lucide="save" class="w-4 h-4"></i>
-                                        <span>שמור ארוחה ותמונה ביומן</span>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">איך עבר עליך השבוע? הערות / שאלות לאילאי</label>
+                                        <textarea x-model="portalNewCheckin.notes" placeholder="ספר על תחושות, אנרגיה באימונים, חריגות או אתגרים..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#22c55e] h-24 resize-none"></textarea>
+                                    </div>
+
+                                    <button type="submit" class="w-full bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-xl shadow-[#86efac]/20 transition cursor-pointer">
+                                        <i data-lucide="send" class="w-4 h-4"></i>
+                                        <span>שלח שקילה שבועית לאילאי</span>
                                     </button>
-                                </div>
+                                </form>
                             </div>
 
-                            <!-- היסטוריית ארוחות ותמונות -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                                <h4 class="text-xs md:text-sm font-extrabold text-[#082722] border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
-                                    <span>הארוחות והתמונות האחרונות שלך</span>
-                                    <span class="text-[10px] text-[#5f756e] font-normal" x-text="(portalClient?.foodLogs?.length || 0) + ' ארוחות'"></span>
-                                </h4>
-
-                                <template x-if="!portalClient?.foodLogs || portalClient.foodLogs.length === 0">
-                                    <div class="py-8 text-center text-slate-400 text-xs italic">
-                                        טרם הזנת ארוחות או תמונות. צלם את הארוחה הראשונה שלך למעלה! 🥗
-                                    </div>
-                                </template>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <template x-for="log in (portalClient?.foodLogs || [])" :key="log.id">
-                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3 space-y-2 relative group shadow-sm">
-                                            <div class="flex items-center justify-between text-xs border-b border-[#e5dfd3] pb-1.5">
-                                                <span class="bg-[#082722] text-[#86efac] font-black px-2 py-0.5 rounded-lg text-[10px]" x-text="log.mealType"></span>
-                                                <div class="flex items-center gap-2">
-                                                    <span class="text-[10px] text-[#5f756e]" x-text="formatDate(log.date) + ' • ' + (log.time || '')"></span>
-                                                    <button type="button" @click="deletePortalFoodLog(log.id)" class="text-slate-400 hover:text-red-500 transition" title="מחק">
-                                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                                    </button>
-                                                </div>
+                            <!-- היסטוריית שקילות -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 shadow-xl space-y-3">
+                                <h4 class="text-xs font-bold text-[#082722] border-b border-[#e5dfd3] pb-2">היסטוריית השקילות האחרונות</h4>
+                                <div class="space-y-2">
+                                    <template x-for="(c, cIdx) in (portalClient?.checkins || []).slice().reverse()" :key="cIdx">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-3 flex items-center justify-between text-xs">
+                                            <div class="space-y-0.5">
+                                                <span class="font-bold text-[#082722]" x-text="formatDate(c.date)"></span>
+                                                <span class="text-[10px] text-[#5f756e] block" x-text="c.notes || 'ללא הערות'"></span>
                                             </div>
-
-                                            <template x-if="log.photo">
-                                                <div class="w-full h-40 rounded-xl overflow-hidden bg-black/10 relative">
-                                                    <img :src="log.photo" class="w-full h-full object-cover" loading="lazy" />
-                                                </div>
-                                            </template>
-
-                                            <p class="text-xs text-[#082722] font-semibold" x-text="log.description || 'ללא פירוט'"></p>
+                                            <div class="text-right">
+                                                <span class="font-black text-[#22c55e] text-sm block" x-text="c.weight + ' ק״ג'"></span>
+                                                <span class="text-[9px] text-[#5f756e]" x-text="c.waist ? 'מותן: ' + c.waist + ' ס״מ' : ''"></span>
+                                            </div>
                                         </div>
                                     </template>
                                 </div>
@@ -1959,7 +2026,7 @@
                                         <textarea x-model="portalWeeklyReflectionText" placeholder="כתוב כאן בחופשיות לאילאי על השבוע שלך..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3.5 text-xs text-[#082722] focus:outline-none focus:border-[#082722] h-32 resize-none font-semibold"></textarea>
                                     </div>
 
-                                    <button type="button" @click="savePortalReflection()" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 transition border border-[#174e43] shadow-md">
+                                    <button type="button" @click="savePortalReflection()" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 transition border border-[#174e43] shadow-md cursor-pointer">
                                         <i data-lucide="send" class="w-4 h-4 text-[#86efac]"></i>
                                         <span>שלח שיקוף שבועי לאילאי</span>
                                     </button>
@@ -4328,6 +4395,114 @@
         </div>
     </div>
 
+    <!-- מודל מחשבון פלטות למוט אולימפי (Barbell Plate Calculator) -->
+    <div x-show="openPlateCalculatorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openPlateCalculatorModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="disc" class="w-5 h-5 text-[#86efac]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">מחשבון פלטות למוט 🏋️‍♂️</h3>
+                        <p class="text-xs text-[#5f756e]">חישוב פלטות מדויק לכל צד של המוט האולימפי</p>
+                    </div>
+                </div>
+                <button @click="openPlateCalculatorModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs">
+                <!-- הגדרות משקל יעד ומשקל מוט -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל כולל להרמה (ק״ג):</label>
+                            <div class="flex items-center gap-1">
+                                <button type="button" @click="plateTargetWeight = Math.max(plateBarWeight, (parseFloat(plateTargetWeight) || 0) - 2.5)" class="w-8 h-8 rounded-xl bg-white border border-[#e5dfd3] text-[#082722] font-black hover:bg-slate-100 cursor-pointer">-</button>
+                                <input type="number" step="0.5" x-model.number="plateTargetWeight" placeholder="80" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-2 py-1.5 text-sm font-black text-[#082722] text-center focus:outline-none focus:border-[#22c55e]">
+                                <button type="button" @click="plateTargetWeight = (parseFloat(plateTargetWeight) || 0) + 2.5" class="w-8 h-8 rounded-xl bg-white border border-[#e5dfd3] text-[#082722] font-black hover:bg-slate-100 cursor-pointer">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל המוט (ק״ג):</label>
+                            <select x-model.number="plateBarWeight" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-3 py-2 text-xs font-bold text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                                <option :value="20">20 ק״ג (מוט אולימפי גברים סטנדרטי)</option>
+                                <option :value="15">15 ק״ג (מוט אולימפי נשים)</option>
+                                <option :value="10">10 ק״ג (מוט טכניקה / קל)</option>
+                                <option :value="8">8 ק״ג (מוט W / EZ Bar)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- כפתורי קיצור מהירים למשקלים פופולריים -->
+                    <div class="flex items-center gap-1.5 flex-wrap pt-1">
+                        <span class="text-[10px] text-[#5f756e] font-bold">משקלים נפוצים:</span>
+                        <template x-for="tw in [40, 60, 80, 100, 120, 140, 160]" :key="tw">
+                            <button type="button" @click="plateTargetWeight = tw" :class="plateTargetWeight === tw ? 'bg-[#082722] text-[#86efac]' : 'bg-white text-[#082722]'" class="border border-[#e5dfd3] px-2 py-0.5 rounded-lg text-[10px] font-black transition cursor-pointer" x-text="tw + 'kg'"></button>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- תוצאת חישוב לכל צד -->
+                <div class="bg-[#082722] border border-[#133d35] rounded-2xl p-4 text-center space-y-2 text-[#fbf8f2]">
+                    <span class="text-[10px] text-[#86efac] font-bold block uppercase tracking-wider">משקל שיש להעמיס על כל צד</span>
+                    <div class="text-3xl font-black text-white" x-text="calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג'"></div>
+                    <span class="text-[10px] text-[#93c7bb]" x-text="'מוט (' + plateBarWeight + ' ק״ג) + 2 צדדים × ' + calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג = ' + plateTargetWeight + ' ק״ג סה״כ'"></span>
+                </div>
+
+                <!-- פירוט הפלטות שיש להרכיב על כל צד -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3">
+                    <h4 class="font-black text-[#082722] text-xs border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
+                        <span>פלטות להרכבה על כל צד (מימין ומשמאל):</span>
+                        <span class="text-[10px] text-[#5f756e]">מבפנים החוצה ➔</span>
+                    </h4>
+
+                    <template x-if="calculatePlates(plateTargetWeight, plateBarWeight).plates.length === 0">
+                        <div class="text-center py-4 text-[#5f756e] text-xs italic">
+                            מוט ריק בלבד (אין צורך בהוספת פלטות)
+                        </div>
+                    </template>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                        <template x-for="p in calculatePlates(plateTargetWeight, plateBarWeight).plates" :key="p.plate">
+                            <div class="bg-white border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between shadow-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-8 h-8 rounded-xl font-black text-xs flex items-center justify-center border"
+                                          :class="{
+                                              'bg-red-500 text-white border-red-600': p.plate === 25,
+                                              'bg-blue-600 text-white border-blue-700': p.plate === 20,
+                                              'bg-amber-400 text-slate-900 border-amber-500': p.plate === 15,
+                                              'bg-emerald-600 text-white border-emerald-700': p.plate === 10,
+                                              'bg-slate-100 text-slate-800 border-slate-300': p.plate === 5,
+                                              'bg-slate-800 text-white border-slate-950': p.plate === 2.5,
+                                              'bg-slate-300 text-slate-900 border-slate-400': p.plate === 1.25
+                                          }"
+                                          x-text="p.plate"></span>
+                                    <span class="font-bold text-xs text-[#082722]" x-text="p.plate + ' ק״ג'"></span>
+                                </div>
+                                <span class="bg-[#082722] text-[#86efac] px-2.5 py-1 rounded-xl text-xs font-black" x-text="'× ' + p.count"></span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <template x-if="calculatePlates(plateTargetWeight, plateBarWeight).remainder > 0">
+                        <div class="p-2.5 bg-amber-50 border border-amber-300 text-amber-900 rounded-xl text-[10px] font-bold">
+                            ⚠️ שארית של <span x-text="calculatePlates(plateTargetWeight, plateBarWeight).remainder"></span> ק״ג לא ניתנת להרכבה מדויקת עם פלטות סטנדרטיות (מינימום 1.25 ק״ג לצד).
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
+                <button type="button" @click="openPlateCalculatorModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור מחשבון
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- מודל 0: שליחת שאלון קליטה מורחב למתאמן חדש -->
     <div x-show="openSendIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openSendIntakeModal = false">
         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2">
@@ -5027,16 +5202,20 @@
 
                 // פורטל מתאמן אישי
                 portalClientId: null,
-                portalActiveSubTab: 'workouts',
+                portalActiveSubTab: 'home',
+                portalSelectedWorkoutDayIdx: 0,
                 portalScorecardViewDate: '',
                 openScorecardHistoryModal: false,
+                openPlateCalculatorModal: false,
+                plateTargetWeight: 80,
+                plateBarWeight: 20,
                 portalNewCheckin: { weight: '', waist: '', adherenceNutrition: 10, adherenceTraining: 10, notes: '' },
                 portalTodayJournal: '',
                 portalCheckinSuccess: false,
                 portalJournalSaved: false,
 
                 // יומן אכילה ותמונות + שיקוף שבועי
-                portalJournalSection: 'food',
+                portalJournalSection: 'checkin',
                 portalMealType: 'ארוחת צהריים',
                 portalMealDescription: '',
                 portalMealPhoto: '',
@@ -6644,6 +6823,54 @@
                         confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
                     }
                     this.playVictorySound();
+                },
+
+                calculatePlates(targetWeight, barWeight = 20) {
+                    const target = parseFloat(targetWeight) || 0;
+                    const bar = parseFloat(barWeight) || 20;
+                    if (target <= bar) return [];
+                    let perSide = (target - bar) / 2;
+                    const availablePlates = [25, 20, 15, 10, 5, 2.5, 1.25];
+                    const result = [];
+                    availablePlates.forEach(p => {
+                        const count = Math.floor(perSide / p);
+                        if (count > 0) {
+                            result.push({ plate: p, count: count });
+                            perSide = Math.round((perSide - (count * p)) * 100) / 100;
+                        }
+                    });
+                    return result;
+                },
+
+                getWorkoutCompletionPercent(dayIdx) {
+                    const client = this.portalClient;
+                    const day = client?.workoutPlan?.days?.[dayIdx];
+                    if (!day || !day.exercises || day.exercises.length === 0) return 0;
+                    let totalSets = 0;
+                    let completedSets = 0;
+                    day.exercises.forEach((ex, exIdx) => {
+                        const count = parseInt(ex.sets) || 3;
+                        totalSets += count;
+                        const setsArr = this.liveWorkoutSets[`d${dayIdx}_e${exIdx}`] || [];
+                        setsArr.forEach(s => { if (s.done) completedSets++; });
+                    });
+                    if (totalSets === 0) return 0;
+                    return Math.round((completedSets / totalSets) * 100);
+                },
+
+                getWorkoutCompletedSetsCount(dayIdx) {
+                    const client = this.portalClient;
+                    const day = client?.workoutPlan?.days?.[dayIdx];
+                    if (!day || !day.exercises) return { completed: 0, total: 0 };
+                    let totalSets = 0;
+                    let completedSets = 0;
+                    day.exercises.forEach((ex, exIdx) => {
+                        const count = parseInt(ex.sets) || 3;
+                        totalSets += count;
+                        const setsArr = this.liveWorkoutSets[`d${dayIdx}_e${exIdx}`] || [];
+                        setsArr.forEach(s => { if (s.done) completedSets++; });
+                    });
+                    return { completed: completedSets, total: totalSets };
                 },
 
                 printWorkout(client) { this.printClient = client; setTimeout(() => { window.print(); }, 200); },
