@@ -977,7 +977,6 @@
                     </div>
 
                     <!-- צ'ק-ליסט יומי של אלופים (Daily Champion Scorecard) -->
-                    <!-- צ'ק-ליסט יומי של אלופים (Daily Scorecard) - שמירה אוטומטית וסגירת יום בחצות -->
                     <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4 relative overflow-hidden" x-data="{ openScorecardEdit: false }">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
                             <div class="flex items-center gap-3">
@@ -989,32 +988,41 @@
                                         <h3 class="text-sm md:text-base font-black text-[#082722]">צ'ק-ליסט יומי של אלופים 👑</h3>
                                         <span class="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2.5 py-0.5 rounded-full" x-text="getTodayDate()"></span>
                                     </div>
-                                    <p class="text-[11px] text-[#5f756e]">מתעדכן ונשמר אוטומטית בזמן אמת • נסגר סופית ב-00:00 בלילה!</p>
+                                    <p class="text-[11px] text-[#5f756e]">סמן את ההישגים היומיים שלך וצבור ציון מצטיין ברצף ההתמדה!</p>
                                 </div>
                             </div>
                             
-                            <div class="flex items-center gap-2">
-                                <span class="bg-[#082722] text-[#86efac] font-black px-3.5 py-1.5 rounded-2xl text-xs flex items-center gap-1.5 shadow-sm">
-                                    <i data-lucide="zap" class="w-4 h-4 text-[#86efac]"></i>
-                                    <span x-text="'ציון חי: ' + getLiveDailyScore(portalClient) + '% ⚡'"></span>
-                                </span>
-                            </div>
+                            <template x-if="getTodayScorecard(portalClient)">
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-[#082722] text-[#86efac] font-black px-3.5 py-1.5 rounded-2xl text-xs flex items-center gap-1.5 shadow-sm">
+                                        <i data-lucide="check-circle-2" class="w-4 h-4 text-[#86efac]"></i>
+                                        <span x-text="'ציון היום: ' + getTodayScorecard(portalClient).score + '% 🏆'"></span>
+                                    </span>
+                                    <button @click="openScorecardEdit = !openScorecardEdit" class="text-[10px] text-[#5f756e] hover:text-[#082722] font-bold underline cursor-pointer">
+                                        <span x-text="openScorecardEdit ? 'סגור' : 'ערוך'"></span>
+                                    </button>
+                                </div>
+                            </template>
                         </div>
 
-                        <!-- באנר מצב שמירה אוטומטי -->
-                        <div class="bg-[#fbf8f2] border border-emerald-200/80 rounded-2xl p-3 flex items-center justify-between gap-2 shadow-xs text-xs">
-                            <div class="flex items-center gap-2.5">
-                                <span class="relative flex h-3 w-3">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                                </span>
-                                <span class="font-black text-[#082722] text-[11px] sm:text-xs">שמירה אוטומטית פעילה • הציון ננעל בחצות (00:00)</span>
+                        <!-- אם כבר הושלם היום וסגור לעריכה -->
+                        <template x-if="getTodayScorecard(portalClient) && !openScorecardEdit">
+                            <div class="bg-gradient-to-r from-[#082722] to-[#0f3830] text-[#fbf8f2] p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 border border-[#174e43] shadow-md">
+                                <div class="flex items-center gap-3 text-right">
+                                    <div class="text-3xl">🔥</div>
+                                    <div>
+                                        <h4 class="text-xs md:text-sm font-black text-[#86efac]" x-text="'השלמת את הצ\'ק-ליסט להיום עם ציון ' + getTodayScorecard(portalClient).score + '%!'"></h4>
+                                        <p class="text-[10px] text-[#93c7bb]" x-text="'כל הכבוד על המשמעת! אילאי רואה את הציון שלך בזמן אמת ב-CRM.'"></p>
+                                    </div>
+                                </div>
+                                <button @click="openScorecardEdit = true" class="w-full sm:w-auto bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-3.5 py-1.5 rounded-xl text-xs transition">
+                                    עדכן צ'ק ליסט ✏️
+                                </button>
                             </div>
-                            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100/70 border border-emerald-300 px-2.5 py-0.5 rounded-lg">סנכרון ענן מיידי ✓</span>
-                        </div>
+                        </template>
 
                         <!-- טופס הצ'ק-ליסט האינטראקטיבי -->
-                        <div class="space-y-4 pt-1">
+                        <div x-show="!getTodayScorecard(portalClient) || openScorecardEdit" class="space-y-4 pt-1">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                                 <!-- 1. תזונה -->
                                 <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-2">
@@ -1023,13 +1031,13 @@
                                         <span>1. עמידה ביעד התזונה והקלוריות:</span>
                                     </span>
                                     <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
-                                        <button type="button" @click="scorecardNutrition = 'yes'; autoSaveDailyScorecard();" :class="scorecardNutrition === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                        <button type="button" @click="scorecardNutrition = 'yes'" :class="scorecardNutrition === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition">
                                             100% בול ✅
                                         </button>
-                                        <button type="button" @click="scorecardNutrition = 'almost'; autoSaveDailyScorecard();" :class="scorecardNutrition === 'almost' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                        <button type="button" @click="scorecardNutrition = 'almost'" :class="scorecardNutrition === 'almost' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition">
                                             כמעט (~80%) 👍
                                         </button>
-                                        <button type="button" @click="scorecardNutrition = 'no'; autoSaveDailyScorecard();" :class="scorecardNutrition === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                        <button type="button" @click="scorecardNutrition = 'no'" :class="scorecardNutrition === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition">
                                             חרגתי ⚠️
                                         </button>
                                     </div>
@@ -1042,13 +1050,13 @@
                                         <span>2. ביצוע אימון יומי:</span>
                                     </span>
                                     <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
-                                        <button type="button" @click="scorecardWorkout = 'yes'; autoSaveDailyScorecard();" :class="scorecardWorkout === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                        <button type="button" @click="scorecardWorkout = 'yes'" :class="scorecardWorkout === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition">
                                             התאמנתי! 🏋️‍♂️
                                         </button>
-                                        <button type="button" @click="scorecardWorkout = 'rest'; autoSaveDailyScorecard();" :class="scorecardWorkout === 'rest' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                        <button type="button" @click="scorecardWorkout = 'rest'" :class="scorecardWorkout === 'rest' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition">
                                             יום מנוחה 🧘
                                         </button>
-                                        <button type="button" @click="scorecardWorkout = 'no'; autoSaveDailyScorecard();" :class="scorecardWorkout === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition cursor-pointer">
+                                        <button type="button" @click="scorecardWorkout = 'no'" :class="scorecardWorkout === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 px-1 rounded-xl border text-center transition">
                                             דילגתי ❌
                                         </button>
                                     </div>
@@ -1078,13 +1086,18 @@
                                         <span class="text-[10px] text-[#5f756e] block font-bold">5. איכות שינה / אנרגיה:</span>
                                         <div class="flex items-center gap-1 mt-1">
                                             <template x-for="star in [1,2,3,4,5]" :key="star">
-                                                <button type="button" @click="scorecardSleep = star; autoSaveDailyScorecard();" class="text-base focus:outline-none transition hover:scale-110 cursor-pointer" :class="star <= scorecardSleep ? 'text-amber-400' : 'text-slate-300'">★</button>
+                                                <button type="button" @click="scorecardSleep = star" class="text-base focus:outline-none transition hover:scale-110" :class="star <= scorecardSleep ? 'text-amber-400' : 'text-slate-300'">★</button>
                                             </template>
                                         </div>
                                     </div>
                                     <span class="text-xs font-black text-[#082722]" x-text="scorecardSleep + ' / 5 ⭐'"></span>
                                 </div>
                             </div>
+
+                            <button type="button" @click="saveDailyScorecard(); openScorecardEdit = false;" class="w-full bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#86efac]/20 transition cursor-pointer">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-[#082722]"></i>
+                                <span>שמור צ'ק-ליסט וחשב ציון יומי 🚀</span>
+                            </button>
                         </div>
                     </div>
 
@@ -1502,194 +1515,6 @@
                                 <i data-lucide="list-checks" class="w-3.5 h-3.5 text-[#86efac]"></i>
                                 <span>פתח רשימת קניות לסופר</span>
                             </button>
-                        <!-- מחשבון החלפות מזון חכם ומדויק -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4">
-                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                                        <i data-lucide="rotate-ccw" class="w-5 h-5 text-[#86efac]"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">מחשבון החלפות מזון חכם 🔄</h4>
-                                        <p class="text-[10px] text-[#5f756e]">נתקעת בלי מצרך מהתפריט? חשב בדיוק כמה גרם לאכול ממאכל אחר!</p>
-                                    </div>
-                                </div>
-                                <span class="bg-[#86efac]/20 text-[#082722] text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-[#86efac]/40">המרה מדויקת ✨</span>
-                            </div>
-
-                            <!-- בחירת קטגוריה -->
-                            <div class="flex items-center gap-1.5 p-1 bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl">
-                                <template x-for="cat in foodSwapCategories" :key="cat.id">
-                                    <button @click="swapCategoryId = cat.id; swapSourceFoodName = cat.items[0].name; swapTargetFoodName = (cat.items[1] ? cat.items[1].name : cat.items[0].name)"
-                                            :class="swapCategoryId === cat.id ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                                            class="flex-1 py-2 px-1 rounded-xl text-xs transition text-center cursor-pointer"
-                                            x-text="cat.name">
-                                    </button>
-                                </template>
-                            </div>
-
-                            <!-- טופס ההחלפה -->
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                                <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-[#5f756e]">מאכל מקורי בתפריט:</label>
-                                    <select x-model="swapSourceFoodName" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
-                                        <template x-for="item in (foodSwapCategories.find(c => c.id === swapCategoryId)?.items || [])" :key="item.name">
-                                            <option :value="item.name" x-text="item.name"></option>
-                                        </template>
-                                    </select>
-                                </div>
-
-                                <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-[#5f756e]">כמות רשומה בתפריט (גרם):</label>
-                                    <input type="number" step="5" x-model.number="swapSourceGrams" placeholder="150" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-xs font-black text-center text-[#082722] focus:outline-none focus:border-[#22c55e]">
-                                </div>
-
-                                <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-[#5f756e]">מאכל חלופי שתרצה לאכול:</label>
-                                    <select x-model="swapTargetFoodName" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
-                                        <template x-for="item in (foodSwapCategories.find(c => c.id === swapCategoryId)?.items || [])" :key="item.name">
-                                            <option :value="item.name" x-text="item.name"></option>
-                                        </template>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- תוצאת ההמרה המדויקת -->
-                            <template x-if="calculateFoodSwap()">
-                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 animate-scale-up">
-                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-[#e5dfd3] p-3.5 rounded-2xl shadow-sm">
-                                        <div>
-                                            <span class="text-[10px] text-[#5f756e] font-bold block">כמות מדויקת לצריכה מהמאכל החלופי:</span>
-                                            <div class="text-lg md:text-xl font-black text-[#082722]">
-                                                <span class="text-[#22c55e]" x-text="calculateFoodSwap().targetGrams + ' גרם'"></span>
-                                                <span x-text="' של ' + calculateFoodSwap().targetFood.name"></span>
-                                            </div>
-                                        </div>
-                                        <div class="text-[11px] font-bold text-[#082722] bg-[#fbf8f2] border border-[#e5dfd3] px-3 py-1.5 rounded-xl self-start sm:self-auto">
-                                            <span>הבדל קלורי: </span>
-                                            <span :class="calculateFoodSwap().calDelta > 0 ? 'text-amber-600' : 'text-emerald-600'" x-text="(calculateFoodSwap().calDelta > 0 ? '+' : '') + calculateFoodSwap().calDelta + ' קל\''"></span>
-                                        </div>
-                                    </div>
-
-                                    <!-- השוואת ערכי מאקרו -->
-                                    <div class="grid grid-cols-2 gap-2.5 text-[11px]">
-                                        <div class="bg-white border border-[#e5dfd3] p-2.5 rounded-xl space-y-1">
-                                            <span class="font-black text-[#082722] block text-xs" x-text="calculateFoodSwap().sourceGrams + 'ג\' ' + calculateFoodSwap().sourceFood.name"></span>
-                                            <div class="text-[#5f756e] flex items-center gap-1.5 flex-wrap">
-                                                <span x-text="calculateFoodSwap().sourceNutrition.cal + ' קל\''"></span> •
-                                                <span class="text-emerald-700 font-bold" x-text="'ח: ' + calculateFoodSwap().sourceNutrition.pro + 'ג\''"></span> •
-                                                <span class="text-sky-700 font-bold" x-text="'פ: ' + calculateFoodSwap().sourceNutrition.carb + 'ג\''"></span> •
-                                                <span class="text-amber-700 font-bold" x-text="'ש: ' + calculateFoodSwap().sourceNutrition.fat + 'ג\''"></span>
-                                            </div>
-                                        </div>
-
-                                        <div class="bg-white border border-[#22c55e]/50 p-2.5 rounded-xl space-y-1">
-                                            <span class="font-black text-[#082722] block text-xs" x-text="calculateFoodSwap().targetGrams + 'ג\' ' + calculateFoodSwap().targetFood.name"></span>
-                                            <div class="text-[#5f756e] flex items-center gap-1.5 flex-wrap">
-                                                <span x-text="calculateFoodSwap().targetNutrition.cal + ' קל\''"></span> •
-                                                <span class="text-emerald-700 font-bold" x-text="'ח: ' + calculateFoodSwap().targetNutrition.pro + 'ג\''"></span> •
-                                                <span class="text-sky-700 font-bold" x-text="'פ: ' + calculateFoodSwap().targetNutrition.carb + 'ג\''"></span> •
-                                                <span class="text-amber-700 font-bold" x-text="'ש: ' + calculateFoodSwap().targetNutrition.fat + 'ג\''"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- טיפ מקצועי מאילאי -->
-                                    <div class="bg-[#082722] text-[#fbf8f2] p-3 rounded-xl border border-[#133d35] flex items-start gap-2.5 text-xs">
-                                        <div class="w-5 h-5 rounded-lg bg-[#13443a] text-[#86efac] flex items-center justify-center shrink-0 font-bold text-[10px]">💡</div>
-                                        <div>
-                                            <span class="text-[#86efac] font-black block text-[11px]">דגש מאילאי:</span>
-                                            <p class="text-[#fbf8f2] text-[11px] leading-relaxed" x-text="calculateFoodSwap().proCoachTip"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-
-                        <!-- פרוטוקול תוספי תזונה ומחשבון קפאין חכם (VIP Biohacking) -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4">
-                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                                        <i data-lucide="shield-check" class="w-5 h-5 text-[#86efac]"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">פרוטוקול תוספים ומחשבון קפאין 💊⚡</h4>
-                                        <p class="text-[10px] text-[#5f756e]">אופטימיזציה של שנת הלילה, התאוששות שרירים ונטילת תוספים</p>
-                                    </div>
-                                </div>
-                                <span class="bg-amber-100 text-amber-900 text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-amber-300">התאוששות שיא 🌙</span>
-                            </div>
-
-                            <!-- 1. מחשבון שעת Cutoff לקפאין -->
-                            <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3">
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5dfd3] pb-2">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-base">☕</span>
-                                        <div>
-                                            <span class="font-black text-xs text-[#082722] block">שעת Cutoff לקפאין (מניעת פגיעה בשינה)</span>
-                                            <span class="text-[10px] text-[#5f756e]">לקפאין יש זמן מחצית חיים של 6 שעות בגוף</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <label class="text-[10px] font-bold text-[#5f756e]">שעת שינה מתוכננת:</label>
-                                        <input type="time" x-model="plannedBedtime" class="bg-white border border-[#e5dfd3] rounded-xl px-2.5 py-1 text-xs font-black text-[#082722] focus:outline-none">
-                                    </div>
-                                </div>
-
-                                <div class="flex items-center justify-between bg-white border border-[#e5dfd3] p-3 rounded-xl">
-                                    <span class="text-[11px] font-bold text-[#082722]">כוס קפה / קפאין אחרונה להיום:</span>
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-sm md:text-base font-black text-amber-700 bg-amber-50 border border-amber-300 px-2.5 py-0.5 rounded-lg" x-text="'עד השעה ' + getCaffeineCutoffTime()"></span>
-                                    </div>
-                                </div>
-
-                                <!-- מעקב מנות קפאין יומיות -->
-                                <div class="space-y-1.5 pt-1">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-[10px] font-bold text-[#5f756e]">מעקב מנות קפאין יומי:</span>
-                                        <span class="text-xs font-black text-[#082722]" x-text="'סך הכל: ' + getTotalDailyCaffeine() + ' / 400 מ״ג'"></span>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 flex-wrap">
-                                        <template x-for="item in dailyCaffeineItems" :key="item.id">
-                                            <button @click="addCaffeineItem(item.id)" class="bg-white hover:bg-[#f0eae1] border border-[#e5dfd3] px-2.5 py-1.5 rounded-xl text-[10px] font-bold text-[#082722] flex items-center gap-1 transition cursor-pointer shadow-sm">
-                                                <span x-text="item.name"></span>
-                                                <span class="bg-[#082722] text-[#86efac] px-1 rounded text-[9px] font-black" x-text="item.count"></span>
-                                            </button>
-                                        </template>
-                                        <button @click="resetCaffeineTracker()" class="text-[10px] text-slate-400 hover:text-red-500 underline font-bold mr-auto cursor-pointer">איפוס</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 2. צ'ק-ליסט פרוטוקול תוספים יומי -->
-                            <div class="space-y-2">
-                                <h5 class="font-black text-xs text-[#082722] flex items-center justify-between">
-                                    <span>צ'ק-ליסט תוספים יומי מומלץ:</span>
-                                    <span class="text-[10px] text-[#5f756e] font-normal">סמן מה נלקח היום</span>
-                                </h5>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    <template x-for="supp in defaultSupplementsList" :key="supp.id">
-                                        <div @click="toggleSupplementToday(supp.id)" 
-                                             :class="isSupplementTakenToday(supp.id) ? 'bg-emerald-50 border-[#22c55e] shadow-sm' : 'bg-[#fbf8f2] border-[#e5dfd3] opacity-80'"
-                                             class="border p-3 rounded-2xl flex items-center justify-between gap-2.5 transition cursor-pointer hover:border-[#22c55e]">
-                                            <div class="flex items-center gap-2.5">
-                                                <div :class="isSupplementTakenToday(supp.id) ? 'bg-[#082722] text-[#86efac]' : 'bg-white text-slate-600 border border-[#e5dfd3]'" class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
-                                                    <span x-text="supp.icon"></span>
-                                                </div>
-                                                <div class="space-y-0.5">
-                                                    <span class="font-extrabold text-xs text-[#082722] block" x-text="supp.name"></span>
-                                                    <span class="text-[10px] text-[#5f756e] block" x-text="supp.time"></span>
-                                                </div>
-                                            </div>
-                                            <div :class="isSupplementTakenToday(supp.id) ? 'bg-[#22c55e] text-white' : 'bg-white border border-[#e5dfd3] text-transparent'" class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition shadow-sm">
-                                                <i data-lucide="check" class="w-4 h-4"></i>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
                         </div>
 
                         <!-- יעדים יומיים -->
@@ -2224,64 +2049,6 @@
                                     <div class="h-full flex flex-col items-center justify-center text-slate-500 italic text-xs">
                                         <i data-lucide="coffee" class="w-8 h-8 text-emerald-600/30 mb-2"></i>
                                         <span>אין משימות להיום.</span>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ליגת האלופים ומובילי העקביות של ILAICO למאמן -->
-                    <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4" x-data="{ openLeaderboardHub: true }">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700">
-                                    <i data-lucide="trophy" class="w-5 h-5"></i>
-                                </div>
-                                <div>
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <h3 class="text-sm md:text-base font-black text-[#082722]">ליגת והיכל האלופים של ILAICO 👑</h3>
-                                        <span class="bg-amber-100 text-amber-800 text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-amber-300">מובילי העקביות והמשמעת</span>
-                                    </div>
-                                    <p class="text-[11px] text-[#5f756e]">דירוג חי לפי ציוני צ׳ק-ליסט, ימי רצף, שקילות ושבירת שיאי PR</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 self-end sm:self-auto">
-                                <button @click="openLeaderboardModal = true; championsModalTab = 'leaderboard'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3 py-1.5 rounded-xl text-xs font-bold transition border border-[#174e43] shadow-sm flex items-center gap-1 cursor-pointer">
-                                    <i data-lucide="external-link" class="w-3.5 h-3.5 text-[#86efac]"></i>
-                                    <span>טבלה מלאה</span>
-                                </button>
-                                <button @click="openLeaderboardHub = !openLeaderboardHub; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" class="text-xs text-[#5f756e] hover:text-[#082722] font-bold flex items-center gap-1 cursor-pointer">
-                                    <span x-text="openLeaderboardHub ? 'צמצם' : 'הצג'"></span>
-                                    <i x-show="openLeaderboardHub" data-lucide="chevron-up" class="w-4 h-4"></i>
-                                    <i x-show="!openLeaderboardHub" data-lucide="chevron-down" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div x-show="openLeaderboardHub" class="space-y-3" x-cloak>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                <template x-for="(trainee, idx) in getChampionsLeaderboard().slice(0, 3)" :key="trainee.id">
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between gap-3 shadow-sm hover:border-[#22c55e]/50 transition">
-                                        <div class="flex items-center gap-3">
-                                            <div :class="idx === 0 ? 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/30' : (idx === 1 ? 'bg-slate-300 text-slate-900 font-black' : 'bg-amber-600 text-white font-black')"
-                                                 class="w-8 h-8 rounded-xl flex items-center justify-center text-sm shrink-0">
-                                                <span x-text="idx === 0 ? '🥇' : (idx === 1 ? '🥈' : '🥉')"></span>
-                                            </div>
-                                            <div class="space-y-0.5">
-                                                <div class="flex items-center gap-1.5">
-                                                    <span class="font-black text-xs text-[#082722]" x-text="trainee.name"></span>
-                                                    <span :class="trainee.rank.badgeClass" class="text-[9px] px-1.5 py-0.2 rounded font-bold border" x-text="trainee.rank.name.split(' ')[0]"></span>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
-                                                    <span class="text-amber-700 font-bold" x-text="'🔥 ' + trainee.streak + ' ימי רצף'"></span>
-                                                    <span>•</span>
-                                                    <span class="text-[#082722] font-black" x-text="trainee.score + ' נק\''"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <a :href="getSendCheerWhatsAppLink(clients.find(c => c.id === trainee.id))" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white p-2 rounded-xl text-xs font-bold transition shadow-sm shadow-emerald-600/20 shrink-0 cursor-pointer" title="שלח פרגון בוואטסאפ">
-                                            <i data-lucide="message-circle" class="w-4 h-4"></i>
-                                        </a>
                                     </div>
                                 </template>
                             </div>
@@ -4082,134 +3849,25 @@
         </template>
     </datalist>
 
-    <!-- מודל היכל וליגת האלופים של ILAICO -->
-    <div x-show="openBadgesModal || openLeaderboardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBadgesModal = false; openLeaderboardModal = false">
-        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[90vh] flex flex-col text-[#082722]">
+    <!-- מודל היכל תגי הצלחה והישגים -->
+    <div x-show="openBadgesModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBadgesModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
                     <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                        <i data-lucide="trophy" class="w-5 h-5 text-[#86efac]"></i>
+                        <i data-lucide="award" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <h3 class="text-base md:text-lg font-black text-[#082722]">ליגת והיכל האלופים של ILAICO 👑</h3>
-                        <p class="text-xs text-[#5f756e]">עקביות מנצחת הכל • טבלת המובילים ותגי הכבוד</p>
+                        <h3 class="text-base font-black text-[#082722]">היכל התגים וההישגים שלך 🏆</h3>
+                        <p class="text-xs text-[#5f756e]">ההתקדמות והפרסים שלך במסע עם אילאי</p>
                     </div>
                 </div>
-                <button @click="openBadgesModal = false; openLeaderboardModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                <button @click="openBadgesModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <!-- טאבים פנימיים: טבלת הליגה / תגי כבוד -->
-            <div class="grid grid-cols-2 gap-1.5 p-1 bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl shrink-0">
-                <button @click="championsModalTab = 'leaderboard'" 
-                        :class="championsModalTab === 'leaderboard' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                        class="py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
-                    <i data-lucide="flame" class="w-3.5 h-3.5"></i>
-                    <span>טבלת ליגת האלופים 🔥</span>
-                </button>
-                <button @click="championsModalTab = 'badges'" 
-                        :class="championsModalTab === 'badges' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                        class="py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
-                    <i data-lucide="award" class="w-3.5 h-3.5"></i>
-                    <span>הישגים ותגי כבוד 🎖️</span>
-                </button>
-            </div>
-
-            <!-- תוכן 1: טבלת ליגת האלופים -->
-            <div x-show="championsModalTab === 'leaderboard'" class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs">
-                <!-- דרגות אלופים הסבר מהיר -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-[10px]">
-                    <div class="bg-amber-50/80 border border-amber-300 p-2 rounded-xl">
-                        <span class="text-sm block mb-0.5">👑</span>
-                        <span class="font-black text-amber-900 block">מלך הברזל</span>
-                        <span class="text-amber-800 text-[9px]">30+ ימי רצף</span>
-                    </div>
-                    <div class="bg-emerald-50/80 border border-emerald-300 p-2 rounded-xl">
-                        <span class="text-sm block mb-0.5">🦁</span>
-                        <span class="font-black text-emerald-900 block">אריה ILAICO</span>
-                        <span class="text-emerald-800 text-[9px]">14-29 ימי רצף</span>
-                    </div>
-                    <div class="bg-sky-50/80 border border-sky-300 p-2 rounded-xl">
-                        <span class="text-sm block mb-0.5">⚡</span>
-                        <span class="font-black text-sky-900 block">מכונת משמעת</span>
-                        <span class="text-sky-800 text-[9px]">7-13 ימי רצף</span>
-                    </div>
-                    <div class="bg-slate-100 border border-slate-300 p-2 rounded-xl">
-                        <span class="text-sm block mb-0.5">🥉</span>
-                        <span class="font-black text-slate-800 block">טירון נחוש</span>
-                        <span class="text-slate-700 text-[9px]">1-6 ימי רצף</span>
-                    </div>
-                </div>
-
-                <!-- דירוג המתאמן הנוכחי -->
-                <template x-if="portalClient">
-                    <div class="bg-gradient-to-r from-[#082722] to-[#13443a] text-white p-4 rounded-2xl shadow-lg border border-[#1b5e50] space-y-2">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xl" x-text="getTraineeRank(portalClient).icon"></span>
-                                <div>
-                                    <span class="text-[10px] text-[#86efac] font-bold block">המיקום והדרגה שלך בליגה:</span>
-                                    <h4 class="text-sm font-black text-white" x-text="getTraineeRank(portalClient).name"></h4>
-                                </div>
-                            </div>
-                            <div class="text-left bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
-                                <span class="text-[9px] text-[#86efac] block font-bold">ציון עקביות</span>
-                                <span class="text-base font-black text-white" x-text="calculateTraineeConsistencyScore(portalClient) + ' נק\''"></span>
-                            </div>
-                        </div>
-                        <p class="text-[10px] text-[#93c7bb] italic border-t border-white/10 pt-2">
-                            ״משמעת ועקביות מנצחות כל תירוץ. תמשיך לנעול את הצ׳ק-ליסט היומי ולשבור שיאים! 👑🔥״ — אילאי
-                        </p>
-                    </div>
-                </template>
-
-                <!-- טבלת האלופים -->
-                <div class="space-y-2">
-                    <h5 class="font-black text-xs text-[#082722] flex items-center justify-between">
-                        <span>טבלת המובילים החודשית:</span>
-                        <span class="text-[10px] text-[#5f756e] font-normal" x-text="getChampionsLeaderboard().length + ' אלופים פעילים'"></span>
-                    </h5>
-
-                    <div class="space-y-2">
-                        <template x-for="(trainee, idx) in getChampionsLeaderboard()" :key="trainee.id">
-                            <div :class="trainee.isCurrentPortalUser ? 'bg-emerald-50 border-2 border-[#22c55e] shadow-md' : 'bg-[#fbf8f2] border border-[#e5dfd3]'"
-                                 class="p-3 rounded-2xl flex items-center justify-between gap-2.5 transition">
-                                <div class="flex items-center gap-2.5">
-                                    <div :class="idx === 0 ? 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/30' : (idx === 1 ? 'bg-slate-300 text-slate-900 font-black' : (idx === 2 ? 'bg-amber-600 text-white font-black' : 'bg-white border border-[#e5dfd3] text-slate-600 font-bold'))"
-                                         class="w-7 h-7 rounded-xl flex items-center justify-center text-xs shrink-0">
-                                        <span x-text="idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : (idx + 1)))"></span>
-                                    </div>
-
-                                    <div class="space-y-0.5">
-                                        <div class="flex items-center gap-1.5">
-                                            <span class="font-black text-xs text-[#082722]" x-text="trainee.firstName + (trainee.isCurrentPortalUser ? ' (אתה 👑)' : '')"></span>
-                                            <span :class="trainee.rank.badgeClass" class="text-[9px] px-1.5 py-0.2 rounded-md font-bold border" x-text="trainee.rank.name.split(' ')[0]"></span>
-                                        </div>
-                                        <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
-                                            <span class="text-amber-700 font-bold" x-text="'🔥 ' + trainee.streak + ' ימי רצף'"></span>
-                                            <template x-if="trainee.prsCount > 0">
-                                                <span>•</span>
-                                            </template>
-                                            <template x-if="trainee.prsCount > 0">
-                                                <span class="text-purple-700 font-bold" x-text="'🏋️‍♂️ ' + trainee.prsCount + ' שיאים'"></span>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="text-left shrink-0">
-                                    <span class="text-xs md:text-sm font-black text-[#082722] block" x-text="trainee.score"></span>
-                                    <span class="text-[8px] text-[#5f756e] font-bold">נקודות</span>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-
-            <!-- תוכן 2: היכל תגי הכבוד -->
-            <div x-show="championsModalTab === 'badges'" class="overflow-y-auto pr-1 flex-1 space-y-3 text-xs">
+            <div class="overflow-y-auto pr-1 flex-1 space-y-3 text-xs">
                 <template x-for="badge in getClientBadges(portalClient)" :key="badge.id">
                     <div :class="badge.unlocked ? 'bg-gradient-to-r from-[#fbf8f2] to-emerald-50/50 border-[#22c55e]/40 shadow-sm' : 'bg-slate-50 border-slate-200 opacity-60'" class="border p-3.5 rounded-2xl flex items-center justify-between gap-3 transition">
                         <div class="flex items-center gap-3">
@@ -4234,8 +3892,8 @@
             </div>
 
             <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
-                <button type="button" @click="openBadgesModal = false; openLeaderboardModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
-                    סגור
+                <button type="button" @click="openBadgesModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור היכל תגים
                 </button>
             </div>
         </div>
@@ -5076,34 +4734,8 @@
                 oneRmWeight: 100,
                 oneRmReps: 5,
 
-                // רצפים ותגים למתאמן והיכל ליגת האלופים
+                // רצפים ותגים למתאמן
                 openBadgesModal: false,
-                championsModalTab: 'leaderboard',
-                openLeaderboardModal: false,
-
-                // מחשבון החלפות מזון חכם
-                openSwapModal: false,
-                swapCategoryId: 'protein',
-                swapSourceFoodName: 'חזה עוף מבושל',
-                swapSourceGrams: 150,
-                swapTargetFoodName: 'פילה סלמון אפוי',
-
-                // פרוטוקול תוספי תזונה ומחשבון קפאין חכם
-                plannedBedtime: '23:00',
-                dailyCaffeineItems: [
-                    { id: 'espresso', name: 'אספרסו קצר ☕', mg: 65, count: 0 },
-                    { id: 'double_espresso', name: 'אספרסו כפול / אמריקנו ☕☕', mg: 130, count: 0 },
-                    { id: 'nescafe', name: 'נס קפה / קפוצ\'ינו 🥛', mg: 60, count: 0 },
-                    { id: 'preworkout', name: 'פרה-וורקאאוט / משקה אנרגיה ⚡', mg: 200, count: 0 },
-                    { id: 'zero', name: 'קולה זירו / תה ירוק 🥤', mg: 35, count: 0 }
-                ],
-                defaultSupplementsList: [
-                    { id: 'creatine', name: 'קריאטין מונוהידראט (5 גרם)', desc: 'כוח מתפרץ, התאוששות ונפח תאי שריר', time: 'בכל שעה קבועה ביום', icon: '⚡' },
-                    { id: 'omega3', name: 'אומגה 3 (2-3 כמוסות)', desc: 'הפחתת דלקתיות, בריאות לב ומפרקים', time: 'עם ארוחה גדולה', icon: '🐟' },
-                    { id: 'magnesium', name: 'מגנזיום ציטראט / ביסגליצינאט', desc: 'הרפיית שרירים, מניעת התכווצויות ושינה עמוקה', time: '30-60 דק\' לפני השינה', icon: '🌙' },
-                    { id: 'protein_powder', name: 'אבקת חלבון מי גבינה (סקופ)', desc: 'השלמת יעד החלבון היומי בקלות', time: 'אחרי אימון / כחלק מארוחה', icon: '🥛' },
-                    { id: 'vitamind', name: 'ויטמין D3 + K2 / מולטי-ויטמין', desc: 'תמיכה במערכת החיסון וחיזוק עצמות', time: 'בבוקר עם ארוחה שומנית', icon: '☀️' }
-                ],
 
                 // מחולל סיכום חודשי אישי לוואטסאפ
                 openMonthlySummaryModal: false,
@@ -5123,7 +4755,7 @@
                 targetMealIndex: null,
 
                 // אימות ונעילת מאמן (קוד 1236)
-                isCoachAuthenticated: (typeof localStorage !== 'undefined' && localStorage.getItem('ilaico_coach_logged_out') === 'true') ? false : true,
+                isCoachAuthenticated: false,
                 coachPinInput: '',
                 coachPinError: false,
 
@@ -5279,21 +4911,11 @@
                         googleDriveUrl: '',
                         googleSheetsUrl: '',
                         mealPlanPdfUrl: '',
-                        dailyWater: 0,
-                        waterTarget: 3000,
-                        dailySteps: 0,
-                        stepsTarget: 10000,
-                        streakDays: 1,
                         macroCalculated: { targetCalories: '', targetProtein: '', targetCarbs: '', targetFat: '' },
                         workoutPlan: { days: [] },
                         mealPlan: { meals: [] },
                         checkins: [],
-                        payments: [],
-                        dailyScorecards: [],
-                        foodLogs: [],
-                        mealPhotoLogs: [],
-                        reflectionLogs: [],
-                        personalRecords: []
+                        payments: []
                     };
                 },
 
@@ -5308,20 +4930,9 @@
                         googleDriveUrl: '',
                         googleSheetsUrl: '',
                         mealPlanPdfUrl: '',
-                        dailyWater: 0,
-                        waterTarget: 3000,
-                        dailySteps: 0,
-                        stepsTarget: 10000,
-                        streakDays: 1,
                         workoutPlan: { days: [] },
                         mealPlan: { meals: [] },
                         checkins: [],
-                        payments: [],
-                        dailyScorecards: [],
-                        foodLogs: [],
-                        mealPhotoLogs: [],
-                        reflectionLogs: [],
-                        personalRecords: [],
                         macroCalculated: { targetCalories: '', targetProtein: '', targetCarbs: '', targetFat: '' }
                     };
                 },
@@ -5339,24 +4950,19 @@
                 },
 
                 checkCoachAuth() {
-                    if (typeof localStorage !== 'undefined' && localStorage.getItem('ilaico_coach_logged_out') === 'true') {
-                        this.isCoachAuthenticated = false;
-                    } else {
+                    const token = localStorage.getItem('ilaico_coach_auth_token') || localStorage.getItem('ilaico_coach_authenticated');
+                    if (token === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || token === 'true_1236') {
                         this.isCoachAuthenticated = true;
                     }
                 },
 
                 async loginCoach() {
-                    const input = (this.coachPinInput || '').trim();
-                    const hashed = await this.hashPin(input);
-                    if (hashed === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || input === '1236') {
+                    const hashed = await this.hashPin(this.coachPinInput);
+                    if (hashed === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394') {
                         this.isCoachAuthenticated = true;
                         this.coachPinError = false;
                         this.coachPinInput = '';
-                        if (typeof localStorage !== 'undefined') {
-                            localStorage.removeItem('ilaico_coach_logged_out');
-                            localStorage.setItem('ilaico_coach_auth_token', '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394');
-                        }
+                        localStorage.setItem('ilaico_coach_auth_token', hashed);
                         setTimeout(() => {
                             if (window.lucide) window.lucide.createIcons();
                         }, 50);
@@ -5368,11 +4974,8 @@
 
                 logoutCoach() {
                     this.isCoachAuthenticated = false;
-                    if (typeof localStorage !== 'undefined') {
-                        localStorage.setItem('ilaico_coach_logged_out', 'true');
-                        localStorage.removeItem('ilaico_coach_auth_token');
-                        localStorage.removeItem('ilaico_coach_authenticated');
-                    }
+                    localStorage.removeItem('ilaico_coach_auth_token');
+                    localStorage.removeItem('ilaico_coach_authenticated');
                     this.coachPinInput = '';
                     this.coachPinError = false;
                     this.activeTab = 'dashboard';
@@ -5399,23 +5002,15 @@
                         this.selectedClientId = this.portalClientId;
                         this.isCoachAuthenticated = false;
                     } else {
-                        this.checkCoachAuth();
+                        // תמיד דורש הזנת קוד 1236 בכניסה לקישור
+                        this.isCoachAuthenticated = false;
                     }
 
-                    // Always ensure clients array is loaded
-                    if (!this.clients || this.clients.length === 0) {
-                        this.loadLocalDatabase();
-                        if (!this.clients || this.clients.length === 0) {
-                            this.loadDefaultData();
-                            this.saveData();
-                        }
+                    // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
+                    if (this.clients.length === 0) {
+                        this.loadDefaultData();
+                        this.saveData();
                     }
-
-                    // סגירת יום ואיפוס אוטומטי בחצות (00:00)
-                    this.checkAndProcessMidnightRollover();
-                    setInterval(() => {
-                        this.checkAndProcessMidnightRollover();
-                    }, 60000);
                     
                     setTimeout(() => {
                         if (window.lucide) window.lucide.createIcons();
@@ -5424,10 +5019,10 @@
 
                 // טעינת הגדרות Firebase
                 loadFirebaseConfig() {
-                    let savedConfig = typeof localStorage !== 'undefined' ? localStorage.getItem('il_fitness_firebase_config') : null;
-                    const isDisabled = typeof localStorage !== 'undefined' ? localStorage.getItem('il_fitness_firebase_disabled') === 'true' : false;
+                    let savedConfig = localStorage.getItem('il_fitness_firebase_config');
+                    const isDisabled = localStorage.getItem('il_fitness_firebase_disabled') === 'true';
                     
-                    // מפתחות ברירת המחדל שהמשתמש הגדיר עבור הפרויקט שלו
+                    // מפתחות ברירת המחדל שהמתשתמש הגדיר עבור הפרויקט שלו
                     const defaultCloudConfig = {
                         apiKey: "AIzaSyD9CAKRqTP4NUlQyedInV-BKB3z2AA-_nU",
                         authDomain: "ilai-fitness.firebaseapp.com",
@@ -5438,10 +5033,9 @@
                     };
 
                     if (!savedConfig && !isDisabled) {
-                        try {
-                            localStorage.setItem('il_fitness_firebase_config', JSON.stringify(defaultCloudConfig));
-                            savedConfig = JSON.stringify(defaultCloudConfig);
-                        } catch (e) {}
+                        // מגדירים אוטומטית את מפתחות ברירת המחדל בפעם הראשונה
+                        localStorage.setItem('il_fitness_firebase_config', JSON.stringify(defaultCloudConfig));
+                        savedConfig = JSON.stringify(defaultCloudConfig);
                     }
 
                     if (savedConfig) {
@@ -5449,19 +5043,19 @@
                             this.firebaseConfig = JSON.parse(savedConfig);
                             this.firebaseInput = { ...this.firebaseConfig };
                             
-                            // אתחול בטוח רק אם firebase נטען
-                            if (typeof firebase !== 'undefined' && firebase && firebase.apps) {
-                                let app;
-                                if (!firebase.apps.length) {
-                                    app = firebase.initializeApp(this.firebaseConfig);
-                                } else {
-                                    app = firebase.app();
-                                }
-                                this.db = app.firestore();
-                                this.isCloudSynced = true;
-                                this.loadDataFromCloud();
-                                return;
+                            // אתחול Firebase Web SDK בצורה בטוחה ללא שגיאות כפילות
+                            let app;
+                            if (!firebase.apps.length) {
+                                app = firebase.initializeApp(this.firebaseConfig);
+                            } else {
+                                app = firebase.app();
                             }
+                            this.db = app.firestore();
+                            this.isCloudSynced = true;
+                            
+                            // טעינה מקבילה בזמן אמת מהענן
+                            this.loadDataFromCloud();
+                            return;
                         } catch (e) {
                             console.error("שגיאה באתחול חיבור הענן", e);
                         }
@@ -6954,7 +6548,6 @@
                         this.db.collection("clients").doc(client.id).set(client);
                     }
                     this.saveData();
-                    this.autoSaveDailyScorecard();
                 },
 
                 resetWater() {
@@ -6966,7 +6559,6 @@
                         this.db.collection("clients").doc(client.id).set(client);
                     }
                     this.saveData();
-                    this.autoSaveDailyScorecard();
                 },
 
                 updateSteps(steps) {
@@ -6978,7 +6570,6 @@
                         this.db.collection("clients").doc(client.id).set(client);
                     }
                     this.saveData();
-                    this.autoSaveDailyScorecard();
                 },
 
                 // --- מתודות סטופר וטיימר מנוחה בין סטים ---
@@ -7855,35 +7446,7 @@
                     return null;
                 },
 
-                getLiveDailyScore(client) {
-                    const c = client || this.portalClient;
-                    if (!c) return 0;
-                    const waterTarget = c.waterTarget || 3000;
-                    const stepsTarget = c.stepsTarget || 10000;
-                    const waterRatio = (c.dailyWater || 0) / waterTarget;
-                    const stepsRatio = (c.dailySteps || 0) / stepsTarget;
-
-                    let score = 0;
-                    // 1. Nutrition: 35 pts
-                    if (this.scorecardNutrition === 'yes') score += 35;
-                    else if (this.scorecardNutrition === 'almost') score += 25;
-                    else score += 10;
-
-                    // 2. Water: 20 pts
-                    score += Math.min(20, Math.round(waterRatio * 20));
-
-                    // 3. Steps: 20 pts
-                    score += Math.min(20, Math.round(stepsRatio * 20));
-
-                    // 4. Workout: 15 pts
-                    if (this.scorecardWorkout === 'yes' || this.scorecardWorkout === 'rest') score += 15;
-
-                    // 5. Sleep / Energy: 10 pts
-                    score += Math.round(((this.scorecardSleep || 5) / 5) * 10);
-                    return Math.min(100, Math.max(0, score));
-                },
-
-                autoSaveDailyScorecard(showCelebration = false) {
+                saveDailyScorecard() {
                     const client = this.portalClient;
                     if (!client || !client.id) return;
                     if (!client.dailyScorecards) client.dailyScorecards = [];
@@ -7892,10 +7455,32 @@
                     }
 
                     const todayStr = this.getTodayDate();
-                    const score = this.getLiveDailyScore(client);
+                    const waterTarget = client.waterTarget || 3000;
+                    const stepsTarget = client.stepsTarget || 10000;
+                    const waterRatio = (client.dailyWater || 0) / waterTarget;
+                    const stepsRatio = (client.dailySteps || 0) / stepsTarget;
+
+                    let score = 0;
+                    // Nutrition: 35 pts
+                    if (this.scorecardNutrition === 'yes') score += 35;
+                    else if (this.scorecardNutrition === 'almost') score += 25;
+                    else score += 10;
+
+                    // Water: 20 pts
+                    score += Math.min(20, Math.round(waterRatio * 20));
+
+                    // Steps: 20 pts
+                    score += Math.min(20, Math.round(stepsRatio * 20));
+
+                    // Workout: 15 pts
+                    if (this.scorecardWorkout === 'yes' || this.scorecardWorkout === 'rest') score += 15;
+
+                    // Sleep: 10 pts
+                    score += Math.round((this.scorecardSleep / 5) * 10);
+                    score = Math.min(100, Math.max(0, score));
 
                     const entry = {
-                        id: 'sc_' + todayStr,
+                        id: Date.now().toString(),
                         date: todayStr,
                         score: score,
                         nutrition: this.scorecardNutrition,
@@ -7903,12 +7488,10 @@
                         sleep: this.scorecardSleep,
                         water: client.dailyWater || 0,
                         steps: client.dailySteps || 0,
-                        autoSaved: true,
-                        closedAtMidnight: false,
                         timestamp: new Date().toISOString()
                     };
 
-                    const existingIdx = client.dailyScorecards.findIndex(sc => sc && sc.date === todayStr);
+                    const existingIdx = client.dailyScorecards.findIndex(sc => sc.date === todayStr);
                     if (existingIdx >= 0) {
                         client.dailyScorecards[existingIdx] = entry;
                     } else {
@@ -7920,92 +7503,15 @@
                     }
                     this.saveData();
 
-                    if (showCelebration) {
-                        if (typeof confetti === 'function') {
-                            confetti({
-                                particleCount: score >= 90 ? 120 : 60,
-                                spread: 70,
-                                origin: { y: 0.6 }
-                            });
-                        }
-                        this.playVictorySound();
-                    }
-                },
-
-                saveDailyScorecard() {
-                    this.autoSaveDailyScorecard(true);
-                },
-
-                checkAndProcessMidnightRollover() {
-                    const todayStr = this.getTodayDate();
-                    let lastDate = localStorage.getItem('ilaico_last_midnight_date');
-
-                    if (!lastDate) {
-                        localStorage.setItem('ilaico_last_midnight_date', todayStr);
-                        return;
-                    }
-
-                    if (lastDate !== todayStr) {
-                        let hasChanges = false;
-                        this.clients.forEach(client => {
-                            if (client.status !== 'active') return;
-                            if (!client.dailyScorecards) client.dailyScorecards = [];
-                            if (!Array.isArray(client.dailyScorecards)) {
-                                client.dailyScorecards = Object.values(client.dailyScorecards);
-                            }
-
-                            // בדיקה האם נשמר צ'ק-ליסט עבור היום שהסתיים
-                            const pastScorecard = client.dailyScorecards.find(sc => sc && sc.date === lastDate);
-                            if (!pastScorecard) {
-                                const waterTarget = client.waterTarget || 3000;
-                                const stepsTarget = client.stepsTarget || 10000;
-                                const waterRatio = (client.dailyWater || 0) / waterTarget;
-                                const stepsRatio = (client.dailySteps || 0) / stepsTarget;
-
-                                let finalScore = 30; // בסיס פעילות
-                                finalScore += Math.min(20, Math.round(waterRatio * 20));
-                                finalScore += Math.min(20, Math.round(stepsRatio * 20));
-                                if ((client.dailyWater || 0) > 0 || (client.dailySteps || 0) > 0) finalScore += 20;
-                                finalScore = Math.min(100, Math.max(20, finalScore));
-
-                                client.dailyScorecards.unshift({
-                                    id: 'sc_' + lastDate,
-                                    date: lastDate,
-                                    score: finalScore,
-                                    nutrition: 'yes',
-                                    workout: 'yes',
-                                    sleep: 5,
-                                    water: client.dailyWater || 0,
-                                    steps: client.dailySteps || 0,
-                                    autoSaved: true,
-                                    closedAtMidnight: true,
-                                    timestamp: new Date().toISOString()
-                                });
-                            } else {
-                                pastScorecard.closedAtMidnight = true;
-                            }
-
-                            // איפוס מונים יומיים ליום החדש
-                            client.dailyWater = 0;
-                            client.dailySteps = 0;
-                            if (!client.streakDays) client.streakDays = 1;
-                            client.streakDays += 1;
-
-                            if (this.isCloudSynced && this.db) {
-                                this.db.collection("clients").doc(client.id).set(client);
-                            }
-                            hasChanges = true;
+                    // Confetti and celebration
+                    if (typeof confetti === 'function') {
+                        confetti({
+                            particleCount: score >= 90 ? 120 : 60,
+                            spread: 70,
+                            origin: { y: 0.6 }
                         });
-
-                        localStorage.setItem('ilaico_last_midnight_date', todayStr);
-                        if (hasChanges) {
-                            this.saveData();
-                            if (this.portalClient) {
-                                this.portalDailyWater = 0;
-                                this.portalDailySteps = 0;
-                            }
-                        }
                     }
+                    this.playVictorySound();
                 },
 
                 getClientPrs(client) {
@@ -8154,219 +7660,11 @@
                         osc3.frequency.setValueAtTime(783.99, now + 0.3); // G5
                         g3.gain.setValueAtTime(0.3, now + 0.3);
                         g3.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                        osc3.start(now + 0.3);
                         osc3.stop(now + 0.8);
                     } catch (e) {
                         console.log('AudioContext not allowed without gesture', e);
                     }
-                },
-
-                // --- שיטות מחשבון החלפות מזון חכם ---
-                foodSwapCategories: [
-                    {
-                        id: 'protein',
-                        name: 'חלבונים (Proteins 🍗)',
-                        primaryMacro: 'protein',
-                        items: [
-                            { name: 'חזה עוף מבושל', cal: 165, pro: 31, carb: 0, fat: 3.6, tip: 'חלבון רזה ודל שומן קלאסי' },
-                            { name: 'סינטה בקר רזה (צלוי)', cal: 190, pro: 28, carb: 0, fat: 8.5, tip: 'עשיר בברזל, אבץ וקריאטין טבעי' },
-                            { name: 'פילה סלמון אפוי', cal: 206, pro: 25, carb: 0, fat: 12, tip: 'עשיר באומגה 3 ושומן בריא (יותר קלוריות מחזה עוף)' },
-                            { name: 'טונה בשימורים במים', cal: 116, pro: 26, carb: 0, fat: 0.8, tip: 'חלבון מהיר, נקי וזמין' },
-                            { name: 'גבינה לבנה 5%', cal: 85, pro: 10, carb: 3.5, fat: 5, tip: 'חלבון קזאין מעולה לשובע מתמשך' },
-                            { name: 'קוטג׳ 5%', cal: 90, pro: 11, carb: 1.5, fat: 5, tip: 'חלבון קזאין איכותי ודל פחמימה' },
-                            { name: 'יוגורט PRO 20g (גביע 200ג\')', cal: 130, pro: 20, carb: 6, fat: 0.5, tip: 'חלבון מהיר וקל לעיכול' },
-                            { name: 'טופו טבעי', cal: 140, pro: 15, carb: 2, fat: 8.5, tip: 'חלבון צמחי מלא ואיכותי' },
-                            { name: 'חלבוני ביצה (חלבון בלבד)', cal: 52, pro: 11, carb: 0.7, fat: 0.2, tip: 'חלבון טהור ללא שומן כמעט' },
-                            { name: 'ביצים שלמות (L)', cal: 155, pro: 13, carb: 1.1, fat: 11, tip: 'כולין, שומן איכותי וויטמינים' },
-                            { name: 'אבקת חלבון מי גבינה (סקופ ~30ג\')', cal: 120, pro: 24, carb: 2, fat: 1.5, tip: 'ספיגה מהירה וערך ביולוגי מקסימלי' }
-                        ]
-                    },
-                    {
-                        id: 'carbs',
-                        name: 'פחמימות (Carbs 🍚)',
-                        primaryMacro: 'carb',
-                        items: [
-                            { name: 'אורז בסמטי מבושל', cal: 130, pro: 2.7, carb: 28, fat: 0.3, tip: 'קל מאוד לעיכול, אנרגיה נקייה לאימון' },
-                            { name: 'בטטה אפויה', cal: 90, pro: 2, carb: 21, fat: 0.1, tip: 'אינדקס גליקמי נמוך ועשירה בוויטמין A' },
-                            { name: 'תפוח אדמה אפוי', cal: 93, pro: 2.5, carb: 21, fat: 0.1, tip: 'מדד השובע הגבוה ביותר בעולם המזון!' },
-                            { name: 'שיבולת שועל (יבשה לפני בישול)', cal: 389, pro: 16.9, carb: 66, fat: 6.9, tip: 'סיבים מסיסים מזינים ושובע מתמשך' },
-                            { name: 'פסטה מבושלת', cal: 158, pro: 5.8, carb: 30, fat: 0.9, tip: 'מעולה למילוי מאגרי גליקוגן' },
-                            { name: 'קינואה מבושלת', cal: 120, pro: 4.4, carb: 21, fat: 1.9, tip: 'מכילה את כל חומצות האמינו החיוניות' },
-                            { name: 'לחם מלא / מחמצת (פרוסה ~35ג\')', cal: 85, pro: 3.5, carb: 16, fat: 0.8, tip: 'סיבים תזונתיים ומשביע' },
-                            { name: 'לחם קל (2 פרוסות ~45ג\')', cal: 80, pro: 4.5, carb: 15, fat: 0.8, tip: 'נפח גדול וחיסכון קלורי' },
-                            { name: 'טורטיה מחיטה מלאה', cal: 180, pro: 5, carb: 32, fat: 3.5, tip: 'נוח ומהיר לארוחות בדרכים' }
-                        ]
-                    },
-                    {
-                        id: 'fats',
-                        name: 'שומנים בריאים (Healthy Fats 🥑)',
-                        primaryMacro: 'fat',
-                        items: [
-                            { name: 'שמן זית כתית מעולה', cal: 884, pro: 0, carb: 0, fat: 100, tip: 'חומצות שומן חד בלתי רוויות בריאות ללב' },
-                            { name: 'טחינה גולמית משומשום מלא', cal: 600, pro: 20, carb: 15, fat: 55, tip: 'עשירה בסידן, ברזל ושומן בריא' },
-                            { name: 'אבוקדו', cal: 160, pro: 2, carb: 9, fat: 15, tip: 'עשיר באשלגן וסיבים תזונתיים' },
-                            { name: 'שקדים / אגוזי מלך', cal: 580, pro: 21, carb: 22, fat: 50, tip: 'אגוזי מלך עשירים באומגה 3 צמחית (ALA)' },
-                            { name: 'חמאת בוטנים טבעית 100%', cal: 590, pro: 25, carb: 20, fat: 50, tip: 'שומן וחלבון ללא תוספת סוכר' }
-                        ]
-                    }
-                ],
-
-                calculateFoodSwap() {
-                    const cat = this.foodSwapCategories.find(c => c.id === this.swapCategoryId) || this.foodSwapCategories[0];
-                    if (!cat) return null;
-                    const sourceFood = cat.items.find(i => i.name === this.swapSourceFoodName) || cat.items[0];
-                    const targetFood = cat.items.find(i => i.name === this.swapTargetFoodName) || (cat.items[1] || cat.items[0]);
-                    const sourceGrams = parseFloat(this.swapSourceGrams) || 100;
-                    
-                    const macroKey = cat.primaryMacro;
-                    const sourceMacroPer100 = sourceFood[macroKey === 'protein' ? 'pro' : (macroKey === 'carb' ? 'carb' : 'fat')] || 1;
-                    const targetMacroPer100 = targetFood[macroKey === 'protein' ? 'pro' : (macroKey === 'carb' ? 'carb' : 'fat')] || 1;
-                    
-                    const totalMacro = (sourceGrams * sourceMacroPer100) / 100;
-                    const targetGrams = Math.round((totalMacro / (targetMacroPer100 / 100)));
-                    
-                    const sourceNutrition = {
-                        cal: Math.round((sourceGrams * sourceFood.cal) / 100),
-                        pro: Math.round(((sourceGrams * sourceFood.pro) / 100) * 10) / 10,
-                        carb: Math.round(((sourceGrams * sourceFood.carb) / 100) * 10) / 10,
-                        fat: Math.round(((sourceGrams * sourceFood.fat) / 100) * 10) / 10
-                    };
-                    const targetNutrition = {
-                        cal: Math.round((targetGrams * targetFood.cal) / 100),
-                        pro: Math.round(((targetGrams * targetFood.pro) / 100) * 10) / 10,
-                        carb: Math.round(((targetGrams * targetFood.carb) / 100) * 10) / 10,
-                        fat: Math.round(((targetGrams * targetFood.fat) / 100) * 10) / 10
-                    };
-                    const calDelta = targetNutrition.cal - sourceNutrition.cal;
-                    
-                    return {
-                        cat,
-                        sourceFood,
-                        targetFood,
-                        sourceGrams,
-                        targetGrams,
-                        sourceNutrition,
-                        targetNutrition,
-                        calDelta,
-                        proCoachTip: targetFood.tip
-                    };
-                },
-
-                // --- שיטות היכל וליגת האלופים של ILAICO ---
-                getTraineeRank(client) {
-                    const streak = this.getClientStreak(client);
-                    const score = this.calculateTraineeConsistencyScore(client);
-                    if (streak >= 30 || score >= 600) {
-                        return { tier: 4, name: 'מלך הברזל (Iron King)', icon: '👑', color: 'from-amber-500 to-yellow-300', badgeClass: 'bg-amber-100 text-amber-900 border-amber-400' };
-                    }
-                    if (streak >= 14 || score >= 300) {
-                        return { tier: 3, name: 'אריה ILAICO (Lion)', icon: '🦁', color: 'from-emerald-500 to-teal-400', badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-400' };
-                    }
-                    if (streak >= 7 || score >= 100) {
-                        return { tier: 2, name: 'מכונת משמעת (Machine)', icon: '⚡', color: 'from-sky-500 to-blue-400', badgeClass: 'bg-sky-100 text-sky-900 border-sky-400' };
-                    }
-                    return { tier: 1, name: 'טירון נחוש (Fighter)', icon: '🥉', color: 'from-slate-600 to-slate-400', badgeClass: 'bg-slate-100 text-slate-800 border-slate-300' };
-                },
-
-                calculateTraineeConsistencyScore(client) {
-                    if (!client) return 0;
-                    let score = 0;
-                    if (Array.isArray(client.dailyScorecards)) {
-                        client.dailyScorecards.forEach(sc => {
-                            score += Math.round((sc.score || 0) * 0.2);
-                        });
-                    } else if (client.dailyScorecards && typeof client.dailyScorecards === 'object') {
-                        Object.values(client.dailyScorecards).forEach(sc => {
-                            score += Math.round((sc.score || 0) * 0.2);
-                        });
-                    }
-                    score += (client.checkins || []).length * 25;
-                    score += (client.foodLogs || []).length * 10;
-                    const prs = this.getClientPrs(client);
-                    prs.forEach(pr => { if (pr.weight > 0) score += 30; });
-                    score += this.getClientStreak(client) * 15;
-                    return Math.min(9999, Math.max(20, score));
-                },
-
-                getChampionsLeaderboard() {
-                    return this.clients
-                        .filter(c => c.status === 'active')
-                        .map(c => {
-                            const rank = this.getTraineeRank(c);
-                            const score = this.calculateTraineeConsistencyScore(c);
-                            const streak = this.getClientStreak(c);
-                            return {
-                                id: c.id,
-                                name: c.name || 'מתאמן אנונימי',
-                                firstName: (c.name || 'אלוף').split(' ')[0],
-                                streak: streak,
-                                score: score,
-                                rank: rank,
-                                prsCount: this.getClientPrs(c).filter(p => p.weight > 0).length,
-                                isCurrentPortalUser: c.id === this.portalClientId
-                            };
-                        })
-                        .sort((a, b) => b.score - a.score);
-                },
-
-                getSendCheerWhatsAppLink(client) {
-                    if (!client) return '#';
-                    const cleanPhone = this.cleanPhone(client.phone);
-                    const rank = this.getTraineeRank(client);
-                    const streak = this.getClientStreak(client);
-                    const msg = encodeURIComponent(`היי ${client.name}! כאן אילאי 💪👑\n\nראיתי עכשיו את הביצועים שלך בליגת האלופים של ILAICO — דרגת ${rank.name} עם רצף מטורף של ${streak} ימים! 🔥\nעבודה ענקית, מפלצת של עקביות ומשמעת ברזל. תמשיך לנעול כל יום ולא לוותר! 🚀🏆`);
-                    return cleanPhone ? `https://wa.me/972${cleanPhone}?text=${msg}` : `https://wa.me/?text=${msg}`;
-                },
-
-                // --- שיטות מחשבון קפאין ופרוטוקול תוספים ---
-                getCaffeineCutoffTime() {
-                    const time = this.plannedBedtime || '23:00';
-                    const [h, m] = time.split(':').map(Number);
-                    let cutoffH = (h - 6 + 24) % 24;
-                    const strH = cutoffH < 10 ? '0' + cutoffH : cutoffH;
-                    const strM = m < 10 ? '0' + m : m;
-                    return `${strH}:${strM}`;
-                },
-
-                getTotalDailyCaffeine() {
-                    return this.dailyCaffeineItems.reduce((sum, item) => sum + (item.mg * item.count), 0);
-                },
-
-                addCaffeineItem(id) {
-                    const item = this.dailyCaffeineItems.find(i => i.id === id);
-                    if (item) item.count++;
-                },
-
-                resetCaffeineTracker() {
-                    this.dailyCaffeineItems.forEach(i => i.count = 0);
-                },
-
-                isSupplementTakenToday(suppId) {
-                    const client = this.portalClient;
-                    if (!client || !client.dailySupplements) return false;
-                    const todayStr = this.getTodayDate();
-                    const todaySupps = client.dailySupplements[todayStr] || [];
-                    return todaySupps.includes(suppId);
-                },
-
-                toggleSupplementToday(suppId) {
-                    const client = this.portalClient;
-                    if (!client || !client.id) return;
-                    if (!client.dailySupplements) client.dailySupplements = {};
-                    const todayStr = this.getTodayDate();
-                    if (!client.dailySupplements[todayStr]) client.dailySupplements[todayStr] = [];
-                    const idx = client.dailySupplements[todayStr].indexOf(suppId);
-                    if (idx >= 0) {
-                        client.dailySupplements[todayStr].splice(idx, 1);
-                    } else {
-                        client.dailySupplements[todayStr].push(suppId);
-                        if (typeof confetti === 'function') {
-                            confetti({ particleCount: 30, spread: 55, origin: { y: 0.8 } });
-                        }
-                    }
-                    if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
-                    }
-                    this.saveData();
                 }
             };
         }
