@@ -1567,41 +1567,196 @@
                     </div>
 
                     <!-- תוכן לשונית 2: תזונה ויעדים -->
-                    <div x-show="portalActiveSubTab === 'nutrition'" x-cloak class="space-y-4">
-                        <!-- מחשבון תזונה AI וגרף עוגת קלוריות ומאקרו -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-6 shadow-xl space-y-4">
+                    <!-- תוכן לשונית 2: תזונה ויעדים בסגנון MyFitnessPal Pro -->
+                    <div x-show="portalActiveSubTab === 'nutrition'" x-cloak class="space-y-5">
+                        
+                        <!-- 1. כרטיס ראשי: יומן קלוריות ומאקרו יומי (MyFitnessPal Hero Tracker) -->
+                        <div class="bg-gradient-to-br from-[#082722] to-[#041512] border border-[#133d35] rounded-3xl p-5 md:p-6 text-white shadow-2xl space-y-5 relative overflow-hidden">
+                            <!-- Background decorative ambient blur -->
+                            <div class="absolute -top-12 -left-12 w-48 h-48 bg-[#86efac]/10 rounded-full blur-3xl pointer-events-none"></div>
+                            <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-[#38bdf8]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#133d35]/80 pb-4 relative z-10">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2.5 rounded-2xl bg-[#86efac]/15 text-[#86efac] border border-[#86efac]/20">
+                                        <i data-lucide="utensils" class="w-5 h-5 text-[#86efac]"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
+                                            <span>יומן תזונה ומאקרו יומי</span>
+                                            <span class="text-[10px] bg-[#86efac]/20 text-[#86efac] px-2 py-0.5 rounded-full font-bold border border-[#86efac]/30">MyFitnessPal Pro ✨</span>
+                                        </h3>
+                                        <p class="text-[11px] text-[#93c7bb]">מעקב קלוריות, חלבון, פחמימה ושומן חיים בזמן אמת</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center gap-2 self-end sm:self-auto">
+                                    <button type="button" @click="openQuickAddCalorieModal = true" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
+                                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                                        <span>+ הוספה מהירה</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- מדד קלוריות מרכזי (Remaining Calories) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center bg-[#051c17] border border-[#174e43] p-4 md:p-5 rounded-2xl relative z-10">
+                                <!-- יעד קלורי -->
+                                <div class="text-center sm:text-right space-y-0.5">
+                                    <span class="text-[10px] text-[#93c7bb] font-bold block">יעד יומי שהוגדר</span>
+                                    <div class="text-xl md:text-2xl font-black text-white" x-text="(portalClient?.macroCalculated?.targetCalories || 2000) + ' קל\''"></div>
+                                    <span class="text-[9px] text-[#5f756e]">לפי תוכנית המאמן</span>
+                                </div>
+
+                                <!-- קלוריות שנותרו - לב המערכת -->
+                                <div class="text-center py-2 sm:py-0 border-y sm:border-y-0 sm:border-x border-[#174e43] px-3 space-y-1">
+                                    <span class="text-[10px] uppercase tracking-wider text-[#86efac] font-black block">נותרו להיום לאכילה 🎯</span>
+                                    <div class="text-3xl md:text-4xl font-black" :class="getRemainingCalories(portalClient) >= 0 ? 'text-[#86efac]' : 'text-amber-400'" x-text="getRemainingCalories(portalClient)"></div>
+                                    <span class="text-[10px] text-[#93c7bb]" x-text="getRemainingCalories(portalClient) >= 0 ? 'קלוריות זמינות' : 'חריגה קלה מהיעד'"></span>
+                                </div>
+
+                                <!-- סך שנאכל עד כה -->
+                                <div class="text-center sm:text-left space-y-0.5">
+                                    <span class="text-[10px] text-[#93c7bb] font-bold block">נאכל היום עד כה</span>
+                                    <div class="text-xl md:text-2xl font-black text-white" x-text="getTodayConsumedCalories(portalClient) + ' קל\''"></div>
+                                    <span class="text-[9px] text-[#86efac]" x-text="Math.round((getTodayConsumedCalories(portalClient) / (portalClient?.macroCalculated?.targetCalories || 2000)) * 100) + '% מהיעד'"></span>
+                                </div>
+                            </div>
+
+                            <!-- 3 סרגלי מאקרו חיים: חלבון, פחמימה, שומן -->
+                            <div class="space-y-3 pt-1 relative z-10">
+                                <!-- חלבון -->
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="font-extrabold text-[#86efac] flex items-center gap-1.5">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-[#86efac]"></span>
+                                            <span>חלבון</span>
+                                        </span>
+                                        <span class="font-black text-white" x-text="getTodayConsumedProtein(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetProtein || 160) + ' גרם'"></span>
+                                    </div>
+                                    <div class="w-full bg-[#051c17] rounded-full h-3 overflow-hidden p-0.5 border border-[#174e43]">
+                                        <div class="bg-gradient-to-r from-[#22c55e] to-[#86efac] h-full rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, Math.round((getTodayConsumedProtein(portalClient) / (portalClient?.macroCalculated?.targetProtein || 160)) * 100)) + '%'"></div>
+                                    </div>
+                                </div>
+
+                                <!-- פחמימות -->
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="font-extrabold text-[#38bdf8] flex items-center gap-1.5">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-[#38bdf8]"></span>
+                                            <span>פחמימות</span>
+                                        </span>
+                                        <span class="font-black text-white" x-text="getTodayConsumedCarbs(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetCarbs || 220) + ' גרם'"></span>
+                                    </div>
+                                    <div class="w-full bg-[#051c17] rounded-full h-3 overflow-hidden p-0.5 border border-[#174e43]">
+                                        <div class="bg-gradient-to-r from-[#0284c7] to-[#38bdf8] h-full rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, Math.round((getTodayConsumedCarbs(portalClient) / (portalClient?.macroCalculated?.targetCarbs || 220)) * 100)) + '%'"></div>
+                                    </div>
+                                </div>
+
+                                <!-- שומנים -->
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="font-extrabold text-[#fbbf24] flex items-center gap-1.5">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-[#fbbf24]"></span>
+                                            <span>שומנים</span>
+                                        </span>
+                                        <span class="font-black text-white" x-text="getTodayConsumedFat(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetFat || 65) + ' גרם'"></span>
+                                    </div>
+                                    <div class="w-full bg-[#051c17] rounded-full h-3 overflow-hidden p-0.5 border border-[#174e43]">
+                                        <div class="bg-gradient-to-r from-[#d97706] to-[#fbbf24] h-full rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, Math.round((getTodayConsumedFat(portalClient) / (portalClient?.macroCalculated?.targetFat || 65)) * 100)) + '%'"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. מחשבון תזונה AI רב-ערוצי: הקלטה קולית 🎙️ | הקלדה ✍️ | צילום צלחת 📸 -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                             <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
                                 <div class="flex items-center gap-2.5">
                                     <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
                                         <i data-lucide="sparkles" class="w-5 h-5 text-[#86efac]"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">מחשבון תזונה AI וגרף עוגת מאקרו 🤖</h4>
-                                        <p class="text-[10px] text-[#5f756e]">כתוב בחופשיות מה אכלת וקבל ניתוח קלוריות, חלבון, פחמימה ושומן</p>
+                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">הזנה חכמה ב-AI: הקלטה קולית 🎙️ | הקלדה ✍️ | צילום 📸</h4>
+                                        <p class="text-[10px] text-[#5f756e]">דבר, הקלד או צלם מצרכים וכמויות (כפות הגשה, כוסות, גרמים, קופסאות)</p>
                                     </div>
                                 </div>
-                                <span class="bg-[#86efac]/20 text-[#082722] text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-[#86efac]/40">AI חכם ✨</span>
+                                <span class="bg-[#86efac]/20 text-[#082722] text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-[#86efac]/40">AI Engine ✨</span>
                             </div>
 
-                            <!-- שדה הזנה חופשית -->
+                            <!-- שדה הזנה רב-ערוצי -->
                             <div class="space-y-2">
-                                <div class="relative">
+                                <div class="relative flex items-center">
                                     <input type="text" 
                                            x-model="aiFoodQuery" 
                                            @keydown.enter.prevent="analyzeFoodWithAi()"
-                                           placeholder="למשל: 150 גרם חזה עוף, 120 גרם אורז, כף טחינה וסלט ירקות" 
-                                           class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl px-4 py-3 text-xs text-[#082722] font-semibold focus:outline-none focus:border-[#22c55e] pr-4 pl-28 shadow-inner">
-                                    <button @click="analyzeFoodWithAi()" 
-                                            :disabled="isAiAnalyzing"
-                                            class="absolute left-1.5 top-1.5 bottom-1.5 bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3.5 rounded-xl text-xs font-black flex items-center gap-1 transition border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
-                                        <span x-show="!isAiAnalyzing">חשב ב-AI ✨</span>
-                                        <span x-show="isAiAnalyzing" class="flex items-center gap-1">
-                                            <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>
-                                            <span>מנתח...</span>
-                                        </span>
-                                    </button>
+                                           placeholder="הקלד או הקלט: למשל 2 כפות הגשה אורז, 180 גרם חזה עוף, כף טחינה גולמית וסלט..." 
+                                           class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl px-4 py-3 text-xs text-[#082722] font-semibold focus:outline-none focus:border-[#22c55e] pr-4 pl-36 shadow-inner">
+                                    
+                                    <div class="absolute left-1.5 top-1.5 bottom-1.5 flex items-center gap-1">
+                                        <!-- כפתור מיקרופון הקלטה קולית -->
+                                        <button type="button" 
+                                                @click="startVoiceFoodInput()"
+                                                :class="isVoiceRecording ? 'bg-red-600 text-white animate-pulse' : 'bg-slate-100 hover:bg-slate-200 text-[#082722]'"
+                                                class="p-2 rounded-xl text-xs font-bold flex items-center justify-center transition cursor-pointer"
+                                                :title="isVoiceRecording ? 'עצור הקלטה' : 'הקלטה קולית בעברית'">
+                                            <i data-lucide="flame" x-show="isVoiceRecording" class="w-4 h-4 text-white"></i>
+                                            <i data-lucide="message-circle" x-show="!isVoiceRecording" class="w-4 h-4 text-[#082722]"></i>
+                                        </button>
+
+                                        <!-- כפתור העלאת/צילום תמונה -->
+                                        <label class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#082722] cursor-pointer flex items-center justify-center transition" title="צלם צלחת / בחר תמונה">
+                                            <i data-lucide="camera" class="w-4 h-4"></i>
+                                            <input type="file" accept="image/*" class="hidden" @change="handleMealPhotoUpload($event)">
+                                        </label>
+
+                                        <!-- כפתור ניתוח AI -->
+                                        <button type="button" 
+                                                @click="analyzeFoodWithAi()" 
+                                                :disabled="isAiAnalyzing"
+                                                class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3.5 py-2 rounded-xl text-xs font-black flex items-center gap-1 transition border border-[#174e43] shadow-md cursor-pointer">
+                                            <span x-show="!isAiAnalyzing">חשב ✨</span>
+                                            <span x-show="isAiAnalyzing" class="flex items-center gap-1">
+                                                <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <p class="text-[9px] text-[#5f756e] italic">טיפ: אפשר לציין כמויות בגרמים או יחידות (למשל: 2 ביצים, קופסת טונה, 2 פרוסות לחם, כף שמן זית, תפוח).</p>
+
+                                <!-- מצב הקלטה פעיל -->
+                                <template x-if="isVoiceRecording">
+                                    <div class="bg-red-50 border border-red-200 p-2.5 rounded-xl flex items-center justify-between text-xs text-red-700 animate-pulse font-bold">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
+                                            <span>מקליט דיבור בעברית... אמור מה אכלת עכשיו 🎙️</span>
+                                        </div>
+                                        <button type="button" @click="stopVoiceFoodInput()" class="bg-red-600 text-white px-2.5 py-1 rounded-lg text-[10px] cursor-pointer">סיום</button>
+                                    </div>
+                                </template>
+
+                                <!-- תצוגה מקדימה של תמונת הצלחת שצולמה -->
+                                <template x-if="portalMealPhoto">
+                                    <div class="flex items-center gap-3 p-2 bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl">
+                                        <div class="relative w-14 h-14 rounded-xl overflow-hidden border-2 border-[#86efac] shrink-0">
+                                            <img :src="portalMealPhoto" class="w-full h-full object-cover" />
+                                            <button type="button" @click="portalMealPhoto = ''" class="absolute top-0.5 right-0.5 bg-red-600 text-white rounded-full p-0.5 shadow-md">
+                                                <i data-lucide="x" class="w-2.5 h-2.5"></i>
+                                            </button>
+                                        </div>
+                                        <div class="text-xs">
+                                            <span class="font-bold text-[#082722] block">תמונת צלחת צורפה בהצלחה 📸</span>
+                                            <span class="text-[10px] text-[#5f756e]">התמונה תישמר יחד עם הארוחה ביומן היומי שלך</span>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <div class="flex flex-wrap items-center gap-1.5 pt-1 text-[9px] text-[#5f756e]">
+                                    <span class="font-bold text-[#082722]">דוגמאות לזיהוי:</span>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] px-2 py-0.5 rounded-lg">2 כפות הגשה אורז</span>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] px-2 py-0.5 rounded-lg">180 גרם חזה עוף</span>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] px-2 py-0.5 rounded-lg">כף טחינה גולמית</span>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] px-2 py-0.5 rounded-lg">קופסת קוטג' 5%</span>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] px-2 py-0.5 rounded-lg">חצי כוס שיבולת שועל</span>
+                                </div>
                             </div>
 
                             <!-- תוצאות הניתוח וגרף עוגה -->
@@ -1654,19 +1809,29 @@
                                             </div>
                                         </div>
 
-                                        <!-- השוואה ליעד יומי -->
-                                        <template x-if="portalClient?.macroCalculated?.targetCalories">
-                                            <div class="bg-white border border-[#e5dfd3] p-3 rounded-2xl text-center space-y-1 sm:w-44 shrink-0 shadow-sm">
-                                                <span class="text-[9px] text-[#5f756e] block font-bold">כיסוי מהיעד היומי שלך</span>
-                                                <div class="text-lg font-black text-[#082722]" x-text="Math.round((aiAnalyzedMeal.calories / (portalClient.macroCalculated.targetCalories || 2000)) * 100) + '%'"></div>
-                                                <span class="text-[9px] text-[#22c55e] font-bold block" x-text="'מתוך ' + portalClient.macroCalculated.targetCalories + ' קל\''"></span>
+                                        <!-- כפתורי שמירה מהירים ליומן (1-Tap Add to Meal) -->
+                                        <div class="space-y-2 sm:w-56 shrink-0 w-full">
+                                            <span class="text-[10px] font-black text-[#082722] block text-center sm:text-right">לאיזו ארוחה להוסיף ביומן?</span>
+                                            <div class="grid grid-cols-2 gap-1.5">
+                                                <button type="button" @click="saveAiMealToJournal('ארוחת בוקר')" class="bg-white hover:bg-emerald-50 text-[#082722] border border-[#e5dfd3] hover:border-emerald-500 py-2 px-2 rounded-xl text-[10px] font-black transition shadow-sm cursor-pointer text-center">
+                                                    🌅 בוקר
+                                                </button>
+                                                <button type="button" @click="saveAiMealToJournal('ארוחת צהריים')" class="bg-white hover:bg-emerald-50 text-[#082722] border border-[#e5dfd3] hover:border-emerald-500 py-2 px-2 rounded-xl text-[10px] font-black transition shadow-sm cursor-pointer text-center">
+                                                    ☀️ צהריים
+                                                </button>
+                                                <button type="button" @click="saveAiMealToJournal('ארוחת ערב')" class="bg-white hover:bg-emerald-50 text-[#082722] border border-[#e5dfd3] hover:border-emerald-500 py-2 px-2 rounded-xl text-[10px] font-black transition shadow-sm cursor-pointer text-center">
+                                                    🌙 ערב
+                                                </button>
+                                                <button type="button" @click="saveAiMealToJournal('ארוחת ביניים')" class="bg-white hover:bg-emerald-50 text-[#082722] border border-[#e5dfd3] hover:border-emerald-500 py-2 px-2 rounded-xl text-[10px] font-black transition shadow-sm cursor-pointer text-center">
+                                                    🍎 ביניים
+                                                </button>
                                             </div>
-                                        </template>
+                                        </div>
                                     </div>
 
                                     <!-- פירוק הפריטים שזוהו והמלצות החלפה -->
                                     <div class="space-y-2">
-                                        <h5 class="font-black text-xs text-[#082722]">פירוק מצרכים והצעות לתחליפים שווי ערך:</h5>
+                                        <h5 class="font-black text-xs text-[#082722]">פירוק מצרכים וכמויות שזוהו:</h5>
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                             <template x-for="item in aiAnalyzedMeal.items" :key="item.name">
                                                 <div class="bg-white border border-[#e5dfd3] p-3 rounded-xl space-y-1.5 shadow-sm text-xs">
@@ -1695,37 +1860,81 @@
                             </template>
                         </div>
 
-                        <!-- יעדים יומיים -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                                <h3 class="text-xs md:text-sm font-bold text-white flex items-center gap-1.5">
-                                    <i data-lucide="target" class="w-4 h-4 text-sky-400"></i>
-                                    <span>היעדים התזונתיים היומיים שלך</span>
-                                </h3>
-                                <span class="text-[10px] text-beige-300 bg-beige-200/10 px-2 py-0.5 rounded-full border border-beige-300/20 font-bold">הותאם אישית</span>
+                        <!-- 3. פירוט 4 ארוחות היום (MyFitnessPal Meal Diary) -->
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-sm md:text-base font-extrabold text-[#082722] flex items-center gap-2">
+                                    <i data-lucide="clipboard-list" class="w-4 h-4 text-emerald-600"></i>
+                                    <span>יומן הארוחות של היום (בוקר, צהריים, ערב, ביניים)</span>
+                                </h4>
                             </div>
 
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
-                                    <span class="text-[10px] text-slate-400 block mb-0.5">יעד קלוריות</span>
-                                    <span class="text-base font-black text-sky-400" x-text="(portalClient?.macroCalculated?.targetCalories || '0') + ' קל\''"></span>
+                            <template x-for="mCategory in [
+                                { type: 'ארוחת בוקר', label: 'ארוחת בוקר 🌅', icon: 'coffee' },
+                                { type: 'ארוחת צהריים', label: 'ארוחת צהריים ☀️', icon: 'utensils' },
+                                { type: 'ארוחת ערב', label: 'ארוחת ערב 🌙', icon: 'flame' },
+                                { type: 'ארוחת ביניים', label: 'ארוחות ביניים ונשנושים 🍎', icon: 'sparkles' }
+                            ]" :key="mCategory.type">
+                                <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 md:p-5 shadow-md space-y-3">
+                                    <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2.5">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-black text-xs md:text-sm text-[#082722]" x-text="mCategory.label"></span>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-3">
+                                            <!-- סיכום קלוריות ומאקרו לארוחה -->
+                                            <div class="text-[11px] font-black text-[#082722] bg-[#fbf8f2] px-2.5 py-1 rounded-xl border border-[#e5dfd3]">
+                                                <span class="text-emerald-600" x-text="getMealTypeSummary(portalClient, mCategory.type).calories + ' קל\''"></span>
+                                                <span class="text-slate-400 mx-1">|</span>
+                                                <span class="text-slate-600" x-text="'ח: ' + getMealTypeSummary(portalClient, mCategory.type).protein + 'ג\''"></span>
+                                                <span class="text-slate-400 mx-1">•</span>
+                                                <span class="text-slate-600" x-text="'פ: ' + getMealTypeSummary(portalClient, mCategory.type).carbs + 'ג\''"></span>
+                                                <span class="text-slate-400 mx-1">•</span>
+                                                <span class="text-slate-600" x-text="'ש: ' + getMealTypeSummary(portalClient, mCategory.type).fat + 'ג\''"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- רשימת פריטים שנאכלו בארוחה זו היום -->
+                                    <div class="space-y-2">
+                                        <template x-if="getTodayMealLogsByType(portalClient, mCategory.type).length === 0">
+                                            <div class="py-2.5 text-center text-slate-400 text-xs italic">
+                                                טרם נרשמו פריטים בארוחה זו היום
+                                            </div>
+                                        </template>
+
+                                        <template x-for="log in getTodayMealLogsByType(portalClient, mCategory.type)" :key="log.id">
+                                            <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-sm">
+                                                <div class="flex items-center gap-3">
+                                                    <!-- תמונה (אם קיימת) -->
+                                                    <template x-if="log.photo">
+                                                        <div class="w-12 h-12 rounded-xl overflow-hidden border border-[#86efac] shrink-0">
+                                                            <img :src="log.photo" class="w-full h-full object-cover" />
+                                                        </div>
+                                                    </template>
+                                                    <div class="space-y-0.5">
+                                                        <span class="font-bold text-xs text-[#082722] block" x-text="log.description"></span>
+                                                        <span class="text-[10px] text-[#5f756e]" x-text="log.time"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 border-[#e5dfd3]/60 pt-2 sm:pt-0">
+                                                    <div class="text-xs font-bold">
+                                                        <span class="text-emerald-700 font-black" x-text="log.calories + ' קל\''"></span>
+                                                        <span class="text-[10px] text-[#5f756e] mr-1.5" x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
+                                                    </div>
+                                                    <button type="button" @click="deletePortalFoodLog(log.id)" class="text-slate-400 hover:text-red-500 transition p-1 cursor-pointer" title="מחק פריט">
+                                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
                                 </div>
-                                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
-                                    <span class="text-[10px] text-slate-400 block mb-0.5">יעד חלבון</span>
-                                    <span class="text-base font-black text-purple-300" x-text="(portalClient?.macroCalculated?.targetProtein || '0') + ' גרם'"></span>
-                                </div>
-                                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
-                                    <span class="text-[10px] text-slate-400 block mb-0.5">יעד פחמימה</span>
-                                    <span class="text-base font-black text-sky-300" x-text="(portalClient?.macroCalculated?.targetCarbs || '0') + ' גרם'"></span>
-                                </div>
-                                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl text-center">
-                                    <span class="text-[10px] text-slate-400 block mb-0.5">יעד שומן</span>
-                                    <span class="text-base font-black text-beige-300" x-text="(portalClient?.macroCalculated?.targetFat || '0') + ' גרם'"></span>
-                                </div>
-                            </div>
+                            </template>
                         </div>
 
-                        <!-- תפריט PDF (אם צורף) -->
+                        <!-- 4. תפריט PDF אישי מהמאמן אילאי (אם צורף) -->
                         <template x-if="portalClient?.mealPlanPdfUrl">
                             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
                                 <div class="flex items-center justify-between">
@@ -1743,143 +1952,6 @@
                                 </div>
                             </div>
                         </template>
-
-                        <!-- פירוט ארוחות מובנות (אם הוגדרו) -->
-                        <template x-if="portalClient?.mealPlan?.meals && portalClient.mealPlan.meals.length > 0">
-                            <div class="space-y-3">
-                                <template x-for="(meal, mIdx) in portalClient.mealPlan.meals" :key="mIdx">
-                                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-5 shadow-xl space-y-3">
-                                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                                            <h4 class="text-xs md:text-sm font-black text-sky-300" x-text="meal.name || ('ארוחה ' + (mIdx + 1))"></h4>
-                                            <span class="text-[10px] text-slate-400" x-text="(meal.items ? meal.items.length : 0) + ' פריטים'"></span>
-                                        </div>
-                                        <div class="space-y-2">
-                                            <template x-for="(item, iIdx) in (meal.items || [])" :key="iIdx">
-                                                <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5 flex items-center justify-between text-xs">
-                                                    <div class="space-y-0.5">
-                                                        <span class="font-bold text-white block" x-text="item.food"></span>
-                                                        <span class="text-[10px] text-slate-400" x-text="item.quantity"></span>
-                                                    </div>
-                                                    <div class="flex items-center gap-2 text-[10px] text-slate-400">
-                                                        <span class="font-bold text-sky-400" x-text="item.calories + ' קל\''"></span>
-                                                        <span>•</span>
-                                                        <span class="text-purple-300" x-text="'ח: ' + item.protein + 'ג\''"></span>
-                                                    </div>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </template>
-                        <!-- הזנת מה אכלתי + תמונת צלחת ישירות בלשונית תזונה -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                            <div class="flex items-center gap-3 border-b border-[#e5dfd3] pb-3">
-                                <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                                    <i data-lucide="camera" class="w-5 h-5"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-sm md:text-base font-extrabold text-[#082722]">הזנת מה אכלתי + תמונת צלחת 📸</h3>
-                                    <p class="text-[11px] text-[#5f756e]">צלם או בחר תמונה של הארוחה שלך וכתוב מה אכלת</p>
-                                </div>
-                            </div>
-
-                            <template x-if="portalFoodLogSaved">
-                                <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-3 rounded-2xl text-center text-xs font-bold animate-fade-in flex items-center justify-center gap-2">
-                                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
-                                    <span>הארוחה והתמונה נשמרו ונשלחו לאילאי! 👑</span>
-                                </div>
-                            </template>
-
-                            <div class="space-y-3">
-                                <!-- בחירת סוג ארוחה -->
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סוג הארוחה:</label>
-                                    <div class="grid grid-cols-5 gap-1 text-center">
-                                        <template x-for="mType in ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ביניים', 'ארוחת ערב', 'ארוחת לילה']" :key="mType">
-                                            <button type="button" 
-                                                    @click="portalMealType = mType" 
-                                                    :class="portalMealType === mType ? 'bg-[#082722] text-[#86efac] font-black border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-semibold'"
-                                                    class="py-1.5 px-1 rounded-xl text-[10px] border transition cursor-pointer"
-                                                    x-text="mType">
-                                            </button>
-                                        </template>
-                                    </div>
-                                </div>
-
-                                <!-- תיאור הארוחה -->
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מה אכלת בארוחה זו? (מצרכים וכמויות):</label>
-                                    <textarea x-model="portalMealDescription" placeholder="למשל: 200 גרם חזה עוף, כוס אורז בסמטי מבושל, סלט ירקות גדול וכפית שמן זית..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#082722] h-20 resize-none font-semibold"></textarea>
-                                </div>
-
-                                <!-- העלאת/צילום תמונה -->
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תמונת הצלחת / הארוחה:</label>
-                                    <div class="flex items-center gap-3">
-                                        <label class="flex-1 cursor-pointer bg-[#fbf8f2] hover:bg-[#f5efe0] border-2 border-dashed border-[#e5dfd3] hover:border-[#082722] p-3 rounded-2xl text-center transition flex flex-col items-center justify-center gap-1.5">
-                                            <i data-lucide="image-plus" class="w-6 h-6 text-[#22c55e]"></i>
-                                            <span class="text-xs font-black text-[#082722]">צלם במצלמה או העלה תמונה</span>
-                                            <span class="text-[10px] text-[#5f756e]">תמונה תישמר ותוצג לאילאי בכרטיס שלך</span>
-                                            <input type="file" accept="image/*" class="hidden" @change="handleMealPhotoUpload($event)">
-                                        </label>
-
-                                        <!-- תצוגה מקדימה של התמונה שנבחרה -->
-                                        <template x-if="portalMealPhoto">
-                                            <div class="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-[#86efac] shadow-md shrink-0">
-                                                <img :src="portalMealPhoto" class="w-full h-full object-cover" />
-                                                <button type="button" @click="portalMealPhoto = ''" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 shadow-md hover:bg-red-700">
-                                                    <i data-lucide="x" class="w-3 h-3"></i>
-                                                </button>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-
-                                <button type="button" @click="savePortalFoodLog()" class="w-full bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#86efac]/20 transition cursor-pointer">
-                                    <i data-lucide="save" class="w-4 h-4"></i>
-                                    <span>שמור ארוחה ותמונה ביומן</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- היסטוריית ארוחות ותמונות -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                            <h4 class="text-xs md:text-sm font-extrabold text-[#082722] border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
-                                <span>הארוחות והתמונות האחרונות שלך</span>
-                                <span class="text-[10px] text-[#5f756e] font-normal" x-text="(portalClient?.foodLogs?.length || 0) + ' ארוחות'"></span>
-                            </h4>
-
-                            <template x-if="!portalClient?.foodLogs || portalClient.foodLogs.length === 0">
-                                <div class="py-8 text-center text-slate-400 text-xs italic">
-                                    טרם הזנת ארוחות או תמונות. צלם את הארוחה הראשונה שלך למעלה! 🥗
-                                </div>
-                            </template>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <template x-for="log in (portalClient?.foodLogs || [])" :key="log.id">
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3 space-y-2 relative group shadow-sm">
-                                        <div class="flex items-center justify-between text-xs border-b border-[#e5dfd3] pb-1.5">
-                                            <span class="bg-[#082722] text-[#86efac] font-black px-2 py-0.5 rounded-lg text-[10px]" x-text="log.mealType"></span>
-                                            <div class="flex items-center gap-2">
-                                                <span class="text-[10px] text-[#5f756e]" x-text="formatDate(log.date) + ' • ' + (log.time || '')"></span>
-                                                <button type="button" @click="deletePortalFoodLog(log.id)" class="text-slate-400 hover:text-red-500 transition cursor-pointer" title="מחק">
-                                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <template x-if="log.photo">
-                                            <div class="w-full h-40 rounded-xl overflow-hidden bg-black/10 relative">
-                                                <img :src="log.photo" class="w-full h-full object-cover" loading="lazy" />
-                                            </div>
-                                        </template>
-
-                                        <p class="text-xs text-[#082722] font-semibold" x-text="log.description || 'ללא פירוט'"></p>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- תוכן לשונית 4: התקדמות, שקילות, שיקוף שבועי לאילאי ו-Drive -->
@@ -3726,11 +3798,24 @@
                                             <i data-lucide="camera" class="w-5 h-5"></i>
                                         </div>
                                         <div>
-                                            <h3 class="text-base md:text-lg font-black text-[#082722]">יומן תמונות ארוחות — <span x-text="currentClient?.name"></span> 📸</h3>
-                                            <p class="text-xs text-[#5f756e]">כל הארוחות והתמונות שהמתאמן העלה מהטלפון שלו בזמן אמת</p>
+                                            <h3 class="text-base md:text-lg font-black text-[#082722]">יומן תמונות וארוחות — <span x-text="currentClient?.name"></span> 📸</h3>
+                                            <p class="text-xs text-[#5f756e]">כל הארוחות, המאקרו והתמונות שהמתאמן העלה מהטלפון שלו בזמן אמת</p>
                                         </div>
                                     </div>
                                     <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3.5 py-1.5 rounded-xl text-xs font-bold self-start sm:self-auto" x-text="(currentClient?.foodLogs?.length || 0) + ' דיווחי ארוחות במערכת'"></span>
+                                </div>
+
+                                <!-- סיכום יומי חי של מה שהמתאמן אכל היום מול היעד -->
+                                <div class="bg-[#082722] text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 border border-[#133d35]">
+                                    <div class="space-y-0.5">
+                                        <span class="text-[10px] text-[#93c7bb] font-bold block">סך שנאכל היום ע״י המתאמן:</span>
+                                        <div class="text-base font-black text-[#86efac]" x-text="getTodayConsumedCalories(currentClient) + ' / ' + (currentClient?.macroCalculated?.targetCalories || 0) + ' קל׳'"></div>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-xs font-bold">
+                                        <span class="bg-[#051c17] px-3 py-1.5 rounded-xl border border-[#174e43] text-[#86efac]" x-text="'חלבון: ' + getTodayConsumedProtein(currentClient) + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + 'ג׳'"></span>
+                                        <span class="bg-[#051c17] px-3 py-1.5 rounded-xl border border-[#174e43] text-[#38bdf8]" x-text="'פחמימה: ' + getTodayConsumedCarbs(currentClient) + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + 'ג׳'"></span>
+                                        <span class="bg-[#051c17] px-3 py-1.5 rounded-xl border border-[#174e43] text-[#fbbf24]" x-text="'שומן: ' + getTodayConsumedFat(currentClient) + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + 'ג׳'"></span>
+                                    </div>
                                 </div>
 
                                 <template x-if="!currentClient?.foodLogs || currentClient.foodLogs.length === 0">
@@ -4503,6 +4588,79 @@
         </div>
     </div>
 
+    <!-- מודל הוספה מהירה של קלוריות ומאקרו (Quick Add Calorie Modal) -->
+    <div x-show="openQuickAddCalorieModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openQuickAddCalorieModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-md w-full shadow-2xl space-y-4 animate-scale-up mx-2 text-[#082722]">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded-xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="plus-circle" class="w-5 h-5 text-[#86efac]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm md:text-base font-black text-[#082722]">הוספה מהירה של קלוריות ומאקרו ⚡</h3>
+                        <p class="text-[10px] text-[#5f756e]">הזן ישירות ערכים מבלי לחפש מצרכים ספציפיים</p>
+                    </div>
+                </div>
+                <button type="button" @click="openQuickAddCalorieModal = false" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <!-- סוג ארוחה -->
+                <div>
+                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">לאיזו ארוחה להוסיף?</label>
+                    <div class="grid grid-cols-4 gap-1 text-center">
+                        <template x-for="mType in ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ערב', 'ארוחת ביניים']" :key="mType">
+                            <button type="button" 
+                                    @click="quickAddMealType = mType" 
+                                    :class="quickAddMealType === mType ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border border-[#e5dfd3]'"
+                                    class="py-2 px-1 rounded-xl text-[10px] transition cursor-pointer"
+                                    x-text="mType">
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- שם הפריט / תיאור -->
+                <div>
+                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">שם המאכל / ארוחה (אופציונלי):</label>
+                    <input type="text" x-model="quickAddName" placeholder="למשל: שייק חלבון / ארוחה במסעדה" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-xs text-[#082722] font-semibold focus:outline-none focus:border-[#22c55e]">
+                </div>
+
+                <!-- קלוריות ומאקרו -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div class="space-y-1">
+                        <label class="block text-[9px] font-bold text-[#5f756e]">קלוריות *</label>
+                        <input type="number" step="1" x-model="quickAddCalories" placeholder="350" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-center text-xs font-black text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-[9px] font-bold text-emerald-700">חלבון (גרם)</label>
+                        <input type="number" step="0.5" x-model="quickAddProtein" placeholder="30" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-center text-xs font-black text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-[9px] font-bold text-sky-700">פחמימה (גרם)</label>
+                        <input type="number" step="0.5" x-model="quickAddCarbs" placeholder="40" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-center text-xs font-black text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block text-[9px] font-bold text-amber-700">שומן (גרם)</label>
+                        <input type="number" step="0.5" x-model="quickAddFat" placeholder="10" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-center text-xs font-black text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex items-center justify-end gap-2">
+                <button type="button" @click="openQuickAddCalorieModal = false" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer">
+                    ביטול
+                </button>
+                <button type="button" @click="saveQuickAddMeal()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] shadow-md cursor-pointer flex items-center gap-1.5">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    <span>שמור ליומן הארוחות</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- מודל 0: שליחת שאלון קליטה מורחב למתאמן חדש -->
     <div x-show="openSendIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openSendIntakeModal = false">
         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2">
@@ -5222,6 +5380,17 @@
                 portalWeeklyReflectionText: '',
                 portalFoodLogSaved: false,
                 portalReflectionSaved: false,
+
+                // מעקב תזונה והזנה חכמה בסגנון MyFitnessPal Pro
+                isVoiceRecording: false,
+                voiceRecognition: null,
+                openQuickAddCalorieModal: false,
+                quickAddMealType: 'ארוחת צהריים',
+                quickAddCalories: '',
+                quickAddProtein: '',
+                quickAddCarbs: '',
+                quickAddFat: '',
+                quickAddName: '',
 
                 // מאגר מזונות ישראלי מכויל (ערכים ל-100 גרם או ליחידה)
                 foodDatabase: [
@@ -7180,6 +7349,465 @@
                         }
                         this.saveData();
                     }
+                },
+
+                // --- מתודות מחשבון תזונה AI, הקלטה קולית ויומן MyFitnessPal Pro ---
+                startVoiceFoodInput() {
+                    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    if (!SpeechRec) {
+                        alert("הדפדפן שלך אינו תומך בהקלטה קולית ישירה. מומלץ לפתוח ב-Google Chrome או Safari, או להקליד ידנית בשדה.");
+                        return;
+                    }
+                    
+                    if (this.isVoiceRecording && this.voiceRecognition) {
+                        try { this.voiceRecognition.stop(); } catch(e) {}
+                        this.isVoiceRecording = false;
+                        return;
+                    }
+
+                    try {
+                        const recognition = new SpeechRec();
+                        recognition.lang = 'he-IL';
+                        recognition.continuous = false;
+                        recognition.interimResults = false;
+
+                        this.isVoiceRecording = true;
+                        this.voiceRecognition = recognition;
+
+                        recognition.onstart = () => {
+                            this.isVoiceRecording = true;
+                        };
+
+                        recognition.onresult = (event) => {
+                            if (event.results && event.results[0] && event.results[0][0]) {
+                                const transcript = event.results[0][0].transcript;
+                                if (transcript) {
+                                    this.aiFoodQuery = transcript;
+                                    this.portalMealDescription = transcript;
+                                    this.analyzeFoodWithAi();
+                                }
+                            }
+                        };
+
+                        recognition.onerror = (event) => {
+                            console.warn("Speech recognition error:", event.error);
+                            this.isVoiceRecording = false;
+                        };
+
+                        recognition.onend = () => {
+                            this.isVoiceRecording = false;
+                        };
+
+                        recognition.start();
+                    } catch (e) {
+                        console.error("Speech recognition error:", e);
+                        this.isVoiceRecording = false;
+                    }
+                },
+
+                stopVoiceFoodInput() {
+                    if (this.voiceRecognition) {
+                        try { this.voiceRecognition.stop(); } catch(e) {}
+                    }
+                    this.isVoiceRecording = false;
+                },
+
+                getTodayConsumedCalories(client) {
+                    const c = client || this.portalClient || this.currentClient;
+                    if (!c || !c.foodLogs) return 0;
+                    const today = this.getTodayDate();
+                    let sum = 0;
+                    c.foodLogs.forEach(l => {
+                        if (l.date === today && l.calories) {
+                            sum += parseFloat(l.calories) || 0;
+                        }
+                    });
+                    return Math.round(sum);
+                },
+
+                getTodayConsumedProtein(client) {
+                    const c = client || this.portalClient || this.currentClient;
+                    if (!c || !c.foodLogs) return 0;
+                    const today = this.getTodayDate();
+                    let sum = 0;
+                    c.foodLogs.forEach(l => {
+                        if (l.date === today && l.protein) {
+                            sum += parseFloat(l.protein) || 0;
+                        }
+                    });
+                    return Math.round(sum * 10) / 10;
+                },
+
+                getTodayConsumedCarbs(client) {
+                    const c = client || this.portalClient || this.currentClient;
+                    if (!c || !c.foodLogs) return 0;
+                    const today = this.getTodayDate();
+                    let sum = 0;
+                    c.foodLogs.forEach(l => {
+                        if (l.date === today && l.carbs) {
+                            sum += parseFloat(l.carbs) || 0;
+                        }
+                    });
+                    return Math.round(sum * 10) / 10;
+                },
+
+                getTodayConsumedFat(client) {
+                    const c = client || this.portalClient || this.currentClient;
+                    if (!c || !c.foodLogs) return 0;
+                    const today = this.getTodayDate();
+                    let sum = 0;
+                    c.foodLogs.forEach(l => {
+                        if (l.date === today && l.fat) {
+                            sum += parseFloat(l.fat) || 0;
+                        }
+                    });
+                    return Math.round(sum * 10) / 10;
+                },
+
+                getRemainingCalories(client) {
+                    const c = client || this.portalClient || this.currentClient;
+                    const target = parseFloat(c?.macroCalculated?.targetCalories) || 2000;
+                    const consumed = this.getTodayConsumedCalories(c);
+                    return Math.round(target - consumed);
+                },
+
+                getTodayMealLogsByType(client, mealType) {
+                    const c = client || this.portalClient || this.currentClient;
+                    if (!c || !c.foodLogs) return [];
+                    const today = this.getTodayDate();
+                    return c.foodLogs.filter(l => l.date === today && l.mealType === mealType);
+                },
+
+                getMealTypeSummary(client, mealType) {
+                    const logs = this.getTodayMealLogsByType(client, mealType);
+                    let cal = 0, pro = 0, carb = 0, fat = 0;
+                    logs.forEach(l => {
+                        cal += parseFloat(l.calories) || 0;
+                        pro += parseFloat(l.protein) || 0;
+                        carb += parseFloat(l.carbs) || 0;
+                        fat += parseFloat(l.fat) || 0;
+                    });
+                    return {
+                        calories: Math.round(cal),
+                        protein: Math.round(pro * 10) / 10,
+                        carbs: Math.round(carb * 10) / 10,
+                        fat: Math.round(fat * 10) / 10,
+                        count: logs.length
+                    };
+                },
+
+                saveAiMealToJournal(targetMealType) {
+                    const client = this.portalClient || this.currentClient;
+                    if (!client || !client.id) return;
+                    if (!this.aiAnalyzedMeal) {
+                        alert("אנא נתח ארוחה תחילה לפני שמירתה ביומן!");
+                        return;
+                    }
+
+                    if (!client.foodLogs) client.foodLogs = [];
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+                    const mealType = targetMealType || this.portalMealType || 'ארוחת צהריים';
+                    const logObj = {
+                        id: 'fl_' + Date.now(),
+                        date: this.getTodayDate(),
+                        time: timeStr,
+                        mealType: mealType,
+                        description: this.aiFoodQuery || this.portalMealDescription || 'ארוחה מחושבת ב-AI',
+                        calories: this.aiAnalyzedMeal.calories || 0,
+                        protein: this.aiAnalyzedMeal.protein || 0,
+                        carbs: this.aiAnalyzedMeal.carbs || 0,
+                        fat: this.aiAnalyzedMeal.fat || 0,
+                        items: this.aiAnalyzedMeal.items || [],
+                        photo: this.portalMealPhoto || ''
+                    };
+
+                    client.foodLogs.unshift(logObj);
+
+                    const totalCal = this.getTodayConsumedCalories(client);
+                    const targetCal = parseFloat(client.macroCalculated?.targetCalories) || 2000;
+                    if (totalCal >= targetCal * 0.7) {
+                        this.scorecardNutrition = 'yes';
+                        this.autoSaveDailyScorecard(true);
+                    }
+
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+
+                    this.portalFoodLogSaved = true;
+                    this.portalMealDescription = '';
+                    this.portalMealPhoto = '';
+                    this.aiFoodQuery = '';
+                    this.aiAnalyzedMeal = null;
+
+                    setTimeout(() => { this.portalFoodLogSaved = false; }, 4000);
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                saveQuickAddMeal() {
+                    const client = this.portalClient || this.currentClient;
+                    if (!client || !client.id) return;
+                    const cals = parseFloat(this.quickAddCalories) || 0;
+                    if (cals <= 0) {
+                        alert("אנא הזן כמות קלוריות!");
+                        return;
+                    }
+
+                    if (!client.foodLogs) client.foodLogs = [];
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+                    const logObj = {
+                        id: 'fl_' + Date.now(),
+                        date: this.getTodayDate(),
+                        time: timeStr,
+                        mealType: this.quickAddMealType || 'ארוחת צהריים',
+                        description: this.quickAddName || ('הוספה מהירה — ' + cals + ' קל׳'),
+                        calories: cals,
+                        protein: parseFloat(this.quickAddProtein) || 0,
+                        carbs: parseFloat(this.quickAddCarbs) || 0,
+                        fat: parseFloat(this.quickAddFat) || 0,
+                        items: [{ name: this.quickAddName || 'הוספה מהירה', cal: cals, pro: parseFloat(this.quickAddProtein) || 0, carb: parseFloat(this.quickAddCarbs) || 0, fat: parseFloat(this.quickAddFat) || 0 }],
+                        photo: ''
+                    };
+
+                    client.foodLogs.unshift(logObj);
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+
+                    this.openQuickAddCalorieModal = false;
+                    this.quickAddCalories = '';
+                    this.quickAddProtein = '';
+                    this.quickAddCarbs = '';
+                    this.quickAddFat = '';
+                    this.quickAddName = '';
+                    this.portalFoodLogSaved = true;
+                    setTimeout(() => { this.portalFoodLogSaved = false; }, 4000);
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                analyzeFoodWithAi() {
+                    if (!this.aiFoodQuery || !this.aiFoodQuery.trim()) {
+                        alert("אנא הקלד או הקלט מה אכלת!");
+                        return;
+                    }
+                    this.isAiAnalyzing = true;
+
+                    let text = this.aiFoodQuery.toLowerCase().trim();
+
+                    text = text.replace(/חצי\s*כוס/g, '0.5 כוס');
+                    text = text.replace(/רבע\s*כוס/g, '0.25 כוס');
+                    text = text.replace(/שליש\s*כוס/g, '0.33 כוס');
+                    text = text.replace(/שתי\s*כפות\s*הגשה/g, '2 כפות הגשה');
+                    text = text.replace(/שלוש\s*כפות\s*הגשה/g, '3 כפות הגשה');
+                    text = text.replace(/שתי\s*כפות/g, '2 כפות');
+                    text = text.replace(/שלוש\s*כפות/g, '3 כפות');
+                    text = text.replace(/ארבע\s*כפות/g, '4 כפות');
+                    text = text.replace(/שתי\s*פרוסות/g, '2 פרוסות');
+                    text = text.replace(/שתי\s*ביצים/g, '2 ביצים');
+                    text = text.replace(/שני\s*תמרים/g, '2 תמרים');
+                    text = text.replace(/שני\s*שניצלים/g, '2 שניצלים');
+
+                    const database = [
+                        { keys: ['אורז בסמטי', 'אורז לבן', 'אורז יסמין', 'אורז מלא', 'אורז', 'מג\'דרה', 'מגדרה'], name: 'אורז מבושל', defaultGrams: 150, servingSpoonGrams: 55, spoonGrams: 25, cupGrams: 160, calPer100: 130, proPer100: 2.7, carbPer100: 28, fatPer100: 0.3, swap: '150 גרם תפו״א אפוי / 120 גרם קינואה' },
+                        { keys: ['פסטה מבושלת', 'פסטה', 'פתיתים', 'ספגטי', 'מקרוני', 'נודלס', 'אטריות'], name: 'פסטה / פתיתים מבושלים', defaultGrams: 150, servingSpoonGrams: 50, spoonGrams: 25, cupGrams: 150, calPer100: 158, proPer100: 5.8, carbPer100: 31, fatPer100: 0.9, swap: '150 גרם אורז בסמטי / 180 גרם בטטה' },
+                        { keys: ['קוסקוס', 'בורגול', 'קינואה', 'כוסמת'], name: 'קוסקוס / קינואה / בורגול מבושל', defaultGrams: 150, servingSpoonGrams: 50, spoonGrams: 25, cupGrams: 160, calPer100: 120, proPer100: 4, carbPer100: 24, fatPer100: 0.8, swap: '150 גרם אורז מבושל' },
+                        { keys: ['שיבולת שועל', 'קוואקר', 'דייסת קוואקר', 'דייסה'], name: 'שיבולת שועל (קוואקר)', defaultGrams: 50, spoonGrams: 12, cupGrams: 80, calPer100: 389, proPer100: 16.9, carbPer100: 66, fatPer100: 6.9, swap: '2 פרוסות לחם מלא / 40 גרם ברנפלקס' },
+                        { keys: ['לחם קל', 'פרוסות לחם קל', 'לחם דיאט'], name: 'לחם קל', defaultGrams: 50, sliceGrams: 25, calPer100: 165, proPer100: 9, carbPer100: 28, fatPer100: 1.2, swap: '3 פריכיות אורז' },
+                        { keys: ['לחם מלא', 'לחם מחמצת', 'לחם כפרי', 'לחם לבן', 'לחם', 'טוסט', 'פרוסת לחם', 'פרוסות לחם'], name: 'לחם (פרוסה)', defaultGrams: 60, sliceGrams: 35, calPer100: 240, proPer100: 8.5, carbPer100: 46, fatPer100: 2.2, swap: '2 פרוסות לחם קל' },
+                        { keys: ['פיתה קלה', 'פיתה כוסמין קלה'], name: 'פיתה קלה', defaultGrams: 60, unitGrams: 60, calPer100: 160, proPer100: 8, carbPer100: 30, fatPer100: 1, swap: '2 פרוסות לחם קל' },
+                        { keys: ['פיתה'], name: 'פיתה רגילה', defaultGrams: 90, unitGrams: 90, calPer100: 260, proPer100: 9, carbPer100: 52, fatPer100: 1.5, swap: 'פיתה קלה / 2 פרוסות לחם מלא' },
+                        { keys: ['לאפה'], name: 'לאפה', defaultGrams: 160, unitGrams: 160, calPer100: 280, proPer100: 9.5, carbPer100: 56, fatPer100: 2, swap: '2 פיתות קלות' },
+                        { keys: ['טורטיה', 'טורטייה'], name: 'טורטיה מקמח חיטה', defaultGrams: 60, unitGrams: 60, calPer100: 290, proPer100: 8, carbPer100: 50, fatPer100: 6.5, swap: '2 פרוסות לחם קל' },
+                        { keys: ['בטטה אפויה', 'בטטה בתנור', 'בטטה', 'תפוח אדמה', 'תפו״א', 'פירה'], name: 'בטטה / תפו״א אפוי', defaultGrams: 150, unitGrams: 150, calPer100: 86, proPer100: 1.6, carbPer100: 20, fatPer100: 0.1, swap: '120 גרם אורז מבושל' },
+                        { keys: ['פריכיות אורז', 'פריכיות', 'פריכית'], name: 'פריכיות אורז', defaultGrams: 30, unitGrams: 10, calPer100: 380, proPer100: 8, carbPer100: 80, fatPer100: 2.5, swap: 'פרוסת לחם מלא' },
+                        { keys: ['כריות נוגט', 'כריות', 'דגני כריות'], name: 'דגני כריות', defaultGrams: 45, cupGrams: 50, calPer100: 470, proPer100: 6.5, carbPer100: 68, fatPer100: 20, swap: '40 גרם ברנפלקס / 50 גרם קוואקר' },
+                        { keys: ['קורנפלקס', 'צ\'יריוס', 'פיטנס', 'ברנפלקס', 'פייבר 1'], name: 'דגני בוקר / קורנפלקס', defaultGrams: 40, cupGrams: 40, calPer100: 375, proPer100: 8, carbPer100: 75, fatPer100: 2, swap: '50 גרם שיבולת שועל' },
+                        { keys: ['חזה עוף צלוי', 'חזה עוף מבושל', 'חזה עוף', 'פילה עוף', 'סטייק עוף'], name: 'חזה עוף (מוכן)', defaultGrams: 180, calPer100: 165, proPer100: 31, carbPer100: 0, fatPer100: 3.6, swap: '160 גרם פילה סלמון / 2 קופסאות טונה במים' },
+                        { keys: ['פרגית צלויה', 'פרגית', 'שווארמה הודו', 'שווארמה פרגית', 'שווארמה', 'כרעיים', 'שוקיים'], name: 'פרגית / שווארמה', defaultGrams: 180, calPer100: 215, proPer100: 25, carbPer100: 0, fatPer100: 12.5, swap: '180 גרם חזה עוף + 10 גרם טחינה' },
+                        { keys: ['שניצל עוף מטוגן', 'שניצל עוף', 'שניצל ביתי', 'שניצל'], name: 'שניצל עוף', defaultGrams: 150, unitGrams: 120, calPer100: 260, proPer100: 22, carbPer100: 14, fatPer100: 13, swap: '160 גרם חזה עוף על האש' },
+                        { keys: ['שניצל תירס', 'טבעול'], name: 'שניצל תירס', defaultGrams: 100, unitGrams: 100, calPer100: 210, proPer100: 8, carbPer100: 24, fatPer100: 9, swap: 'טופו מוקפץ' },
+                        { keys: ['בקר', 'אנטריקוט', 'סינטה', 'בשר', 'פילה בקר', 'קבב', 'המבורגר בקר'], name: 'בשר בקר / סינטה', defaultGrams: 180, calPer100: 210, proPer100: 26, carbPer100: 0, fatPer100: 11, swap: '180 גרם חזה עוף / 160 גרם סלמון' },
+                        { keys: ['טונה במים', 'קופסת טונה במים'], name: 'טונה במים', defaultGrams: 110, boxGrams: 110, calPer100: 116, proPer100: 26, carbPer100: 0, fatPer100: 1, swap: '120 גרם חזה עוף / גביע קוטג\' 1%' },
+                        { keys: ['טונה בשמן', 'קופסת טונה בשמן', 'טונה'], name: 'טונה בשמן (מסוננת)', defaultGrams: 110, boxGrams: 110, calPer100: 195, proPer100: 25, carbPer100: 0, fatPer100: 10, swap: 'קופסת טונה במים + כף טחינה' },
+                        { keys: ['סלמון אפוי', 'סלמון בתנור', 'פילה סלמון', 'סלמון', 'דג סלמון', 'דג אמנון', 'דניס', 'מושט', 'לברק'], name: 'פילה דג / סלמון', defaultGrams: 180, calPer100: 208, proPer100: 20, carbPer100: 0, fatPer100: 13, swap: '180 גרם חזה עוף + 10 גרם שמן זית' },
+                        { keys: ['ביצה קשה', 'ביצת עין', 'חביתה', 'ביצים', 'ביצה'], name: 'ביצים (L)', defaultGrams: 120, unitGrams: 60, calPer100: 143, proPer100: 12.6, carbPer100: 0.7, fatPer100: 9.5, swap: '150 גרם חלבון ביצה נוזלי / גביע יוגורט פרו' },
+                        { keys: ['חלבון ביצה', 'חלבוני ביצה'], name: 'חלבון ביצה', defaultGrams: 100, unitGrams: 35, calPer100: 52, proPer100: 11, carbPer100: 0.7, fatPer100: 0.2, swap: 'סקופ אבקת חלבון' },
+                        { keys: ['יוגורט פרו 25', 'יוגורט פרו 20', 'דנונה פרו 25', 'דנונה פרו 20', 'יוגורט פרו', 'דנונה פרו', 'יוגורט חלבון', 'פרו 25', 'פרו 20', 'יוגורט pro', 'מולר פרו', 'גו'], name: 'יוגורט חלבון PRO (גביע)', defaultGrams: 200, boxGrams: 200, calPer100: 60, proPer100: 10, carbPer100: 3.5, fatPer100: 0.5, swap: 'סקופ אבקת חלבון עם מים / גביע קוטג\' 1%' },
+                        { keys: ['קוטג\' 1%', 'קוטג 1%'], name: 'קוטג\' 1%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 65, proPer100: 11, carbPer100: 2, fatPer100: 1, swap: 'יוגורט פרו 0%' },
+                        { keys: ['קוטג\' 3%', 'קוטג 3%'], name: 'קוטג\' 3%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 78, proPer100: 11, carbPer100: 2.5, fatPer100: 3, swap: 'קוטג\' 1%' },
+                        { keys: ['קוטג\' 5%', 'קוטג 5%', 'קוטג\'', 'קוטג', 'גבינה לבנה 5%', 'גבינה לבנה', 'גבינה לבנה 3%'], name: 'קוטג\' / גבינה לבנה 5%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 92, proPer100: 11, carbPer100: 2.5, fatPer100: 5, swap: 'גביע יוגורט יווני 0%' },
+                        { keys: ['גבינה צהובה 9%', 'גבנצ 9%', 'עמק 9%', 'נועם 9%'], name: 'גבינה צהובה 9%', defaultGrams: 28, sliceGrams: 28, calPer100: 200, proPer100: 28, carbPer100: 0, fatPer100: 9, swap: 'גבינה צפתית 5%' },
+                        { keys: ['גבינה צהובה', 'גבנצ', 'עמק', 'נועם', 'מוצרלה'], name: 'גבינה צהובה', defaultGrams: 50, sliceGrams: 28, calPer100: 330, proPer100: 25, carbPer100: 0, fatPer100: 26, swap: 'גבינה צהובה 9%' },
+                        { keys: ['בולגרית 5%', 'צפתית 5%', 'פטה 5%'], name: 'גבינה מלוחה 5%', defaultGrams: 60, calPer100: 110, proPer100: 14, carbPer100: 2, fatPer100: 5, swap: 'חצי גביע קוטג\' 3%' },
+                        { keys: ['חלב 3%', 'חלב תנובה 3%'], name: 'חלב 3%', defaultGrams: 200, cupGrams: 200, calPer100: 60, proPer100: 3.2, carbPer100: 4.8, fatPer100: 3, swap: 'חלב 1% / משקה סויה ללא סוכר' },
+                        { keys: ['חלב 1%', 'חלב דל שומן', 'חלב שיבולת שועל', 'חלב סויה', 'חלב שקדים', 'משקה סויה', 'משקה שקדים', 'חלב'], name: 'חלב / משקה צמחי (כוס)', defaultGrams: 200, cupGrams: 200, calPer100: 45, proPer100: 3, carbPer100: 4.9, fatPer100: 1.2, swap: 'משקה סויה ללא סוכר' },
+                        { keys: ['אבקת חלבון', 'סקופ חלבון', 'סקופ מי גבינה', 'חלבון'], name: 'אבקת חלבון (סקופ)', defaultGrams: 30, unitGrams: 30, calPer100: 380, proPer100: 80, carbPer100: 5, fatPer100: 3, swap: 'גביע יוגורט פרו 25ג\'' },
+                        { keys: ['חטיף חלבון', 'פרוטין בר'], name: 'חטיף חלבון', defaultGrams: 60, unitGrams: 60, calPer100: 360, proPer100: 33, carbPer100: 30, fatPer100: 11, swap: 'סקופ חלבון + תפוח' },
+                        { keys: ['טופו', 'סויה'], name: 'טופו טבעי', defaultGrams: 150, calPer100: 120, proPer100: 14, carbPer100: 2.5, fatPer100: 6.5, swap: '150 גרם חזה עוף' },
+                        { keys: ['טחינה גולמית', 'טחינה מלאה'], name: 'טחינה גולמית', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 650, proPer100: 24, carbPer100: 21, fatPer100: 56, swap: '15 גרם שמן זית / 25 גרם אבוקדו' },
+                        { keys: ['טחינה מוכנה', 'סלט טחינה', 'טחינה'], name: 'טחינה מוכנה', defaultGrams: 30, spoonGrams: 15, calPer100: 320, proPer100: 9, carbPer100: 12, fatPer100: 28, swap: 'כף טחינה גולמית' },
+                        { keys: ['חומוס מוכן', 'סלט חומוס', 'חומוס'], name: 'חומוס מוכן', defaultGrams: 40, spoonGrams: 20, calPer100: 240, proPer100: 8, carbPer100: 14, fatPer100: 17, swap: 'טחינה / אבוקדו' },
+                        { keys: ['שמן זית', 'שמן קנולה', 'שמן'], name: 'שמן זית / קנולה', defaultGrams: 10, spoonGrams: 10, teaspoonGrams: 5, calPer100: 884, proPer100: 0, carbPer100: 0, fatPer100: 100, swap: 'תרסיס שמן' },
+                        { keys: ['אבוקדו'], name: 'אבוקדו טרי', defaultGrams: 50, unitGrams: 120, calPer100: 160, proPer100: 2, carbPer100: 9, fatPer100: 15, swap: '15 גרם טחינה גולמית' },
+                        { keys: ['חמאת בוטנים טבעית', 'חמאת בוטנים'], name: 'חמאת בוטנים טבעית', defaultGrams: 18, spoonGrams: 18, teaspoonGrams: 6, calPer100: 588, proPer100: 25, carbPer100: 20, fatPer100: 50, swap: '15 גרם שקדים' },
+                        { keys: ['שקדים', 'אגוזים', 'אגוזי מלך', 'קשיו', 'פקאן'], name: 'שקדים / אגוזי מלך', defaultGrams: 20, spoonGrams: 15, calPer100: 580, proPer100: 21, carbPer100: 22, fatPer100: 50, swap: 'כף טחינה גולמית' },
+                        { keys: ['דבש', 'סילאן', 'מייפל', 'סוכר'], name: 'דבש / סילאן / סוכר', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 320, proPer100: 0.3, carbPer100: 80, fatPer100: 0, swap: 'ממתיק סטיביה ללא סוכר' },
+                        { keys: ['תפוח עץ', 'תפוח ירוק', 'תפוח אדום', 'תפוח'], name: 'תפוח עץ בינוני', defaultGrams: 150, unitGrams: 150, calPer100: 52, proPer100: 0.3, carbPer100: 14, fatPer100: 0.2, swap: 'בננה קטנה / 150 גרם פירות יער' },
+                        { keys: ['בננה'], name: 'בננה בינונית', defaultGrams: 110, unitGrams: 110, calPer100: 89, proPer100: 1.1, carbPer100: 23, fatPer100: 0.3, swap: 'תפוח גדול' },
+                        { keys: ['תמר מג\'הול', 'תמרים', 'תמר'], name: 'תמר מג\'הול', defaultGrams: 40, unitGrams: 20, calPer100: 280, proPer100: 2, carbPer100: 75, fatPer100: 0.2, swap: 'בננה' },
+                        { keys: ['סלט ירקות', 'סלט קצוץ', 'סלט', 'מלפפון', 'עגבניה', 'חסה', 'עגבניות', 'מלפפונים', 'פלפל', 'ירקות'], name: 'סלט ירקות עשיר', defaultGrams: 200, cupGrams: 120, calPer100: 25, proPer100: 1.2, carbPer100: 4.5, fatPer100: 0.2, swap: 'ירקות מאודים (ברוקולי/שעועית)' },
+                        { keys: ['משולש פיצה', 'משולשי פיצה', 'פיצה'], name: 'משולש פיצה', defaultGrams: 110, unitGrams: 110, calPer100: 265, proPer100: 11, carbPer100: 33, fatPer100: 10, swap: 'טוסט לחם קל עם גבנ\"צ 9%' },
+                        { keys: ['המבורגר'], name: 'המבורגר בלחמניה', defaultGrams: 250, unitGrams: 250, calPer100: 250, proPer100: 16, carbPer100: 24, fatPer100: 11, swap: 'המבורגר עוף/סינטה בלחמניה קלה' },
+                        { keys: ['פלאפל'], name: 'פלאפל (3 כדורים)', defaultGrams: 60, unitGrams: 20, calPer100: 330, proPer100: 13, carbPer100: 32, fatPer100: 18, swap: 'גרגרי חומוס מבושלים' },
+                        { keys: ['במבה', 'שקית במבה'], name: 'במבה (שקית)', defaultGrams: 25, unitGrams: 25, calPer100: 535, proPer100: 16, carbPer100: 45, fatPer100: 32, swap: 'שקית פופקורן לייט' },
+                        { keys: ['קולה זירו', 'זירו', 'סודה'], name: 'משקה דיאט / זירו (0 קלוריות)', defaultGrams: 330, unitGrams: 330, calPer100: 0, proPer100: 0, carbPer100: 0, fatPer100: 0, swap: 'מים קרים' }
+                    ];
+
+                    const flatKeys = [];
+                    database.forEach(entry => {
+                        entry.keys.forEach(k => {
+                            flatKeys.push({ key: k, entry });
+                        });
+                    });
+                    flatKeys.sort((a, b) => b.key.length - a.key.length);
+
+                    let remainingText = text;
+                    const items = [];
+                    let totalCal = 0, totalPro = 0, totalCarb = 0, totalFat = 0;
+                    const matchedEntries = new Set();
+
+                    flatKeys.forEach(({ key, entry }) => {
+                        if (matchedEntries.has(entry)) return;
+
+                        if (remainingText.includes(key)) {
+                            const regex = new RegExp(`(?:(\\d+(?:\\.\\d+)?)\\s*)?(כפות\\s*הגשה|כף\\s*הגשה|מצקות|מצקת|כפיות|כפית|כפות|כף|כוסות|כוס|קופסאות|קופסה|גביעים|גביע|פרוסות|פרוסה|יחידות|יחידה|משולשים|משולש|גרם|גרמים|ג|מ\\\"ל|מל)?\\s*(?:של)?\\s*${key}|${key}\\s*(?:של)?\\s*(?:(\\d+(?:\\.\\d+)?)\\s*)?(כפות\\s*הגשה|כף\\s*הגשה|מצקות|מצקת|כפיות|כפית|כפות|כף|כוסות|כוס|קופסאות|קופסה|גביעים|גביע|פרוסות|פרוסה|יחידות|יחידה|משולשים|משולש|גרם|גרמים|ג|מ\\\"ל|מל)?`, 'i');
+                            const match = remainingText.match(regex);
+
+                            let grams = entry.defaultGrams;
+                            let unitLabel = '';
+
+                            if (match) {
+                                const numVal = parseFloat(match[1] || match[3]) || 1;
+                                const unit = (match[2] || match[4] || '').trim();
+
+                                if (unit.includes('הגשה') || unit.includes('מצק')) {
+                                    const single = entry.servingSpoonGrams || 50;
+                                    grams = single * numVal;
+                                    unitLabel = `${numVal} כפות הגשה (~${grams} גרם)`;
+                                } else if (unit.includes('כפית') || unit.includes('כפיות')) {
+                                    const single = entry.teaspoonGrams || 5;
+                                    grams = single * numVal;
+                                    unitLabel = `${numVal} כפיות (~${grams} גרם)`;
+                                } else if (unit.includes('כף') || unit.includes('כפות')) {
+                                    const single = entry.spoonGrams || 15;
+                                    grams = single * numVal;
+                                    unitLabel = `${numVal} כפות (~${grams} גרם)`;
+                                } else if (unit.includes('כוס')) {
+                                    const single = entry.cupGrams || 180;
+                                    grams = single * numVal;
+                                    unitLabel = `${numVal} כוסות (~${grams} גרם/מ״ל)`;
+                                } else if (unit.includes('קופס') || unit.includes('גביע') || unit.includes('פחית')) {
+                                    const single = entry.boxGrams || entry.unitGrams || 200;
+                                    grams = single * numVal;
+                                    unitLabel = `${numVal} קופסה/גביע (~${grams} גרם)`;
+                                } else if (unit.includes('פרוס')) {
+                                    const single = entry.sliceGrams || 30;
+                                    grams = single * numVal;
+                                    unitLabel = `${numVal} פרוסות (~${grams} גרם)`;
+                                } else if (unit.includes('יחיד') || unit.includes('משולש')) {
+                                    const single = entry.unitGrams || entry.defaultGrams;
+                                    grams = single * numVal;
+                                    unitLabel = `${numVal} יחידות (~${grams} גרם)`;
+                                } else if (unit.includes('גרם') || unit === 'ג' || unit.includes('מל') || unit.includes('מ"ל')) {
+                                    if (numVal > 0) {
+                                        grams = numVal;
+                                        unitLabel = `${grams} גרם/מ״ל`;
+                                    }
+                                } else {
+                                    if (numVal > 0 && numVal <= 10) {
+                                        const single = entry.unitGrams || entry.sliceGrams || entry.boxGrams || entry.defaultGrams;
+                                        grams = single * numVal;
+                                        unitLabel = `${numVal} יח׳ (~${grams} גרם)`;
+                                    } else if (numVal > 10) {
+                                        grams = numVal;
+                                        unitLabel = `${grams} גרם`;
+                                    }
+                                }
+                            }
+
+                            if (!unitLabel) {
+                                unitLabel = `~${grams} גרם`;
+                            }
+
+                            const factor = grams / 100;
+                            const c = Math.round(entry.calPer100 * factor);
+                            const p = Math.round(entry.proPer100 * factor * 10) / 10;
+                            const cb = Math.round(entry.carbPer100 * factor * 10) / 10;
+                            const f = Math.round(entry.fatPer100 * factor * 10) / 10;
+
+                            items.push({
+                                name: `${entry.name} (${unitLabel})`,
+                                cal: c,
+                                pro: p,
+                                carb: cb,
+                                fat: f,
+                                swap: entry.swap
+                            });
+
+                            totalCal += c;
+                            totalPro += p;
+                            totalCarb += cb;
+                            totalFat += f;
+
+                            matchedEntries.add(entry);
+                            remainingText = remainingText.split(key).join(' '.repeat(key.length));
+                        }
+                    });
+
+                    if (items.length === 0) {
+                        totalCal = 450;
+                        totalPro = 30;
+                        totalCarb = 50;
+                        totalFat = 14;
+                        items.push({
+                            name: 'ארוחה מעורבת מוערכת ב-AI',
+                            cal: 450,
+                            pro: 30,
+                            carb: 50,
+                            fat: 14,
+                            swap: 'ציין שמות מאכלים מוכרים (חזה עוף, אורז, כף טחינה, ביצים וכו\')'
+                        });
+                    }
+
+                    const proCal = totalPro * 4;
+                    const carbCal = totalCarb * 4;
+                    const fatCal = totalFat * 9;
+                    const sumCal = proCal + carbCal + fatCal || 1;
+
+                    const pPro = Math.round((proCal / sumCal) * 100);
+                    const pCarb = Math.round((carbCal / sumCal) * 100);
+                    const pFat = Math.max(0, 100 - pPro - pCarb);
+
+                    this.aiAnalyzedMeal = {
+                        query: this.aiFoodQuery,
+                        calories: totalCal,
+                        protein: Math.round(totalPro * 10) / 10,
+                        carbs: Math.round(totalCarb * 10) / 10,
+                        fat: Math.round(totalFat * 10) / 10,
+                        pProtein: pPro,
+                        pCarbs: pCarb,
+                        pFat: pFat,
+                        items: items
+                    };
+
+                    this.isAiAnalyzing = false;
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
                 },
 
                 // --- שיטות שליחת שאלון קליטה דיגיטלי ---
