@@ -7904,8 +7904,8 @@
 
                     if (apiKey) {
                         try {
-                            const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר הרשמי של המאמן אילאי).
-תפקידך לנתח בדיוק מקסימלי כל מאכל, ארוחה, צילום צלחת, תיאור בסלנג עברי או מנת מסעדה.
+                            const prompt = `אתה אנציקלופדיית התזונה הקלינית, תזונת הספורט וזיהוי המאכלים של המאמן אילאי.
+עליך לזהות בדיוק של 100% כל מאכל, מותג, מנת מסעדה, סלנג, קינוח, פרי, ירק, צילום צלחת או מאכל עדתי בעולם.
 
 פרופיל המתאמן:
 - יעד יומי: ${targetCal} קלוריות | ${targetPro} גרם חלבון.
@@ -7915,31 +7915,31 @@
 תיאור הארוחה / המצרכים שהמתאמן הזין:
 "${this.aiFoodQuery || (this.portalMealPhoto ? 'צלחת שצולמה בתמונה' : '')}"
 
-כללי כיול תזונתי מדויק לישראל:
-1. כף הגשה מבושלת (אורז, פתיתים, פסטה, קוסקוס, עדשים, קינואה) = 50-60 גרם (~70-80 קלוריות, ~2.5ג' חלבון).
-2. כוס מבושלת = 160-180 גרם (~210-230 קלוריות).
-3. כף שמן זית / טחינה גולמית = 10-15 גרם (~90-100 קלוריות, 9-11ג' שומן). כפית = 5 גרם (~45 קלוריות).
-4. חזה עוף / הודו מבושל/צלוי = 165 קלוריות ו-31 גרם חלבון ל-100 גרם.
-5. סטייק סינטה/בקר ממוצע = 200-250 גרם. פרגית צלויה = 215 קלוריות / 25ג' חלבון ל-100ג'.
-6. פיתה רגילה = 230-260 קלוריות | פיתה קלה/כוסמין = 90-120 קלוריות | לאפה = 450-550 קלוריות.
-7. אם המתאמן לא ציין כמויות מדויקות (למשל "אכלתי עוף ואורז"), העריך מנה ספורטיבית ממוצעת הגיונית (למשל: 180 גרם חזה עוף + 3 כפות הגשה אורז) וציין את המשקל המשוער בשם הפריט.
-8. מנות מסעדה ואוכל רחוב (שווארמה, סביח, פלאפל, שקשוקה, פיצה, המבורגר, סושי) - פרק למרכיבים המרכזיים עם קלוריות ומאקרו אמיתיים כולל שמנים ורטבים.
+הנחיות קריטיות לדיוק מושלם:
+1. זהה בדיוק מוחלט את המאכל הספציפי שהוזן. לעולם אל תחליף מאכל במאכל אחר (למשל: דג אמנון זה דג אמנון, אסאי זה אסאי, במבה נוגט זה במבה נוגט, מגנום פיסטוק זה מגנום פיסטוק, שווארמה זה שווארמה).
+2. אם הוזנו מספר מאכלים יחד, פרק כל מאכל לפריט נפרד עם הקלוריות והמאקרו שלו, וחבר את הסך הכולל במדויק.
+3. כיול כמויות ישראלי:
+   - כף הגשה מבושלת (אורז, פסטה, פתיתים, קוסקוס, עדשים) = 50-60 גרם (~75 קלוריות).
+   - כוס מבושלת = 160-180 גרם (~210-230 קלוריות).
+   - כף שמן / טחינה גולמית = 10-15 גרם (~90-100 קלוריות).
+   - מנת חלבון ממוצעת (חזה עוף, פילה דג אמנון/דניס/סלמון, סינטה) = 180-220 גרם מוכן.
+4. אם לא צוינה כמות, הערך מנה ספורטיבית ממוצעת הגיונית וציין את הכמות המוערכת בשם הפריט.
 
-החזר אך ורק אובייקט JSON תקין ללא שום טקסט או הערות מסביב:
+החזר אך ורק אובייקט JSON תקין ומדויק ללא שום טקסט, הסברים או תגיות מסביב:
 {
   "calories": סך קלוריות כולל כמספר שלם,
   "protein": סך חלבון בגרמים (מספר),
   "carbs": סך פחמימות בגרמים (מספר),
   "fat": סך שומן בגרמים (מספר),
-  "coachInsight": "משפט תובנה ועידוד מקצועי ואישי מהמאמן אילאי על הארוחה הזו בהתייחס למטרת המתאמן",
+  "coachInsight": "משפט תובנה, פירגון והכוונה מקצועית ואישית מהמאמן אילאי על הארוחה הזו",
   "items": [
     {
-      "name": "שם המאכל וכמות מוערכת בעברית (למשל: 'חזה עוף צלוי (~180 גרם)')",
-      "cal": קלוריות לפריט כמספר,
+      "name": "שם המאכל וכמות מוערכת בעברית (למשל: 'דג אמנון אפוי (~180 גרם)')",
+      "cal": קלוריות כמספר,
       "pro": חלבון בגרם,
-      "carb": פחמימה בגרם,
+      "carb": פחמימות בגרם,
       "fat": שומן בגרם,
-      "swap": "הצעת תחליף שווה ערך פרקטי בעברית (למשל: '160 גרם פילה סלמון / 200 גרם טופו')"
+      "swap": "הצעת תחליף שווה ערך איכותי (למשל: 'פילה לברק / 180 גרם חזה עוף')"
     }
   ]
 }`;
@@ -7957,7 +7957,7 @@
                                     }],
                                     generationConfig: {
                                         response_mime_type: "application/json",
-                                        temperature: 0.15
+                                        temperature: 0.1
                                     }
                                 };
                             } else {
@@ -7967,12 +7967,12 @@
                                     }],
                                     generationConfig: {
                                         response_mime_type: "application/json",
-                                        temperature: 0.15
+                                        temperature: 0.1
                                     }
                                 };
                             }
 
-                            const modelsToTry = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemma-4-31b-it'];
+                            const modelsToTry = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-flash-lite-latest', 'gemma-4-31b-it', 'gemini-3-flash-preview'];
                             for (const mName of modelsToTry) {
                                 try {
                                     const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${apiKey}`, {
@@ -7984,40 +7984,42 @@
                                         const resData = await resp.json();
                                         const outText = resData.candidates?.[0]?.content?.parts?.[0]?.text;
                                         if (outText) {
-                                            const cleanJson = outText.replace(/```json/g, '').replace(/```/g, '').trim();
-                                            const parsed = JSON.parse(cleanJson);
-                                            if (parsed && typeof parsed.calories === 'number') {
-                                                const totalCal = Math.round(parsed.calories || 0);
-                                                const totalPro = Math.round((parsed.protein || 0) * 10) / 10;
-                                                const totalCarb = Math.round((parsed.carbs || 0) * 10) / 10;
-                                                const totalFat = Math.round((parsed.fat || 0) * 10) / 10;
-                                                const proCal = totalPro * 4;
-                                                const carbCal = totalCarb * 4;
-                                                const fatCal = totalFat * 9;
-                                                const sumCal = proCal + carbCal + fatCal || 1;
+                                            const jsonMatch = outText.match(/\{[\s\S]*\}/);
+                                            if (jsonMatch) {
+                                                const parsed = JSON.parse(jsonMatch[0]);
+                                                if (parsed && typeof parsed.calories === 'number') {
+                                                    const totalCal = Math.round(parsed.calories || 0);
+                                                    const totalPro = Math.round((parsed.protein || 0) * 10) / 10;
+                                                    const totalCarb = Math.round((parsed.carbs || 0) * 10) / 10;
+                                                    const totalFat = Math.round((parsed.fat || 0) * 10) / 10;
+                                                    const proCal = totalPro * 4;
+                                                    const carbCal = totalCarb * 4;
+                                                    const fatCal = totalFat * 9;
+                                                    const sumCal = proCal + carbCal + fatCal || 1;
 
-                                                this.aiAnalyzedMeal = {
-                                                    query: this.aiFoodQuery || (this.portalMealPhoto ? 'צלחת שנותחה ב-Vision AI 📸' : 'ארוחה מחושבת'),
-                                                    calories: totalCal,
-                                                    protein: totalPro,
-                                                    carbs: totalCarb,
-                                                    fat: totalFat,
-                                                    coachInsight: parsed.coachInsight || `ארוחה מצוינת המכילה ${totalPro} גרם חלבון! נותרו לך עוד ${Math.max(0, remainingCal - totalCal)} קלוריות להיום.`,
-                                                    pProtein: Math.round((proCal / sumCal) * 100),
-                                                    pCarbs: Math.round((carbCal / sumCal) * 100),
-                                                    pFat: Math.max(0, 100 - Math.round((proCal / sumCal) * 100) - Math.round((carbCal / sumCal) * 100)),
-                                                    items: (parsed.items || []).map(it => ({
-                                                        name: it.name || 'מאכל',
-                                                        cal: Math.round(it.cal || 0),
-                                                        pro: Math.round((it.pro || 0) * 10) / 10,
-                                                        carb: Math.round((it.carb || 0) * 10) / 10,
-                                                        fat: Math.round((it.fat || 0) * 10) / 10,
-                                                        swap: it.swap || ''
-                                                    }))
-                                                };
-                                                this.isAiAnalyzing = false;
-                                                setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
-                                                return;
+                                                    this.aiAnalyzedMeal = {
+                                                        query: this.aiFoodQuery || (this.portalMealPhoto ? 'צלחת שנותחה ב-Vision AI 📸' : 'ארוחה מחושבת'),
+                                                        calories: totalCal,
+                                                        protein: totalPro,
+                                                        carbs: totalCarb,
+                                                        fat: totalFat,
+                                                        coachInsight: parsed.coachInsight || `ארוחה מעולה המכילה ${totalPro} גרם חלבון! נותרו לך עוד ${Math.max(0, remainingCal - totalCal)} קלוריות להיום.`,
+                                                        pProtein: Math.round((proCal / sumCal) * 100),
+                                                        pCarbs: Math.round((carbCal / sumCal) * 100),
+                                                        pFat: Math.max(0, 100 - Math.round((proCal / sumCal) * 100) - Math.round((carbCal / sumCal) * 100)),
+                                                        items: (parsed.items || []).map(it => ({
+                                                            name: it.name || 'מאכל',
+                                                            cal: Math.round(it.cal || 0),
+                                                            pro: Math.round((it.pro || 0) * 10) / 10,
+                                                            carb: Math.round((it.carb || 0) * 10) / 10,
+                                                            fat: Math.round((it.fat || 0) * 10) / 10,
+                                                            swap: it.swap || ''
+                                                        }))
+                                                    };
+                                                    this.isAiAnalyzing = false;
+                                                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                                                    return;
+                                                }
                                             }
                                         }
                                     }
