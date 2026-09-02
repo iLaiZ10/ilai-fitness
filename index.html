@@ -5279,11 +5279,21 @@
                         googleDriveUrl: '',
                         googleSheetsUrl: '',
                         mealPlanPdfUrl: '',
+                        dailyWater: 0,
+                        waterTarget: 3000,
+                        dailySteps: 0,
+                        stepsTarget: 10000,
+                        streakDays: 1,
                         macroCalculated: { targetCalories: '', targetProtein: '', targetCarbs: '', targetFat: '' },
                         workoutPlan: { days: [] },
                         mealPlan: { meals: [] },
                         checkins: [],
-                        payments: []
+                        payments: [],
+                        dailyScorecards: [],
+                        foodLogs: [],
+                        mealPhotoLogs: [],
+                        reflectionLogs: [],
+                        personalRecords: []
                     };
                 },
 
@@ -5298,9 +5308,20 @@
                         googleDriveUrl: '',
                         googleSheetsUrl: '',
                         mealPlanPdfUrl: '',
+                        dailyWater: 0,
+                        waterTarget: 3000,
+                        dailySteps: 0,
+                        stepsTarget: 10000,
+                        streakDays: 1,
                         workoutPlan: { days: [] },
                         mealPlan: { meals: [] },
                         checkins: [],
+                        payments: [],
+                        dailyScorecards: [],
+                        foodLogs: [],
+                        mealPhotoLogs: [],
+                        reflectionLogs: [],
+                        personalRecords: [],
                         macroCalculated: { targetCalories: '', targetProtein: '', targetCarbs: '', targetFat: '' }
                     };
                 },
@@ -5325,12 +5346,13 @@
                 },
 
                 async loginCoach() {
-                    const hashed = await this.hashPin(this.coachPinInput);
-                    if (hashed === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394') {
+                    const input = (this.coachPinInput || '').trim();
+                    const hashed = await this.hashPin(input);
+                    if (hashed === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || input === '1236') {
                         this.isCoachAuthenticated = true;
                         this.coachPinError = false;
                         this.coachPinInput = '';
-                        localStorage.setItem('ilaico_coach_auth_token', hashed);
+                        localStorage.setItem('ilaico_coach_auth_token', '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394');
                         setTimeout(() => {
                             if (window.lucide) window.lucide.createIcons();
                         }, 50);
@@ -5370,8 +5392,7 @@
                         this.selectedClientId = this.portalClientId;
                         this.isCoachAuthenticated = false;
                     } else {
-                        // תמיד דורש הזנת קוד 1236 בכניסה לקישור
-                        this.isCoachAuthenticated = false;
+                        this.checkCoachAuth();
                     }
 
                     // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
