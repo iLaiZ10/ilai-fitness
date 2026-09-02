@@ -1567,10 +1567,10 @@
                     </div>
 
                     <!-- תוכן לשונית 2: תזונה ויעדים -->
-                    <!-- תוכן לשונית 2: תזונה ויעדים בסגנון MyFitnessPal Pro -->
+                    <!-- תוכן לשונית 2: תזונה ויעדים - המחשבון של אילאי -->
                     <div x-show="portalActiveSubTab === 'nutrition'" x-cloak class="space-y-5">
                         
-                        <!-- 1. כרטיס ראשי: יומן קלוריות ומאקרו יומי (MyFitnessPal Hero Tracker) -->
+                        <!-- 1. כרטיס ראשי: יומן קלוריות ומאקרו יומי (המחשבון של אילאי) -->
                         <div class="bg-gradient-to-br from-[#082722] to-[#041512] border border-[#133d35] rounded-3xl p-5 md:p-6 text-white shadow-2xl space-y-5 relative overflow-hidden">
                             <!-- Background decorative ambient blur -->
                             <div class="absolute -top-12 -left-12 w-48 h-48 bg-[#86efac]/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -1584,13 +1584,17 @@
                                     <div>
                                         <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
                                             <span>יומן תזונה ומאקרו יומי</span>
-                                            <span class="text-[10px] bg-[#86efac]/20 text-[#86efac] px-2 py-0.5 rounded-full font-bold border border-[#86efac]/30">MyFitnessPal Pro ✨</span>
+                                            <span class="text-[10px] bg-[#86efac]/20 text-[#86efac] px-2.5 py-0.5 rounded-full font-bold border border-[#86efac]/30">המחשבון של אילאי ✨</span>
                                         </h3>
                                         <p class="text-[11px] text-[#93c7bb]">מעקב קלוריות, חלבון, פחמימה ושומן חיים בזמן אמת</p>
                                     </div>
                                 </div>
                                 
                                 <div class="flex items-center gap-2 self-end sm:self-auto">
+                                    <button type="button" @click="openFoodSearchModal = true" class="bg-white/10 hover:bg-white/20 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition border border-white/15 cursor-pointer">
+                                        <i data-lucide="search" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                        <span>🔍 חיפוש במאגר</span>
+                                    </button>
                                     <button type="button" @click="openQuickAddCalorieModal = true" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
                                         <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
                                         <span>+ הוספה מהירה</span>
@@ -1762,6 +1766,17 @@
                             <!-- תוצאות הניתוח וגרף עוגה -->
                             <template x-if="aiAnalyzedMeal">
                                 <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-5 space-y-4 animate-scale-up">
+                                    <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
+                                        <span class="text-xs font-black text-[#082722] flex items-center gap-1.5">
+                                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+                                            <span>חישוב תזונתי של המחשבון של אילאי</span>
+                                        </span>
+                                        <button type="button" @click="aiAnalyzedMeal = null; aiFoodQuery = ''; portalMealPhoto = '';" class="text-[11px] text-red-500 hover:text-red-700 font-bold flex items-center gap-1 hover:bg-red-50 px-2 py-1 rounded-lg transition cursor-pointer">
+                                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                                            <span>איפוס / נקה</span>
+                                        </button>
+                                    </div>
+
                                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-[#e5dfd3] pb-4">
                                         <!-- גרף עוגה SVG Donut -->
                                         <div class="flex items-center gap-4">
@@ -1923,8 +1938,9 @@
                                                         <span class="text-emerald-700 font-black" x-text="log.calories + ' קל\''"></span>
                                                         <span class="text-[10px] text-[#5f756e] mr-1.5" x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
                                                     </div>
-                                                    <button type="button" @click="deletePortalFoodLog(log.id)" class="text-slate-400 hover:text-red-500 transition p-1 cursor-pointer" title="מחק פריט">
+                                                    <button type="button" @click="deletePortalFoodLog(log.id)" class="text-red-500 hover:text-white hover:bg-red-600 bg-red-50 border border-red-200/80 px-2 py-1 rounded-xl transition cursor-pointer flex items-center gap-1 text-[11px] font-bold shadow-xs shrink-0" title="הסר פריט זה שהוזן בטעות">
                                                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                        <span>הסר</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -4649,13 +4665,179 @@
                 </div>
             </div>
 
-            <div class="pt-3 border-t border-[#e5dfd3] flex items-center justify-end gap-2">
-                <button type="button" @click="openQuickAddCalorieModal = false" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer">
-                    ביטול
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל חיפוש מזונות ישיר במאגר (המחשבון של אילאי) -->
+    <div x-show="openFoodSearchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openFoodSearchModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl space-y-4 animate-scale-up mx-2 text-[#082722]">
+            <!-- כותרת המודל -->
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded-xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="search" class="w-5 h-5 text-[#86efac]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm md:text-base font-black text-[#082722]">מאגר המזונות - המחשבון של אילאי 🔍</h3>
+                        <p class="text-[10px] text-[#5f756e]">בחר מתוך מאות מאכלים ישראליים ובינלאומיים והוסף ישירות ליומן</p>
+                    </div>
+                </div>
+                <button type="button" @click="openFoodSearchModal = false; foodSearchSelectedFood = null;" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
-                <button type="button" @click="saveQuickAddMeal()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] shadow-md cursor-pointer flex items-center gap-1.5">
-                    <i data-lucide="check" class="w-4 h-4"></i>
-                    <span>שמור ליומן הארוחות</span>
+            </div>
+
+            <!-- שורת חיפוש וקטגוריות -->
+            <div class="space-y-2 shrink-0">
+                <div class="relative">
+                    <input type="text" 
+                           x-model="foodSearchQuery" 
+                           placeholder="הקלד שם מאכל לחיפוש (למשל: סלמון, שווארמה, קוטג', אורז, פיצה, אבוקדו...)" 
+                           class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl px-4 py-2.5 text-xs text-[#082722] font-semibold focus:outline-none focus:border-[#22c55e] pr-9 shadow-inner">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none"></i>
+                    <template x-if="foodSearchQuery">
+                        <button type="button" @click="foodSearchQuery = ''" class="absolute left-3 top-2.5 text-slate-400 hover:text-slate-600">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </template>
+                </div>
+
+                <!-- לשוניות קטגוריה -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] no-scrollbar">
+                    <template x-for="cat in [
+                        { id: 'all', label: 'הכל' },
+                        { id: 'protein', label: '🥩 חלבונים ודגים' },
+                        { id: 'carb', label: '🍚 פחמימות ודגנים' },
+                        { id: 'dairy', label: '🧀 מוצרי חלב' },
+                        { id: 'prepared', label: '🥙 מנות ואוכל רחוב' },
+                        { id: 'veggies', label: '🥗 ירקות' },
+                        { id: 'fruits', label: '🍎 פירות' },
+                        { id: 'fats', label: '🥑 שמנים ואגוזים' },
+                        { id: 'sweets', label: '🍫 מתוקים וחטיפים' },
+                        { id: 'drinks', label: '☕ משקאות' }
+                    ]" :key="cat.id">
+                        <button type="button" 
+                                @click="foodSearchCategory = cat.id"
+                                :class="foodSearchCategory === cat.id ? 'bg-[#082722] text-[#86efac] font-bold' : 'bg-[#fbf8f2] text-slate-600 border border-[#e5dfd3]'"
+                                class="px-2.5 py-1 rounded-xl whitespace-nowrap transition cursor-pointer"
+                                x-text="cat.label">
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <!-- רשימת מאכלים ופרטי בחירה -->
+            <div class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs min-h-[220px]">
+                <!-- אם לא נבחר מאכל: הצגת תוצאות החיפוש -->
+                <template x-if="!foodSearchSelectedFood">
+                    <div class="space-y-1.5">
+                        <template x-if="getFilteredFoodDatabase().length === 0">
+                            <div class="text-center py-8 text-slate-400 text-xs italic">
+                                לא נמצאו מאכלים התואמים לחיפוש "<span x-text="foodSearchQuery"></span>"
+                            </div>
+                        </template>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <template x-for="food in getFilteredFoodDatabase()" :key="food.name">
+                                <div @click="selectFoodForAdd(food)" 
+                                     class="bg-[#fbf8f2] hover:bg-emerald-50/60 border border-[#e5dfd3] hover:border-emerald-400 p-3 rounded-2xl cursor-pointer transition shadow-xs flex flex-col justify-between gap-1.5">
+                                    <div class="flex items-start justify-between gap-1">
+                                        <span class="font-black text-xs text-[#082722]" x-text="food.name"></span>
+                                        <span class="text-emerald-700 font-extrabold text-[11px] shrink-0" x-text="food.calPer100 + ' קל׳/100ג׳'"></span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
+                                        <span x-text="'ח: ' + food.proPer100 + 'ג\''"></span>
+                                        <span>•</span>
+                                        <span x-text="'פ: ' + food.carbPer100 + 'ג\''"></span>
+                                        <span>•</span>
+                                        <span x-text="'ש: ' + food.fatPer100 + 'ג\''"></span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- אם נבחר מאכל: כרטיס קביעת כמות והוספה לארוחה -->
+                <template x-if="foodSearchSelectedFood">
+                    <div class="bg-[#fbf8f2] border-2 border-emerald-500/80 rounded-2xl p-4 space-y-4 animate-scale-up">
+                        <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
+                            <div>
+                                <span class="text-[10px] text-emerald-800 font-bold block">מאכל שנבחר להוספה:</span>
+                                <h4 class="text-sm font-black text-[#082722]" x-text="foodSearchSelectedFood.name"></h4>
+                            </div>
+                            <button type="button" @click="foodSearchSelectedFood = null" class="text-xs text-slate-500 hover:text-slate-800 underline font-bold cursor-pointer">
+                                ➔ חזור לרשימה
+                            </button>
+                        </div>
+
+                        <!-- בחירת ארוחה -->
+                        <div>
+                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">לאיזו ארוחה לשמור?</label>
+                            <div class="grid grid-cols-4 gap-1.5 text-center">
+                                <template x-for="mType in ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ערב', 'ארוחת ביניים']" :key="mType">
+                                    <button type="button" 
+                                            @click="foodSearchTargetMeal = mType" 
+                                            :class="foodSearchTargetMeal === mType ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-white text-slate-700 border border-[#e5dfd3]'"
+                                            class="py-2 px-1 rounded-xl text-[10px] transition cursor-pointer"
+                                            x-text="mType">
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- בחירת יחידת מידה וכמות -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                            <div>
+                                <label class="block text-[10px] font-bold text-[#5f756e] mb-1">יחידת מידה:</label>
+                                <select x-model="foodSearchUnit" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-3 py-2 text-xs font-bold text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                                    <option value="grams">גרמים / מ״ל</option>
+                                    <option value="servingSpoon">כף הגשה / מצקת (~50-60 גרם)</option>
+                                    <option value="spoon">כף רגילה (~15 גרם)</option>
+                                    <option value="cup">כוס (~150-200 גרם)</option>
+                                    <option value="unit">יחידה</option>
+                                    <option value="slice">פרוסה</option>
+                                    <option value="box">קופסה / גביע</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-[10px] font-bold text-[#5f756e] mb-1" x-text="foodSearchUnit === 'grams' ? 'כמות בגרמים:' : 'מספר יחידות/כפות:'"></label>
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" @click="foodSearchQuantity = Math.max(1, (parseFloat(foodSearchQuantity) || 1) - (foodSearchUnit === 'grams' ? 25 : 1))" class="w-8 h-8 rounded-xl bg-white border border-[#e5dfd3] font-black text-sm hover:bg-slate-100 cursor-pointer">-</button>
+                                    <input type="number" step="1" x-model.number="foodSearchQuantity" class="w-full bg-white border border-[#e5dfd3] rounded-xl py-1.5 px-2 text-center text-sm font-black text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                                    <button type="button" @click="foodSearchQuantity = (parseFloat(foodSearchQuantity) || 0) + (foodSearchUnit === 'grams' ? 25 : 1)" class="w-8 h-8 rounded-xl bg-white border border-[#e5dfd3] font-black text-sm hover:bg-slate-100 cursor-pointer">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- תצוגה מקדימה של החישוב עבור הכמות שנבחרה -->
+                        <div class="bg-[#082722] text-white p-3 rounded-xl flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] text-[#93c7bb] block">ערך תזונתי לכמות זו:</span>
+                                <span class="text-sm font-black text-[#86efac]" x-text="Math.round(foodSearchSelectedFood.calPer100 * ((foodSearchUnit === 'servingSpoon' ? (foodSearchSelectedFood.servingSpoonGrams || 50) : foodSearchUnit === 'spoon' ? (foodSearchSelectedFood.spoonGrams || 15) : foodSearchUnit === 'cup' ? (foodSearchSelectedFood.cupGrams || 180) : foodSearchUnit === 'unit' ? (foodSearchSelectedFood.unitGrams || foodSearchSelectedFood.defaultGrams || 100) : foodSearchUnit === 'slice' ? (foodSearchSelectedFood.sliceGrams || 30) : foodSearchUnit === 'box' ? (foodSearchSelectedFood.boxGrams || 200) : 1) * (parseFloat(foodSearchQuantity) || 100) / (foodSearchUnit === 'grams' ? 100 : 100))) + ' קלוריות'"></span>
+                            </div>
+                            <div class="text-[10px] text-slate-300 text-left space-y-0.5 font-bold">
+                                <div x-text="'חלבון: ' + (Math.round(foodSearchSelectedFood.proPer100 * ((foodSearchUnit === 'servingSpoon' ? (foodSearchSelectedFood.servingSpoonGrams || 50) : foodSearchUnit === 'spoon' ? (foodSearchSelectedFood.spoonGrams || 15) : foodSearchUnit === 'cup' ? (foodSearchSelectedFood.cupGrams || 180) : foodSearchUnit === 'unit' ? (foodSearchSelectedFood.unitGrams || foodSearchSelectedFood.defaultGrams || 100) : foodSearchUnit === 'slice' ? (foodSearchSelectedFood.sliceGrams || 30) : foodSearchUnit === 'box' ? (foodSearchSelectedFood.boxGrams || 200) : 1) * (parseFloat(foodSearchQuantity) || 100) / (foodSearchUnit === 'grams' ? 100 : 100)) * 10) / 10) + ' גרם'"></div>
+                                <div x-text="'פחמימות: ' + (Math.round(foodSearchSelectedFood.carbPer100 * ((foodSearchUnit === 'servingSpoon' ? (foodSearchSelectedFood.servingSpoonGrams || 50) : foodSearchUnit === 'spoon' ? (foodSearchSelectedFood.spoonGrams || 15) : foodSearchUnit === 'cup' ? (foodSearchSelectedFood.cupGrams || 180) : foodSearchUnit === 'unit' ? (foodSearchSelectedFood.unitGrams || foodSearchSelectedFood.defaultGrams || 100) : foodSearchUnit === 'slice' ? (foodSearchSelectedFood.sliceGrams || 30) : foodSearchUnit === 'box' ? (foodSearchSelectedFood.boxGrams || 200) : 1) * (parseFloat(foodSearchQuantity) || 100) / (foodSearchUnit === 'grams' ? 100 : 100)) * 10) / 10) + ' גרם'"></div>
+                            </div>
+                        </div>
+
+                        <!-- כפתור הוספה סופי -->
+                        <button type="button" @click="addSelectedFoodToMeal()" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3 rounded-2xl text-xs transition border border-[#174e43] shadow-lg cursor-pointer flex items-center justify-center gap-2">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            <span x-text="'+ הוסף ל' + foodSearchTargetMeal"></span>
+                        </button>
+                    </div>
+                </template>
+            </div>
+
+            <!-- סגירה -->
+            <div class="pt-3 border-t border-[#e5dfd3] flex items-center justify-between shrink-0">
+                <span class="text-[10px] text-[#5f756e]">המחשבון של אילאי • מאגר מזונות ישראלי מכויל</span>
+                <button type="button" @click="openFoodSearchModal = false; foodSearchSelectedFood = null;" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer">
+                    סגור
                 </button>
             </div>
         </div>
@@ -5391,6 +5573,15 @@
                 quickAddCarbs: '',
                 quickAddFat: '',
                 quickAddName: '',
+
+                // מודל חיפוש מזונות ישיר
+                openFoodSearchModal: false,
+                foodSearchQuery: '',
+                foodSearchCategory: 'all',
+                foodSearchSelectedFood: null,
+                foodSearchQuantity: 100,
+                foodSearchUnit: 'grams',
+                foodSearchTargetMeal: 'ארוחת צהריים',
 
                 // מאגר מזונות ישראלי מכויל (ערכים ל-100 גרם או ליחידה)
                 foodDatabase: [
@@ -7600,74 +7791,221 @@
 
                     let text = this.aiFoodQuery.toLowerCase().trim();
 
+                    // נרמול כמויות וביטויים בעברית
                     text = text.replace(/חצי\s*כוס/g, '0.5 כוס');
                     text = text.replace(/רבע\s*כוס/g, '0.25 כוס');
                     text = text.replace(/שליש\s*כוס/g, '0.33 כוס');
                     text = text.replace(/שתי\s*כפות\s*הגשה/g, '2 כפות הגשה');
                     text = text.replace(/שלוש\s*כפות\s*הגשה/g, '3 כפות הגשה');
+                    text = text.replace(/ארבע\s*כפות\s*הגשה/g, '4 כפות הגשה');
                     text = text.replace(/שתי\s*כפות/g, '2 כפות');
                     text = text.replace(/שלוש\s*כפות/g, '3 כפות');
                     text = text.replace(/ארבע\s*כפות/g, '4 כפות');
                     text = text.replace(/שתי\s*פרוסות/g, '2 פרוסות');
+                    text = text.replace(/שלוש\s*פרוסות/g, '3 פרוסות');
                     text = text.replace(/שתי\s*ביצים/g, '2 ביצים');
+                    text = text.replace(/שלוש\s*ביצים/g, '3 ביצים');
                     text = text.replace(/שני\s*תמרים/g, '2 תמרים');
                     text = text.replace(/שני\s*שניצלים/g, '2 שניצלים');
+                    text = text.replace(/שני\s*רולים/g, '2 רולים');
 
                     const database = [
-                        { keys: ['אורז בסמטי', 'אורז לבן', 'אורז יסמין', 'אורז מלא', 'אורז', 'מג\'דרה', 'מגדרה'], name: 'אורז מבושל', defaultGrams: 150, servingSpoonGrams: 55, spoonGrams: 25, cupGrams: 160, calPer100: 130, proPer100: 2.7, carbPer100: 28, fatPer100: 0.3, swap: '150 גרם תפו״א אפוי / 120 גרם קינואה' },
-                        { keys: ['פסטה מבושלת', 'פסטה', 'פתיתים', 'ספגטי', 'מקרוני', 'נודלס', 'אטריות'], name: 'פסטה / פתיתים מבושלים', defaultGrams: 150, servingSpoonGrams: 50, spoonGrams: 25, cupGrams: 150, calPer100: 158, proPer100: 5.8, carbPer100: 31, fatPer100: 0.9, swap: '150 גרם אורז בסמטי / 180 גרם בטטה' },
-                        { keys: ['קוסקוס', 'בורגול', 'קינואה', 'כוסמת'], name: 'קוסקוס / קינואה / בורגול מבושל', defaultGrams: 150, servingSpoonGrams: 50, spoonGrams: 25, cupGrams: 160, calPer100: 120, proPer100: 4, carbPer100: 24, fatPer100: 0.8, swap: '150 גרם אורז מבושל' },
-                        { keys: ['שיבולת שועל', 'קוואקר', 'דייסת קוואקר', 'דייסה'], name: 'שיבולת שועל (קוואקר)', defaultGrams: 50, spoonGrams: 12, cupGrams: 80, calPer100: 389, proPer100: 16.9, carbPer100: 66, fatPer100: 6.9, swap: '2 פרוסות לחם מלא / 40 גרם ברנפלקס' },
-                        { keys: ['לחם קל', 'פרוסות לחם קל', 'לחם דיאט'], name: 'לחם קל', defaultGrams: 50, sliceGrams: 25, calPer100: 165, proPer100: 9, carbPer100: 28, fatPer100: 1.2, swap: '3 פריכיות אורז' },
-                        { keys: ['לחם מלא', 'לחם מחמצת', 'לחם כפרי', 'לחם לבן', 'לחם', 'טוסט', 'פרוסת לחם', 'פרוסות לחם'], name: 'לחם (פרוסה)', defaultGrams: 60, sliceGrams: 35, calPer100: 240, proPer100: 8.5, carbPer100: 46, fatPer100: 2.2, swap: '2 פרוסות לחם קל' },
-                        { keys: ['פיתה קלה', 'פיתה כוסמין קלה'], name: 'פיתה קלה', defaultGrams: 60, unitGrams: 60, calPer100: 160, proPer100: 8, carbPer100: 30, fatPer100: 1, swap: '2 פרוסות לחם קל' },
-                        { keys: ['פיתה'], name: 'פיתה רגילה', defaultGrams: 90, unitGrams: 90, calPer100: 260, proPer100: 9, carbPer100: 52, fatPer100: 1.5, swap: 'פיתה קלה / 2 פרוסות לחם מלא' },
-                        { keys: ['לאפה'], name: 'לאפה', defaultGrams: 160, unitGrams: 160, calPer100: 280, proPer100: 9.5, carbPer100: 56, fatPer100: 2, swap: '2 פיתות קלות' },
-                        { keys: ['טורטיה', 'טורטייה'], name: 'טורטיה מקמח חיטה', defaultGrams: 60, unitGrams: 60, calPer100: 290, proPer100: 8, carbPer100: 50, fatPer100: 6.5, swap: '2 פרוסות לחם קל' },
-                        { keys: ['בטטה אפויה', 'בטטה בתנור', 'בטטה', 'תפוח אדמה', 'תפו״א', 'פירה'], name: 'בטטה / תפו״א אפוי', defaultGrams: 150, unitGrams: 150, calPer100: 86, proPer100: 1.6, carbPer100: 20, fatPer100: 0.1, swap: '120 גרם אורז מבושל' },
-                        { keys: ['פריכיות אורז', 'פריכיות', 'פריכית'], name: 'פריכיות אורז', defaultGrams: 30, unitGrams: 10, calPer100: 380, proPer100: 8, carbPer100: 80, fatPer100: 2.5, swap: 'פרוסת לחם מלא' },
-                        { keys: ['כריות נוגט', 'כריות', 'דגני כריות'], name: 'דגני כריות', defaultGrams: 45, cupGrams: 50, calPer100: 470, proPer100: 6.5, carbPer100: 68, fatPer100: 20, swap: '40 גרם ברנפלקס / 50 גרם קוואקר' },
-                        { keys: ['קורנפלקס', 'צ\'יריוס', 'פיטנס', 'ברנפלקס', 'פייבר 1'], name: 'דגני בוקר / קורנפלקס', defaultGrams: 40, cupGrams: 40, calPer100: 375, proPer100: 8, carbPer100: 75, fatPer100: 2, swap: '50 גרם שיבולת שועל' },
-                        { keys: ['חזה עוף צלוי', 'חזה עוף מבושל', 'חזה עוף', 'פילה עוף', 'סטייק עוף'], name: 'חזה עוף (מוכן)', defaultGrams: 180, calPer100: 165, proPer100: 31, carbPer100: 0, fatPer100: 3.6, swap: '160 גרם פילה סלמון / 2 קופסאות טונה במים' },
-                        { keys: ['פרגית צלויה', 'פרגית', 'שווארמה הודו', 'שווארמה פרגית', 'שווארמה', 'כרעיים', 'שוקיים'], name: 'פרגית / שווארמה', defaultGrams: 180, calPer100: 215, proPer100: 25, carbPer100: 0, fatPer100: 12.5, swap: '180 גרם חזה עוף + 10 גרם טחינה' },
-                        { keys: ['שניצל עוף מטוגן', 'שניצל עוף', 'שניצל ביתי', 'שניצל'], name: 'שניצל עוף', defaultGrams: 150, unitGrams: 120, calPer100: 260, proPer100: 22, carbPer100: 14, fatPer100: 13, swap: '160 גרם חזה עוף על האש' },
-                        { keys: ['שניצל תירס', 'טבעול'], name: 'שניצל תירס', defaultGrams: 100, unitGrams: 100, calPer100: 210, proPer100: 8, carbPer100: 24, fatPer100: 9, swap: 'טופו מוקפץ' },
-                        { keys: ['בקר', 'אנטריקוט', 'סינטה', 'בשר', 'פילה בקר', 'קבב', 'המבורגר בקר'], name: 'בשר בקר / סינטה', defaultGrams: 180, calPer100: 210, proPer100: 26, carbPer100: 0, fatPer100: 11, swap: '180 גרם חזה עוף / 160 גרם סלמון' },
-                        { keys: ['טונה במים', 'קופסת טונה במים'], name: 'טונה במים', defaultGrams: 110, boxGrams: 110, calPer100: 116, proPer100: 26, carbPer100: 0, fatPer100: 1, swap: '120 גרם חזה עוף / גביע קוטג\' 1%' },
-                        { keys: ['טונה בשמן', 'קופסת טונה בשמן', 'טונה'], name: 'טונה בשמן (מסוננת)', defaultGrams: 110, boxGrams: 110, calPer100: 195, proPer100: 25, carbPer100: 0, fatPer100: 10, swap: 'קופסת טונה במים + כף טחינה' },
-                        { keys: ['סלמון אפוי', 'סלמון בתנור', 'פילה סלמון', 'סלמון', 'דג סלמון', 'דג אמנון', 'דניס', 'מושט', 'לברק'], name: 'פילה דג / סלמון', defaultGrams: 180, calPer100: 208, proPer100: 20, carbPer100: 0, fatPer100: 13, swap: '180 גרם חזה עוף + 10 גרם שמן זית' },
-                        { keys: ['ביצה קשה', 'ביצת עין', 'חביתה', 'ביצים', 'ביצה'], name: 'ביצים (L)', defaultGrams: 120, unitGrams: 60, calPer100: 143, proPer100: 12.6, carbPer100: 0.7, fatPer100: 9.5, swap: '150 גרם חלבון ביצה נוזלי / גביע יוגורט פרו' },
-                        { keys: ['חלבון ביצה', 'חלבוני ביצה'], name: 'חלבון ביצה', defaultGrams: 100, unitGrams: 35, calPer100: 52, proPer100: 11, carbPer100: 0.7, fatPer100: 0.2, swap: 'סקופ אבקת חלבון' },
-                        { keys: ['יוגורט פרו 25', 'יוגורט פרו 20', 'דנונה פרו 25', 'דנונה פרו 20', 'יוגורט פרו', 'דנונה פרו', 'יוגורט חלבון', 'פרו 25', 'פרו 20', 'יוגורט pro', 'מולר פרו', 'גו'], name: 'יוגורט חלבון PRO (גביע)', defaultGrams: 200, boxGrams: 200, calPer100: 60, proPer100: 10, carbPer100: 3.5, fatPer100: 0.5, swap: 'סקופ אבקת חלבון עם מים / גביע קוטג\' 1%' },
-                        { keys: ['קוטג\' 1%', 'קוטג 1%'], name: 'קוטג\' 1%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 65, proPer100: 11, carbPer100: 2, fatPer100: 1, swap: 'יוגורט פרו 0%' },
-                        { keys: ['קוטג\' 3%', 'קוטג 3%'], name: 'קוטג\' 3%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 78, proPer100: 11, carbPer100: 2.5, fatPer100: 3, swap: 'קוטג\' 1%' },
-                        { keys: ['קוטג\' 5%', 'קוטג 5%', 'קוטג\'', 'קוטג', 'גבינה לבנה 5%', 'גבינה לבנה', 'גבינה לבנה 3%'], name: 'קוטג\' / גבינה לבנה 5%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 92, proPer100: 11, carbPer100: 2.5, fatPer100: 5, swap: 'גביע יוגורט יווני 0%' },
-                        { keys: ['גבינה צהובה 9%', 'גבנצ 9%', 'עמק 9%', 'נועם 9%'], name: 'גבינה צהובה 9%', defaultGrams: 28, sliceGrams: 28, calPer100: 200, proPer100: 28, carbPer100: 0, fatPer100: 9, swap: 'גבינה צפתית 5%' },
-                        { keys: ['גבינה צהובה', 'גבנצ', 'עמק', 'נועם', 'מוצרלה'], name: 'גבינה צהובה', defaultGrams: 50, sliceGrams: 28, calPer100: 330, proPer100: 25, carbPer100: 0, fatPer100: 26, swap: 'גבינה צהובה 9%' },
-                        { keys: ['בולגרית 5%', 'צפתית 5%', 'פטה 5%'], name: 'גבינה מלוחה 5%', defaultGrams: 60, calPer100: 110, proPer100: 14, carbPer100: 2, fatPer100: 5, swap: 'חצי גביע קוטג\' 3%' },
-                        { keys: ['חלב 3%', 'חלב תנובה 3%'], name: 'חלב 3%', defaultGrams: 200, cupGrams: 200, calPer100: 60, proPer100: 3.2, carbPer100: 4.8, fatPer100: 3, swap: 'חלב 1% / משקה סויה ללא סוכר' },
-                        { keys: ['חלב 1%', 'חלב דל שומן', 'חלב שיבולת שועל', 'חלב סויה', 'חלב שקדים', 'משקה סויה', 'משקה שקדים', 'חלב'], name: 'חלב / משקה צמחי (כוס)', defaultGrams: 200, cupGrams: 200, calPer100: 45, proPer100: 3, carbPer100: 4.9, fatPer100: 1.2, swap: 'משקה סויה ללא סוכר' },
-                        { keys: ['אבקת חלבון', 'סקופ חלבון', 'סקופ מי גבינה', 'חלבון'], name: 'אבקת חלבון (סקופ)', defaultGrams: 30, unitGrams: 30, calPer100: 380, proPer100: 80, carbPer100: 5, fatPer100: 3, swap: 'גביע יוגורט פרו 25ג\'' },
-                        { keys: ['חטיף חלבון', 'פרוטין בר'], name: 'חטיף חלבון', defaultGrams: 60, unitGrams: 60, calPer100: 360, proPer100: 33, carbPer100: 30, fatPer100: 11, swap: 'סקופ חלבון + תפוח' },
-                        { keys: ['טופו', 'סויה'], name: 'טופו טבעי', defaultGrams: 150, calPer100: 120, proPer100: 14, carbPer100: 2.5, fatPer100: 6.5, swap: '150 גרם חזה עוף' },
-                        { keys: ['טחינה גולמית', 'טחינה מלאה'], name: 'טחינה גולמית', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 650, proPer100: 24, carbPer100: 21, fatPer100: 56, swap: '15 גרם שמן זית / 25 גרם אבוקדו' },
-                        { keys: ['טחינה מוכנה', 'סלט טחינה', 'טחינה'], name: 'טחינה מוכנה', defaultGrams: 30, spoonGrams: 15, calPer100: 320, proPer100: 9, carbPer100: 12, fatPer100: 28, swap: 'כף טחינה גולמית' },
-                        { keys: ['חומוס מוכן', 'סלט חומוס', 'חומוס'], name: 'חומוס מוכן', defaultGrams: 40, spoonGrams: 20, calPer100: 240, proPer100: 8, carbPer100: 14, fatPer100: 17, swap: 'טחינה / אבוקדו' },
-                        { keys: ['שמן זית', 'שמן קנולה', 'שמן'], name: 'שמן זית / קנולה', defaultGrams: 10, spoonGrams: 10, teaspoonGrams: 5, calPer100: 884, proPer100: 0, carbPer100: 0, fatPer100: 100, swap: 'תרסיס שמן' },
-                        { keys: ['אבוקדו'], name: 'אבוקדו טרי', defaultGrams: 50, unitGrams: 120, calPer100: 160, proPer100: 2, carbPer100: 9, fatPer100: 15, swap: '15 גרם טחינה גולמית' },
-                        { keys: ['חמאת בוטנים טבעית', 'חמאת בוטנים'], name: 'חמאת בוטנים טבעית', defaultGrams: 18, spoonGrams: 18, teaspoonGrams: 6, calPer100: 588, proPer100: 25, carbPer100: 20, fatPer100: 50, swap: '15 גרם שקדים' },
-                        { keys: ['שקדים', 'אגוזים', 'אגוזי מלך', 'קשיו', 'פקאן'], name: 'שקדים / אגוזי מלך', defaultGrams: 20, spoonGrams: 15, calPer100: 580, proPer100: 21, carbPer100: 22, fatPer100: 50, swap: 'כף טחינה גולמית' },
-                        { keys: ['דבש', 'סילאן', 'מייפל', 'סוכר'], name: 'דבש / סילאן / סוכר', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 320, proPer100: 0.3, carbPer100: 80, fatPer100: 0, swap: 'ממתיק סטיביה ללא סוכר' },
-                        { keys: ['תפוח עץ', 'תפוח ירוק', 'תפוח אדום', 'תפוח'], name: 'תפוח עץ בינוני', defaultGrams: 150, unitGrams: 150, calPer100: 52, proPer100: 0.3, carbPer100: 14, fatPer100: 0.2, swap: 'בננה קטנה / 150 גרם פירות יער' },
-                        { keys: ['בננה'], name: 'בננה בינונית', defaultGrams: 110, unitGrams: 110, calPer100: 89, proPer100: 1.1, carbPer100: 23, fatPer100: 0.3, swap: 'תפוח גדול' },
-                        { keys: ['תמר מג\'הול', 'תמרים', 'תמר'], name: 'תמר מג\'הול', defaultGrams: 40, unitGrams: 20, calPer100: 280, proPer100: 2, carbPer100: 75, fatPer100: 0.2, swap: 'בננה' },
-                        { keys: ['סלט ירקות', 'סלט קצוץ', 'סלט', 'מלפפון', 'עגבניה', 'חסה', 'עגבניות', 'מלפפונים', 'פלפל', 'ירקות'], name: 'סלט ירקות עשיר', defaultGrams: 200, cupGrams: 120, calPer100: 25, proPer100: 1.2, carbPer100: 4.5, fatPer100: 0.2, swap: 'ירקות מאודים (ברוקולי/שעועית)' },
-                        { keys: ['משולש פיצה', 'משולשי פיצה', 'פיצה'], name: 'משולש פיצה', defaultGrams: 110, unitGrams: 110, calPer100: 265, proPer100: 11, carbPer100: 33, fatPer100: 10, swap: 'טוסט לחם קל עם גבנ\"צ 9%' },
-                        { keys: ['המבורגר'], name: 'המבורגר בלחמניה', defaultGrams: 250, unitGrams: 250, calPer100: 250, proPer100: 16, carbPer100: 24, fatPer100: 11, swap: 'המבורגר עוף/סינטה בלחמניה קלה' },
-                        { keys: ['פלאפל'], name: 'פלאפל (3 כדורים)', defaultGrams: 60, unitGrams: 20, calPer100: 330, proPer100: 13, carbPer100: 32, fatPer100: 18, swap: 'גרגרי חומוס מבושלים' },
-                        { keys: ['במבה', 'שקית במבה'], name: 'במבה (שקית)', defaultGrams: 25, unitGrams: 25, calPer100: 535, proPer100: 16, carbPer100: 45, fatPer100: 32, swap: 'שקית פופקורן לייט' },
-                        { keys: ['קולה זירו', 'זירו', 'סודה'], name: 'משקה דיאט / זירו (0 קלוריות)', defaultGrams: 330, unitGrams: 330, calPer100: 0, proPer100: 0, carbPer100: 0, fatPer100: 0, swap: 'מים קרים' }
+                        // --- 1. מנות עיקריות, אוכל רחוב, מסעדות ומאכלים ביתיים ---
+                        { category: 'prepared', keys: ['שווארמה בלאפה', 'שווארמה לאפה', 'לאפה שווארמה'], name: 'שווארמה בלאפה (כולל סלטים וטחינה)', defaultGrams: 450, unitGrams: 450, calPer100: 200, proPer100: 10, carbPer100: 21, fatPer100: 8.5, swap: 'שווארמה בפיתה קלה / שווארמה בצלחת עם אורז' },
+                        { category: 'prepared', keys: ['שווארמה בפיתה', 'שווארמה פיתה', 'פיתה שווארמה'], name: 'שווארמה בפיתה (כולל סלטים וטחינה)', defaultGrams: 300, unitGrams: 300, calPer100: 210, proPer100: 12, carbPer100: 22, fatPer100: 8, swap: 'שווארמה בצלחת עם סלט וטחינה' },
+                        { category: 'prepared', keys: ['שווארמה בצלחת', 'מנת שווארמה'], name: 'שווארמה בצלחת (בשר נקי)', defaultGrams: 200, calPer100: 220, proPer100: 25, carbPer100: 2, fatPer100: 13, swap: 'חזה עוף צלוי בצלחת' },
+                        { category: 'prepared', keys: ['פלאפל בפיתה', 'מנת פלאפל', 'פלאפל פיתה'], name: 'פלאפל בפיתה (כולל טחינה וסלטים)', defaultGrams: 280, unitGrams: 280, calPer100: 220, proPer100: 7, carbPer100: 30, fatPer100: 8.5, swap: 'חצי מנת פלאפל / כדורי פלאפל אפויים' },
+                        { category: 'prepared', keys: ['סביח בפיתה', 'מנת סביח', 'סביח'], name: 'סביח בפיתה (חציל, ביצה, טחינה, תפו״א)', defaultGrams: 300, unitGrams: 300, calPer100: 215, proPer100: 7.5, carbPer100: 26, fatPer100: 9, swap: 'סביח בצלחת עם ביצה קשה וחציל אפוי' },
+                        { category: 'prepared', keys: ['שקשוקה עם ביצים', 'שקשוקה ביתית', 'שקשוקה'], name: 'שקשוקה (מנה ללא לחם)', defaultGrams: 250, unitGrams: 250, calPer100: 110, proPer100: 6, carbPer100: 5, fatPer100: 7.5, swap: 'שקשוקה מ-3 חלבוני ביצה ותרסיס שמן' },
+                        { category: 'prepared', keys: ['חריימה', 'חריימה דג', 'דג ברוטב חריף'], name: 'חריימה דג (מנה מבושלת ברוטב)', defaultGrams: 250, unitGrams: 250, calPer100: 125, proPer100: 14, carbPer100: 4, fatPer100: 6, swap: 'דג אפוי בתנור עם עשבי תיבול' },
+                        { category: 'prepared', keys: ['קובה סלק', 'קובה חמוסטה', 'קובה'], name: 'קובה (יחידה במרק)', defaultGrams: 90, unitGrams: 90, calPer100: 160, proPer100: 7, carbPer100: 20, fatPer100: 6, swap: 'מרק ירקות עם חזה עוף' },
+                        { category: 'prepared', keys: ['מפרום'], name: 'מפרום תפו״א ובשר', defaultGrams: 180, unitGrams: 180, calPer100: 190, proPer100: 9, carbPer100: 15, fatPer100: 10.5, swap: 'קציצות בקר אפויות עם תפו״א אפוי' },
+                        { category: 'prepared', keys: ['קציצות בקר ברוטב', 'קציצות בקר', 'קציצות ברוטב עגבניות', 'קציצות עוף', 'קציצות הודו', 'קציצות'], name: 'קציצות בשר / עוף ברוטב', defaultGrams: 70, unitGrams: 70, calPer100: 180, proPer100: 16, carbPer100: 6, fatPer100: 10, swap: 'קציצות חזה עוף אפויות' },
+                        { category: 'prepared', keys: ['מוסקה'], name: 'מוסקה בשר וחצילים', defaultGrams: 250, unitGrams: 250, calPer100: 165, proPer100: 9, carbPer100: 8, fatPer100: 11, swap: 'חציל קלוי עם 150 גרם בקר רזה' },
+                        { category: 'prepared', keys: ['עוף בגריל', 'עוף בתנור', 'כרעיים בתנור', 'שוקיים בתנור', 'כרעיים', 'שוקיים', 'עוף שלם'], name: 'עוף / כרעיים אפויים בתנור', defaultGrams: 200, unitGrams: 200, calPer100: 190, proPer100: 24, carbPer100: 0, fatPer100: 10.5, swap: 'חזה עוף צלוי / פרגית על האש' },
+                        { category: 'prepared', keys: ['כנפיים בצ\'ילי', 'כנפיים ברוטב', 'כנפיים מטוגנות', 'כנפי עוף', 'כנפיים'], name: 'כנפי עוף (יחידה)', defaultGrams: 45, unitGrams: 45, calPer100: 240, proPer100: 18, carbPer100: 6, fatPer100: 16, swap: 'שיפודי חזה עוף' },
+                        { category: 'protein', keys: ['כבד עוף מוקפץ', 'כבד עוף עם בצל', 'כבד עוף'], name: 'כבד עוף צלוי / מוקפץ', defaultGrams: 150, calPer100: 170, proPer100: 26, carbPer100: 2.5, fatPer100: 6, swap: 'חזה עוף' },
+                        { category: 'protein', keys: ['לבבות עוף', 'לבבות'], name: 'לבבות עוף צלויים', defaultGrams: 150, calPer100: 185, proPer100: 26, carbPer100: 1, fatPer100: 8.5, swap: 'שיפודי חזה עוף' },
+                        { category: 'prepared', keys: ['מעורב ירושלמי'], name: 'מעורב ירושלמי', defaultGrams: 200, calPer100: 210, proPer100: 25, carbPer100: 3, fatPer100: 11, swap: 'חזה עוף מוקפץ עם בצל ותבלינים' },
+                        { category: 'protein', keys: ['אסאדו מעושן', 'אסאדו בתנור', 'אסאדו', 'בשר אסאדו'], name: 'בשר אסאדו (שפפונדרה)', defaultGrams: 200, calPer100: 290, proPer100: 22, carbPer100: 0, fatPer100: 22, swap: 'סינטה / פילה בקר צלוי' },
+                        { category: 'protein', keys: ['גולאש', 'צלי בקר', 'בשר צלי'], name: 'צלי בקר / גולאש ברוטב', defaultGrams: 200, calPer100: 185, proPer100: 24, carbPer100: 4, fatPer100: 8, swap: 'סינטה צלויה' },
+                        { category: 'protein', keys: ['אנטריקוט', 'סטייק אנטריקוט'], name: 'סטייק אנטריקוט', defaultGrams: 250, calPer100: 240, proPer100: 24, carbPer100: 0, fatPer100: 16, swap: 'סטייק סינטה / פילה בקר' },
+                        { category: 'protein', keys: ['סינטה', 'סטייק סינטה', 'פילה בקר', 'רוסטביף'], name: 'סינטה / פילה בקר / רוסטביף רזה', defaultGrams: 200, calPer100: 160, proPer100: 28, carbPer100: 0, fatPer100: 5, swap: 'חזה עוף צלוי' },
+                        { category: 'protein', keys: ['קבב רומני', 'קבב כבש', 'קבבים', 'קבב'], name: 'קבב בקר / כבש (יחידה)', defaultGrams: 50, unitGrams: 50, calPer100: 240, proPer100: 18, carbPer100: 2, fatPer100: 18, swap: 'קבב ביתי מחזה עוף/בקר רזה' },
+                        { category: 'prepared', keys: ['המבורגר כפול', 'המבורגר בלחמניה', 'המבורגר בקר', 'המבורגר'], name: 'המבורגר בלחמניה', defaultGrams: 250, unitGrams: 250, calPer100: 250, proPer100: 16, carbPer100: 24, fatPer100: 11, swap: 'המבורגר ביתי בלחמניה קלה' },
+                        { category: 'protein', keys: ['נקניקיות', 'נקניקיה'], name: 'נקניקיות עוף / בקר (יחידה)', defaultGrams: 50, unitGrams: 50, calPer100: 260, proPer100: 12, carbPer100: 4, fatPer100: 22, swap: 'פסטרמה דלת שומן' },
+                        { category: 'protein', keys: ['פסטרמה הודו', 'פסטרמה דלת שומן', 'פסטרמה'], name: 'פסטרמה הודו דלת שומן', defaultGrams: 100, sliceGrams: 20, calPer100: 95, proPer100: 18, carbPer100: 2, fatPer100: 1.5, swap: 'חזה עוף פרוס' },
+                        { category: 'prepared', keys: ['שניצלונים', 'נאגטס'], name: 'שניצלונים / נאגטס', defaultGrams: 150, unitGrams: 30, calPer100: 270, proPer100: 18, carbPer100: 18, fatPer100: 14, swap: 'רצועות חזה עוף צלויות' },
+                        { category: 'prepared', keys: ['רול סושי סלמון אבוקדו', 'רול סושי סלמון', 'רול סושי', 'סושי סלמון', 'סושי', 'מאקי', 'פוטומאקי', 'אינסייד אאוט'], name: 'רול סושי (8 יחידות)', defaultGrams: 200, unitGrams: 25, calPer100: 165, proPer100: 6.5, carbPer100: 28, fatPer100: 3.5, swap: 'סשימי סלמון + אורז מאודה' },
+                        { category: 'protein', keys: ['סשימי סלמון', 'סשימי טונה', 'סשימי'], name: 'סשימי דג נא (יחידה)', defaultGrams: 30, unitGrams: 30, calPer100: 140, proPer100: 23, carbPer100: 0, fatPer100: 5, swap: 'סלמון אפוי' },
+                        { category: 'prepared', keys: ['ניגירי סלמון', 'ניגירי'], name: 'ניגירי (יחידה)', defaultGrams: 40, unitGrams: 40, calPer100: 160, proPer100: 8, carbPer100: 26, fatPer100: 2, swap: 'סשימי' },
+                        { category: 'prepared', keys: ['מוקפץ עוף עם אטריות', 'מוקפץ עוף', 'מוקפץ בקר', 'מוקפץ נודלס', 'פאד תאי עוף', 'פאד תאי', 'נודלס מוקפץ', 'מוקפץ'], name: 'מוקפץ עוף / נודלס עם ירקות', defaultGrams: 350, calPer100: 150, proPer100: 10, carbPer100: 19, fatPer100: 3.8, swap: 'מוקפץ חזה עוף עם ירקות ואטריות קונג\'אק' },
+                        { category: 'prepared', keys: ['אגרול'], name: 'אגרול סיני מטוגן', defaultGrams: 80, unitGrams: 80, calPer100: 230, proPer100: 5, carbPer100: 26, fatPer100: 12, swap: 'דפי אורז מאודים במילוי ירקות' },
+                        { category: 'prepared', keys: ['דים סאם', 'באן'], name: 'דים סאם / לחמניית באן מאודה', defaultGrams: 50, unitGrams: 50, calPer100: 180, proPer100: 7, carbPer100: 28, fatPer100: 4, swap: 'דים סאם עוף מאודה' },
+                        { category: 'prepared', keys: ['פיצה מרגריטה', 'משולש פיצה', 'משולשי פיצה', 'מגש פיצה', 'פיצה'], name: 'משולש פיצה', defaultGrams: 110, unitGrams: 110, calPer100: 265, proPer100: 11, carbPer100: 33, fatPer100: 10, swap: 'טוסט לחם קל עם גבנ\"צ 9% ורוטב עגבניות' },
+                        { category: 'prepared', keys: ['לזניה בולונז', 'לזניה גבינות', 'לזניה'], name: 'לזניה (מנה)', defaultGrams: 250, unitGrams: 250, calPer100: 175, proPer100: 9.5, carbPer100: 16, fatPer100: 8.5, swap: 'פסטה מחיטה מלאה עם בולונז בקר רזה' },
+                        { category: 'prepared', keys: ['פסטה בולונז', 'בולונז'], name: 'פסטה בולונז', defaultGrams: 300, calPer100: 155, proPer100: 9, carbPer100: 20, fatPer100: 4.5, swap: 'פסטה קלה עם חזה עוף טחון' },
+                        { category: 'prepared', keys: ['פסטה שמנת פטריות', 'פסטה פסטו', 'פסטה שמנת'], name: 'פסטה ברוטב שמנת / פסטו', defaultGrams: 300, calPer100: 195, proPer100: 6, carbPer100: 24, fatPer100: 8.5, swap: 'פסטה ברוטב עגבניות ושום' },
+                        { category: 'carb', keys: ['רביולי גבינות', 'רביולי בטטה', 'רביולי', 'טורטליני', 'ניוקי'], name: 'רביולי / ניוקי מבושל', defaultGrams: 200, calPer100: 185, proPer100: 7, carbPer100: 30, fatPer100: 4, swap: 'פסטה מלאה' },
+                        { category: 'prepared', keys: ['בורקס גבינה', 'בורקס תפו״א', 'בורקס תפוח אדמה', 'בורקס פטריות', 'בורקס'], name: 'בורקס (יחידה בינונית)', defaultGrams: 90, unitGrams: 90, calPer100: 380, proPer100: 7, carbPer100: 38, fatPer100: 23, swap: 'טוסט לחם קל עם בולגרית 5%' },
+                        { category: 'prepared', keys: ['ג\'חנון עם ביצה', 'ג\'חנון', 'גחנון'], name: 'ג\'חנון (יחידה כולל ביצה ורסק)', defaultGrams: 200, unitGrams: 200, calPer100: 330, proPer100: 6, carbPer100: 42, fatPer100: 16, swap: 'פיתה קלה עם ביצה קשה וטחינה' },
+                        { category: 'prepared', keys: ['מלוואח עם רסק', 'מלוואח', 'מלווח', 'זיווה'], name: 'מלוואח / זיווה (יחידה)', defaultGrams: 160, unitGrams: 160, calPer100: 360, proPer100: 6.5, carbPer100: 45, fatPer100: 18, swap: 'טורטיה מקמח מלא קלויה' },
+                        { category: 'carb', keys: ['צ\'יפס מטוגן', 'צ\'יפס', 'ציפס', 'פוטטוס'], name: 'צ\'יפס מטוגן', defaultGrams: 150, cupGrams: 100, calPer100: 310, proPer100: 3.5, carbPer100: 41, fatPer100: 15, swap: 'תפו״א אפוי בתנור עם פפריקה' },
+                        { category: 'carb', keys: ['טבעות בצל'], name: 'טבעות בצל מטוגנות', defaultGrams: 120, calPer100: 280, proPer100: 3.5, carbPer100: 35, fatPer100: 14, swap: 'בצל מוקפץ קל' },
+
+                        // --- 2. מרקים ותבשילים ---
+                        { category: 'prepared', keys: ['מרק עדשים עשיר', 'מרק עדשים', 'מרק אפונה', 'מרק שעועית'], name: 'מרק עדשים / קטניות', defaultGrams: 300, cupGrams: 250, calPer100: 65, proPer100: 4.5, carbPer100: 10, fatPer100: 0.8, swap: 'עדשים מבושלות עם ירקות' },
+                        { category: 'prepared', keys: ['מרק עוף עם ירקות', 'מרק עוף', 'מרק צח'], name: 'מרק עוף צח עם ירקות ועוף', defaultGrams: 300, cupGrams: 250, calPer100: 45, proPer100: 4.5, carbPer100: 3, fatPer100: 1.5, swap: 'מרק ירקות עשיר' },
+                        { category: 'carb', keys: ['שקדי מרק'], name: 'שקדי מרק', defaultGrams: 20, spoonGrams: 10, calPer100: 515, proPer100: 10, carbPer100: 55, fatPer100: 28, swap: 'קרוטונים מלחם קל אפוי' },
+                        { category: 'prepared', keys: ['מרק ירקות', 'מרק עגבניות', 'מרק בצל', 'מרק פטריות', 'מרק מינסטרונה'], name: 'מרק ירקות / עגבניות / פטריות', defaultGrams: 300, cupGrams: 250, calPer100: 35, proPer100: 1.5, carbPer100: 6, fatPer100: 0.5, swap: 'סלט ירקות חם' },
+
+                        // --- 3. מוצרי חלב, גבינות, תחליפי חלב ושייקים ---
+                        { category: 'protein', keys: ['שייק חלבון', 'סמודי חלבון', 'פרוטין שייק'], name: 'שייק חלבון (בסיס סקופ + נוזל)', defaultGrams: 300, cupGrams: 300, calPer100: 75, proPer100: 9.5, carbPer100: 5, fatPer100: 1.5, swap: 'סקופ חלבון עם מים' },
+                        { category: 'dairy', keys: ['יוגורט יווני 0%', 'יוגורט יווני 2%', 'יוגורט יווני', 'יוגורט יווני 5%', 'יוגורט יווני 10%'], name: 'יוגורט יווני', defaultGrams: 170, boxGrams: 170, calPer100: 65, proPer100: 10, carbPer100: 3.8, fatPer100: 1, swap: 'יוגורט פרו 0%' },
+                        { category: 'dairy', keys: ['גבינת ריקוטה 5%', 'גבינת ריקוטה', 'ריקוטה פרסקה', 'ריקוטה'], name: 'גבינת ריקוטה 5%', defaultGrams: 100, spoonGrams: 30, calPer100: 105, proPer100: 9, carbPer100: 4, fatPer100: 5, swap: 'קוטג\' 3%' },
+                        { category: 'dairy', keys: ['גבינת מוצרלה', 'מוצרלה פרסקה', 'כדורי מוצרלה'], name: 'גבינת מוצרלה', defaultGrams: 60, calPer100: 250, proPer100: 20, carbPer100: 2, fatPer100: 18, swap: 'מוצרלה לייט 9%' },
+                        { category: 'dairy', keys: ['גבינת פטה', 'גבינת פטה 5%', 'פטה עיזים'], name: 'גבינת פטה / פטה 5%', defaultGrams: 50, calPer100: 130, proPer100: 14, carbPer100: 2, fatPer100: 7, swap: 'בולגרית 5%' },
+                        { category: 'dairy', keys: ['גבינת חלומי', 'חלומי מטוגנת', 'חלומי צרובה', 'חלומי'], name: 'גבינת חלומי צרובה', defaultGrams: 60, sliceGrams: 30, calPer100: 320, proPer100: 21, carbPer100: 2, fatPer100: 26, swap: 'צפתית 5% צרובה' },
+                        { category: 'dairy', keys: ['גבינת עיזים', 'פרומעז', 'גליל עיזים'], name: 'גבינת עיזים', defaultGrams: 40, sliceGrams: 20, calPer100: 290, proPer100: 18, carbPer100: 1, fatPer100: 24, swap: 'צפתית עיזים 5%' },
+                        { category: 'dairy', keys: ['גבינת פילדלפיה', 'גבינת שמנת', 'גבינת שמנת 5%', 'מסקרפונה', 'שמנת חמוצה 15%', 'שמנת חמוצה 9%', 'שמנת חמוצה'], name: 'גבינת שמנת / פילדלפיה / שמנת חמוצה', defaultGrams: 30, spoonGrams: 30, calPer100: 180, proPer100: 6, carbPer100: 4, fatPer100: 16, swap: 'גבינה לבנה 5% מתובלת' },
+                        { category: 'dairy', keys: ['לבנה עם שמן זית', 'גבינת לבנה', 'לאבנה', 'לבנה'], name: 'גבינת לאבנה', defaultGrams: 60, spoonGrams: 30, calPer100: 120, proPer100: 9, carbPer100: 3.5, fatPer100: 7, swap: 'יוגורט יווני 0% עם זעתר' },
+                        { category: 'dairy', keys: ['גבינת פרמז\'ן', 'פרמז\'ן מגוררת', 'פרמזן', 'קשקבל'], name: 'גבינת פרמז\'ן / קשקבל מגוררת', defaultGrams: 20, spoonGrams: 10, calPer100: 390, proPer100: 36, carbPer100: 3, fatPer100: 26, swap: 'גבינה צהובה 9% מגוררת' },
+                        { category: 'sweets', keys: ['מילקי', 'מעדן מילקי', 'מעדן שוקולד', 'דני', 'יולו', 'קרלו'], name: 'מעדן שוקולד / מילקי (גביע)', defaultGrams: 130, boxGrams: 130, calPer100: 140, proPer100: 3, carbPer100: 19, fatPer100: 6, swap: 'פודינג חלבון PRO 20g' },
+                        { category: 'protein', keys: ['פודינג חלבון', 'מוס חלבון', 'דנונה פרו פודינג'], name: 'פודינג חלבון PRO (גביע)', defaultGrams: 200, boxGrams: 200, calPer100: 75, proPer100: 10, carbPer100: 5.5, fatPer100: 1.2, swap: 'יוגורט פרו 25' },
+                        { category: 'dairy', keys: ['חלב קוקוס', 'קרם קוקוס', 'מי קוקוס'], name: 'קרם / חלב קוקוס', defaultGrams: 100, spoonGrams: 15, cupGrams: 200, calPer100: 190, proPer100: 2, carbPer100: 3, fatPer100: 19, swap: 'משקה שקדים ללא סוכר' },
+
+                        // --- 4. משקאות וקפה ---
+                        { category: 'drinks', keys: ['קפה הפוך גדול', 'קפה הפוך', 'קפוצ\'ינו', 'קפה לאטה', 'אייס קפה דיאט', 'נס קפה עם חלב', 'נס קפה'], name: 'קפה הפוך / קפוצ\'ינו על חלב', defaultGrams: 250, cupGrams: 250, calPer100: 45, proPer100: 2.8, carbPer100: 4.5, fatPer100: 1.8, swap: 'אמריקנו עם מעט חלב דל שומן' },
+                        { category: 'drinks', keys: ['אייס קפה רגיל', 'אייס קפה', 'אייס וניל', 'שוקו קר', 'שוקו'], name: 'אייס קפה / שוקו קר (כוס)', defaultGrams: 350, cupGrams: 350, calPer100: 95, proPer100: 2.5, carbPer100: 16, fatPer100: 2.5, swap: 'אייס קפה על בסיס אספרסו וממתיק' },
+                        { category: 'drinks', keys: ['אמריקנו', 'אספרסו כפול', 'אספרסו', 'קפה שחור', 'תה ירוק', 'תה'], name: 'קפה שחור / אספרסו / אמריקנו (ללא חלב וסוכר)', defaultGrams: 200, cupGrams: 200, calPer100: 2, proPer100: 0.1, carbPer100: 0.2, fatPer100: 0, swap: 'מים צוננים' },
+                        { category: 'drinks', keys: ['מיץ תפוזים סחוט', 'מיץ תפוזים', 'מיץ גזר', 'מיץ תפוחים', 'מיץ סחוט'], name: 'מיץ פירות טבעי סחוט (כוס)', defaultGrams: 250, cupGrams: 250, calPer100: 45, proPer100: 0.7, carbPer100: 10.5, fatPer100: 0.2, swap: 'תפוז שלם (עם הסיבים)' },
+
+                        // --- 5. מאפים, לחמים ודגנים ---
+                        { category: 'carb', keys: ['חלה לשבת', 'פרוסת חלה', 'חלה מתוקה', 'חלה'], name: 'חלה (פרוסה עבה)', defaultGrams: 60, sliceGrams: 60, calPer100: 280, proPer100: 9, carbPer100: 52, fatPer100: 4, swap: '2 פרוסות לחם מלא' },
+                        { category: 'carb', keys: ['לחמניה עגולה', 'לחמניה ארוכה', 'לחמניית המבורגר', 'לחמניה', 'לחמנייה'], name: 'לחמניה (יחידה)', defaultGrams: 80, unitGrams: 80, calPer100: 270, proPer100: 8.5, carbPer100: 52, fatPer100: 2.5, swap: 'לחמניה קלה / פיתה קלה' },
+                        { category: 'carb', keys: ['לחם שיפון', 'לחם מחמצת', 'לחם פשתן'], name: 'לחם שיפון / מחמצת', defaultGrams: 40, sliceGrams: 40, calPer100: 220, proPer100: 8, carbPer100: 44, fatPer100: 1.5, swap: 'לחם קל' },
+                        { category: 'carb', keys: ['בגט', 'ג\'בטה', 'פוקצ\'ה'], name: 'בגט / ג\'בטה / פוקצ\'ה', defaultGrams: 100, unitGrams: 100, calPer100: 275, proPer100: 9, carbPer100: 55, fatPer100: 2, swap: 'פיתה קלה' },
+                        { category: 'carb', keys: ['גרנולה ביתית', 'גרנולה עם אגוזים', 'גרנולה', 'מוזלי'], name: 'גרנולה / מוזלי', defaultGrams: 45, spoonGrams: 15, cupGrams: 60, calPer100: 440, proPer100: 11, carbPer100: 60, fatPer100: 18, swap: 'שיבולת שועל דקה' },
+                        { category: 'carb', keys: ['בייגלה עם שומשום', 'בייגלה רומני', 'מקלות מלוחים', 'בייגלה', 'בייגל'], name: 'בייגלה / מקלות מלוחים', defaultGrams: 40, unitGrams: 100, calPer100: 385, proPer100: 10, carbPer100: 75, fatPer100: 4.5, swap: 'פריכיות כוסמין' },
+                        { category: 'carb', keys: ['קרקרים מלוחים', 'קרקר שיפון', 'קרקרים', 'קרקר', 'פתית'], name: 'קרקרים / פתית (יחידה)', defaultGrams: 30, unitGrams: 8, calPer100: 410, proPer100: 9, carbPer100: 68, fatPer100: 12, swap: 'פריכיות אורז' },
+                        { category: 'carb', keys: ['פריכיות כוסמין', 'פריכיות תירס'], name: 'פריכיות כוסמין / תירס', defaultGrams: 30, unitGrams: 10, calPer100: 370, proPer100: 10, carbPer100: 76, fatPer100: 2, swap: 'פרוסת לחם קל' },
+                        { category: 'sweets', keys: ['קרואסון שוקולד', 'קרואסון חמאה', 'רוגלך', 'רוגעלך', 'עוגת שמרים', 'דניש', 'מאפה קינמון'], name: 'קרואסון / רוגלך / מאפה שמרים (יחידה)', defaultGrams: 80, unitGrams: 80, calPer100: 420, proPer100: 7, carbPer100: 50, fatPer100: 22, swap: 'טוסט לחם קל עם כפית סילאן וטחינה' },
+                        { category: 'sweets', keys: ['פנקייק', 'וופל בלגי', 'קרפ צרפתי', 'קרפ'], name: 'פנקייק / וופל בלגי (יחידה)', defaultGrams: 70, unitGrams: 70, calPer100: 280, proPer100: 7, carbPer100: 45, fatPer100: 8, swap: 'פנקייק חלבון משיבולת שועל וסקופ' },
+                        { category: 'sweets', keys: ['עוגת גבינה אפויה', 'עוגת גבינה פירורים', 'עוגת גבינה'], name: 'עוגת גבינה (פרוסה)', defaultGrams: 100, sliceGrams: 100, calPer100: 290, proPer100: 8, carbPer100: 28, fatPer100: 16, swap: 'עוגת גבינה לייט מחלבון וריקוטה' },
+                        { category: 'sweets', keys: ['עוגת שוקולד חמה', 'עוגת שוקולד', 'בראוניז', 'סופלה שוקולד'], name: 'עוגת שוקולד / בראוניז (פרוסה)', defaultGrams: 90, sliceGrams: 90, calPer100: 410, proPer100: 5.5, carbPer100: 52, fatPer100: 21, swap: 'בראוני חלבון ביתי' },
+                        { category: 'sweets', keys: ['עוגיות שוקולד צ\'יפס', 'עוגיות חמאה', 'עוגיות טחינה', 'עוגיות שיבולת שועל', 'עוגיות', 'עוגייה', 'עוגיה', 'ביסקוויט', 'פתי בר'], name: 'עוגיות / פתי בר (יחידה)', defaultGrams: 20, unitGrams: 20, calPer100: 450, proPer100: 6, carbPer100: 68, fatPer100: 18, swap: 'עוגיית חלבון PRO' },
+
+                        // --- 6. קטניות ודגנים בריאים ---
+                        { category: 'carb', keys: ['עדשים שחורות', 'עדשים ירוקות', 'עדשים כתומות', 'עדשים מבושלות', 'עדשים'], name: 'עדשים מבושלות (כוס)', defaultGrams: 150, cupGrams: 180, servingSpoonGrams: 50, calPer100: 116, proPer100: 9, carbPer100: 20, fatPer100: 0.4, swap: 'קינואה / בורגול' },
+                        { category: 'carb', keys: ['גרגירי חומוס מבושלים', 'גרגירי חומוס', 'גרגרי חומוס'], name: 'גרגירי חומוס מבושלים', defaultGrams: 120, cupGrams: 160, servingSpoonGrams: 45, calPer100: 164, proPer100: 8.9, carbPer100: 27, fatPer100: 2.6, swap: 'עדשים שחורות' },
+                        { category: 'carb', keys: ['שעועית אדומה מבושלת', 'שעועית לבנה מבושלת', 'שעועית שחורה', 'שעועית מבושלת'], name: 'שעועית מבושלת', defaultGrams: 130, cupGrams: 170, servingSpoonGrams: 45, calPer100: 127, proPer100: 8.7, carbPer100: 23, fatPer100: 0.5, swap: 'עדשים מבושלות' },
+                        { category: 'veggies', keys: ['שעועית ירוקה מבושלת', 'שעועית ירוקה עדינה', 'שעועית ירוקה', 'שעועית צהובה'], name: 'שעועית ירוקה / צהובה מבושלת', defaultGrams: 150, cupGrams: 130, calPer100: 31, proPer100: 1.8, carbPer100: 7, fatPer100: 0.2, swap: 'ברוקולי מאודה' },
+                        { category: 'protein', keys: ['אדממה', 'פולי סויה'], name: 'פולי אדממה (סויה)', defaultGrams: 120, cupGrams: 120, calPer100: 122, proPer100: 11, carbPer100: 10, fatPer100: 5, swap: 'גרגירי חומוס' },
+                        { category: 'carb', keys: ['אפונה וגזר', 'אפונה ירוקה מבושלת', 'אפונה עדינה', 'אפונה'], name: 'אפונה ירוקה מבושלת', defaultGrams: 130, cupGrams: 150, servingSpoonGrams: 45, calPer100: 81, proPer100: 5.4, carbPer100: 14.5, fatPer100: 0.4, swap: 'שעועית ירוקה' },
+                        { category: 'carb', keys: ['גרגירי תירס', 'תירס מתוק', 'קלח תירס', 'תירס'], name: 'תירס מתוק / קלח תירס', defaultGrams: 120, unitGrams: 150, cupGrams: 150, calPer100: 86, proPer100: 3.2, carbPer100: 19, fatPer100: 1.2, swap: 'אורז בסמטי' },
+
+                        // --- 7. שמנים, ממרחים, רטבים ואגוזים ---
+                        { category: 'fats', keys: ['חמאה צהובה', 'חמאה', 'גהי', 'חמאה מזוקקת'], name: 'חמאה / גהי', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 717, proPer100: 0.8, carbPer100: 0.1, fatPer100: 81, swap: 'שמן זית' },
+                        { category: 'fats', keys: ['מיונז אמיתי', 'מיונז'], name: 'מיונז', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 680, proPer100: 1, carbPer100: 1, fatPer100: 75, swap: 'מיונז לייט / טחינה גולמית' },
+                        { category: 'fats', keys: ['מיונז לייט', 'מיוקל'], name: 'מיונז לייט (מיוקל)', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 240, proPer100: 1, carbPer100: 6, fatPer100: 24, swap: 'חרדל דיז\'ון' },
+                        { category: 'fats', keys: ['קטשופ', 'רוטב קטשופ'], name: 'קטשופ', defaultGrams: 20, spoonGrams: 20, teaspoonGrams: 7, calPer100: 110, proPer100: 1.5, carbPer100: 26, fatPer100: 0.1, swap: 'רסק עגבניות ללא סוכר' },
+                        { category: 'fats', keys: ['חרדל דיז\'ון', 'חרדל'], name: 'חרדל', defaultGrams: 10, spoonGrams: 10, teaspoonGrams: 5, calPer100: 66, proPer100: 4.4, carbPer100: 5, fatPer100: 3.3, swap: 'מיץ לימון ותבלינים' },
+                        { category: 'fats', keys: ['רוטב אלף האיים', 'אלף האיים'], name: 'רוטב אלף האיים', defaultGrams: 30, spoonGrams: 15, calPer100: 380, proPer100: 1, carbPer100: 15, fatPer100: 36, swap: 'ויניגרט שמן זית ולימון' },
+                        { category: 'fats', keys: ['רוטב סויה', 'סויה לייט'], name: 'רוטב סויה', defaultGrams: 15, spoonGrams: 15, calPer100: 53, proPer100: 8, carbPer100: 5, fatPer100: 0, swap: 'סויה מופחתת נתרן' },
+                        { category: 'fats', keys: ['רוטב טריאקי', 'רוטב צ\'ילי מתוק', 'טריאקי', 'צ\'ילי מתוק', 'צילי מתוק'], name: 'רוטב טריאקי / צ\'ילי מתוק', defaultGrams: 25, spoonGrams: 20, calPer100: 180, proPer100: 1.5, carbPer100: 42, fatPer100: 0.2, swap: 'רוטב סויה עם מעט סילאן' },
+                        { category: 'fats', keys: ['רוטב פסטו', 'ממרח פסטו', 'פסטו'], name: 'ממרח רוטב פסטו', defaultGrams: 20, spoonGrams: 20, teaspoonGrams: 7, calPer100: 450, proPer100: 5, carbPer100: 6, fatPer100: 46, swap: 'שמן זית עם שום ועשבי תיבול' },
+                        { category: 'sweets', keys: ['ריבה', 'קונפיטורה'], name: 'ריבה / קונפיטורה', defaultGrams: 20, spoonGrams: 20, teaspoonGrams: 7, calPer100: 250, proPer100: 0.4, carbPer100: 65, fatPer100: 0.1, swap: 'ריבה ללא תוספת סוכר' },
+                        { category: 'fats', keys: ['אגוזי פקאן', 'פקאן'], name: 'אגוזי פקאן', defaultGrams: 25, spoonGrams: 15, calPer100: 690, proPer100: 9, carbPer100: 14, fatPer100: 72, swap: 'שקדים טבעיים' },
+                        { category: 'fats', keys: ['אגוזי קשיו', 'קשיו'], name: 'אגוזי קשיו', defaultGrams: 25, spoonGrams: 15, calPer100: 553, proPer100: 18, carbPer100: 30, fatPer100: 44, swap: 'שקדים טבעיים' },
+                        { category: 'fats', keys: ['פיסטוקים', 'פיסטוק'], name: 'פיסטוקים קלופים', defaultGrams: 25, spoonGrams: 15, calPer100: 560, proPer100: 20, carbPer100: 28, fatPer100: 45, swap: 'שקדים' },
+                        { category: 'fats', keys: ['גרעיני חמניה', 'גרעיני דלעת', 'גרעינים שחורים', 'גרעינים לבנים'], name: 'גרעיני חמניה / דלעת קלופים', defaultGrams: 25, spoonGrams: 15, calPer100: 580, proPer100: 24, carbPer100: 15, fatPer100: 50, swap: 'שקדים' },
+                        { category: 'fats', keys: ['שומשום', 'זרעי צ\'יה', 'זרעי פשתן'], name: 'שומשום / זרעי צ\'יה / פשתן', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 570, proPer100: 18, carbPer100: 23, fatPer100: 50, swap: 'טחינה גולמית' },
+                        { category: 'sweets', keys: ['חלווה', 'חלווה ללא סוכר'], name: 'חלווה', defaultGrams: 30, unitGrams: 30, calPer100: 520, proPer100: 12, carbPer100: 50, fatPer100: 31, swap: 'כף טחינה גולמית עם כפית סילאן' },
+
+                        // --- 8. פירות וירקות ---
+                        { category: 'fruits', keys: ['אבטיח', 'כוס אבטיח', 'פלח אבטיח'], name: 'אבטיח חתוך', defaultGrams: 250, cupGrams: 150, calPer100: 30, proPer100: 0.6, carbPer100: 7.5, fatPer100: 0.1, swap: 'מלון' },
+                        { category: 'fruits', keys: ['מלון'], name: 'מלון חתוך', defaultGrams: 200, cupGrams: 150, calPer100: 34, proPer100: 0.8, carbPer100: 8, fatPer100: 0.2, swap: 'אבטיח' },
+                        { category: 'fruits', keys: ['ענבים ירוקים', 'ענבים שחורים', 'ענבים'], name: 'ענבים (כוס)', defaultGrams: 150, cupGrams: 150, calPer100: 69, proPer100: 0.7, carbPer100: 18, fatPer100: 0.2, swap: 'פירות יער' },
+                        { category: 'fruits', keys: ['תותים', 'תות שדה', 'תות'], name: 'תותים טריים (כוס)', defaultGrams: 150, cupGrams: 150, calPer100: 32, proPer100: 0.7, carbPer100: 7.7, fatPer100: 0.3, swap: 'אוכמניות' },
+                        { category: 'fruits', keys: ['אוכמניות', 'פטל', 'פירות יער קפואים', 'פירות יער'], name: 'פירות יער / אוכמניות', defaultGrams: 120, cupGrams: 150, calPer100: 57, proPer100: 0.7, carbPer100: 14, fatPer100: 0.3, swap: 'תותים' },
+                        { category: 'fruits', keys: ['מנגו'], name: 'מנגו טרי', defaultGrams: 150, unitGrams: 200, cupGrams: 160, calPer100: 60, proPer100: 0.8, carbPer100: 15, fatPer100: 0.4, swap: 'אפרסק' },
+                        { category: 'fruits', keys: ['אננס טרי', 'אננס'], name: 'אננס טרי חתוך', defaultGrams: 150, cupGrams: 160, calPer100: 50, proPer100: 0.5, carbPer100: 13, fatPer100: 0.1, swap: 'תפוח' },
+                        { category: 'fruits', keys: ['תפוז', 'קלמנטינה', 'מנדרינה', 'אשכולית'], name: 'תפוז / קלמנטינה (יחידה)', defaultGrams: 150, unitGrams: 150, calPer100: 47, proPer100: 0.9, carbPer100: 12, fatPer100: 0.1, swap: 'תפוח' },
+                        { category: 'fruits', keys: ['אפרסק', 'נקטרינה', 'שזיף', 'משמש'], name: 'אפרסק / נקטרינה / שזיף', defaultGrams: 130, unitGrams: 130, calPer100: 40, proPer100: 0.9, carbPer100: 10, fatPer100: 0.2, swap: 'תפוח' },
+                        { category: 'fruits', keys: ['קיווי'], name: 'קיווי (יחידה)', defaultGrams: 80, unitGrams: 80, calPer100: 61, proPer100: 1.1, carbPer100: 15, fatPer100: 0.5, swap: 'תפוז' },
+                        { category: 'fruits', keys: ['חמוציות ללא סוכר', 'חמוציות', 'צימוקים'], name: 'חמוציות / צימוקים מיובשים', defaultGrams: 30, spoonGrams: 15, calPer100: 300, proPer100: 2.5, carbPer100: 75, fatPer100: 0.5, swap: 'תמר מג\'הול' },
+                        { category: 'veggies', keys: ['כרובית אפויה', 'כרובית מבושלת', 'כרובית'], name: 'כרובית אפויה / מבושלת', defaultGrams: 150, cupGrams: 120, calPer100: 25, proPer100: 2, carbPer100: 5, fatPer100: 0.3, swap: 'ברוקולי' },
+                        { category: 'veggies', keys: ['ברוקולי מאודה', 'ברוקולי מבושל', 'ברוקולי'], name: 'ברוקולי מאודה / אפוי', defaultGrams: 150, cupGrams: 100, calPer100: 34, proPer100: 2.8, carbPer100: 7, fatPer100: 0.4, swap: 'שעועית ירוקה' },
+                        { category: 'veggies', keys: ['קישואים', 'זוקיני', 'קישוא'], name: 'קישוא / זוקיני מבושל/צלוי', defaultGrams: 150, unitGrams: 150, calPer100: 17, proPer100: 1.2, carbPer100: 3.1, fatPer100: 0.3, swap: 'מלפפון' },
+                        { category: 'veggies', keys: ['חציל קלוי', 'חציל בתנור', 'חציל'], name: 'חציל קלוי / אפוי', defaultGrams: 150, unitGrams: 200, calPer100: 25, proPer100: 1, carbPer100: 6, fatPer100: 0.2, swap: 'קישוא צלוי' },
+                        { category: 'veggies', keys: ['פטריות שמפיניון', 'פטריות פורטובלו', 'פטריות מוקפצות', 'פטריות'], name: 'פטריות טריות / מוקפצות', defaultGrams: 120, cupGrams: 100, calPer100: 22, proPer100: 3.1, carbPer100: 3.3, fatPer100: 0.3, swap: 'קישוא' },
+                        { category: 'veggies', keys: ['תרד מבושל', 'עלי תרד', 'תרד'], name: 'עלי תרד טרי / מבושל', defaultGrams: 100, cupGrams: 60, calPer100: 23, proPer100: 2.9, carbPer100: 3.6, fatPer100: 0.4, swap: 'חסה עשירה' },
+                        { category: 'veggies', keys: ['גזר גמדי', 'גזר'], name: 'גזר טרי / מבושל', defaultGrams: 100, unitGrams: 80, calPer100: 41, proPer100: 0.9, carbPer100: 9.6, fatPer100: 0.2, swap: 'פלפל אדום' },
+                        { category: 'veggies', keys: ['סלק מבושל', 'סלק אפוי', 'סלק'], name: 'סלק מבושל / אפוי', defaultGrams: 120, unitGrams: 120, calPer100: 43, proPer100: 1.6, carbPer100: 9.6, fatPer100: 0.2, swap: 'גזר' },
+
+                        // --- 9. חטיפים, מתוקים וגלידות ---
+                        { category: 'sweets', keys: ['שוקולד מריר 85%', 'שוקולד מריר 70%', 'שוקולד מריר', 'שוקולד חלב', 'שוקולד לבן', 'שוקולד', 'קוביות שוקולד', 'קוביית שוקולד'], name: 'שוקולד (קוביות)', defaultGrams: 20, unitGrams: 6, calPer100: 550, proPer100: 8, carbPer100: 45, fatPer100: 38, swap: 'תמר מג\'הול עם אגוז מלך' },
+                        { category: 'sweets', keys: ['גלידת שמנת', 'כדור גלידה', 'גלידה אמריקאית', 'גלידה'], name: 'גלידת שמנת (כדור / מנה)', defaultGrams: 100, unitGrams: 90, calPer100: 210, proPer100: 3.5, carbPer100: 24, fatPer100: 11, swap: 'גלידת יוגורט חלבון PRO / ארטיק קרח' },
+                        { category: 'sweets', keys: ['גלידת יוגורט', 'פרוזן יוגורט'], name: 'גלידת יוגורט / פרוזן יוגורט', defaultGrams: 150, calPer100: 130, proPer100: 4, carbPer100: 22, fatPer100: 3, swap: 'יוגורט פרו קפוא' },
+                        { category: 'sweets', keys: ['מגנום שוקולד', 'מגנום'], name: 'שלגון מגנום (יחידה)', defaultGrams: 85, unitGrams: 85, calPer100: 320, proPer100: 3.8, carbPer100: 28, fatPer100: 21, swap: 'שלגון לייט 40 קלוריות' },
+                        { category: 'sweets', keys: ['ארטיק קרח', 'קרטיב'], name: 'ארטיק קרח (יחידה)', defaultGrams: 70, unitGrams: 70, calPer100: 60, proPer100: 0, carbPer100: 15, fatPer100: 0, swap: 'מים קרים עם לימון' },
+                        { category: 'sweets', keys: ['תפוצ\'יפס', 'דוריטוס', 'ביסלי', 'חטיף מלוח'], name: 'חטיף מלוח (שקית קטנה)', defaultGrams: 45, unitGrams: 45, calPer100: 520, proPer100: 6, carbPer100: 55, fatPer100: 30, swap: 'שקית פופקורן לייט' },
+                        { category: 'carb', keys: ['פופקורן שקית לייט', 'פופקורן לייט', 'פופקורן'], name: 'פופקורן (שקית מוכנה לייט)', defaultGrams: 50, unitGrams: 50, calPer100: 380, proPer100: 9, carbPer100: 60, fatPer100: 10, swap: 'פריכיות אורז' },
+
+                        // --- 10. בסיסיים קלאסיים ---
+                        { category: 'carb', keys: ['אורז בסמטי', 'אורז לבן', 'אורז יסמין', 'אורז מלא', 'אורז', 'מג\'דרה', 'מגדרה'], name: 'אורז מבושל', defaultGrams: 150, servingSpoonGrams: 55, spoonGrams: 25, cupGrams: 160, calPer100: 130, proPer100: 2.7, carbPer100: 28, fatPer100: 0.3, swap: '150 גרם תפו״א אפוי / 120 גרם קינואה' },
+                        { category: 'carb', keys: ['פסטה מבושלת', 'פסטה', 'פתיתים', 'ספגטי', 'מקרוני', 'נודלס', 'אטריות'], name: 'פסטה / פתיתים מבושלים', defaultGrams: 150, servingSpoonGrams: 50, spoonGrams: 25, cupGrams: 150, calPer100: 158, proPer100: 5.8, carbPer100: 31, fatPer100: 0.9, swap: '150 גרם אורז בסמטי / 180 גרם בטטה' },
+                        { category: 'carb', keys: ['קוסקוס', 'בורגול', 'קינואה', 'כוסמת'], name: 'קוסקוס / קינואה / בורגול מבושל', defaultGrams: 150, servingSpoonGrams: 50, spoonGrams: 25, cupGrams: 160, calPer100: 120, proPer100: 4, carbPer100: 24, fatPer100: 0.8, swap: '150 גרם אורז מבושל' },
+                        { category: 'carb', keys: ['שיבולת שועל', 'קוואקר', 'דייסת קוואקר', 'דייסה'], name: 'שיבולת שועל (קוואקר)', defaultGrams: 50, spoonGrams: 12, cupGrams: 80, calPer100: 389, proPer100: 16.9, carbPer100: 66, fatPer100: 6.9, swap: '2 פרוסות לחם מלא / 40 גרם ברנפלקס' },
+                        { category: 'carb', keys: ['לחם קל', 'פרוסות לחם קל', 'לחם דיאט'], name: 'לחם קל', defaultGrams: 50, sliceGrams: 25, calPer100: 165, proPer100: 9, carbPer100: 28, fatPer100: 1.2, swap: '3 פריכיות אורז' },
+                        { category: 'carb', keys: ['לחם מלא', 'לחם מחמצת', 'לחם כפרי', 'לחם לבן', 'לחם', 'טוסט', 'פרוסת לחם', 'פרוסות לחם'], name: 'לחם (פרוסה)', defaultGrams: 60, sliceGrams: 35, calPer100: 240, proPer100: 8.5, carbPer100: 46, fatPer100: 2.2, swap: '2 פרוסות לחם קל' },
+                        { category: 'carb', keys: ['פיתה קלה', 'פיתה כוסמין קלה'], name: 'פיתה קלה', defaultGrams: 60, unitGrams: 60, calPer100: 160, proPer100: 8, carbPer100: 30, fatPer100: 1, swap: '2 פרוסות לחם קל' },
+                        { category: 'carb', keys: ['פיתה'], name: 'פיתה רגילה', defaultGrams: 90, unitGrams: 90, calPer100: 260, proPer100: 9, carbPer100: 52, fatPer100: 1.5, swap: 'פיתה קלה / 2 פרוסות לחם מלא' },
+                        { category: 'carb', keys: ['לאפה'], name: 'לאפה', defaultGrams: 160, unitGrams: 160, calPer100: 280, proPer100: 9.5, carbPer100: 56, fatPer100: 2, swap: '2 פיתות קלות' },
+                        { category: 'carb', keys: ['טורטיה', 'טורטייה'], name: 'טורטיה מקמח חיטה', defaultGrams: 60, unitGrams: 60, calPer100: 290, proPer100: 8, carbPer100: 50, fatPer100: 6.5, swap: '2 פרוסות לחם קל' },
+                        { category: 'carb', keys: ['בטטה אפויה', 'בטטה בתנור', 'בטטה', 'תפוח אדמה', 'תפו״א', 'פירה'], name: 'בטטה / תפו״א אפוי', defaultGrams: 150, unitGrams: 150, calPer100: 86, proPer100: 1.6, carbPer100: 20, fatPer100: 0.1, swap: '120 גרם אורז מבושל' },
+                        { category: 'carb', keys: ['פריכיות אורז', 'פריכיות', 'פריכית'], name: 'פריכיות אורז', defaultGrams: 30, unitGrams: 10, calPer100: 380, proPer100: 8, carbPer100: 80, fatPer100: 2.5, swap: 'פרוסת לחם מלא' },
+                        { category: 'carb', keys: ['כריות נוגט', 'כריות', 'דגני כריות'], name: 'דגני כריות', defaultGrams: 45, cupGrams: 50, calPer100: 470, proPer100: 6.5, carbPer100: 68, fatPer100: 20, swap: '40 גרם ברנפלקס / 50 גרם קוואקר' },
+                        { category: 'carb', keys: ['קורנפלקס', 'צ\'יריוס', 'פיטנס', 'ברנפלקס', 'פייבר 1'], name: 'דגני בוקר / קורנפלקס', defaultGrams: 40, cupGrams: 40, calPer100: 375, proPer100: 8, carbPer100: 75, fatPer100: 2, swap: '50 גרם שיבולת שועל' },
+                        { category: 'protein', keys: ['חזה עוף צלוי', 'חזה עוף מבושל', 'חזה עוף', 'פילה עוף', 'סטייק עוף', 'עוף'], name: 'חזה עוף (מוכן)', defaultGrams: 180, calPer100: 165, proPer100: 31, carbPer100: 0, fatPer100: 3.6, swap: '160 גרם פילה סלמון / 2 קופסאות טונה במים' },
+                        { category: 'protein', keys: ['פרגית צלויה', 'פרגית', 'שווארמה הודו', 'שווארמה פרגית', 'שווארמה'], name: 'פרגית / שווארמה', defaultGrams: 180, calPer100: 215, proPer100: 25, carbPer100: 0, fatPer100: 12.5, swap: '180 גרם חזה עוף + 10 גרם טחינה' },
+                        { category: 'protein', keys: ['שניצל עוף מטוגן', 'שניצל עוף', 'שניצל ביתי', 'שניצל'], name: 'שניצל עוף', defaultGrams: 150, unitGrams: 120, calPer100: 260, proPer100: 22, carbPer100: 14, fatPer100: 13, swap: '160 גרם חזה עוף על האש' },
+                        { category: 'protein', keys: ['שניצל תירס', 'טבעול'], name: 'שניצל תירס', defaultGrams: 100, unitGrams: 100, calPer100: 210, proPer100: 8, carbPer100: 24, fatPer100: 9, swap: 'טופו מוקפץ' },
+                        { category: 'protein', keys: ['בקר', 'אנטריקוט', 'סינטה', 'בשר', 'פילה בקר'], name: 'בשר בקר / סינטה', defaultGrams: 180, calPer100: 210, proPer100: 26, carbPer100: 0, fatPer100: 11, swap: '180 גרם חזה עוף / 160 גרם סלמון' },
+                        { category: 'protein', keys: ['טונה במים', 'קופסת טונה במים'], name: 'טונה במים', defaultGrams: 110, boxGrams: 110, calPer100: 116, proPer100: 26, carbPer100: 0, fatPer100: 1, swap: '120 גרם חזה עוף / גביע קוטג\' 1%' },
+                        { category: 'protein', keys: ['טונה בשמן', 'קופסת טונה בשמן', 'טונה'], name: 'טונה בשמן (מסוננת)', defaultGrams: 110, boxGrams: 110, calPer100: 195, proPer100: 25, carbPer100: 0, fatPer100: 10, swap: 'קופסת טונה במים + כף טחינה' },
+                        { category: 'protein', keys: ['סלמון אפוי', 'סלמון בתנור', 'פילה סלמון', 'סלמון', 'דג סלמון', 'דג אמנון', 'דניס', 'מושט', 'לברק', 'דג'], name: 'פילה דג / סלמון', defaultGrams: 180, calPer100: 208, proPer100: 20, carbPer100: 0, fatPer100: 13, swap: '180 גרם חזה עוף + 10 גרם שמן זית' },
+                        { category: 'protein', keys: ['ביצה קשה', 'ביצת עין', 'חביתה', 'ביצים', 'ביצה'], name: 'ביצים (L)', defaultGrams: 120, unitGrams: 60, calPer100: 143, proPer100: 12.6, carbPer100: 0.7, fatPer100: 9.5, swap: '150 גרם חלבון ביצה נוזלי / גביע יוגורט פרו' },
+                        { category: 'protein', keys: ['חלבון ביצה', 'חלבוני ביצה'], name: 'חלבון ביצה', defaultGrams: 100, unitGrams: 35, calPer100: 52, proPer100: 11, carbPer100: 0.7, fatPer100: 0.2, swap: 'סקופ אבקת חלבון' },
+                        { category: 'dairy', keys: ['יוגורט פרו 25', 'יוגורט פרו 20', 'דנונה פרו 25', 'דנונה פרו 20', 'יוגורט פרו', 'דנונה פרו', 'יוגורט חלבון', 'פרו 25', 'פרו 20', 'יוגורט pro', 'מולר פרו', 'גו'], name: 'יוגורט חלבון PRO (גביע)', defaultGrams: 200, boxGrams: 200, calPer100: 60, proPer100: 10, carbPer100: 3.5, fatPer100: 0.5, swap: 'סקופ אבקת חלבון עם מים / גביע קוטג\' 1%' },
+                        { category: 'dairy', keys: ['קוטג\' 1%', 'קוטג 1%'], name: 'קוטג\' 1%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 65, proPer100: 11, carbPer100: 2, fatPer100: 1, swap: 'יוגורט פרו 0%' },
+                        { category: 'dairy', keys: ['קוטג\' 3%', 'קוטג 3%'], name: 'קוטג\' 3%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 78, proPer100: 11, carbPer100: 2.5, fatPer100: 3, swap: 'קוטג\' 1%' },
+                        { category: 'dairy', keys: ['קוטג\' 5%', 'קוטג 5%', 'קוטג\'', 'קוטג', 'גבינה לבנה 5%', 'גבינה לבנה', 'גבינה לבנה 3%'], name: 'קוטג\' / גבינה לבנה 5%', defaultGrams: 125, boxGrams: 250, spoonGrams: 30, calPer100: 92, proPer100: 11, carbPer100: 2.5, fatPer100: 5, swap: 'גביע יוגורט יווני 0%' },
+                        { category: 'dairy', keys: ['גבינה צהובה 9%', 'גבנצ 9%', 'עמק 9%', 'נועם 9%'], name: 'גבינה צהובה 9%', defaultGrams: 28, sliceGrams: 28, calPer100: 200, proPer100: 28, carbPer100: 0, fatPer100: 9, swap: 'גבינה צפתית 5%' },
+                        { category: 'dairy', keys: ['גבינה צהובה', 'גבנצ', 'עמק', 'נועם', 'מוצרלה'], name: 'גבינה צהובה', defaultGrams: 50, sliceGrams: 28, calPer100: 330, proPer100: 25, carbPer100: 0, fatPer100: 26, swap: 'גבינה צהובה 9%' },
+                        { category: 'dairy', keys: ['בולגרית 5%', 'צפתית 5%', 'פטה 5%'], name: 'גבינה מלוחה 5%', defaultGrams: 60, calPer100: 110, proPer100: 14, carbPer100: 2, fatPer100: 5, swap: 'חצי גביע קוטג\' 3%' },
+                        { category: 'dairy', keys: ['חלב 3%', 'חלב תנובה 3%'], name: 'חלב 3%', defaultGrams: 200, cupGrams: 200, calPer100: 60, proPer100: 3.2, carbPer100: 4.8, fatPer100: 3, swap: 'חלב 1% / משקה סויה ללא סוכר' },
+                        { category: 'dairy', keys: ['חלב 1%', 'חלב דל שומן', 'חלב שיבולת שועל', 'חלב סויה', 'חלב שקדים', 'משקה סויה', 'משקה שקדים', 'חלב'], name: 'חלב / משקה צמחי (כוס)', defaultGrams: 200, cupGrams: 200, calPer100: 45, proPer100: 3, carbPer100: 4.9, fatPer100: 1.2, swap: 'משקה סויה ללא סוכר' },
+                        { category: 'protein', keys: ['אבקת חלבון', 'סקופ חלבון', 'סקופ מי גבינה', 'חלבון'], name: 'אבקת חלבון (סקופ)', defaultGrams: 30, unitGrams: 30, calPer100: 380, proPer100: 80, carbPer100: 5, fatPer100: 3, swap: 'גביע יוגורט פרו 25ג\'' },
+                        { category: 'protein', keys: ['חטיף חלבון', 'פרוטין בר'], name: 'חטיף חלבון', defaultGrams: 60, unitGrams: 60, calPer100: 360, proPer100: 33, carbPer100: 30, fatPer100: 11, swap: 'סקופ חלבון + תפוח' },
+                        { category: 'protein', keys: ['טופו', 'סויה'], name: 'טופו טבעי', defaultGrams: 150, calPer100: 120, proPer100: 14, carbPer100: 2.5, fatPer100: 6.5, swap: '150 גרם חזה עוף' },
+                        { category: 'fats', keys: ['טחינה גולמית', 'טחינה מלאה'], name: 'טחינה גולמית', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 650, proPer100: 24, carbPer100: 21, fatPer100: 56, swap: '15 גרם שמן זית / 25 גרם אבוקדו' },
+                        { category: 'fats', keys: ['טחינה מוכנה', 'סלט טחינה', 'טחינה'], name: 'טחינה מוכנה', defaultGrams: 30, spoonGrams: 15, calPer100: 320, proPer100: 9, carbPer100: 12, fatPer100: 28, swap: 'כף טחינה גולמית' },
+                        { category: 'fats', keys: ['חומוס מוכן', 'סלט חומוס', 'חומוס'], name: 'חומוס מוכן', defaultGrams: 40, spoonGrams: 20, calPer100: 240, proPer100: 8, carbPer100: 14, fatPer100: 17, swap: 'טחינה / אבוקדו' },
+                        { category: 'fats', keys: ['שמן זית', 'שמן קנולה', 'שמן'], name: 'שמן זית / קנולה', defaultGrams: 10, spoonGrams: 10, teaspoonGrams: 5, calPer100: 884, proPer100: 0, carbPer100: 0, fatPer100: 100, swap: 'תרסיס שמן' },
+                        { category: 'fats', keys: ['אבוקדו'], name: 'אבוקדו טרי', defaultGrams: 50, unitGrams: 120, calPer100: 160, proPer100: 2, carbPer100: 9, fatPer100: 15, swap: '15 גרם טחינה גולמית' },
+                        { category: 'fats', keys: ['חמאת בוטנים טבעית', 'חמאת בוטנים'], name: 'חמאת בוטנים טבעית', defaultGrams: 18, spoonGrams: 18, teaspoonGrams: 6, calPer100: 588, proPer100: 25, carbPer100: 20, fatPer100: 50, swap: '15 גרם שקדים' },
+                        { category: 'fats', keys: ['שקדים', 'אגוזים', 'אגוזי מלך', 'קשיו', 'פקאן'], name: 'שקדים / אגוזי מלך', defaultGrams: 20, spoonGrams: 15, calPer100: 580, proPer100: 21, carbPer100: 22, fatPer100: 50, swap: 'כף טחינה גולמית' },
+                        { category: 'sweets', keys: ['דבש', 'סילאן', 'מייפל', 'סוכר'], name: 'דבש / סילאן / סוכר', defaultGrams: 15, spoonGrams: 15, teaspoonGrams: 5, calPer100: 320, proPer100: 0.3, carbPer100: 80, fatPer100: 0, swap: 'ממתיק סטיביה ללא סוכר' },
+                        { category: 'fruits', keys: ['תפוח עץ', 'תפוח ירוק', 'תפוח אדום', 'תפוח'], name: 'תפוח עץ בינוני', defaultGrams: 150, unitGrams: 150, calPer100: 52, proPer100: 0.3, carbPer100: 14, fatPer100: 0.2, swap: 'בננה קטנה / 150 גרם פירות יער' },
+                        { category: 'fruits', keys: ['בננה'], name: 'בננה בינונית', defaultGrams: 110, unitGrams: 110, calPer100: 89, proPer100: 1.1, carbPer100: 23, fatPer100: 0.3, swap: 'תפוח גדול' },
+                        { category: 'fruits', keys: ['תמר מג\'הול', 'תמרים', 'תמר'], name: 'תמר מג\'הול', defaultGrams: 40, unitGrams: 20, calPer100: 280, proPer100: 2, carbPer100: 75, fatPer100: 0.2, swap: 'בננה' },
+                        { category: 'veggies', keys: ['סלט ירקות', 'סלט קצוץ', 'סלט ירוק', 'סלט', 'מלפפון', 'עגבניה', 'חסה', 'עגבניות', 'מלפפונים', 'פלפל', 'ירקות'], name: 'סלט ירקות עשיר', defaultGrams: 200, cupGrams: 120, calPer100: 25, proPer100: 1.2, carbPer100: 4.5, fatPer100: 0.2, swap: 'ירקות מאודים (ברוקולי/שעועית)' },
+                        { category: 'sweets', keys: ['במבה', 'שקית במבה'], name: 'במבה (שקית)', defaultGrams: 25, unitGrams: 25, calPer100: 535, proPer100: 16, carbPer100: 45, fatPer100: 32, swap: 'שקית פופקורן לייט' },
+                        { category: 'drinks', keys: ['קולה זירו', 'זירו', 'סודה', 'פפסי מקס', 'דיאט'], name: 'משקה דיאט / זירו (0 קלוריות)', defaultGrams: 330, unitGrams: 330, calPer100: 0, proPer100: 0, carbPer100: 0, fatPer100: 0, swap: 'מים קרים' }
                     ];
+
+                    this.masterFoodDatabase = database;
 
                     const flatKeys = [];
                     database.forEach(entry => {
@@ -7686,7 +8024,7 @@
                         if (matchedEntries.has(entry)) return;
 
                         if (remainingText.includes(key)) {
-                            const regex = new RegExp(`(?:(\\d+(?:\\.\\d+)?)\\s*)?(כפות\\s*הגשה|כף\\s*הגשה|מצקות|מצקת|כפיות|כפית|כפות|כף|כוסות|כוס|קופסאות|קופסה|גביעים|גביע|פרוסות|פרוסה|יחידות|יחידה|משולשים|משולש|גרם|גרמים|ג|מ\\\"ל|מל)?\\s*(?:של)?\\s*${key}|${key}\\s*(?:של)?\\s*(?:(\\d+(?:\\.\\d+)?)\\s*)?(כפות\\s*הגשה|כף\\s*הגשה|מצקות|מצקת|כפיות|כפית|כפות|כף|כוסות|כוס|קופסאות|קופסה|גביעים|גביע|פרוסות|פרוסה|יחידות|יחידה|משולשים|משולש|גרם|גרמים|ג|מ\\\"ל|מל)?`, 'i');
+                            const regex = new RegExp(`(?:(\\d+(?:\\.\\d+)?)\\s*)?(כפות\\s*הגשה|כף\\s*הגשה|מצקות|מצקת|כפיות|כפית|כפות|כף|כוסות|כוס|קופסאות|קופסה|גביעים|גביע|פרוסות|פרוסה|יחידות|יחידה|משולשים|משולש|רולים|רול|גרם|גרמים|ג|מ\\\"ל|מל)?\\s*(?:של)?\\s*${key}|${key}\\s*(?:של)?\\s*(?:(\\d+(?:\\.\\d+)?)\\s*)?(כפות\\s*הגשה|כף\\s*הגשה|מצקות|מצקת|כפיות|כפית|כפות|כף|כוסות|כוס|קופסאות|קופסה|גביעים|גביע|פרוסות|פרוסה|יחידות|יחידה|משולשים|משולש|רולים|רול|גרם|גרמים|ג|מ\\\"ל|מל)?`, 'i');
                             const match = remainingText.match(regex);
 
                             let grams = entry.defaultGrams;
@@ -7720,7 +8058,7 @@
                                     const single = entry.sliceGrams || 30;
                                     grams = single * numVal;
                                     unitLabel = `${numVal} פרוסות (~${grams} גרם)`;
-                                } else if (unit.includes('יחיד') || unit.includes('משולש')) {
+                                } else if (unit.includes('יחיד') || unit.includes('משולש') || unit.includes('רול')) {
                                     const single = entry.unitGrams || entry.defaultGrams;
                                     grams = single * numVal;
                                     unitLabel = `${numVal} יחידות (~${grams} גרם)`;
@@ -7770,17 +8108,56 @@
                         }
                     });
 
+                    // בדיקת שאריות מילים לא מוכרות -> מנוע הערכה סמנטי חכם שלעולם לא מפספס מאכל
+                    const leftoverTokens = remainingText.split(/[\s,+:;.()]+/).filter(w => w.length > 2 && !['אכלתי', 'מנה', 'צלחת', 'כוס', 'גרם', 'קצת', 'הרבה', 'בתוך', 'ביחד', 'תוספת', 'עם'].includes(w));
+                    
+                    if (items.length === 0 && leftoverTokens.length > 0) {
+                        const queryTerm = leftoverTokens.join(' ');
+                        
+                        let estCal = 350, estPro = 15, estCarb = 40, estFat = 12, swapMsg = 'שלב מקור חלבון רזה ופחמימה מורכבת';
+
+                        if (/בשר|אסאדו|סטייק|אנטריקוט|צלעות|קבב|שווארמה|המבורגר/.test(queryTerm)) {
+                            estCal = 420; estPro = 32; estCarb = 10; estFat = 26; swapMsg = 'חזה עוף צלוי / פילה בקר';
+                        } else if (/עוף|פרגית|הודו|שניצל|כנפיים|כרעיים/.test(queryTerm)) {
+                            estCal = 340; estPro = 35; estCarb = 8; estFat = 15; swapMsg = 'חזה עוף צלוי על האש';
+                        } else if (/דג|סלמון|טונה|דניס|לברק|אמנון|שרימפס|סושי/.test(queryTerm)) {
+                            estCal = 320; estPro = 28; estCarb = 12; estFat = 14; swapMsg = 'פילה דג אפוי בתנור';
+                        } else if (/עוג|מאפה|קרואסון|בורקס|בצק|שמרים|פנקייק|וופל/.test(queryTerm)) {
+                            estCal = 420; estPro = 6; estCarb = 55; estFat = 20; swapMsg = 'עוגת חלבון לייט / פריכיות כוסמין וסילאן';
+                        } else if (/גליד|שוקולד|מוס|מתוק|סוכריי|וופל|קינוח/.test(queryTerm)) {
+                            estCal = 360; estPro = 5; estCarb = 50; estFat = 16; swapMsg = 'יוגורט פרו קפוא / ארטיק קרח';
+                        } else if (/שייק|סמודי|אייס|מיץ|משקה/.test(queryTerm)) {
+                            estCal = 240; estPro = 12; estCarb = 35; estFat = 3; swapMsg = 'שייק חלבון על בסיס מים';
+                        } else if (/סלט|ירק|מרק|תבשיל|עדשים|שעועית/.test(queryTerm)) {
+                            estCal = 180; estPro = 8; estCarb = 25; estFat = 4; swapMsg = 'סלט ירקות עם כף שמן זית';
+                        }
+
+                        items.push({
+                            name: `${this.aiFoodQuery} (הערכת AI חכמה)`,
+                            cal: estCal,
+                            pro: estPro,
+                            carb: estCarb,
+                            fat: estFat,
+                            swap: swapMsg
+                        });
+
+                        totalCal = estCal;
+                        totalPro = estPro;
+                        totalCarb = estCarb;
+                        totalFat = estFat;
+                    }
+
                     if (items.length === 0) {
-                        totalCal = 450;
-                        totalPro = 30;
-                        totalCarb = 50;
-                        totalFat = 14;
+                        totalCal = 400;
+                        totalPro = 25;
+                        totalCarb = 45;
+                        totalFat = 12;
                         items.push({
                             name: 'ארוחה מעורבת מוערכת ב-AI',
-                            cal: 450,
-                            pro: 30,
-                            carb: 50,
-                            fat: 14,
+                            cal: 400,
+                            pro: 25,
+                            carb: 45,
+                            fat: 12,
                             swap: 'ציין שמות מאכלים מוכרים (חזה עוף, אורז, כף טחינה, ביצים וכו\')'
                         });
                     }
@@ -7807,6 +8184,123 @@
                     };
 
                     this.isAiAnalyzing = false;
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                // --- מתודות חיפוש מזונות ישיר במאגר (MyFitnessPal Food Directory Search) ---
+                getFilteredFoodDatabase() {
+                    if (!this.masterFoodDatabase) {
+                        this.masterFoodDatabase = [
+                            { category: 'protein', name: 'חזה עוף מבושל / צלוי', calPer100: 165, proPer100: 31, carbPer100: 0, fatPer100: 3.6, defaultGrams: 180, keys: ['חזה עוף', 'עוף'] },
+                            { category: 'protein', name: 'פרגית צלויה / שווארמה', calPer100: 215, proPer100: 25, carbPer100: 0, fatPer100: 12.5, defaultGrams: 180, keys: ['פרגית', 'שווארמה'] },
+                            { category: 'protein', name: 'פילה סלמון אפוי', calPer100: 208, proPer100: 20, carbPer100: 0, fatPer100: 13, defaultGrams: 180, keys: ['סלמון', 'דג'] },
+                            { category: 'protein', name: 'טונה במים (מסוננת)', calPer100: 116, proPer100: 26, carbPer100: 0, fatPer100: 1, defaultGrams: 110, keys: ['טונה'] },
+                            { category: 'protein', name: 'ביצים (L)', calPer100: 143, proPer100: 12.6, carbPer100: 0.7, fatPer100: 9.5, defaultGrams: 120, keys: ['ביצה', 'ביצים', 'חביתה'] },
+                            { category: 'dairy', name: 'קוטג\' 5%', calPer100: 92, proPer100: 11, carbPer100: 2.5, fatPer100: 5, defaultGrams: 125, keys: ['קוטג'] },
+                            { category: 'dairy', name: 'יוגורט חלבון PRO 25', calPer100: 60, proPer100: 10, carbPer100: 3.5, fatPer100: 0.5, defaultGrams: 200, keys: ['יוגורט', 'פרו'] },
+                            { category: 'carb', name: 'אורז בסמטי / לבן מבושל', calPer100: 130, proPer100: 2.7, carbPer100: 28, fatPer100: 0.3, defaultGrams: 150, servingSpoonGrams: 55, keys: ['אורז'] },
+                            { category: 'carb', name: 'פסטה / פתיתים מבושלים', calPer100: 158, proPer100: 5.8, carbPer100: 31, fatPer100: 0.9, defaultGrams: 150, servingSpoonGrams: 50, keys: ['פסטה', 'פתיתים'] },
+                            { category: 'fats', name: 'טחינה גולמית', calPer100: 650, proPer100: 24, carbPer100: 21, fatPer100: 56, defaultGrams: 15, spoonGrams: 15, keys: ['טחינה'] },
+                            { category: 'prepared', name: 'שווארמה בלאפה', calPer100: 200, proPer100: 10, carbPer100: 21, fatPer100: 8.5, defaultGrams: 450, keys: ['שווארמה לאפה', 'לאפה'] },
+                            { category: 'prepared', name: 'פלאפל בפיתה', calPer100: 220, proPer100: 7, carbPer100: 30, fatPer100: 8.5, defaultGrams: 280, keys: ['פלאפל'] }
+                        ];
+                    }
+
+                    let list = this.masterFoodDatabase || [];
+                    const q = (this.foodSearchQuery || '').trim().toLowerCase();
+                    const cat = this.foodSearchCategory || 'all';
+
+                    if (cat !== 'all') {
+                        list = list.filter(item => item.category === cat);
+                    }
+
+                    if (q) {
+                        list = list.filter(item => {
+                            if (item.name.toLowerCase().includes(q)) return true;
+                            if (item.keys && item.keys.some(k => k.toLowerCase().includes(q))) return true;
+                            return false;
+                        });
+                    }
+
+                    return list.slice(0, 40);
+                },
+
+                selectFoodForAdd(food) {
+                    this.foodSearchSelectedFood = food;
+                    this.foodSearchQuantity = food.defaultGrams || 100;
+                    this.foodSearchUnit = 'grams';
+                },
+
+                addSelectedFoodToMeal() {
+                    if (!this.foodSearchSelectedFood) return;
+                    const food = this.foodSearchSelectedFood;
+                    const client = this.portalClient || this.currentClient;
+                    if (!client || !client.id) return;
+
+                    let grams = parseFloat(this.foodSearchQuantity) || food.defaultGrams || 100;
+                    let unitLabel = `${grams} גרם`;
+
+                    if (this.foodSearchUnit === 'servingSpoon') {
+                        const count = parseFloat(this.foodSearchQuantity) || 1;
+                        grams = (food.servingSpoonGrams || 50) * count;
+                        unitLabel = `${count} כפות הגשה (~${grams} גרם)`;
+                    } else if (this.foodSearchUnit === 'spoon') {
+                        const count = parseFloat(this.foodSearchQuantity) || 1;
+                        grams = (food.spoonGrams || 15) * count;
+                        unitLabel = `${count} כפות (~${grams} גרם)`;
+                    } else if (this.foodSearchUnit === 'cup') {
+                        const count = parseFloat(this.foodSearchQuantity) || 1;
+                        grams = (food.cupGrams || 180) * count;
+                        unitLabel = `${count} כוסות (~${grams} גרם/מ״ל)`;
+                    } else if (this.foodSearchUnit === 'unit') {
+                        const count = parseFloat(this.foodSearchQuantity) || 1;
+                        grams = (food.unitGrams || food.defaultGrams || 100) * count;
+                        unitLabel = `${count} יחידות (~${grams} גרם)`;
+                    } else if (this.foodSearchUnit === 'slice') {
+                        const count = parseFloat(this.foodSearchQuantity) || 1;
+                        grams = (food.sliceGrams || 30) * count;
+                        unitLabel = `${count} פרוסות (~${grams} גרם)`;
+                    } else if (this.foodSearchUnit === 'box') {
+                        const count = parseFloat(this.foodSearchQuantity) || 1;
+                        grams = (food.boxGrams || 200) * count;
+                        unitLabel = `${count} גביע/קופסה (~${grams} גרם)`;
+                    }
+
+                    const factor = grams / 100;
+                    const c = Math.round(food.calPer100 * factor);
+                    const p = Math.round(food.proPer100 * factor * 10) / 10;
+                    const cb = Math.round(food.carbPer100 * factor * 10) / 10;
+                    const f = Math.round(food.fatPer100 * factor * 10) / 10;
+
+                    if (!client.foodLogs) client.foodLogs = [];
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+                    const logObj = {
+                        id: 'fl_' + Date.now(),
+                        date: this.getTodayDate(),
+                        time: timeStr,
+                        mealType: this.foodSearchTargetMeal || 'ארוחת צהריים',
+                        description: `${food.name} (${unitLabel})`,
+                        calories: c,
+                        protein: p,
+                        carbs: cb,
+                        fat: f,
+                        items: [{ name: `${food.name} (${unitLabel})`, cal: c, pro: p, carb: cb, fat: f, swap: food.swap || '' }],
+                        photo: ''
+                    };
+
+                    client.foodLogs.unshift(logObj);
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+
+                    this.openFoodSearchModal = false;
+                    this.foodSearchSelectedFood = null;
+                    this.foodSearchQuery = '';
+                    this.portalFoodLogSaved = true;
+                    setTimeout(() => { this.portalFoodLogSaved = false; }, 4000);
                     setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
                 },
 
@@ -8522,15 +9016,16 @@
                 },
 
                 deletePortalFoodLog(logId) {
-                    if (confirm("האם למחוק דיווח ארוחה זה?")) {
-                        const client = this.portalClient;
-                        if (client && client.foodLogs) {
-                            client.foodLogs = client.foodLogs.filter(l => l.id !== logId);
-                            if (this.isCloudSynced && this.db) {
-                                this.db.collection("clients").doc(client.id).set(client);
-                            }
-                            this.saveData();
+                    const client = this.portalClient || this.currentClient || (this.clients && this.clients.find(c => c.id === this.selectedClientId));
+                    if (!client || !client.foodLogs) return;
+
+                    if (confirm("האם להסיר פריט זה מיומן התזונה?")) {
+                        client.foodLogs = client.foodLogs.filter(l => l.id !== logId);
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
                         }
+                        this.saveData();
+                        setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
                     }
                 },
 
