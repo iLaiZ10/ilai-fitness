@@ -1804,11 +1804,13 @@
 
                                     <!-- תובנת מאמן אישית (Coach Insight) -->
                                     <template x-if="aiAnalyzedMeal.coachInsight">
-                                        <div class="bg-gradient-to-r from-[#082722] to-[#0f3d35] text-white p-3.5 rounded-xl border border-emerald-500/30 flex items-start gap-3 shadow-sm">
-                                            <span class="text-base shrink-0">💡</span>
-                                            <div class="space-y-0.5">
-                                                <span class="text-[10px] uppercase font-black text-[#86efac] tracking-wider block">תובנת מאמן אישית - אילאי:</span>
-                                                <p class="text-xs font-medium text-slate-100 leading-relaxed" x-text="aiAnalyzedMeal.coachInsight"></p>
+                                        <div class="bg-[#051c17] p-4 rounded-2xl border-2 border-[#22c55e]/70 flex items-start gap-3 shadow-md">
+                                            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shrink-0 text-base shadow-xs">
+                                                💡
+                                            </div>
+                                            <div class="space-y-1">
+                                                <span class="text-xs uppercase font-black tracking-wide block" style="color: #86efac !important;">תובנת מאמן אישית - אילאי:</span>
+                                                <p class="text-xs sm:text-sm font-bold leading-relaxed" style="color: #ffffff !important;" x-text="aiAnalyzedMeal.coachInsight"></p>
                                             </div>
                                         </div>
                                     </template>
