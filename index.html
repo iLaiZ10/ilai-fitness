@@ -5720,7 +5720,7 @@
                     if (!client || !client.mealPlan?.meals) return 0;
                     let total = 0;
                     client.mealPlan.meals.forEach(m => {
-                        m.items.forEach(i => {
+                        (m.items || []).forEach(i => {
                             const val = parseFloat(i[field]);
                             if (!isNaN(val)) total += val;
                         });
@@ -6583,7 +6583,7 @@
                 },
 
                 duplicateWorkoutDay(dayIdx) {
-                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    const client = this.currentClient || this.clients.find(c => c.id === this.selectedClientId);
                     if (client && client.workoutPlan?.days?.[dayIdx]) {
                         const original = client.workoutPlan.days[dayIdx];
                         const cloned = JSON.parse(JSON.stringify(original));
@@ -6828,27 +6828,28 @@
                 calculatePlates(targetWeight, barWeight = 20) {
                     const target = parseFloat(targetWeight) || 0;
                     const bar = parseFloat(barWeight) || 20;
-                    if (target <= bar) return [];
-                    let perSide = (target - bar) / 2;
+                    if (target <= bar) return { perSideWeight: 0, plates: [], remainder: 0 };
+                    const perSideWeight = (target - bar) / 2;
+                    let remaining = perSideWeight;
                     const availablePlates = [25, 20, 15, 10, 5, 2.5, 1.25];
-                    const result = [];
+                    const plates = [];
                     availablePlates.forEach(p => {
-                        const count = Math.floor(perSide / p);
+                        const count = Math.floor(remaining / p);
                         if (count > 0) {
-                            result.push({ plate: p, count: count });
-                            perSide = Math.round((perSide - (count * p)) * 100) / 100;
+                            plates.push({ plate: p, count: count });
+                            remaining = Math.round((remaining - (count * p)) * 100) / 100;
                         }
                     });
-                    return result;
+                    return { perSideWeight, plates, remainder: remaining };
                 },
 
                 getWorkoutCompletionPercent(dayIdx) {
-                    const client = this.portalClient;
+                    const client = this.portalClient || this.currentClient;
                     const day = client?.workoutPlan?.days?.[dayIdx];
                     if (!day || !day.exercises || day.exercises.length === 0) return 0;
                     let totalSets = 0;
                     let completedSets = 0;
-                    day.exercises.forEach((ex, exIdx) => {
+                    (day.exercises || []).forEach((ex, exIdx) => {
                         const count = parseInt(ex.sets) || 3;
                         totalSets += count;
                         const setsArr = this.liveWorkoutSets[`d${dayIdx}_e${exIdx}`] || [];
@@ -6859,12 +6860,12 @@
                 },
 
                 getWorkoutCompletedSetsCount(dayIdx) {
-                    const client = this.portalClient;
+                    const client = this.portalClient || this.currentClient;
                     const day = client?.workoutPlan?.days?.[dayIdx];
                     if (!day || !day.exercises) return { completed: 0, total: 0 };
                     let totalSets = 0;
                     let completedSets = 0;
-                    day.exercises.forEach((ex, exIdx) => {
+                    (day.exercises || []).forEach((ex, exIdx) => {
                         const count = parseInt(ex.sets) || 3;
                         totalSets += count;
                         const setsArr = this.liveWorkoutSets[`d${dayIdx}_e${exIdx}`] || [];
@@ -8005,18 +8006,108 @@
                             email: 'yuri@example.com',
                             startDate: this.getTodayDate(),
                             startWeight: '78',
-                            goal: 'תוכנית אימונים ומעקב מדדים שבועי',
+                            goal: 'חיטוב, עלייה במסת שריר ושיפור כוח',
                             pricePerMonth: 350,
                             paymentMonths: 3,
                             status: 'active',
+                            waterTarget: 3000,
+                            stepsTarget: 10000,
+                            dailyWater: 1750,
+                            dailySteps: 6400,
                             googleSheetsUrl: 'https://docs.google.com/spreadsheets/d/11ATEDM1gxldBTrsKWABGSFcQwAaHJ8ysSX1JeBNZO-k/edit?usp=sharing',
                             googleDriveUrl: '',
                             mealPlanPdfUrl: '',
                             macroCalculated: { targetCalories: '2400', targetProtein: '160', targetCarbs: '250', targetFat: '70' },
-                            workoutPlan: { days: [] },
-                            mealPlan: { meals: [] },
+                            prs: [
+                                { name: 'בנץ׳ פרס (חזה במוט)', weight: 95, reps: 5, date: this.getTodayDate() },
+                                { name: 'סקוואט (רגליים במוט)', weight: 120, reps: 6, date: this.getTodayDate() },
+                                { name: 'דדליפט קלאסי', weight: 140, reps: 4, date: this.getTodayDate() }
+                            ],
+                            workoutPlan: {
+                                days: [
+                                    {
+                                        name: 'אימון A - חזה, כתפיים ויד אחורית',
+                                        exercises: [
+                                            { name: 'לחיצת חזה כנגד מוט אולימפי', sets: 4, reps: '6-8', rest: '90 שנ׳', notes: 'הורדה איטית ומבוקרת עד החזה, נגיעה רכה ולחיצה מתפרצת.' },
+                                            { name: 'לחיצת חזה עליון בדאמבלים', sets: 3, reps: '8-10', rest: '75 שנ׳', notes: 'זווית ספסל 30 מעלות, מתיחה מלאה בתחתית.' },
+                                            { name: 'לחיצת כתפיים בישיבה עם דאמבלים', sets: 3, reps: '8-10', rest: '75 שנ׳', notes: 'גב צמוד למשענת, מרפקים מעט לפני הגוף.' },
+                                            { name: 'מקבילים בתוספת משקל / משקל גוף', sets: 3, reps: '10-12', rest: '60 שנ׳', notes: 'הטיית גוף קלה לפנים למיקוד בחזה התחתון.' },
+                                            { name: 'פשיטת מרפקים כנגד כבל עליון', sets: 3, reps: '12-15', rest: '60 שנ׳', notes: 'נעילת מרפקים לצדי הגוף וכיווץ מקסימלי.' }
+                                        ]
+                                    },
+                                    {
+                                        name: 'אימון B - גב, יד קדמית ובטן',
+                                        exercises: [
+                                            { name: 'מתח בתוספת משקל / פולי עליון', sets: 4, reps: '6-8', rest: '90 שנ׳', notes: 'אחיזה רחבה, משיכה לחזה עליון עם כיווץ שכמות.' },
+                                            { name: 'חתירה במשקולת יד בודדת (Dumbbell Row)', sets: 3, reps: '8-10', rest: '75 שנ׳', notes: 'שמירה על גב ישר ומשיכה לכיוון האגן.' },
+                                            { name: 'משיכת פולי תחתון בישיבה', sets: 3, reps: '10-12', rest: '60 שנ׳', notes: 'שכמות אחורה וחזה בחוץ בסוף התנועה.' },
+                                            { name: 'כפיפת מרפקים בעמידה כנגד מוט W', sets: 3, reps: '10-12', rest: '60 שנ׳', notes: 'בלי תנופת גוף, תנועה מבודדת ונקייה.' },
+                                            { name: 'גלגל בטן (Ab Wheel Rollout)', sets: 3, reps: '12-15', rest: '60 שנ׳', notes: 'בטן מוחזקת לאורך כל טווח התנועה.' }
+                                        ]
+                                    },
+                                    {
+                                        name: 'אימון C - רגליים וליבה',
+                                        exercises: [
+                                            { name: 'סקוואט חופשי כנגד מוט (Back Squat)', sets: 4, reps: '6-8', rest: '120 שנ׳', notes: 'עומק מלא מתחת ל-90 מעלות, ברכיים בקו האצבעות.' },
+                                            { name: 'לג פרס (Leg Press 45°)', sets: 3, reps: '10-12', rest: '90 שנ׳', notes: 'כפות רגליים במרכז הפלטפורמה ברוחב כתפיים.' },
+                                            { name: 'פשיטת ברכיים במכונה', sets: 3, reps: '12-15', rest: '60 שנ׳', notes: 'השהייה של שנייה בשיא הכיווץ.' },
+                                            { name: 'כפיפת ברכיים בשכיבה / ישיבה', sets: 3, reps: '10-12', rest: '60 שנ׳', notes: 'עבודה איטית ואקצנטרית של 3 שניות בירידה.' },
+                                            { name: 'הרמת עקבים בעמידה לתאומים', sets: 4, reps: '15-20', rest: '45 שנ׳', notes: 'מתיחה מלאה בתחתית וכיווץ חזק למעלה.' }
+                                        ]
+                                    }
+                                ]
+                            },
+                            mealPlan: {
+                                meals: [
+                                    {
+                                        name: 'ארוחת בוקר — אנרגיה וחלבון',
+                                        items: [
+                                            { food: 'שיבולת שועל דקה', quantity: '60 גרם', calories: 230, protein: 8, carbs: 40, fat: 4 },
+                                            { food: 'אבקת חלבון מי גבינה', quantity: 'סקופ אחד (30 גרם)', calories: 120, protein: 24, carbs: 2, fat: 1.5 },
+                                            { food: 'חמאת בוטנים טבעית', quantity: 'כף אחת (15 גרם)', calories: 95, protein: 4, carbs: 3, fat: 8 }
+                                        ]
+                                    },
+                                    {
+                                        name: 'ארוחת צהריים — ארוחה מרכזית',
+                                        items: [
+                                            { food: 'חזה עוף מבושל / צלוי', quantity: '200 גרם', calories: 330, protein: 62, carbs: 0, fat: 7.2 },
+                                            { food: 'אורז בסמטי מבושל', quantity: '180 גרם', calories: 235, protein: 5, carbs: 52, fat: 0.5 },
+                                            { food: 'סלט ירקות קצוץ + שמן זית', quantity: 'קערה בינונית (כפית שמן)', calories: 90, protein: 2, carbs: 8, fat: 5 }
+                                        ]
+                                    },
+                                    {
+                                        name: 'ארוחת ערב — שיקום וסגירת מאקרו',
+                                        items: [
+                                            { food: 'ביצה קשה / עין (2 שלמות + 1 חלבון)', quantity: '3 יחידות', calories: 170, protein: 16, carbs: 1, fat: 10 },
+                                            { food: 'לחם קל / מלא', quantity: '2 פרוסות', calories: 140, protein: 6, carbs: 26, fat: 1.5 },
+                                            { food: 'טונה בהירה במים', quantity: 'קופסה אחת (110 גרם נטו)', calories: 120, protein: 28, carbs: 0, fat: 1 },
+                                            { food: 'אבוקדו', quantity: 'רבע אבוקדו (40 גרם)', calories: 65, protein: 1, carbs: 3, fat: 6 }
+                                        ]
+                                    }
+                                ]
+                            },
                             checkins: [
                                 { date: this.getTodayDate(), weight: 78, waist: 82, adherenceNutrition: 10, adherenceTraining: 10, notes: 'תחילת תוכנית' }
+                            ],
+                            reflectionLogs: [
+                                {
+                                    id: 'ref_1',
+                                    date: this.getTodayDate(),
+                                    text: 'השבוע הראשון עבר מעולה! רמות האנרגיה באימונים היו גבוהות והצלחתי להגיע ליעד החלבון בכל יום.',
+                                    reviewed: true,
+                                    reviewedAt: this.getTodayDate(),
+                                    coachFeedback: 'עבודה פנומנלית יורי! רואים את ההשקעה והמחויבות. שבוע הבא נוסיף עוד 2.5 ק״ג בלחיצת חזה!'
+                                }
+                            ],
+                            foodLogs: [
+                                {
+                                    id: 'fl_1',
+                                    date: this.getTodayDate(),
+                                    time: '13:30',
+                                    mealType: 'ארוחת צהריים',
+                                    description: '200 גרם חזה עוף, אורז בסמטי וסלט ירקות עם שמן זית',
+                                    photo: ''
+                                }
                             ],
                             payments: [
                                 { month: 1, amount: 350, status: 'paid' },
