@@ -1534,23 +1534,6 @@
                             </template>
                         </div>
 
-                        <!-- כפתור רשימת קניות מהירה לסופר -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3">
-                            <div class="flex items-center gap-2.5">
-                                <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
-                                    <i data-lucide="shopping-cart" class="w-4 h-4 text-[#86efac]"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-xs md:text-sm font-black text-[#082722]">רשימת קניות חכמה לסופר 🛒</h4>
-                                    <p class="text-[10px] text-[#5f756e]">ריכוז כל המצרכים מהתפריט שלך לקנייה מהירה</p>
-                                </div>
-                            </div>
-                            <button @click="openGroceryListForClient(portalClient)" class="w-full sm:w-auto bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
-                                <i data-lucide="list-checks" class="w-3.5 h-3.5 text-[#86efac]"></i>
-                                <span>פתח רשימת קניות לסופר</span>
-                            </button>
-                        </div>
-
                         <!-- יעדים יומיים -->
                         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
                             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
@@ -2560,6 +2543,10 @@
                     <!-- תפריט מחליק פנימי בנייד -->
                     <div class="flex border-b border-[#e5dfd3] gap-1 overflow-x-auto pb-1 scrollbar-none whitespace-nowrap flex-nowrap">
                         <button @click="detailSubTab = 'profile'" :class="detailSubTab === 'profile' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">פרופיל & תזונה</button>
+                        <button @click="detailSubTab = 'scorecards'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="detailSubTab === 'scorecards' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5">
+                            <i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i>
+                            <span>📋 דיווחים וצ'ק-ליסטים</span>
+                        </button>
                         <button @click="detailSubTab = 'intake'; setTimeout(() => window.lucide.createIcons(), 50)" :class="detailSubTab === 'intake' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5">
                             <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-[#22c55e]"></i>
                             <span>שאלון קליטה מורחב</span>
@@ -2873,6 +2860,119 @@
                                                 <p class="text-[#233d36] italic bg-[#fbf8f2] border border-[#e5dfd3] p-2.5 rounded-xl mt-1 leading-relaxed" x-text="currentClient?.biggestChallenge || '-'"></p>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- טאב היסטוריית דיווחים וצ'ק-ליסטים יומיים למאמן בלבד -->
+                        <div x-show="detailSubTab === 'scorecards'" x-cloak class="space-y-6">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-6">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="award" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-base md:text-lg font-black text-[#082722]">היסטוריית צ'ק-ליסטים ודיווחים יומיים — <span x-text="currentClient?.name"></span> 📋</h3>
+                                            <p class="text-xs text-[#5f756e]">מעקב מלא ועריכה של כל הדיווחים היומיים שנשמרו וננעלו</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <button @click="openCoachScorecardEditor()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
+                                            <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                            <span>הוסף / ערוך דיווח לתאריך ✍️</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- כרטיסי מדדי סיכום מהירים -->
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">ממוצע ציון עמידה</span>
+                                            <span class="text-lg font-black text-[#082722]" x-text="getAverageScore(currentClient) + '%'"></span>
+                                        </div>
+                                        <div class="p-2 bg-emerald-100 text-emerald-800 rounded-xl font-black text-sm">
+                                            🏆
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">סה״כ ימי דיווח</span>
+                                            <span class="text-lg font-black text-[#082722]" x-text="getClientScorecardsList(currentClient).length + ' ימים'"></span>
+                                        </div>
+                                        <div class="p-2 bg-blue-100 text-blue-800 rounded-xl font-black text-sm">
+                                            📅
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">רצף התמדה נוכחי</span>
+                                            <span class="text-lg font-black text-[#082722]" x-text="(currentClient?.streakDays || 0) + ' ימים 🔥'"></span>
+                                        </div>
+                                        <div class="p-2 bg-amber-100 text-amber-800 rounded-xl font-black text-sm">
+                                            ⚡
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- טבלת / רשימת הדיווחים היומיים -->
+                                <div class="space-y-3">
+                                    <h4 class="text-xs font-black text-[#082722] flex items-center gap-1.5 border-b border-[#e5dfd3] pb-2">
+                                        <i data-lucide="list" class="w-4 h-4 text-[#22c55e]"></i>
+                                        <span>יומן הדיווחים היומי (כרונולוגי)</span>
+                                    </h4>
+
+                                    <template x-if="getClientScorecardsList(currentClient).length === 0">
+                                        <div class="p-8 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
+                                            <i data-lucide="calendar" class="w-8 h-8 mx-auto text-[#082722]/30"></i>
+                                            <p class="font-bold text-xs text-[#082722]">טרם נרשמו דיווחים יומיים עבור מתאמן זה</p>
+                                            <p class="text-[11px]">תוכל להוסיף דיווח רטרואקטיבי בלחיצה על "הוסף / ערוך דיווח לתאריך".</p>
+                                        </div>
+                                    </template>
+
+                                    <div class="space-y-2.5">
+                                        <template x-for="sc in getClientScorecardsList(currentClient)" :key="sc.id || sc.date">
+                                            <div class="bg-[#fbf8f2] border border-[#e5dfd3] hover:border-[#082722]/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition shadow-sm">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac] text-center min-w-[55px]">
+                                                        <span class="text-xs font-black block text-[#86efac]" x-text="sc.score + '%'"></span>
+                                                        <span class="text-[8px] text-[#93c7bb] block">ציון</span>
+                                                    </div>
+                                                    <div class="space-y-1">
+                                                        <div class="flex items-center gap-2 flex-wrap">
+                                                            <span class="font-black text-xs md:text-sm text-[#082722]" x-text="formatDate(sc.date)"></span>
+                                                            <template x-if="sc.date === getTodayDate()">
+                                                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded-full">היום</span>
+                                                            </template>
+                                                            <template x-if="sc.editedByCoach">
+                                                                <span class="bg-purple-100 text-purple-800 text-[9px] font-bold px-1.5 py-0.2 rounded-full">נערך ע״י מאמן</span>
+                                                            </template>
+                                                        </div>
+                                                        <div class="flex items-center gap-3 text-[10px] text-[#5f756e] flex-wrap">
+                                                            <span>🥗 תזונה: <strong class="text-[#082722]" x-text="sc.nutrition === 'yes' ? '100% בול' : (sc.nutrition === 'almost' ? '80%' : 'חריגה')"></strong></span>
+                                                            <span>🏋️‍♂️ אימון: <strong class="text-[#082722]" x-text="sc.workout === 'yes' ? 'התאמן' : (sc.workout === 'rest' ? 'מנוחה' : 'דילג')"></strong></span>
+                                                            <span>💧 מים: <strong class="text-[#082722]" x-text="(sc.water || 0) + ' מ״ל'"></strong></span>
+                                                            <span>🚶 צעדים: <strong class="text-[#082722]" x-text="sc.steps || 0"></strong></span>
+                                                            <span>⭐ שינה: <strong class="text-[#082722]" x-text="(sc.sleep || 5) + '/5'"></strong></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center gap-1.5 self-end sm:self-center">
+                                                    <button type="button" @click="openCoachScorecardEditor(sc)" class="bg-white hover:bg-slate-50 border border-[#e5dfd3] text-[#082722] font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
+                                                        <i data-lucide="edit-3" class="w-3.5 h-3.5 text-[#082722]"></i>
+                                                        <span>ערוך ✏️</span>
+                                                    </button>
+                                                    <button type="button" @click="deleteCoachScorecard(sc.date)" class="bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 font-bold p-1.5 rounded-xl text-xs transition cursor-pointer" title="מחק דיווח">
+                                                        <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-600"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -3290,10 +3390,6 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                                    <button @click="openGroceryListForClient(currentClient)" class="flex-1 md:flex-none justify-center bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-3 py-1.5 rounded-xl text-[10px] font-black flex items-center gap-1.5 whitespace-nowrap border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
-                                        <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-[#86efac]"></i>
-                                        <span>רשימת קניות לסופר</span>
-                                    </button>
                                     <button @click="saveCurrentMealPlanAsTemplate()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="save" class="w-3.5 h-3.5"></i>
                                         <span>שמור תבנית</span>
@@ -3883,84 +3979,107 @@
         </template>
     </datalist>
 
-    <!-- מודל היסטוריית כל הדיווחים והצ'ק-ליסטים היומיים -->
-    <div x-show="openScorecardHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openScorecardHistoryModal = false">
-        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+    <!-- מודל עריכת / הוספת דיווח יומי למאמן בלבד -->
+    <div x-show="openCoachScorecardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openCoachScorecardModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
                     <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                        <i data-lucide="history" class="w-5 h-5 text-[#86efac]"></i>
+                        <i data-lucide="edit-3" class="w-5 h-5 text-[#86efac]"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-black text-[#082722]">היסטוריית דיווחים יומיים 📜</h3>
-                        <p class="text-xs text-[#5f756e]">יומן ביצועים וציונים מכל הימים הקודמים</p>
+                        <h3 class="text-base font-black text-[#082722]">עריכת דיווח יומי — <span x-text="currentClient?.name"></span> 📋</h3>
+                        <p class="text-xs text-[#5f756e]">עדכון מדדים, תזונה, אימון וציון עבור יום נבחר</p>
                     </div>
                 </div>
-                <button @click="openScorecardHistoryModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                <button @click="openCoachScorecardModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <div class="overflow-y-auto pr-1 flex-1 space-y-3 text-xs">
-                <template x-if="getClientScorecardsList(portalClient).length === 0">
-                    <div class="p-8 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
-                        <i data-lucide="calendar" class="w-8 h-8 mx-auto text-[#082722]/30"></i>
-                        <p class="font-bold text-xs text-[#082722]">טרם נצברו דיווחים בהיסטוריה</p>
-                        <p class="text-[11px]">ברגע שתסמן את היעדים היומיים, הם יישמרו כאן אוטומטית בכל יום בחצות!</p>
+            <form @submit.prevent="saveCoachScorecard()" class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs">
+                <!-- 1. תאריך הדיווח -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-1.5">
+                    <label class="block font-black text-[#082722]">תאריך הדיווח:</label>
+                    <input type="date" x-model="coachEditingScorecard.date" required class="w-full bg-white border border-[#e5dfd3] rounded-xl p-2.5 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
+                </div>
+
+                <!-- 2. עמידה בתזונה -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-2">
+                    <span class="font-black text-[#082722] block">1. עמידה ביעד התזונה והקלוריות:</span>
+                    <div class="grid grid-cols-3 gap-1.5 font-bold text-[11px]">
+                        <button type="button" @click="coachEditingScorecard.nutrition = 'yes'" :class="coachEditingScorecard.nutrition === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                            100% בול ✅
+                        </button>
+                        <button type="button" @click="coachEditingScorecard.nutrition = 'almost'" :class="coachEditingScorecard.nutrition === 'almost' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                            כמעט (~80%) 👍
+                        </button>
+                        <button type="button" @click="coachEditingScorecard.nutrition = 'no'" :class="coachEditingScorecard.nutrition === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                            חרגתי ⚠️
+                        </button>
                     </div>
-                </template>
+                </div>
 
-                <template x-for="sc in getClientScorecardsList(portalClient)" :key="sc.id || sc.date">
-                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] hover:border-[#082722]/30 p-4 rounded-2xl space-y-3 transition shadow-sm">
-                        <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
-                            <div class="flex items-center gap-2">
-                                <span class="font-black text-sm text-[#082722]" x-text="sc.date"></span>
-                                <span :class="sc.score >= 90 ? 'bg-emerald-100 text-emerald-800' : (sc.score >= 70 ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800')" class="text-[10px] font-black px-2 py-0.5 rounded-full" x-text="sc.score + '% 🏆'"></span>
-                                <template x-if="sc.date === getTodayDate()">
-                                    <span class="bg-emerald-500 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full">היום</span>
-                                </template>
-                            </div>
-                            <button type="button" @click="setScorecardViewDate(sc.date); openScorecardHistoryModal = false;" class="text-[10px] bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-2.5 py-1 rounded-xl transition cursor-pointer">
-                                פתח דיווח זה 🔍
-                            </button>
-                        </div>
+                <!-- 3. ביצוע אימון -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-2">
+                    <span class="font-black text-[#082722] block">2. ביצוע אימון יומי:</span>
+                    <div class="grid grid-cols-3 gap-1.5 font-bold text-[11px]">
+                        <button type="button" @click="coachEditingScorecard.workout = 'yes'" :class="coachEditingScorecard.workout === 'yes' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                            התאמן 🏋️‍♂️
+                        </button>
+                        <button type="button" @click="coachEditingScorecard.workout = 'rest'" :class="coachEditingScorecard.workout === 'rest' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                            יום מנוחה 🧘
+                        </button>
+                        <button type="button" @click="coachEditingScorecard.workout = 'no'" :class="coachEditingScorecard.workout === 'no' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-white text-[#082722] border-[#e5dfd3]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                            דילג ❌
+                        </button>
+                    </div>
+                </div>
 
-                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px]">
-                            <!-- תזונה -->
-                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center">
-                                <span class="text-[9px] text-[#5f756e] block font-bold">תזונה</span>
-                                <span class="font-black text-[#082722]" x-text="sc.nutrition === 'yes' ? '100% בול ✅' : (sc.nutrition === 'almost' ? 'כמעט 👍' : 'חרגתי ⚠️')"></span>
-                            </div>
-                            <!-- אימון -->
-                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center">
-                                <span class="text-[9px] text-[#5f756e] block font-bold">אימון</span>
-                                <span class="font-black text-[#082722]" x-text="sc.workout === 'yes' ? 'התאמנתי 🏋️‍♂️' : (sc.workout === 'rest' ? 'מנוחה 🧘' : 'דילגתי ❌')"></span>
-                            </div>
-                            <!-- מים -->
-                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center">
-                                <span class="text-[9px] text-[#5f756e] block font-bold">מים</span>
-                                <span class="font-black text-[#082722]" x-text="(sc.water || 0) + ' מ״ל 💧'"></span>
-                            </div>
-                            <!-- צעדים -->
-                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center">
-                                <span class="text-[9px] text-[#5f756e] block font-bold">צעדים</span>
-                                <span class="font-black text-[#082722]" x-text="(sc.steps || 0) + ' 🚶'"></span>
-                            </div>
-                            <!-- שינה -->
-                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center col-span-2 sm:col-span-1">
-                                <span class="text-[9px] text-[#5f756e] block font-bold">שינה</span>
-                                <span class="font-black text-[#082722]" x-text="(sc.sleep || 5) + '/5 ⭐'"></span>
-                            </div>
+                <!-- 4. מים וצעדים -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-1.5">
+                        <label class="block font-black text-[#082722]">3. שתיית מים (מ״ל):</label>
+                        <input type="number" step="50" min="0" x-model="coachEditingScorecard.water" class="w-full bg-white border border-[#e5dfd3] rounded-xl p-2.5 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
+                    </div>
+
+                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-1.5">
+                        <label class="block font-black text-[#082722]">4. כמות צעדים:</label>
+                        <input type="number" step="100" min="0" x-model="coachEditingScorecard.steps" class="w-full bg-white border border-[#e5dfd3] rounded-xl p-2.5 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
+                    </div>
+                </div>
+
+                <!-- 5. איכות שינה -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <span class="block font-black text-[#082722]">5. איכות שינה / אנרגיה:</span>
+                        <div class="flex items-center gap-1 mt-1">
+                            <template x-for="star in [1,2,3,4,5]" :key="star">
+                                <button type="button" @click="coachEditingScorecard.sleep = star" class="text-lg focus:outline-none transition hover:scale-110 cursor-pointer" :class="star <= coachEditingScorecard.sleep ? 'text-amber-400' : 'text-slate-300'">★</button>
+                            </template>
                         </div>
                     </div>
-                </template>
-            </div>
+                    <span class="text-sm font-black text-[#082722]" x-text="coachEditingScorecard.sleep + ' / 5 ⭐'"></span>
+                </div>
 
-            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
-                <button type="button" @click="openScorecardHistoryModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
-                    סגור היסטוריה
-                </button>
-            </div>
+                <!-- תצוגה מקדימה של הציון המשוקלל -->
+                <div class="bg-[#082722] text-[#fbf8f2] p-4 rounded-2xl flex items-center justify-between border border-[#174e43]">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-[#86efac]"></i>
+                        <span class="font-bold text-xs">ציון מחושב משוקלל ליום זה:</span>
+                    </div>
+                    <span class="text-base font-black text-[#86efac]" x-text="calculateCoachScorecardScore() + '% 🏆'"></span>
+                </div>
+
+                <div class="pt-2 flex items-center justify-end gap-2">
+                    <button type="button" @click="openCoachScorecardModal = false" class="bg-slate-100 hover:bg-slate-200 text-[#082722] font-bold px-4 py-2.5 rounded-xl text-xs transition cursor-pointer">
+                        ביטול
+                    </button>
+                    <button type="submit" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-6 py-2.5 rounded-xl text-xs transition shadow-md shadow-emerald-500/20 cursor-pointer">
+                        שמור דיווח ב-CRM 💾
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -4045,63 +4164,6 @@
                     <span>העתק סיכום ללוח</span>
                 </button>
                 <a :href="getSendMonthlySummaryWhatsAppLink()" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-emerald-500/20 cursor-pointer">
-                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                    <span>שלח עכשיו בוואטסאפ 🚀</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- מודל מחולל רשימת קניות לסופר -->
-    <div x-show="openGroceryListModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openGroceryListModal = false">
-        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
-                <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                        <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-black text-[#082722]">רשימת קניות לסופר — <span x-text="groceryListTraineeName"></span> 🛒</h3>
-                        <p class="text-xs text-[#5f756e]">מרוכזת וממוינת אוטומטית מתוך תפריט התזונה</p>
-                    </div>
-                </div>
-                <button @click="openGroceryListModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <div class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs">
-                <template x-if="groceryListItems.length === 0">
-                    <div class="p-6 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3]">
-                        <i data-lucide="info" class="w-6 h-6 mx-auto mb-2 text-[#082722]/40"></i>
-                        <span>לא נמצאו מצרכים בתפריט התזונה. הוסף פריטים לתפריט כדי להפיק רשימת קניות!</span>
-                    </div>
-                </template>
-
-                <template x-for="cat in groceryListItems" :key="cat.name">
-                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-2 shadow-sm">
-                        <h4 class="font-black text-[#082722] text-xs border-b border-[#e5dfd3] pb-1.5 flex items-center justify-between">
-                            <span x-text="cat.name"></span>
-                            <span class="text-[10px] text-[#5f756e] font-normal" x-text="cat.items.length + ' מוצרים'"></span>
-                        </h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                            <template x-for="item in cat.items" :key="item">
-                                <div class="flex items-center gap-2 bg-white border border-[#e5dfd3] p-2 rounded-xl text-[11px] text-[#082722] font-semibold">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e]"></span>
-                                    <span x-text="item"></span>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </template>
-            </div>
-
-            <div class="pt-3 border-t border-[#e5dfd3] flex flex-col sm:flex-row justify-between gap-2 shrink-0">
-                <button @click="copyGroceryList()" class="bg-[#fbf8f2] hover:bg-[#f0eae1] border border-[#e5dfd3] text-[#082722] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                    <span>העתק רשימת קניות ללוח</span>
-                </button>
-                <a :href="getSendGroceryWhatsAppLink(currentClient?.phone || portalClient?.phone)" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-emerald-500/20 cursor-pointer">
                     <i data-lucide="send" class="w-3.5 h-3.5"></i>
                     <span>שלח עכשיו בוואטסאפ 🚀</span>
                 </a>
@@ -4819,6 +4881,8 @@
                 scorecardWorkout: 'yes',
                 scorecardSleep: 5,
                 scorecardSuccessToast: false,
+                openCoachScorecardModal: false,
+                coachEditingScorecard: { id: '', date: '', nutrition: 'yes', workout: 'yes', water: 3000, steps: 10000, sleep: 5, score: 100 },
 
                 // היכל שיאי כוח אישיים (PR Hub)
                 openPrModal: false,
@@ -4838,11 +4902,6 @@
                 restTimerTotal: 60,
                 restTimerInterval: null,
                 isRestTimerRunning: false,
-
-                // מחולל רשימת קניות לסופר
-                openGroceryListModal: false,
-                groceryListItems: [],
-                groceryListTraineeName: '',
 
                 // מחשבון 1RM ומשקלי עבודה
                 openOneRmModal: false,
@@ -6775,80 +6834,6 @@
                     }
                 },
 
-                // --- מתודות מחולל רשימת קניות לסופר ---
-                openGroceryListForClient(client) {
-                    const c = client || this.portalClient || this.clients.find(cl => cl.id === this.selectedClientId);
-                    if (!c) return;
-                    this.groceryListTraineeName = c.name || '';
-                    
-                    const categories = {
-                        proteins: { name: '🥩 חלבונים, בשרים ומוצרי חלב', items: [] },
-                        carbs: { name: '🍚 פחמימות, דגנים ולחמים', items: [] },
-                        fats: { name: '🥑 שמנים בריאים, אגוזים וטחינה', items: [] },
-                        vegFruit: { name: '🥦 ירקות, עלים ירוקים ופירות', items: [] },
-                        other: { name: '🧂 שונות, תבלינים ומצרכים כלליים', items: [] }
-                    };
-
-                    const allItems = [];
-                    if (c.mealPlan && c.mealPlan.meals) {
-                        c.mealPlan.meals.forEach(m => {
-                            if (m.items) {
-                                m.items.forEach(i => {
-                                    if (i.food && !allItems.includes(i.food)) {
-                                        allItems.push(i.food);
-                                        const fLower = i.food.toLowerCase();
-                                        
-                                        if (fLower.includes('עוף') || fLower.includes('בקר') || fLower.includes('חזה') || fLower.includes('ביצה') || fLower.includes('ביצים') || fLower.includes('טונה') || fLower.includes('קוטג') || fLower.includes('גבינ') || fLower.includes('יוגורט') || fLower.includes('דג') || fLower.includes('סלמון') || fLower.includes('חלבון') || fLower.includes('טופו') || fLower.includes('פרו')) {
-                                            categories.proteins.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
-                                        } else if (fLower.includes('אורז') || fLower.includes('שיבולת') || fLower.includes('לחם') || fLower.includes('פסטה') || fLower.includes('תפוח אדמה') || fLower.includes('בטטה') || fLower.includes('פריכיות') || fLower.includes('קינואה') || fLower.includes('כוסמת') || fLower.includes('פתיתים') || fLower.includes('טורטיה')) {
-                                            categories.carbs.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
-                                        } else if (fLower.includes('טחינה') || fLower.includes('שמן') || fLower.includes('אבוקדו') || fLower.includes('שקדים') || fLower.includes('אגוז') || fLower.includes('בוטנים') || fLower.includes('קשיו') || fLower.includes('זרעי')) {
-                                            categories.fats.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
-                                        } else if (fLower.includes('מלפפון') || fLower.includes('עגבני') || fLower.includes('חסה') || fLower.includes('פלפל') || fLower.includes('גזר') || fLower.includes('תפוח') || fLower.includes('בננה') || fLower.includes('פירות') || fLower.includes('תרד') || fLower.includes('כרוב') || fLower.includes('פטריות') || fLower.includes('ברוקולי')) {
-                                            categories.vegFruit.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
-                                        } else {
-                                            categories.other.items.push(i.food + (i.quantity ? ` (${i.quantity})` : ''));
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
-
-                    this.groceryListItems = Object.values(categories).filter(cat => cat.items.length > 0);
-                    this.openGroceryListModal = true;
-                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
-                },
-
-                getGroceryListText() {
-                    let text = `🛒 *רשימת קניות לסופר - ${this.groceryListTraineeName}*\nמאמן: אילאי | IlaiCo Fitness 💪\n\n`;
-                    this.groceryListItems.forEach(cat => {
-                        text += `*${cat.name}:*\n`;
-                        cat.items.forEach(item => {
-                            text += `• ${item}\n`;
-                        });
-                        text += `\n`;
-                    });
-                    text += `קנייה נעימה ובהצלחה ביעדי התזונה! 👑`;
-                    return text;
-                },
-
-                copyGroceryList() {
-                    const text = this.getGroceryListText();
-                    navigator.clipboard.writeText(text).then(() => {
-                        alert("רשימת הקניות הועתקה בהצלחה ללוח!");
-                    }).catch(() => {
-                        prompt("העתק את רשימת הקניות:", text);
-                    });
-                },
-
-                getSendGroceryWhatsAppLink(phone) {
-                    const cleanPhone = (phone || '').replace(/\D/g, '');
-                    const israelPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
-                    const msg = encodeURIComponent(this.getGroceryListText());
-                    return israelPhone ? `https://wa.me/${israelPhone}?text=${msg}` : `https://wa.me/?text=${msg}`;
-                },
-
                 // --- מתודות מחשבון 1RM ומשקלי עבודה ---
                 calculateOneRm() {
                     const w = parseFloat(this.oneRmWeight) || 0;
@@ -7701,6 +7686,120 @@
                 saveScorecardForDate(dateStr) {
                     this.portalScorecardViewDate = dateStr;
                     this.autoSaveDailyScorecard(true);
+                },
+
+                // --- מתודות עריכת דיווחים יומיים למאמן בלבד ב-CRM ---
+                openCoachScorecardEditor(scorecard = null) {
+                    const client = this.currentClient;
+                    if (!client) return;
+                    if (scorecard) {
+                        this.coachEditingScorecard = {
+                            id: scorecard.id || ('sc_' + scorecard.date),
+                            date: scorecard.date || this.getTodayDate(),
+                            nutrition: scorecard.nutrition || 'yes',
+                            workout: scorecard.workout || 'yes',
+                            water: scorecard.water !== undefined ? scorecard.water : (client.waterTarget || 3000),
+                            steps: scorecard.steps !== undefined ? scorecard.steps : (client.stepsTarget || 10000),
+                            sleep: scorecard.sleep || 5,
+                            score: scorecard.score || 0
+                        };
+                    } else {
+                        const todayStr = this.getTodayDate();
+                        this.coachEditingScorecard = {
+                            id: 'sc_' + todayStr,
+                            date: todayStr,
+                            nutrition: 'yes',
+                            workout: 'yes',
+                            water: client.waterTarget || 3000,
+                            steps: client.stepsTarget || 10000,
+                            sleep: 5,
+                            score: 100
+                        };
+                    }
+                    this.openCoachScorecardModal = true;
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                calculateCoachScorecardScore() {
+                    const sc = this.coachEditingScorecard;
+                    const client = this.currentClient;
+                    if (!sc || !client) return 0;
+                    const waterTarget = client.waterTarget || 3000;
+                    const stepsTarget = client.stepsTarget || 10000;
+                    const waterRatio = (sc.water || 0) / waterTarget;
+                    const stepsRatio = (sc.steps || 0) / stepsTarget;
+
+                    let score = 0;
+                    if (sc.nutrition === 'yes') score += 35;
+                    else if (sc.nutrition === 'almost') score += 25;
+                    else score += 10;
+
+                    score += Math.min(20, Math.round(waterRatio * 20));
+                    score += Math.min(20, Math.round(stepsRatio * 20));
+                    if (sc.workout === 'yes' || sc.workout === 'rest') score += 15;
+                    score += Math.round(((sc.sleep || 5) / 5) * 10);
+                    return Math.min(100, Math.max(0, score));
+                },
+
+                saveCoachScorecard() {
+                    const client = this.currentClient;
+                    if (!client || !client.id) return;
+                    if (!client.dailyScorecards) client.dailyScorecards = [];
+                    if (!Array.isArray(client.dailyScorecards)) {
+                        client.dailyScorecards = Object.values(client.dailyScorecards);
+                    }
+
+                    const sc = this.coachEditingScorecard;
+                    const score = this.calculateCoachScorecardScore();
+                    const entry = {
+                        id: sc.id || ('sc_' + sc.date),
+                        date: sc.date,
+                        score: score,
+                        nutrition: sc.nutrition,
+                        workout: sc.workout,
+                        sleep: parseInt(sc.sleep) || 5,
+                        water: parseInt(sc.water) || 0,
+                        steps: parseInt(sc.steps) || 0,
+                        editedByCoach: true,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    const existingIdx = client.dailyScorecards.findIndex(s => s && s.date === sc.date);
+                    if (existingIdx >= 0) {
+                        client.dailyScorecards[existingIdx] = entry;
+                    } else {
+                        client.dailyScorecards.unshift(entry);
+                    }
+
+                    client.dailyScorecards.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    this.openCoachScorecardModal = false;
+                    alert(`הדיווח לתאריך ${sc.date} נשמר ועודכן בהצלחה! 👑`);
+                },
+
+                deleteCoachScorecard(dateStr) {
+                    const client = this.currentClient;
+                    if (!client || !client.dailyScorecards) return;
+                    if (confirm(`למחוק את הדיווח של תאריך ${dateStr}?`)) {
+                        if (Array.isArray(client.dailyScorecards)) {
+                            client.dailyScorecards = client.dailyScorecards.filter(s => s && s.date !== dateStr);
+                        }
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
+                    }
+                },
+
+                getAverageScore(client) {
+                    const list = this.getClientScorecardsList(client);
+                    if (!list || list.length === 0) return 0;
+                    const sum = list.reduce((acc, s) => acc + (s.score || 0), 0);
+                    return Math.round(sum / list.length);
                 },
 
                 checkAndProcessMidnightRollover() {
