@@ -2631,29 +2631,28 @@
                         </div>
                     </div>
 
-                    <!-- תפריט מחליק פנימי בנייד -->
+                    <!-- תפריט 5 לשוניות ליבה מדויקות למאמן -->
                     <div class="flex border-b border-[#e5dfd3] gap-1 overflow-x-auto pb-1 scrollbar-none whitespace-nowrap flex-nowrap">
-                        <button @click="detailSubTab = 'profile'" :class="detailSubTab === 'profile' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">פרופיל & תזונה</button>
-                        <button @click="detailSubTab = 'scorecards'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="detailSubTab === 'scorecards' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5">
-                            <i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i>
-                            <span>📋 דיווחים וצ'ק-ליסטים</span>
+                        <button @click="detailSubTab = 'profile'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="detailSubTab === 'profile' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-bold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5 cursor-pointer">
+                            <i data-lucide="user" class="w-3.5 h-3.5 text-[#082722]"></i>
+                            <span>👤 פרופיל & קליטה</span>
                         </button>
-                        <button @click="detailSubTab = 'intake'; setTimeout(() => window.lucide.createIcons(), 50)" :class="detailSubTab === 'intake' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5">
-                            <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-[#22c55e]"></i>
-                            <span>שאלון קליטה מורחב</span>
+                        <button @click="detailSubTab = 'workout'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="detailSubTab === 'workout' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-bold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5 cursor-pointer">
+                            <i data-lucide="dumbbell" class="w-3.5 h-3.5 text-[#22c55e]"></i>
+                            <span>🏋️ תוכנית אימונים & ביצועים</span>
                         </button>
-                        <button @click="detailSubTab = 'checkins'" :class="detailSubTab === 'checkins' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">מעקב מדדים</button>
-                        <button @click="detailSubTab = 'workout'" :class="detailSubTab === 'workout' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית אימונים</button>
-                        <button @click="detailSubTab = 'mealplan'" :class="detailSubTab === 'mealplan' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תוכנית תזונה</button>
-                        <button @click="detailSubTab = 'foodlogs'" :class="detailSubTab === 'foodlogs' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1">
-                            <i data-lucide="camera" class="w-3.5 h-3.5 text-[#22c55e]"></i>
-                            <span>תמונות ארוחות</span>
+                        <button @click="detailSubTab = 'mealplan'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="detailSubTab === 'mealplan' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-bold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5 cursor-pointer">
+                            <i data-lucide="utensils" class="w-3.5 h-3.5 text-[#16a34a]"></i>
+                            <span>🥗 תזונה & תמונות ארוחות</span>
                         </button>
-                        <button @click="detailSubTab = 'reflections'" :class="detailSubTab === 'reflections' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1">
-                            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#eab308]"></i>
-                            <span>שיקוף סופ״ש</span>
+                        <button @click="detailSubTab = 'checkins'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="detailSubTab === 'checkins' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-bold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5 cursor-pointer">
+                            <i data-lucide="line-chart" class="w-3.5 h-3.5 text-amber-500"></i>
+                            <span>📊 מדדים, דוחות ושיקוף</span>
                         </button>
-                        <button @click="detailSubTab = 'payments'" :class="detailSubTab === 'payments' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-semibold text-xs md:text-sm transition flex-shrink-0">תשלומים</button>
+                        <button @click="detailSubTab = 'payments'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="detailSubTab === 'payments' ? 'border-[#082722] text-[#082722] font-black' : 'border-transparent text-[#5f756e] hover:text-[#082722]'" class="px-3.5 py-2 border-b-2 font-bold text-xs md:text-sm transition flex-shrink-0 flex items-center gap-1.5 cursor-pointer">
+                            <i data-lucide="credit-card" class="w-3.5 h-3.5 text-emerald-600"></i>
+                            <span>💳 תשלומים & גבייה</span>
+                        </button>
                     </div>
 
                     <!-- תוכן הטאבים הפנימיים -->
@@ -2956,242 +2955,7 @@
                             </div>
                         </div>
 
-                        <!-- טאב היסטוריית דיווחים וצ'ק-ליסטים יומיים למאמן בלבד -->
-                        <div x-show="detailSubTab === 'scorecards'" x-cloak class="space-y-6">
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-6">
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                                            <i data-lucide="award" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="text-base md:text-lg font-black text-[#082722]">היסטוריית צ'ק-ליסטים ודיווחים יומיים — <span x-text="currentClient?.name"></span> 📋</h3>
-                                            <p class="text-xs text-[#5f756e]">מעקב מלא ועריכה של כל הדיווחים היומיים שנשמרו וננעלו</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <button @click="openCoachScorecardEditor()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
-                                            <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-[#86efac]"></i>
-                                            <span>הוסף / ערוך דיווח לתאריך ✍️</span>
-                                        </button>
-                                    </div>
-                                </div>
 
-                                <!-- כרטיסי מדדי סיכום מהירים -->
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
-                                        <div>
-                                            <span class="text-[10px] text-[#5f756e] block font-bold">ממוצע ציון עמידה</span>
-                                            <span class="text-lg font-black text-[#082722]" x-text="getAverageScore(currentClient) + '%'"></span>
-                                        </div>
-                                        <div class="p-2 bg-emerald-100 text-emerald-800 rounded-xl font-black text-sm">
-                                            🏆
-                                        </div>
-                                    </div>
-
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
-                                        <div>
-                                            <span class="text-[10px] text-[#5f756e] block font-bold">סה״כ ימי דיווח</span>
-                                            <span class="text-lg font-black text-[#082722]" x-text="getClientScorecardsList(currentClient).length + ' ימים'"></span>
-                                        </div>
-                                        <div class="p-2 bg-blue-100 text-blue-800 rounded-xl font-black text-sm">
-                                            📅
-                                        </div>
-                                    </div>
-
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
-                                        <div>
-                                            <span class="text-[10px] text-[#5f756e] block font-bold">רצף התמדה נוכחי</span>
-                                            <span class="text-lg font-black text-[#082722]" x-text="(currentClient?.streakDays || 0) + ' ימים 🔥'"></span>
-                                        </div>
-                                        <div class="p-2 bg-amber-100 text-amber-800 rounded-xl font-black text-sm">
-                                            ⚡
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- טבלת / רשימת הדיווחים היומיים -->
-                                <div class="space-y-3">
-                                    <h4 class="text-xs font-black text-[#082722] flex items-center gap-1.5 border-b border-[#e5dfd3] pb-2">
-                                        <i data-lucide="list" class="w-4 h-4 text-[#22c55e]"></i>
-                                        <span>יומן הדיווחים היומי (כרונולוגי)</span>
-                                    </h4>
-
-                                    <template x-if="getClientScorecardsList(currentClient).length === 0">
-                                        <div class="p-8 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
-                                            <i data-lucide="calendar" class="w-8 h-8 mx-auto text-[#082722]/30"></i>
-                                            <p class="font-bold text-xs text-[#082722]">טרם נרשמו דיווחים יומיים עבור מתאמן זה</p>
-                                            <p class="text-[11px]">תוכל להוסיף דיווח רטרואקטיבי בלחיצה על "הוסף / ערוך דיווח לתאריך".</p>
-                                        </div>
-                                    </template>
-
-                                    <div class="space-y-2.5">
-                                        <template x-for="sc in getClientScorecardsList(currentClient)" :key="sc.id || sc.date">
-                                            <div class="bg-[#fbf8f2] border border-[#e5dfd3] hover:border-[#082722]/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition shadow-sm">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac] text-center min-w-[55px]">
-                                                        <span class="text-xs font-black block text-[#86efac]" x-text="sc.score + '%'"></span>
-                                                        <span class="text-[8px] text-[#93c7bb] block">ציון</span>
-                                                    </div>
-                                                    <div class="space-y-1">
-                                                        <div class="flex items-center gap-2 flex-wrap">
-                                                            <span class="font-black text-xs md:text-sm text-[#082722]" x-text="formatDate(sc.date)"></span>
-                                                            <template x-if="sc.date === getTodayDate()">
-                                                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded-full">היום</span>
-                                                            </template>
-                                                            <template x-if="sc.editedByCoach">
-                                                                <span class="bg-purple-100 text-purple-800 text-[9px] font-bold px-1.5 py-0.2 rounded-full">נערך ע״י מאמן</span>
-                                                            </template>
-                                                        </div>
-                                                        <div class="flex items-center gap-3 text-[10px] text-[#5f756e] flex-wrap">
-                                                            <span>🥗 תזונה: <strong class="text-[#082722]" x-text="sc.nutrition === 'yes' ? '100% בול' : (sc.nutrition === 'almost' ? '80%' : 'חריגה')"></strong></span>
-                                                            <span>🏋️‍♂️ אימון: <strong class="text-[#082722]" x-text="sc.workout === 'yes' ? 'התאמן' : (sc.workout === 'rest' ? 'מנוחה' : 'דילג')"></strong></span>
-                                                            <span>💧 מים: <strong class="text-[#082722]" x-text="(sc.water || 0) + ' מ״ל'"></strong></span>
-                                                            <span>🚶 צעדים: <strong class="text-[#082722]" x-text="sc.steps || 0"></strong></span>
-                                                            <span>⭐ שינה: <strong class="text-[#082722]" x-text="(sc.sleep || 5) + '/5'"></strong></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="flex items-center gap-1.5 self-end sm:self-center">
-                                                    <button type="button" @click="openCoachScorecardEditor(sc)" class="bg-white hover:bg-slate-50 border border-[#e5dfd3] text-[#082722] font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
-                                                        <i data-lucide="edit-3" class="w-3.5 h-3.5 text-[#082722]"></i>
-                                                        <span>ערוך ✏️</span>
-                                                    </button>
-                                                    <button type="button" @click="deleteCoachScorecard(sc.date)" class="bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 font-bold p-1.5 rounded-xl text-xs transition cursor-pointer" title="מחק דיווח">
-                                                        <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-600"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- טאב שאלון קליטה מורחב ייעודי למתאמן -->
-                        <div x-show="detailSubTab === 'intake'" x-cloak class="space-y-6">
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-6">
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                                            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="text-base md:text-lg font-black text-[#082722]">שאלון קליטה מורחב — <span x-text="currentClient?.name"></span></h3>
-                                            <p class="text-xs text-[#5f756e]">פרטים מלאים על אורח חיים, כושר, הרגלי תזונה ומטרות</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <button @click="openEditIntake(currentClient)" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15">
-                                            <i data-lucide="edit-3" class="w-3.5 h-3.5 text-[#86efac]"></i>
-                                            <span>ערוך / מלא שאלון עכשיו ✏️</span>
-                                        </button>
-                                        <a :href="getSendIntakeWhatsAppLink(currentClient?.phone, currentClient?.name)" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-emerald-500/20">
-                                            <i data-lucide="send" class="w-3.5 h-3.5 text-white"></i>
-                                            <span>שלח למתאמן להשלמה בוואטסאפ 🚀</span>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <!-- רשת כרטיסי המידע של השאלון -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                                    
-                                    <!-- 1. פרטים אישיים ואורח חיים -->
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm">
-                                        <h4 class="text-xs font-black text-[#082722] flex items-center gap-2 border-b border-[#e5dfd3] pb-2">
-                                            <i data-lucide="user" class="w-4 h-4 text-[#22c55e]"></i>
-                                            <span>פרטים אישיים ואורח חיים</span>
-                                        </h4>
-                                        <div class="space-y-2.5 text-xs">
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-[#5f756e]">גיל:</span>
-                                                <span class="font-bold text-[#082722]" x-text="currentClient?.age ? currentClient.age + ' שנים' : 'לא הוזן'"></span>
-                                            </div>
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-[#5f756e]">גובה:</span>
-                                                <span class="font-bold text-[#082722]" x-text="currentClient?.height ? currentClient.height + ' ס״מ' : 'לא הוזן'"></span>
-                                            </div>
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-[#5f756e]">שעות שינה בלילה:</span>
-                                                <span class="font-bold text-[#082722]" x-text="currentClient?.sleepHours ? currentClient.sleepHours + ' שעות' : 'לא הוזן'"></span>
-                                            </div>
-                                            <div class="flex flex-col gap-1 pt-1 border-t border-[#e5dfd3]/60">
-                                                <span class="text-[#5f756e]">רמת פעילות יומיומית:</span>
-                                                <span class="font-semibold text-[#082722]" x-text="currentClient?.activityLevel || 'לא הוזן'"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 2. כושר ואימונים -->
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm">
-                                        <h4 class="text-xs font-black text-[#082722] flex items-center gap-2 border-b border-[#e5dfd3] pb-2">
-                                            <i data-lucide="dumbbell" class="w-4 h-4 text-[#22c55e]"></i>
-                                            <span>כושר והרגלי אימון</span>
-                                        </h4>
-                                        <div class="space-y-2.5 text-xs">
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-[#5f756e]">משקל התחלתי:</span>
-                                                <span class="font-bold text-[#082722]" x-text="currentClient?.startWeight ? currentClient.startWeight + ' ק״ג' : 'לא הוזן'"></span>
-                                            </div>
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-[#5f756e]">אימונים בשבוע:</span>
-                                                <span class="font-bold text-[#082722]" x-text="currentClient?.weeklyWorkouts || 'לא הוזן'"></span>
-                                            </div>
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-[#5f756e]">מיקום אימונים:</span>
-                                                <span class="font-bold text-[#082722]" x-text="currentClient?.trainingLocation || 'לא הוזן'"></span>
-                                            </div>
-                                            <div class="flex flex-col gap-1 pt-1 border-t border-[#e5dfd3]/60">
-                                                <span class="text-[#5f756e]">ניסיון קודם באימונים:</span>
-                                                <span class="font-semibold text-[#082722]" x-text="currentClient?.experience || 'לא הוזן'"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 3. הרגלי תזונה -->
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm">
-                                        <h4 class="text-xs font-black text-[#082722] flex items-center gap-2 border-b border-[#e5dfd3] pb-2">
-                                            <i data-lucide="utensils" class="w-4 h-4 text-[#22c55e]"></i>
-                                            <span>הרגלי תזונה והעדפות</span>
-                                        </h4>
-                                        <div class="space-y-2.5 text-xs">
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-[#5f756e]">העדפה תזונתית:</span>
-                                                <span class="font-bold text-[#082722]" x-text="currentClient?.dietPreference || 'הכל / ללא הגבלה'"></span>
-                                            </div>
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-[#5f756e]">מספר ארוחות ביום:</span>
-                                                <span class="font-bold text-[#082722]" x-text="currentClient?.mealsPerDay || 'לא הוזן'"></span>
-                                            </div>
-                                            <div class="flex flex-col gap-1 pt-1 border-t border-[#e5dfd3]/60">
-                                                <span class="text-[#5f756e]">מאכלים ששונא / אלרגיות:</span>
-                                                <span class="font-semibold text-[#082722]" x-text="currentClient?.hatedFoods || 'אין הגבלות מיוחדות'"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- מטרות, מוטיבציה ואתגרים -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-2">
-                                        <span class="text-xs font-black text-[#082722] flex items-center gap-1.5">
-                                            <i data-lucide="flame" class="w-4 h-4 text-amber-600"></i>
-                                            <span>למה דווקא עכשיו? (מוטיבציה אישית)</span>
-                                        </span>
-                                        <p class="text-xs text-[#233d36] bg-white border border-[#e5dfd3] p-3 rounded-xl min-h-[60px] leading-relaxed" x-text="currentClient?.motivation || 'טרם הוזנה מוטיבציה על ידי המתאמן.'"></p>
-                                    </div>
-
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-2">
-                                        <span class="text-xs font-black text-[#082722] flex items-center gap-1.5">
-                                            <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i>
-                                            <span>האתגר הכי גדול כרגע</span>
-                                        </span>
-                                        <p class="text-xs text-[#233d36] bg-white border border-[#e5dfd3] p-3 rounded-xl min-h-[60px] leading-relaxed" x-text="currentClient?.biggestChallenge || 'טרם הוזן אתגר על ידי המתאמן.'"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- טאב 2: מעקב מדדים וגרפים -->
                         <div x-show="detailSubTab === 'checkins'" x-cloak class="space-y-6">
@@ -3321,6 +3085,182 @@
                                             </template>
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+
+                            <!-- היסטוריית צ'ק-ליסטים ודיווחים יומיים למאמן בלבד -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-6">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="award" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-base md:text-lg font-black text-[#082722]">היסטוריית צ'ק-ליסטים ודיווחים יומיים — <span x-text="currentClient?.name"></span> 📋</h3>
+                                            <p class="text-xs text-[#5f756e]">מעקב מלא ועריכה של כל הדיווחים היומיים שנשמרו וננעלו</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <button @click="openCoachScorecardEditor()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
+                                            <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                            <span>הוסף / ערוך דיווח לתאריך ✍️</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- כרטיסי מדדי סיכום מהירים -->
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">ממוצע ציון עמידה</span>
+                                            <span class="text-lg font-black text-[#082722]" x-text="getAverageScore(currentClient) + '%'"></span>
+                                        </div>
+                                        <div class="p-2 bg-emerald-100 text-emerald-800 rounded-xl font-black text-sm">
+                                            🏆
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">סה״כ ימי דיווח</span>
+                                            <span class="text-lg font-black text-[#082722]" x-text="getClientScorecardsList(currentClient).length + ' ימים'"></span>
+                                        </div>
+                                        <div class="p-2 bg-blue-100 text-blue-800 rounded-xl font-black text-sm">
+                                            📅
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-[#5f756e] block font-bold">רצף התמדה נוכחי</span>
+                                            <span class="text-lg font-black text-[#082722]" x-text="(currentClient?.streakDays || 0) + ' ימים 🔥'"></span>
+                                        </div>
+                                        <div class="p-2 bg-amber-100 text-amber-800 rounded-xl font-black text-sm">
+                                            ⚡
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- טבלת / רשימת הדיווחים היומיים -->
+                                <div class="space-y-3">
+                                    <h4 class="text-xs font-black text-[#082722] flex items-center gap-1.5 border-b border-[#e5dfd3] pb-2">
+                                        <i data-lucide="list" class="w-4 h-4 text-[#22c55e]"></i>
+                                        <span>יומן הדיווחים היומי (כרונולוגי)</span>
+                                    </h4>
+
+                                    <template x-if="getClientScorecardsList(currentClient).length === 0">
+                                        <div class="p-8 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
+                                            <i data-lucide="calendar" class="w-8 h-8 mx-auto text-[#082722]/30"></i>
+                                            <p class="font-bold text-xs text-[#082722]">טרם נרשמו דיווחים יומיים עבור מתאמן זה</p>
+                                            <p class="text-[11px]">תוכל להוסיף דיווח רטרואקטיבי בלחיצה על "הוסף / ערוך דיווח לתאריך".</p>
+                                        </div>
+                                    </template>
+
+                                    <div class="space-y-2.5">
+                                        <template x-for="sc in getClientScorecardsList(currentClient)" :key="sc.id || sc.date">
+                                            <div class="bg-[#fbf8f2] border border-[#e5dfd3] hover:border-[#082722]/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition shadow-sm">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac] text-center min-w-[55px]">
+                                                        <span class="text-xs font-black block text-[#86efac]" x-text="sc.score + '%'"></span>
+                                                        <span class="text-[8px] text-[#93c7bb] block">ציון</span>
+                                                    </div>
+                                                    <div class="space-y-1">
+                                                        <div class="flex items-center gap-2 flex-wrap">
+                                                            <span class="font-black text-xs md:text-sm text-[#082722]" x-text="formatDate(sc.date)"></span>
+                                                            <template x-if="sc.date === getTodayDate()">
+                                                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded-full">היום</span>
+                                                            </template>
+                                                            <template x-if="sc.editedByCoach">
+                                                                <span class="bg-purple-100 text-purple-800 text-[9px] font-bold px-1.5 py-0.2 rounded-full">נערך ע״י מאמן</span>
+                                                            </template>
+                                                        </div>
+                                                        <div class="flex items-center gap-3 text-[10px] text-[#5f756e] flex-wrap">
+                                                            <span>🥗 תזונה: <strong class="text-[#082722]" x-text="sc.nutrition === 'yes' ? '100% בול' : (sc.nutrition === 'almost' ? '80%' : 'חריגה')"></strong></span>
+                                                            <span>🏋️‍♂️ אימון: <strong class="text-[#082722]" x-text="sc.workout === 'yes' ? 'התאמן' : (sc.workout === 'rest' ? 'מנוחה' : 'דילג')"></strong></span>
+                                                            <span>💧 מים: <strong class="text-[#082722]" x-text="(sc.water || 0) + ' מ״ל'"></strong></span>
+                                                            <span>🚶 צעדים: <strong class="text-[#082722]" x-text="sc.steps || 0"></strong></span>
+                                                            <span>⭐ שינה: <strong class="text-[#082722]" x-text="(sc.sleep || 5) + '/5'"></strong></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center gap-1.5 self-end sm:self-center">
+                                                    <button type="button" @click="openCoachScorecardEditor(sc)" class="bg-white hover:bg-slate-50 border border-[#e5dfd3] text-[#082722] font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
+                                                        <i data-lucide="edit-3" class="w-3.5 h-3.5 text-[#082722]"></i>
+                                                        <span>ערוך ✏️</span>
+                                                    </button>
+                                                    <button type="button" @click="deleteCoachScorecard(sc.date)" class="bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 font-bold p-1.5 rounded-xl text-xs transition cursor-pointer" title="מחק דיווח">
+                                                        <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-600"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- יומן שיקופים שבועיים של המתאמן ומשוב מאמן -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-5">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700">
+                                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-base md:text-lg font-black text-[#082722]">שיקופי סופ״ש ומשוב המאמן — <span x-text="currentClient?.name"></span> 📝</h3>
+                                            <p class="text-xs text-[#5f756e]">מעקב אחר סיכומי השבוע שהמתאמן הגיש באפליקציה האישית שלו</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3.5 py-1.5 rounded-xl text-xs font-bold self-start sm:self-auto" x-text="(currentClient?.reflectionLogs?.length || 0) + ' שיקופים הוגשו'"></span>
+                                </div>
+
+                                <template x-if="!currentClient?.reflectionLogs || currentClient.reflectionLogs.length === 0">
+                                    <div class="p-12 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
+                                        <i data-lucide="file-question" class="w-8 h-8 mx-auto text-[#7a918a]"></i>
+                                        <p class="font-bold text-xs text-[#082722]">טרם הוגשו שיקופים שבועיים ע״י המתאמן</p>
+                                        <p class="text-[10px]">שלח לו תזכורת שיקוף סופ״ש בוואטסאפ מלוח הבקרה כדי שימלא את הסיכום השבועי!</p>
+                                    </div>
+                                </template>
+
+                                <div class="space-y-4">
+                                    <template x-for="ref in (currentClient?.reflectionLogs || [])" :key="ref.id">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-5 space-y-4 shadow-sm" x-data="{ feedbackText: ref.coachFeedback || '' }">
+                                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5dfd3] pb-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="font-black text-xs md:text-sm text-[#082722]" x-text="'שיקוף מתאמן • ' + formatDate(ref.date)"></span>
+                                                </div>
+                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-3 py-0.5 rounded-full font-bold border self-start sm:self-auto" x-text="ref.reviewed ? 'נבדק ונשלח משוב ✅' : 'ממתין למשוב המאמן ⏳'"></span>
+                                            </div>
+
+                                            <!-- תוכן השיקוף של המתאמן -->
+                                            <div class="bg-white p-4 rounded-xl border border-[#e5dfd3] space-y-1">
+                                                <span class="text-[10px] text-[#5f756e] font-bold block">תוכן השיקוף שנכתב על ידי המתאמן:</span>
+                                                <p class="text-xs font-semibold text-[#082722] whitespace-pre-line leading-relaxed" x-text="ref.text"></p>
+                                            </div>
+
+                                            <!-- טופס כתיבת משוב מאמן -->
+                                            <div class="bg-[#082722] border border-[#133d35] p-4 rounded-2xl space-y-3 text-[#fbf8f2]">
+                                                <div class="flex items-center justify-between">
+                                                    <h5 class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
+                                                        <i data-lucide="crown" class="w-4 h-4"></i>
+                                                        <span>משוב והנחיות המאמן אילאי לשבוע הבא:</span>
+                                                    </h5>
+                                                    <template x-if="ref.reviewedAt">
+                                                        <span class="text-[9px] text-[#93c7bb]" x-text="'נשמר בתאריך: ' + formatDate(ref.reviewedAt)"></span>
+                                                    </template>
+                                                </div>
+                                                
+                                                <textarea x-model="feedbackText" placeholder="כתוב כאן משוב אישי, חיזוקים ודגשים למתאמן לשבוע הקרוב..." class="w-full bg-[#051c17] border border-[#1b5e50] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#86efac] h-24 resize-none leading-relaxed font-semibold"></textarea>
+                                                
+                                                <div class="flex justify-end">
+                                                    <button type="button" @click="saveCoachFeedback(currentClient.id, ref.id, feedbackText)" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
+                                                        <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                                        <span>שמור ושלח משוב למתאמן 👑</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -3710,10 +3650,8 @@
                                     </div>
                                 </template>
                             </div>
-                        </div>
 
-                        <!-- טאב 6: יומן תמונות ארוחות של המתאמן -->
-                        <div x-show="detailSubTab === 'foodlogs'" x-cloak class="space-y-6">
+                            <!-- יומן תמונות ארוחות של המתאמן -->
                             <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
                                     <div class="flex items-center gap-3">
@@ -3753,73 +3691,6 @@
                                             <div class="bg-white p-3 rounded-xl border border-[#e5dfd3] space-y-1">
                                                 <span class="text-[9px] text-[#5f756e] block font-bold">פירוט המנה:</span>
                                                 <p class="text-xs font-bold text-[#082722] whitespace-pre-line" x-text="log.description || 'ללא פירוט מילולי'"></p>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- טאב 7: יומן שיקופים שבועיים של המתאמן ומשוב מאמן -->
-                        <div x-show="detailSubTab === 'reflections'" x-cloak class="space-y-6">
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-5">
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700">
-                                            <i data-lucide="sparkles" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="text-base md:text-lg font-black text-[#082722]">שיקופי סופ״ש ומשוב המאמן — <span x-text="currentClient?.name"></span> 📝</h3>
-                                            <p class="text-xs text-[#5f756e]">מעקב אחר סיכומי השבוע שהמתאמן הגיש באפליקציה האישית שלו</p>
-                                        </div>
-                                    </div>
-                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3.5 py-1.5 rounded-xl text-xs font-bold self-start sm:self-auto" x-text="(currentClient?.reflectionLogs?.length || 0) + ' שיקופים הוגשו'"></span>
-                                </div>
-
-                                <template x-if="!currentClient?.reflectionLogs || currentClient.reflectionLogs.length === 0">
-                                    <div class="p-12 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
-                                        <i data-lucide="file-question" class="w-8 h-8 mx-auto text-[#7a918a]"></i>
-                                        <p class="font-bold text-xs text-[#082722]">טרם הוגשו שיקופים שבועיים ע״י המתאמן</p>
-                                        <p class="text-[10px]">שלח לו תזכורת שיקוף סופ״ש בוואטסאפ מלוח הבקרה כדי שימלא את הסיכום השבועי!</p>
-                                    </div>
-                                </template>
-
-                                <div class="space-y-4">
-                                    <template x-for="ref in (currentClient?.reflectionLogs || [])" :key="ref.id">
-                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-5 space-y-4 shadow-sm" x-data="{ feedbackText: ref.coachFeedback || '' }">
-                                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5dfd3] pb-2.5">
-                                                <div class="flex items-center gap-2">
-                                                    <span class="font-black text-xs md:text-sm text-[#082722]" x-text="'שיקוף מתאמן • ' + formatDate(ref.date)"></span>
-                                                </div>
-                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-3 py-0.5 rounded-full font-bold border self-start sm:self-auto" x-text="ref.reviewed ? 'נבדק ונשלח משוב ✅' : 'ממתין למשוב המאמן ⏳'"></span>
-                                            </div>
-
-                                            <!-- תוכן השיקוף של המתאמן -->
-                                            <div class="bg-white p-4 rounded-xl border border-[#e5dfd3] space-y-1">
-                                                <span class="text-[10px] text-[#5f756e] font-bold block">תוכן השיקוף שנכתב על ידי המתאמן:</span>
-                                                <p class="text-xs font-semibold text-[#082722] whitespace-pre-line leading-relaxed" x-text="ref.text"></p>
-                                            </div>
-
-                                            <!-- טופס כתיבת משוב מאמן -->
-                                            <div class="bg-[#082722] border border-[#133d35] p-4 rounded-2xl space-y-3 text-[#fbf8f2]">
-                                                <div class="flex items-center justify-between">
-                                                    <h5 class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
-                                                        <i data-lucide="crown" class="w-4 h-4"></i>
-                                                        <span>משוב והנחיות המאמן אילאי לשבוע הבא:</span>
-                                                    </h5>
-                                                    <template x-if="ref.reviewedAt">
-                                                        <span class="text-[9px] text-[#93c7bb]" x-text="'נשמר בתאריך: ' + formatDate(ref.reviewedAt)"></span>
-                                                    </template>
-                                                </div>
-                                                
-                                                <textarea x-model="feedbackText" placeholder="כתוב כאן משוב אישי, חיזוקים ודגשים למתאמן לשבוע הקרוב..." class="w-full bg-[#051c17] border border-[#1b5e50] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#86efac] h-24 resize-none leading-relaxed font-semibold"></textarea>
-                                                
-                                                <div class="flex justify-end">
-                                                    <button type="button" @click="saveCoachFeedback(currentClient.id, ref.id, feedbackText)" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
-                                                        <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                                                        <span>שמור ושלח משוב למתאמן 👑</span>
-                                                    </button>
-                                                </div>
                                             </div>
                                         </div>
                                     </template>
