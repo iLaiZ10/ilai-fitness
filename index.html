@@ -880,7 +880,7 @@
                 </div>
 
                 <!-- 0.1 טאב אפליקציית המתאמן האישית (Client Portal) -->
-                <div x-show="activeTab === 'portal'" x-cloak class="max-w-2xl mx-auto py-2 md:py-6 space-y-6 pb-24 md:pb-6">
+                <div x-show="activeTab === 'portal'" x-cloak class="max-w-2xl mx-auto py-2 md:py-6 space-y-6">
                     
                     <!-- סרגל חזרה ל-CRM עבור המאמן (מוצג אך ורק אם המאמן מחובר) -->
                     <div x-show="isCoachAuthenticated" class="flex items-center justify-between px-2 text-xs">
@@ -2049,41 +2049,6 @@
                                 הצהרת בריאות, תנאי שימוש ופרטיות 🛡️
                             </button>
                         </p>
-                    </div>
-
-                    <!-- סרגל ניווט תחתון קבוע בסמארטפון (Mobile Bottom Navigation Bar) -->
-                    <div class="fixed bottom-0 left-0 right-0 z-40 bg-[#082722]/95 backdrop-blur-md border-t border-[#174e43] px-3 py-2 md:hidden no-print shadow-2xl">
-                        <div class="flex items-center justify-around text-center">
-                            <!-- 1. היום שלי -->
-                            <button type="button" @click="portalActiveSubTab = 'daily'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="portalActiveSubTab === 'daily' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]/70 hover:text-[#fbf8f2]'" class="flex flex-col items-center gap-1 flex-1 py-1 transition cursor-pointer">
-                                <i data-lucide="home" class="w-5 h-5"></i>
-                                <span class="text-[10px]">היום שלי</span>
-                            </button>
-
-                            <!-- 2. אימונים -->
-                            <button type="button" @click="portalActiveSubTab = 'workout'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="portalActiveSubTab === 'workout' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]/70 hover:text-[#fbf8f2]'" class="flex flex-col items-center gap-1 flex-1 py-1 transition cursor-pointer">
-                                <i data-lucide="dumbbell" class="w-5 h-5"></i>
-                                <span class="text-[10px]">אימונים</span>
-                            </button>
-
-                            <!-- 3. תזונה -->
-                            <button type="button" @click="portalActiveSubTab = 'nutrition'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="portalActiveSubTab === 'nutrition' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]/70 hover:text-[#fbf8f2]'" class="flex flex-col items-center gap-1 flex-1 py-1 transition cursor-pointer">
-                                <i data-lucide="utensils" class="w-5 h-5"></i>
-                                <span class="text-[10px]">תזונה</span>
-                            </button>
-
-                            <!-- 4. התקדמות -->
-                            <button type="button" @click="portalActiveSubTab = 'progress'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="portalActiveSubTab === 'progress' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]/70 hover:text-[#fbf8f2]'" class="flex flex-col items-center gap-1 flex-1 py-1 transition cursor-pointer">
-                                <i data-lucide="trending-up" class="w-5 h-5"></i>
-                                <span class="text-[10px]">התקדמות</span>
-                            </button>
-
-                            <!-- 5. אילאי בוואטסאפ -->
-                            <a :href="'https://wa.me/972500000000?text=' + encodeURIComponent('היי אילאי, כאן ' + (portalClient?.name || 'המתאמן שלך') + '!')" target="_blank" class="flex flex-col items-center gap-1 flex-1 py-1 text-[#86efac] hover:text-white transition cursor-pointer">
-                                <i data-lucide="message-circle" class="w-5 h-5 text-[#22c55e]"></i>
-                                <span class="text-[10px]">אילאי</span>
-                            </a>
-                        </div>
                     </div>
                 </div>
 
