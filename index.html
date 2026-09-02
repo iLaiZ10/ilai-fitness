@@ -1768,14 +1768,36 @@
                                 <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-5 space-y-4 animate-scale-up">
                                     <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
                                         <span class="text-xs font-black text-[#082722] flex items-center gap-1.5">
-                                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-                                            <span>חישוב תזונתי של המחשבון של אילאי</span>
+                                            <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
+                                            <span>ניתוח תזונתי מתקדם - המחשבון של אילאי 🧠</span>
                                         </span>
                                         <button type="button" @click="aiAnalyzedMeal = null; aiFoodQuery = ''; portalMealPhoto = '';" class="text-[11px] text-red-500 hover:text-red-700 font-bold flex items-center gap-1 hover:bg-red-50 px-2 py-1 rounded-lg transition cursor-pointer">
                                             <i data-lucide="x" class="w-3.5 h-3.5"></i>
                                             <span>איפוס / נקה</span>
                                         </button>
                                     </div>
+
+                                    <!-- תובנת מאמן אישית (Coach Insight) -->
+                                    <template x-if="aiAnalyzedMeal.coachInsight">
+                                        <div class="bg-gradient-to-r from-[#082722] to-[#0f3d35] text-white p-3.5 rounded-xl border border-emerald-500/30 flex items-start gap-3 shadow-sm">
+                                            <span class="text-base shrink-0">💡</span>
+                                            <div class="space-y-0.5">
+                                                <span class="text-[10px] uppercase font-black text-[#86efac] tracking-wider block">תובנת מאמן אישית - אילאי:</span>
+                                                <p class="text-xs font-medium text-slate-100 leading-relaxed" x-text="aiAnalyzedMeal.coachInsight"></p>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <!-- תצוגה מקדימה של צילום הצלחת אם הועלה -->
+                                    <template x-if="portalMealPhoto">
+                                        <div class="flex items-center gap-3 bg-white border border-[#e5dfd3] p-2.5 rounded-xl">
+                                            <img :src="portalMealPhoto" class="w-14 h-14 object-cover rounded-lg border border-[#e5dfd3]" alt="תמונת צלחת" />
+                                            <div class="text-xs">
+                                                <span class="font-black text-[#082722] block">צלחת זוהתה ונותחה ב-Vision AI 📸</span>
+                                                <span class="text-[10px] text-[#5f756e]">המרכיבים חושבו לפי משקלים ונפחים מוערכים</span>
+                                            </div>
+                                        </div>
+                                    </template>
 
                                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-[#e5dfd3] pb-4">
                                         <!-- גרף עוגה SVG Donut -->
@@ -6076,6 +6098,14 @@
                         cloudTx.sort((a, b) => new Date(b.date) - new Date(a.date));
                         this.transactions = cloudTx;
                     }, err => console.error("Transactions sync error:", err));
+
+                    this.db.collection("settings").doc("global").onSnapshot(doc => {
+                        if (doc.exists && doc.data().geminiApiKey) {
+                            this.geminiApiKey = doc.data().geminiApiKey;
+                            this.geminiApiKeyInput = doc.data().geminiApiKey;
+                            localStorage.setItem('gemini_api_key', doc.data().geminiApiKey);
+                        }
+                    }, err => {});
                 },
 
                 saveData() {
@@ -7830,25 +7860,50 @@
                     this.isAiAnalyzing = true;
 
                     const apiKey = this.geminiApiKey || localStorage.getItem('gemini_api_key') || '';
+                    const client = this.portalClient || this.currentClient;
+                    const targetCal = client?.macroCalculated?.targetCalories || 2000;
+                    const targetPro = client?.macroCalculated?.targetProtein || 160;
+                    const remainingCal = this.getRemainingCalories(client);
+                    const clientGoal = client?.goal || 'חיטוב וירידה באחוזי שומן';
+
                     if (apiKey) {
                         try {
-                            const prompt = `אתה דיאטן קליני ומומחה תזונת ספורט ישראלי בכיר. נתח במדויק את המאכלים והכמויות מהתיאור / התמונה הבאה לפי מנות ומשקלים מקובלים בישראל (גרמים, כפות הגשה, כפות, כוסות, יחידות, קופסאות, פרוסות).
-תיאור הארוחה: "${this.aiFoodQuery || ''}"
+                            const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר הרשמי של המאמן אילאי).
+תפקידך לנתח בדיוק מקסימלי כל מאכל, ארוחה, צילום צלחת, תיאור בסלנג עברי או מנת מסעדה.
 
-החזר אך ורק אובייקט JSON תקין ומדויק בפורמט הבא ללא טקסט נוסף מסביב:
+פרופיל המתאמן:
+- יעד יומי: ${targetCal} קלוריות | ${targetPro} גרם חלבון.
+- מטרה: ${clientGoal}.
+- קלוריות שנותרו להיום: ${remainingCal} קלוריות.
+
+תיאור הארוחה / המצרכים שהמתאמן הזין:
+"${this.aiFoodQuery || (this.portalMealPhoto ? 'צלחת שצולמה בתמונה' : '')}"
+
+כללי כיול תזונתי מדויק לישראל:
+1. כף הגשה מבושלת (אורז, פתיתים, פסטה, קוסקוס, עדשים, קינואה) = 50-60 גרם (~70-80 קלוריות, ~2.5ג' חלבון).
+2. כוס מבושלת = 160-180 גרם (~210-230 קלוריות).
+3. כף שמן זית / טחינה גולמית = 10-15 גרם (~90-100 קלוריות, 9-11ג' שומן). כפית = 5 גרם (~45 קלוריות).
+4. חזה עוף / הודו מבושל/צלוי = 165 קלוריות ו-31 גרם חלבון ל-100 גרם.
+5. סטייק סינטה/בקר ממוצע = 200-250 גרם. פרגית צלויה = 215 קלוריות / 25ג' חלבון ל-100ג'.
+6. פיתה רגילה = 230-260 קלוריות | פיתה קלה/כוסמין = 90-120 קלוריות | לאפה = 450-550 קלוריות.
+7. אם המתאמן לא ציין כמויות מדויקות (למשל "אכלתי עוף ואורז"), העריך מנה ספורטיבית ממוצעת הגיונית (למשל: 180 גרם חזה עוף + 3 כפות הגשה אורז) וציין את המשקל המשוער בשם הפריט.
+8. מנות מסעדה ואוכל רחוב (שווארמה, סביח, פלאפל, שקשוקה, פיצה, המבורגר, סושי) - פרק למרכיבים המרכזיים עם קלוריות ומאקרו אמיתיים כולל שמנים ורטבים.
+
+החזר אך ורק אובייקט JSON תקין ללא שום טקסט או הערות מסביב:
 {
   "calories": סך קלוריות כולל כמספר שלם,
-  "protein": סך חלבון בגרמים,
-  "carbs": סך פחמימות בגרמים,
-  "fat": סך שומן בגרמים,
+  "protein": סך חלבון בגרמים (מספר),
+  "carbs": סך פחמימות בגרמים (מספר),
+  "fat": סך שומן בגרמים (מספר),
+  "coachInsight": "משפט תובנה ועידוד מקצועי ואישי מהמאמן אילאי על הארוחה הזו בהתייחס למטרת המתאמן",
   "items": [
     {
       "name": "שם המאכל וכמות מוערכת בעברית (למשל: 'חזה עוף צלוי (~180 גרם)')",
-      "cal": קלוריות לפריט,
+      "cal": קלוריות לפריט כמספר,
       "pro": חלבון בגרם,
       "carb": פחמימה בגרם,
       "fat": שומן בגרם,
-      "swap": "הצעת תחליף שווה ערך (למשל: '160 גרם פילה סלמון')"
+      "swap": "הצעת תחליף שווה ערך פרקטי בעברית (למשל: '160 גרם פילה סלמון / 200 גרם טופו')"
     }
   ]
 }`;
@@ -7866,7 +7921,7 @@
                                     }],
                                     generationConfig: {
                                         response_mime_type: "application/json",
-                                        temperature: 0.2
+                                        temperature: 0.15
                                     }
                                 };
                             } else {
@@ -7876,7 +7931,7 @@
                                     }],
                                     generationConfig: {
                                         response_mime_type: "application/json",
-                                        temperature: 0.2
+                                        temperature: 0.15
                                     }
                                 };
                             }
@@ -7906,11 +7961,12 @@
                                                 const sumCal = proCal + carbCal + fatCal || 1;
 
                                                 this.aiAnalyzedMeal = {
-                                                    query: this.aiFoodQuery || 'צלחת מנותחת ב-Vision AI 📸',
+                                                    query: this.aiFoodQuery || (this.portalMealPhoto ? 'צלחת שנותחה ב-Vision AI 📸' : 'ארוחה מחושבת'),
                                                     calories: totalCal,
                                                     protein: totalPro,
                                                     carbs: totalCarb,
                                                     fat: totalFat,
+                                                    coachInsight: parsed.coachInsight || `ארוחה מצוינת המכילה ${totalPro} גרם חלבון! נותרו לך עוד ${Math.max(0, remainingCal - totalCal)} קלוריות להיום.`,
                                                     pProtein: Math.round((proCal / sumCal) * 100),
                                                     pCarbs: Math.round((carbCal / sumCal) * 100),
                                                     pFat: Math.max(0, 100 - Math.round((proCal / sumCal) * 100) - Math.round((carbCal / sumCal) * 100)),
@@ -8847,6 +8903,18 @@
                     }
                     this.geminiApiKey = this.geminiApiKeyInput.trim();
                     localStorage.setItem('gemini_api_key', this.geminiApiKey);
+
+                    if (this.isCloudSynced && this.db) {
+                        try {
+                            this.db.collection("settings").doc("global").set({
+                                geminiApiKey: this.geminiApiKey,
+                                updatedAt: new Date().toISOString()
+                            }, { merge: true });
+                        } catch(e) {
+                            console.warn("Firebase settings sync error:", e);
+                        }
+                    }
+
                     alert("מפתח Gemini API נשמר בהצלחה! המערכת מחוברת כעת ל-AI החי 🧠✨");
                 },
 
@@ -8855,6 +8923,16 @@
                         this.geminiApiKey = '';
                         this.geminiApiKeyInput = '';
                         localStorage.removeItem('gemini_api_key');
+
+                        if (this.isCloudSynced && this.db) {
+                            try {
+                                this.db.collection("settings").doc("global").set({
+                                    geminiApiKey: '',
+                                    updatedAt: new Date().toISOString()
+                                }, { merge: true });
+                            } catch(e) {}
+                        }
+
                         alert("המפתח הוסר. המערכת פועלת כעת על המאגר המקומי.");
                     }
                 },
@@ -8928,10 +9006,12 @@
                 
                 // --- שיטות יומן אכילה, העלאת תמונות ושיקוף שבועי ---
                 handleMealPhotoUpload(event) {
-                    const file = event.target.files[0];
+                    const file = event.target?.files?.[0];
                     if (!file) return;
                     this.compressImage(file, (base64) => {
                         this.portalMealPhoto = base64;
+                        this.aiFoodQuery = this.aiFoodQuery || 'צלחת שצולמה 📸';
+                        this.analyzeFoodWithAi();
                     });
                 },
 
