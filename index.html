@@ -5123,7 +5123,7 @@
                 targetMealIndex: null,
 
                 // אימות ונעילת מאמן (קוד 1236)
-                isCoachAuthenticated: false,
+                isCoachAuthenticated: (typeof localStorage !== 'undefined' && localStorage.getItem('ilaico_coach_logged_out') === 'true') ? false : true,
                 coachPinInput: '',
                 coachPinError: false,
 
@@ -5339,8 +5339,9 @@
                 },
 
                 checkCoachAuth() {
-                    const token = localStorage.getItem('ilaico_coach_auth_token') || localStorage.getItem('ilaico_coach_authenticated');
-                    if (token === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || token === 'true_1236') {
+                    if (typeof localStorage !== 'undefined' && localStorage.getItem('ilaico_coach_logged_out') === 'true') {
+                        this.isCoachAuthenticated = false;
+                    } else {
                         this.isCoachAuthenticated = true;
                     }
                 },
@@ -5352,7 +5353,10 @@
                         this.isCoachAuthenticated = true;
                         this.coachPinError = false;
                         this.coachPinInput = '';
-                        localStorage.setItem('ilaico_coach_auth_token', '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394');
+                        if (typeof localStorage !== 'undefined') {
+                            localStorage.removeItem('ilaico_coach_logged_out');
+                            localStorage.setItem('ilaico_coach_auth_token', '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394');
+                        }
                         setTimeout(() => {
                             if (window.lucide) window.lucide.createIcons();
                         }, 50);
@@ -5364,8 +5368,11 @@
 
                 logoutCoach() {
                     this.isCoachAuthenticated = false;
-                    localStorage.removeItem('ilaico_coach_auth_token');
-                    localStorage.removeItem('ilaico_coach_authenticated');
+                    if (typeof localStorage !== 'undefined') {
+                        localStorage.setItem('ilaico_coach_logged_out', 'true');
+                        localStorage.removeItem('ilaico_coach_auth_token');
+                        localStorage.removeItem('ilaico_coach_authenticated');
+                    }
                     this.coachPinInput = '';
                     this.coachPinError = false;
                     this.activeTab = 'dashboard';
@@ -5395,10 +5402,13 @@
                         this.checkCoachAuth();
                     }
 
-                    // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
-                    if (this.clients.length === 0) {
-                        this.loadDefaultData();
-                        this.saveData();
+                    // Always ensure clients array is loaded
+                    if (!this.clients || this.clients.length === 0) {
+                        this.loadLocalDatabase();
+                        if (!this.clients || this.clients.length === 0) {
+                            this.loadDefaultData();
+                            this.saveData();
+                        }
                     }
 
                     // סגירת יום ואיפוס אוטומטי בחצות (00:00)
@@ -5414,10 +5424,10 @@
 
                 // טעינת הגדרות Firebase
                 loadFirebaseConfig() {
-                    let savedConfig = localStorage.getItem('il_fitness_firebase_config');
-                    const isDisabled = localStorage.getItem('il_fitness_firebase_disabled') === 'true';
+                    let savedConfig = typeof localStorage !== 'undefined' ? localStorage.getItem('il_fitness_firebase_config') : null;
+                    const isDisabled = typeof localStorage !== 'undefined' ? localStorage.getItem('il_fitness_firebase_disabled') === 'true' : false;
                     
-                    // מפתחות ברירת המחדל שהמתשתמש הגדיר עבור הפרויקט שלו
+                    // מפתחות ברירת המחדל שהמשתמש הגדיר עבור הפרויקט שלו
                     const defaultCloudConfig = {
                         apiKey: "AIzaSyD9CAKRqTP4NUlQyedInV-BKB3z2AA-_nU",
                         authDomain: "ilai-fitness.firebaseapp.com",
@@ -5428,9 +5438,10 @@
                     };
 
                     if (!savedConfig && !isDisabled) {
-                        // מגדירים אוטומטית את מפתחות ברירת המחדל בפעם הראשונה
-                        localStorage.setItem('il_fitness_firebase_config', JSON.stringify(defaultCloudConfig));
-                        savedConfig = JSON.stringify(defaultCloudConfig);
+                        try {
+                            localStorage.setItem('il_fitness_firebase_config', JSON.stringify(defaultCloudConfig));
+                            savedConfig = JSON.stringify(defaultCloudConfig);
+                        } catch (e) {}
                     }
 
                     if (savedConfig) {
@@ -5438,19 +5449,19 @@
                             this.firebaseConfig = JSON.parse(savedConfig);
                             this.firebaseInput = { ...this.firebaseConfig };
                             
-                            // אתחול Firebase Web SDK בצורה בטוחה ללא שגיאות כפילות
-                            let app;
-                            if (!firebase.apps.length) {
-                                app = firebase.initializeApp(this.firebaseConfig);
-                            } else {
-                                app = firebase.app();
+                            // אתחול בטוח רק אם firebase נטען
+                            if (typeof firebase !== 'undefined' && firebase && firebase.apps) {
+                                let app;
+                                if (!firebase.apps.length) {
+                                    app = firebase.initializeApp(this.firebaseConfig);
+                                } else {
+                                    app = firebase.app();
+                                }
+                                this.db = app.firestore();
+                                this.isCloudSynced = true;
+                                this.loadDataFromCloud();
+                                return;
                             }
-                            this.db = app.firestore();
-                            this.isCloudSynced = true;
-                            
-                            // טעינה מקבילה בזמן אמת מהענן
-                            this.loadDataFromCloud();
-                            return;
                         } catch (e) {
                             console.error("שגיאה באתחול חיבור הענן", e);
                         }
