@@ -4927,10 +4927,8 @@
                 },
 
                 checkCoachAuth() {
-                    const token = localStorage.getItem('ilaico_coach_auth_token') || localStorage.getItem('ilaico_coach_authenticated');
-                    if (token === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || token === 'true_1236' || localStorage.getItem('ilaico_coach_logged_out') !== 'true') {
-                        this.isCoachAuthenticated = true;
-                    }
+                    // תמיד דורש קוד 1236 בכניסה
+                    this.isCoachAuthenticated = false;
                 },
 
                 async loginCoach() {
@@ -4940,8 +4938,6 @@
                         this.isCoachAuthenticated = true;
                         this.coachPinError = false;
                         this.coachPinInput = '';
-                        localStorage.removeItem('ilaico_coach_logged_out');
-                        localStorage.setItem('ilaico_coach_auth_token', '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394');
                         setTimeout(() => {
                             if (window.lucide) window.lucide.createIcons();
                         }, 50);
@@ -4953,7 +4949,6 @@
 
                 logoutCoach() {
                     this.isCoachAuthenticated = false;
-                    localStorage.setItem('ilaico_coach_logged_out', 'true');
                     localStorage.removeItem('ilaico_coach_auth_token');
                     localStorage.removeItem('ilaico_coach_authenticated');
                     this.coachPinInput = '';
@@ -4982,7 +4977,8 @@
                         this.selectedClientId = this.portalClientId;
                         this.isCoachAuthenticated = false;
                     } else {
-                        this.checkCoachAuth();
+                        // תמיד דורש הזנת קוד 1236 בכניסה לקישור ניהול מאמן
+                        this.isCoachAuthenticated = false;
                     }
 
                     // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
