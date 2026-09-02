@@ -986,22 +986,75 @@
                                 <div>
                                     <div class="flex items-center gap-2 flex-wrap">
                                         <h3 class="text-sm md:text-base font-black text-[#082722]">צ'ק-ליסט יומי חי של אלופים 👑</h3>
-                                        <span class="text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                            <span>נשמר אוטומטית</span>
-                                        </span>
+                                        <template x-if="!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()">
+                                            <span class="text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                <span>נשמר אוטומטית</span>
+                                            </span>
+                                        </template>
+                                        <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
+                                            <span class="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                                <i data-lucide="calendar" class="w-3 h-3 text-amber-700"></i>
+                                                <span x-text="'דיווח קודם: ' + portalScorecardViewDate"></span>
+                                            </span>
+                                        </template>
                                     </div>
-                                    <p class="text-[11px] text-[#5f756e]">הציון מתעדכן ומשתקלל בזמן אמת וננעל אוטומטית בחצות (00:00) 🕛</p>
+                                    <p class="text-[11px] text-[#5f756e]">הציון מתעדכן בזמן אמת וננעל אוטומטית בחצות (00:00) 🕛</p>
                                 </div>
                             </div>
                             
                             <div class="flex items-center gap-2">
+                                <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
+                                    <button type="button" @click="setScorecardViewDate(getTodayDate())" class="bg-[#fbf8f2] hover:bg-[#f0eae1] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
+                                        <span>חזור להיום ⚡</span>
+                                    </button>
+                                </template>
                                 <span class="bg-[#082722] text-[#86efac] font-black px-3.5 py-1.5 rounded-2xl text-xs flex items-center gap-1.5 shadow-sm">
                                     <i data-lucide="sparkles" class="w-4 h-4 text-[#86efac]"></i>
-                                    <span x-text="'ציון חי: ' + getLiveDailyScore(portalClient) + '% ⚡'"></span>
+                                    <template x-if="!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()">
+                                        <span x-text="'ציון חי: ' + getLiveDailyScore(portalClient) + '% ⚡'"></span>
+                                    </template>
+                                    <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
+                                        <span x-text="'ציון היום: ' + (getScorecardForDate(portalClient, portalScorecardViewDate)?.score || getLiveDailyScore(portalClient)) + '% 🏆'"></span>
+                                    </template>
                                 </span>
                             </div>
                         </div>
+
+                        <!-- סרגל מעבר מהיר בין ימים (היום, אתמול, שלשום, והיסטוריה) -->
+                        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px] font-bold border-b border-[#e5dfd3] pt-0.5">
+                            <template x-for="day in getPastDatesList(7)" :key="day.date">
+                                <button type="button" 
+                                        @click="setScorecardViewDate(day.date)"
+                                        :class="(portalScorecardViewDate === day.date || (!portalScorecardViewDate && day.isToday)) ? 'bg-[#082722] text-[#86efac] border-[#082722] shadow-sm' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'"
+                                        class="px-3 py-1.5 rounded-xl border shrink-0 transition flex items-center gap-1.5 cursor-pointer">
+                                    <template x-if="getScorecardForDate(portalClient, day.date)">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    </template>
+                                    <span x-text="day.label"></span>
+                                    <template x-if="getScorecardForDate(portalClient, day.date)">
+                                        <span class="text-[9px] font-black opacity-80" x-text="getScorecardForDate(portalClient, day.date).score + '%'"></span>
+                                    </template>
+                                </button>
+                            </template>
+                            <button type="button" @click="openScorecardHistoryModal = true; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="px-3 py-1.5 rounded-xl border border-[#e5dfd3] bg-white text-[#082722] hover:bg-slate-50 shrink-0 flex items-center gap-1.5 text-[11px] font-bold cursor-pointer">
+                                <i data-lucide="history" class="w-3.5 h-3.5 text-[#082722]"></i>
+                                <span>כל ההיסטוריה 📜</span>
+                            </button>
+                        </div>
+
+                        <!-- אם צופים ביום קודם שטרם הוזן בו דיווח -->
+                        <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate() && !getScorecardForDate(portalClient, portalScorecardViewDate)">
+                            <div class="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="info" class="w-4 h-4 text-amber-700 shrink-0"></i>
+                                    <span>לא נשמר דיווח בתאריך זה (<strong x-text="portalScorecardViewDate"></strong>). תוכל להשלים אותו כעת רטרואקטיבית!</span>
+                                </div>
+                                <button type="button" @click="saveScorecardForDate(portalScorecardViewDate)" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3 py-1 rounded-xl text-[10px] cursor-pointer shrink-0">
+                                    שמור דיווח ליום זה ✍️
+                                </button>
+                            </div>
+                        </template>
 
                         <!-- טופס הצ'ק-ליסט האינטראקטיבי -->
                         <div class="space-y-4 pt-1">
@@ -1049,18 +1102,22 @@
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                                 <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
                                     <div>
-                                        <span class="text-[10px] text-[#5f756e] block font-bold">3. שתיית מים היום:</span>
-                                        <span class="text-xs font-black text-[#082722]" x-text="(portalClient?.dailyWater || 0) + ' / ' + (portalClient?.waterTarget || 3000) + ' מ״ל'"></span>
+                                        <span class="text-[10px] text-[#5f756e] block font-bold">3. שתיית מים:</span>
+                                        <span class="text-xs font-black text-[#082722]" x-text="(!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? ((portalClient?.dailyWater || 0) + ' / ' + (portalClient?.waterTarget || 3000) + ' מ״ל') : ((getScorecardForDate(portalClient, portalScorecardViewDate)?.water || portalClient?.waterTarget || 3000) + ' מ״ל')"></span>
                                     </div>
-                                    <span :class="(portalClient?.dailyWater || 0) >= (portalClient?.waterTarget || 3000) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black" x-text="(portalClient?.dailyWater || 0) >= (portalClient?.waterTarget || 3000) ? 'הושג! 💧' : 'בתהליך ⏳'"></span>
+                                    <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
+                                        <span x-text="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'הושג! 💧' : 'בתהליך ⏳'"></span>
+                                    </span>
                                 </div>
 
                                 <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
                                     <div>
-                                        <span class="text-[10px] text-[#5f756e] block font-bold">4. צעדים היום:</span>
-                                        <span class="text-xs font-black text-[#082722]" x-text="(portalClient?.dailySteps || 0) + ' / ' + (portalClient?.stepsTarget || 10000)"></span>
+                                        <span class="text-[10px] text-[#5f756e] block font-bold">4. צעדים:</span>
+                                        <span class="text-xs font-black text-[#082722]" x-text="(!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? ((portalClient?.dailySteps || 0) + ' / ' + (portalClient?.stepsTarget || 10000)) : ((getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || portalClient?.stepsTarget || 10000) + ' צעדים')"></span>
                                     </div>
-                                    <span :class="(portalClient?.dailySteps || 0) >= (portalClient?.stepsTarget || 10000) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black" x-text="(portalClient?.dailySteps || 0) >= (portalClient?.stepsTarget || 10000) ? 'הושג! 🚶' : 'בתהליך ⏳'"></span>
+                                    <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
+                                        <span x-text="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'הושג! 🚶' : 'בתהליך ⏳'"></span>
+                                    </span>
                                 </div>
 
                                 <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
@@ -3826,6 +3883,87 @@
         </template>
     </datalist>
 
+    <!-- מודל היסטוריית כל הדיווחים והצ'ק-ליסטים היומיים -->
+    <div x-show="openScorecardHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openScorecardHistoryModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="history" class="w-5 h-5 text-[#86efac]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">היסטוריית דיווחים יומיים 📜</h3>
+                        <p class="text-xs text-[#5f756e]">יומן ביצועים וציונים מכל הימים הקודמים</p>
+                    </div>
+                </div>
+                <button @click="openScorecardHistoryModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-3 text-xs">
+                <template x-if="getClientScorecardsList(portalClient).length === 0">
+                    <div class="p-8 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
+                        <i data-lucide="calendar" class="w-8 h-8 mx-auto text-[#082722]/30"></i>
+                        <p class="font-bold text-xs text-[#082722]">טרם נצברו דיווחים בהיסטוריה</p>
+                        <p class="text-[11px]">ברגע שתסמן את היעדים היומיים, הם יישמרו כאן אוטומטית בכל יום בחצות!</p>
+                    </div>
+                </template>
+
+                <template x-for="sc in getClientScorecardsList(portalClient)" :key="sc.id || sc.date">
+                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] hover:border-[#082722]/30 p-4 rounded-2xl space-y-3 transition shadow-sm">
+                        <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-black text-sm text-[#082722]" x-text="sc.date"></span>
+                                <span :class="sc.score >= 90 ? 'bg-emerald-100 text-emerald-800' : (sc.score >= 70 ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800')" class="text-[10px] font-black px-2 py-0.5 rounded-full" x-text="sc.score + '% 🏆'"></span>
+                                <template x-if="sc.date === getTodayDate()">
+                                    <span class="bg-emerald-500 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full">היום</span>
+                                </template>
+                            </div>
+                            <button type="button" @click="setScorecardViewDate(sc.date); openScorecardHistoryModal = false;" class="text-[10px] bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-2.5 py-1 rounded-xl transition cursor-pointer">
+                                פתח דיווח זה 🔍
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px]">
+                            <!-- תזונה -->
+                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center">
+                                <span class="text-[9px] text-[#5f756e] block font-bold">תזונה</span>
+                                <span class="font-black text-[#082722]" x-text="sc.nutrition === 'yes' ? '100% בול ✅' : (sc.nutrition === 'almost' ? 'כמעט 👍' : 'חרגתי ⚠️')"></span>
+                            </div>
+                            <!-- אימון -->
+                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center">
+                                <span class="text-[9px] text-[#5f756e] block font-bold">אימון</span>
+                                <span class="font-black text-[#082722]" x-text="sc.workout === 'yes' ? 'התאמנתי 🏋️‍♂️' : (sc.workout === 'rest' ? 'מנוחה 🧘' : 'דילגתי ❌')"></span>
+                            </div>
+                            <!-- מים -->
+                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center">
+                                <span class="text-[9px] text-[#5f756e] block font-bold">מים</span>
+                                <span class="font-black text-[#082722]" x-text="(sc.water || 0) + ' מ״ל 💧'"></span>
+                            </div>
+                            <!-- צעדים -->
+                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center">
+                                <span class="text-[9px] text-[#5f756e] block font-bold">צעדים</span>
+                                <span class="font-black text-[#082722]" x-text="(sc.steps || 0) + ' 🚶'"></span>
+                            </div>
+                            <!-- שינה -->
+                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl text-center col-span-2 sm:col-span-1">
+                                <span class="text-[9px] text-[#5f756e] block font-bold">שינה</span>
+                                <span class="font-black text-[#082722]" x-text="(sc.sleep || 5) + '/5 ⭐'"></span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
+                <button type="button" @click="openScorecardHistoryModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור היסטוריה
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- מודל היכל תגי הצלחה והישגים -->
     <div x-show="openBadgesModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBadgesModal = false">
         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
@@ -4739,6 +4877,8 @@
                 // פורטל מתאמן אישי
                 portalClientId: null,
                 portalActiveSubTab: 'workouts',
+                portalScorecardViewDate: '',
+                openScorecardHistoryModal: false,
                 portalNewCheckin: { weight: '', waist: '', adherenceNutrition: 10, adherenceTraining: 10, notes: '' },
                 portalTodayJournal: '',
                 portalCheckinSuccess: false,
@@ -7420,15 +7560,61 @@
                 },
 
                 getTodayScorecard(client) {
-                    if (!client || !client.dailyScorecards) return null;
                     const todayStr = this.getTodayDate();
-                    if (Array.isArray(client.dailyScorecards)) {
-                        return client.dailyScorecards.find(sc => sc && sc.date === todayStr) || null;
+                    return this.getScorecardForDate(client, todayStr);
+                },
+
+                getPastDatesList(count = 7) {
+                    const list = [];
+                    const today = new Date();
+                    const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+                    
+                    for (let i = 0; i < count; i++) {
+                        const d = new Date(today);
+                        d.setDate(today.getDate() - i);
+                        const yyyy = d.getFullYear();
+                        const mm = String(d.getMonth() + 1).padStart(2, '0');
+                        const dd = String(d.getDate()).padStart(2, '0');
+                        const dateStr = `${yyyy}-${mm}-${dd}`;
+                        
+                        let label = `${dd}/${mm}`;
+                        if (i === 0) label = `היום (${dd}/${mm})`;
+                        else if (i === 1) label = `אתמול (${dd}/${mm})`;
+                        else if (i === 2) label = `שלשום (${dd}/${mm})`;
+                        else label = `יום ${dayNames[d.getDay()]} (${dd}/${mm})`;
+                        
+                        list.push({ date: dateStr, label: label, dayIndex: i, isToday: i === 0 });
                     }
-                    if (typeof client.dailyScorecards === 'object') {
-                        return client.dailyScorecards[todayStr] || null;
+                    return list;
+                },
+
+                getScorecardForDate(client, dateStr) {
+                    const c = client || this.portalClient;
+                    if (!c || !c.dailyScorecards) return null;
+                    if (Array.isArray(c.dailyScorecards)) {
+                        return c.dailyScorecards.find(sc => sc && sc.date === dateStr) || null;
+                    }
+                    if (typeof c.dailyScorecards === 'object') {
+                        return c.dailyScorecards[dateStr] || null;
                     }
                     return null;
+                },
+
+                getClientScorecardsList(client) {
+                    const c = client || this.portalClient;
+                    if (!c || !c.dailyScorecards) return [];
+                    const list = Array.isArray(c.dailyScorecards) ? [...c.dailyScorecards] : Object.values(c.dailyScorecards);
+                    return list.filter(sc => sc && sc.date).sort((a, b) => new Date(b.date) - new Date(a.date));
+                },
+
+                setScorecardViewDate(dateStr) {
+                    this.portalScorecardViewDate = dateStr || this.getTodayDate();
+                    const sc = this.getScorecardForDate(this.portalClient, this.portalScorecardViewDate);
+                    if (sc) {
+                        this.scorecardNutrition = sc.nutrition || 'yes';
+                        this.scorecardWorkout = sc.workout || 'yes';
+                        this.scorecardSleep = sc.sleep || 5;
+                    }
                 },
 
                 getLiveDailyScore(client) {
@@ -7468,21 +7654,23 @@
                     }
 
                     const todayStr = this.getTodayDate();
+                    const targetDate = this.portalScorecardViewDate || todayStr;
+                    const isToday = targetDate === todayStr;
                     const score = this.getLiveDailyScore(client);
 
                     const entry = {
-                        id: 'sc_' + todayStr,
-                        date: todayStr,
+                        id: 'sc_' + targetDate,
+                        date: targetDate,
                         score: score,
                         nutrition: this.scorecardNutrition,
                         workout: this.scorecardWorkout,
                         sleep: this.scorecardSleep || 5,
-                        water: client.dailyWater || 0,
-                        steps: client.dailySteps || 0,
+                        water: isToday ? (client.dailyWater || 0) : (this.getScorecardForDate(client, targetDate)?.water || client.waterTarget || 3000),
+                        steps: isToday ? (client.dailySteps || 0) : (this.getScorecardForDate(client, targetDate)?.steps || client.stepsTarget || 10000),
                         timestamp: new Date().toISOString()
                     };
 
-                    const existingIdx = client.dailyScorecards.findIndex(sc => sc && sc.date === todayStr);
+                    const existingIdx = client.dailyScorecards.findIndex(sc => sc && sc.date === targetDate);
                     if (existingIdx >= 0) {
                         client.dailyScorecards[existingIdx] = entry;
                     } else {
@@ -7507,6 +7695,11 @@
                 },
 
                 saveDailyScorecard() {
+                    this.autoSaveDailyScorecard(true);
+                },
+
+                saveScorecardForDate(dateStr) {
+                    this.portalScorecardViewDate = dateStr;
                     this.autoSaveDailyScorecard(true);
                 },
 
