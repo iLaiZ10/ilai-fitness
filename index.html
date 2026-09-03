@@ -7915,51 +7915,70 @@
                     }
                     this.isAiAnalyzing = true;
 
-                    const apiKey = this.getEffectiveGeminiKey();
                     const client = this.portalClient || this.currentClient;
                     const targetCal = client?.macroCalculated?.targetCalories || 2000;
                     const targetPro = client?.macroCalculated?.targetProtein || 160;
                     const remainingCal = this.getRemainingCalories(client);
                     const clientGoal = client?.goal || 'חיטוב וירידה באחוזי שומן';
+                    const rawQuery = (this.aiFoodQuery || '').trim();
+
+                    // ⚡ 1. בדיקת זיכרון מטמון חכם (Instant Cache) למענה ב-0 מילישניות
+                    if (rawQuery && !this.portalMealPhoto) {
+                        try {
+                            const cacheKey = 'ilai_meal_' + rawQuery.toLowerCase();
+                            const cached = localStorage.getItem(cacheKey);
+                            if (cached) {
+                                const parsedCached = JSON.parse(cached);
+                                if (parsedCached && parsedCached.calories > 0) {
+                                    this.aiAnalyzedMeal = parsedCached;
+                                    this.isAiAnalyzing = false;
+                                    setTimeout(() => { if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons(); }, 50);
+                                    return;
+                                }
+                            }
+                        } catch(e) {}
+
+                        // ⚡ 2. הרצה מקומית מיידית ב-0ms לתצוגה חיה ומהירה בזמן שה-AI מחדד את התובנות
+                        this.runLocalFoodAnalysis();
+                    }
+
+                    const apiKey = this.getEffectiveGeminiKey();
 
                     if (apiKey) {
                         try {
-                            const prompt = `אתה אנציקלופדיית התזונה הקלינית, תזונת הספורט וזיהוי המאכלים של המאמן אילאי.
+                            const prompt = `אתה מאמן התזונה הדיגיטלי המהיר והמדויק ביותר של אילאי.
 עליך לזהות בדיוק של 100% כל מאכל, מותג, מנת מסעדה, סלנג, קינוח, פרי, ירק, צילום צלחת או מאכל עדתי בעולם.
+לעולם אל תחליף מאכל שהוזן במאכל אחר (למשל: דג אמנון זה דג אמנון, סלמון זה סלמון, שווארמה בלאפה זו לאפה, במבה זה במבה).
 
 פרופיל המתאמן:
 - יעד יומי: ${targetCal} קלוריות | ${targetPro} גרם חלבון.
 - מטרה: ${clientGoal}.
 - קלוריות שנותרו להיום: ${remainingCal} קלוריות.
 
-תיאור הארוחה / המצרכים שהמתאמן הזין:
-"${this.aiFoodQuery || (this.portalMealPhoto ? 'צלחת שצולמה בתמונה' : '')}"
+תיאור המנה שהמתאמן הזין:
+"${rawQuery || (this.portalMealPhoto ? 'צלחת שצולמה בתמונה' : '')}"
 
-הנחיות קריטיות לדיוק מושלם:
-1. זהה בדיוק מוחלט את המאכל הספציפי שהוזן. לעולם אל תחליף מאכל במאכל אחר (למשל: דג אמנון זה דג אמנון, אסאי זה אסאי, במבה נוגט זה במבה נוגט, מגנום פיסטוק זה מגנום פיסטוק, שווארמה זה שווארמה).
-2. אם הוזנו מספר מאכלים יחד, פרק כל מאכל לפריט נפרד עם הקלוריות והמאקרו שלו, וחבר את הסך הכולל במדויק.
-3. כיול כמויות ישראלי:
-   - כף הגשה מבושלת (אורז, פסטה, פתיתים, קוסקוס, עדשים) = 50-60 גרם (~75 קלוריות).
-   - כוס מבושלת = 160-180 גרם (~210-230 קלוריות).
-   - כף שמן / טחינה גולמית = 10-15 גרם (~90-100 קלוריות).
-   - מנת חלבון ממוצעת (חזה עוף, פילה דג אמנון/דניס/סלמון, סינטה) = 180-220 גרם מוכן.
-4. אם לא צוינה כמות, הערך מנה ספורטיבית ממוצעת הגיונית וציין את הכמות המוערכת בשם הפריט.
+כיול ישראלי מדויק:
+- כף הגשה פחמימה/קטניות מבושלת (אורז, פסטה, פתיתים, קוסקוס, עדשים) = 55 גרם (~75 קלוריות).
+- כוס מבושלת = 160 גרם (~215 קלוריות).
+- כף שמן / טחינה גולמית = 15 גרם (~98 קלוריות).
+- מנת חלבון ממוצעת = 180 גרם מוכן (דג אמנון מושט = ~128 קל'/100ג' ו-26ג' חלבון, דניס = ~150 קל'/100ג', סלמון = ~208 קל'/100ג', חזה עוף = ~165 קל'/100ג' ו-31ג' חלבון).
 
-החזר אך ורק אובייקט JSON תקין ומדויק ללא שום טקסט, הסברים או תגיות מסביב:
+החזר אך ורק JSON תקין ומדויק ללא שום טקסט, הסברים או תגיות מסביב:
 {
-  "calories": סך קלוריות כולל כמספר שלם,
-  "protein": סך חלבון בגרמים (מספר),
-  "carbs": סך פחמימות בגרמים (מספר),
-  "fat": סך שומן בגרמים (מספר),
-  "coachInsight": "משפט תובנה, פירגון והכוונה מקצועית ואישית מהמאמן אילאי על הארוחה הזו",
+  "calories": סך קלוריות כמספר שלם,
+  "protein": סך חלבון בגרמים,
+  "carbs": סך פחמימות בגרמים,
+  "fat": סך שומן בגרמים,
+  "coachInsight": "משפט תובנה קצר, מפרגן ומדויק מאילאי בהתאם ליעד הקלורי של המתאמן",
   "items": [
     {
-      "name": "שם המאכל וכמות מוערכת בעברית (למשל: 'דג אמנון אפוי (~180 גרם)')",
+      "name": "שם המאכל וכמות מוערכת בעברית (למשל: '180 גרם דג אמנון אפוי')",
       "cal": קלוריות כמספר,
       "pro": חלבון בגרם,
       "carb": פחמימות בגרם,
       "fat": שומן בגרם,
-      "swap": "הצעת תחליף שווה ערך איכותי (למשל: 'פילה לברק / 180 גרם חזה עוף')"
+      "swap": "הצעת תחליף שווה ערך איכותי"
     }
   ]
 }`;
@@ -7977,7 +7996,8 @@
                                     }],
                                     generationConfig: {
                                         response_mime_type: "application/json",
-                                        temperature: 0.1
+                                        temperature: 0.1,
+                                        maxOutputTokens: 1000
                                     }
                                 };
                             } else {
@@ -7987,15 +8007,23 @@
                                     }],
                                     generationConfig: {
                                         response_mime_type: "application/json",
-                                        temperature: 0.1
+                                        temperature: 0.1,
+                                        maxOutputTokens: 1000
                                     }
                                 };
                             }
 
-                            const modelsToTry = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-flash-lite-latest', 'gemma-4-31b-it', 'gemini-3-flash-preview'];
+                            const modelsToTry = [
+                                'models/gemini-3.5-flash-lite',
+                                'models/gemini-flash-lite-latest',
+                                'models/gemini-flash-latest',
+                                'models/gemma-4-31b-it',
+                                'models/gemini-2.5-flash-lite'
+                            ];
+
                             for (const mName of modelsToTry) {
                                 try {
-                                    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${apiKey}`, {
+                                    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/${mName}:generateContent?key=${apiKey}`, {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(body)
@@ -8017,8 +8045,8 @@
                                                     const fatCal = totalFat * 9;
                                                     const sumCal = proCal + carbCal + fatCal || 1;
 
-                                                    this.aiAnalyzedMeal = {
-                                                        query: this.aiFoodQuery || (this.portalMealPhoto ? 'צלחת שנותחה ב-Vision AI 📸' : 'ארוחה מחושבת'),
+                                                    const analyzedResult = {
+                                                        query: rawQuery || (this.portalMealPhoto ? 'צלחת שנותחה ב-Vision AI 📸' : 'ארוחה מחושבת'),
                                                         calories: totalCal,
                                                         protein: totalPro,
                                                         carbs: totalCarb,
@@ -8036,8 +8064,18 @@
                                                             swap: it.swap || ''
                                                         }))
                                                     };
+
+                                                    this.aiAnalyzedMeal = analyzedResult;
+
+                                                    // שמירה בזיכרון מטמון חכם
+                                                    if (rawQuery && !this.portalMealPhoto) {
+                                                        try {
+                                                            localStorage.setItem('ilai_meal_' + rawQuery.toLowerCase(), JSON.stringify(analyzedResult));
+                                                        } catch(e) {}
+                                                    }
+
                                                     this.isAiAnalyzing = false;
-                                                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                                                    setTimeout(() => { if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons(); }, 50);
                                                     return;
                                                 }
                                             }
@@ -8048,12 +8086,15 @@
                                 }
                             }
                         } catch(e) {
-                            console.warn("Gemini API call failed, falling back to local database:", e);
+                            console.warn("Gemini API call failed, local analysis already active:", e);
                         }
                     }
 
-                    // הרצה מקומית במקרה של חוסר מפתח / שגיאת רשת
-                    this.runLocalFoodAnalysis();
+                    // במקרה שאין מפתח או שגיאת רשת, הניתוח המקומי המהיר כבר מוצג
+                    if (!this.aiAnalyzedMeal) {
+                        this.runLocalFoodAnalysis();
+                    }
+                    this.isAiAnalyzing = false;
                 },
 
                 getMasterFoodDatabase() {
