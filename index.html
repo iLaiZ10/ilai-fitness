@@ -3337,7 +3337,7 @@
                                     <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl flex items-center justify-between">
                                         <div>
                                             <span class="text-[10px] text-[#5f756e] block font-bold">רצף התמדה נוכחי</span>
-                                            <span class="text-lg font-black text-[#082722]" x-text="(currentClient?.streakDays || 0) + ' ימים 🔥'"></span>
+                                            <span class="text-lg font-black text-[#082722]" x-text="getClientStreak(currentClient) + ' ימים 🔥'"></span>
                                         </div>
                                         <div class="p-2 bg-amber-100 text-amber-800 rounded-xl font-black text-sm">
                                             ⚡
@@ -8751,29 +8751,107 @@
                 // --- מתודות רצף ימי התמדה ותגי הישגים ---
                 getClientStreak(client) {
                     if (!client) return 1;
-                    if (client.streakDays) return client.streakDays;
-                    const checkinsCount = (client.checkins || []).length;
-                    const foodLogsCount = (client.mealPhotoLogs || []).length;
-                    const waterDays = (client.dailyWater || 0) > 0 ? 1 : 0;
-                    const streak = Math.max(1, checkinsCount + foodLogsCount + waterDays);
-                    return Math.min(30, streak);
+
+                    const activeDates = new Set();
+                    const todayStr = this.getTodayDate ? this.getTodayDate() : new Date().toISOString().substring(0, 10);
+                    
+                    const yDate = new Date();
+                    yDate.setDate(yDate.getDate() - 1);
+                    const yesterdayStr = `${yDate.getFullYear()}-${String(yDate.getMonth() + 1).padStart(2, '0')}-${String(yDate.getDate()).padStart(2, '0')}`;
+
+                    // 1. Food logs (יומן אכילה)
+                    (client.foodLogs || []).forEach(fl => {
+                        if (fl && fl.date) activeDates.add(fl.date.substring(0, 10));
+                    });
+
+                    // 2. Daily Scorecards (דיווחים יומיים)
+                    (client.dailyScorecards || []).forEach(sc => {
+                        if (sc && sc.date) activeDates.add(sc.date.substring(0, 10));
+                    });
+
+                    // 3. Weekly Check-ins (שקילות ומעקבים שבועיים)
+                    (client.checkins || []).forEach(ch => {
+                        if (ch && ch.date) activeDates.add(ch.date.substring(0, 10));
+                    });
+
+                    // 4. Meal Photos (תמונות ארוחה)
+                    (client.mealPhotoLogs || []).forEach(mp => {
+                        const d = mp.date || (mp.timestamp && mp.timestamp.substring(0, 10));
+                        if (d) activeDates.add(d);
+                    });
+
+                    // 5. Workout logs / completed exercises (אימונים שבוצעו)
+                    (client.completedWorkouts || client.workoutLogs || []).forEach(w => {
+                        if (w && w.date) activeDates.add(w.date.substring(0, 10));
+                    });
+
+                    // 6. Live activity for today (פעילות חיה היום: מים, צעדים, אימונים, תזונה)
+                    const hasLiveToday = (client.dailyWater || 0) > 0 || 
+                                         (client.dailySteps || 0) > 0 || 
+                                         (client.foodLogs && client.foodLogs.some(fl => fl && fl.date === todayStr)) ||
+                                         (client.dailyScorecards && client.dailyScorecards.some(sc => sc && sc.date === todayStr)) ||
+                                         this.scorecardNutrition === 'yes' || 
+                                         this.scorecardWorkout === 'yes';
+                    if (hasLiveToday) {
+                        activeDates.add(todayStr);
+                    }
+
+                    // Determine start offset for contiguous streak
+                    let streak = 0;
+                    let checkDateOffset = 0;
+
+                    if (activeDates.has(todayStr)) {
+                        checkDateOffset = 0;
+                    } else if (activeDates.has(yesterdayStr)) {
+                        checkDateOffset = 1;
+                    } else {
+                        // אם לא היה פעיל היום או אתמול, מציג את סך כל ימי הפעילות הצבורים
+                        if (activeDates.size > 0) {
+                            return Math.max(1, activeDates.size);
+                        }
+                        return Math.max(1, client.streakDays || 1);
+                    }
+
+                    // ספירה יומיומית אחורה לבדיקת רצף רציף
+                    while (true) {
+                        const d = new Date();
+                        d.setDate(d.getDate() - checkDateOffset);
+                        const curDateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                        if (activeDates.has(curDateStr)) {
+                            streak++;
+                            checkDateOffset++;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    const calculatedStreak = Math.max(streak, activeDates.size > 0 ? Math.min(streak || activeDates.size, activeDates.size) : 1);
+                    const finalStreak = Math.max(calculatedStreak, 1);
+                    
+                    // סנכרון אוטומטי של שדה streakDays במתאמן
+                    client.streakDays = finalStreak;
+                    return finalStreak;
                 },
 
                 getClientStreakMessage(client) {
                     const s = this.getClientStreak(client);
-                    if (s >= 14) return 'רצף אגדי! אתה בליגה של הגדולים 👑';
+                    if (s >= 30) return 'חודש שלם של התמדה מטורפת! אתה אגדה חיה 🏆🔥';
+                    if (s >= 14) return 'שבועיים של רצף אגדי! אתה בליגה של הגדולים 👑';
                     if (s >= 7) return 'שבוע שלם של התמדה מדהימה! המשך כך 🔥';
                     if (s >= 3) return 'רצף מצוין! התנופה שלך בשיאה 💪';
-                    return 'התחלה מעולה! סמן מים ואימונים לשמירה על הרצף ✨';
+                    if (s >= 2) return 'יומיים ברצף! הבסיס המושלם להרגל מנצח ✨';
+                    return 'התחלה מעולה! סמן מים, ארוחות ואימונים לשמירה על הרצף 🚀';
                 },
 
                 getClientBadges(client) {
                     if (!client) return [];
+                    const streak = this.getClientStreak(client);
                     const checkins = client.checkins || [];
                     const firstWeight = checkins.length > 0 ? checkins[0].weight : parseFloat(client.startWeight || 80);
                     const lastWeight = checkins.length > 0 ? checkins[checkins.length - 1].weight : firstWeight;
                     const weightLost = Math.max(0, Math.round((firstWeight - lastWeight) * 10) / 10);
                     const photosCount = (client.mealPhotoLogs || []).length;
+                    const foodLogsCount = (client.foodLogs || []).length;
                     const checkinsCount = checkins.length;
                     const water = client.dailyWater || 0;
 
@@ -8800,6 +8878,20 @@
                             unlocked: weightLost >= 5
                         },
                         {
+                            id: 'streak_7',
+                            icon: '🔥',
+                            title: 'שבוע של ברזל',
+                            desc: 'התמדה רציפה של 7 ימים ברצף',
+                            unlocked: streak >= 7
+                        },
+                        {
+                            id: 'streak_14',
+                            icon: '⚡',
+                            title: 'שבועיים של אש',
+                            desc: 'התמדה רציפה של 14 ימים ברצף',
+                            unlocked: streak >= 14
+                        },
+                        {
                             id: 'water_master',
                             icon: '💧',
                             title: 'מאסטר שתיית מים',
@@ -8817,15 +8909,15 @@
                             id: 'food_logger',
                             icon: '📸',
                             title: 'יומן ארוחות מצטיין',
-                            desc: 'העלאת 3+ תמונות ארוחה ליומן האכילה',
-                            unlocked: photosCount >= 3
+                            desc: 'תיעוד 3+ ארוחות ביומן האכילה',
+                            unlocked: photosCount >= 3 || foodLogsCount >= 3
                         },
                         {
                             id: 'month_complete',
                             icon: '👑',
                             title: 'בוגר חודש ראשון',
                             desc: 'השלמת חודש ליווי מלא בתוכנית',
-                            unlocked: checkinsCount >= 4
+                            unlocked: checkinsCount >= 4 || streak >= 30
                         }
                     ];
                 },
@@ -9655,10 +9747,10 @@
                                         timestamp: new Date().toISOString()
                                     });
 
-                                    if (yesterdayScore >= 70) {
-                                        client.streakDays = (client.streakDays || 0) + 1;
-                                    }
                                 }
+
+                                // עדכון רצף ההתמדה החי של המתאמן
+                                client.streakDays = this.getClientStreak(client);
 
                                 // Reset daily counters for the new day
                                 client.dailyWater = 0;
