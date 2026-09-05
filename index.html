@@ -1624,6 +1624,50 @@
                                 </div>
                             </div>
 
+                            <!-- סרגל מעבר תאריכים ליומן תזונה (היום, אתמול, שלשום, ובחירת תאריך) -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#133d35]/80 pb-3 pt-1 relative z-10 text-[11px] font-bold">
+                                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none shrink-0">
+                                    <template x-for="day in getPastDatesList(7)" :key="day.date">
+                                        <button type="button" 
+                                                @click="setNutritionViewDate(day.date)"
+                                                :class="(portalNutritionViewDate === day.date || (!portalNutritionViewDate && day.isToday)) ? 'bg-[#86efac] text-[#082722] font-black border-[#86efac] shadow-sm' : 'bg-white/10 text-[#93c7bb] hover:text-white hover:bg-white/20 border-white/10'"
+                                                class="px-3 py-1.5 rounded-xl border shrink-0 transition flex items-center gap-1.5 cursor-pointer">
+                                            <template x-if="getConsumedCaloriesForDate(portalClient, day.date) > 0">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e]"></span>
+                                            </template>
+                                            <span x-text="day.label"></span>
+                                            <template x-if="getConsumedCaloriesForDate(portalClient, day.date) > 0">
+                                                <span class="text-[9px] font-black opacity-80" x-text="getConsumedCaloriesForDate(portalClient, day.date) + ' קל\''"></span>
+                                            </template>
+                                        </button>
+                                    </template>
+                                </div>
+                                
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <span class="text-[10px] text-[#93c7bb] hidden sm:inline font-medium">תאריך:</span>
+                                    <input type="date" 
+                                           :value="portalNutritionViewDate || getTodayDate()" 
+                                           @change="setNutritionViewDate($event.target.value)" 
+                                           class="bg-[#051c17] border border-[#174e43] text-white text-[11px] font-bold rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[#86efac] cursor-pointer">
+                                    <template x-if="portalNutritionViewDate && portalNutritionViewDate !== getTodayDate()">
+                                        <button type="button" @click="setNutritionViewDate(getTodayDate())" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-[10px] cursor-pointer shrink-0 shadow-sm transition">
+                                            חזור להיום 📅
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- התראה כאשר צופים ביום קודם (למשל אתמול) -->
+                            <template x-if="portalNutritionViewDate && portalNutritionViewDate !== getTodayDate()">
+                                <div class="bg-emerald-950/80 border border-[#86efac]/40 text-white p-3 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-semibold relative z-10">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="calendar" class="w-4 h-4 text-[#86efac] shrink-0"></i>
+                                        <span>מציג יומן אכילה וקלוריות לתאריך: <strong class="text-[#86efac]" x-text="formatDate(portalNutritionViewDate)"></strong></span>
+                                    </div>
+                                    <span class="text-[10px] text-[#93c7bb]">כל ארוחה שתוסיף כעת תישמר לתאריך זה ✍️</span>
+                                </div>
+                            </template>
+
                             <!-- מדד קלוריות מרכזי (Remaining Calories) -->
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center bg-[#051c17] border border-[#174e43] p-4 md:p-5 rounded-2xl relative z-10">
                                 <!-- יעד קלורי -->
@@ -1635,14 +1679,14 @@
 
                                 <!-- קלוריות שנותרו - לב המערכת -->
                                 <div class="text-center py-2 sm:py-0 border-y sm:border-y-0 sm:border-x border-[#174e43] px-3 space-y-1">
-                                    <span class="text-[10px] uppercase tracking-wider text-[#86efac] font-black block">נותרו להיום לאכילה 🎯</span>
+                                    <span class="text-[10px] uppercase tracking-wider text-[#86efac] font-black block" x-text="(!portalNutritionViewDate || portalNutritionViewDate === getTodayDate()) ? 'נותרו להיום לאכילה 🎯' : 'נותרו לתאריך זה 🎯'"></span>
                                     <div class="text-3xl md:text-4xl font-black" :class="getRemainingCalories(portalClient) >= 0 ? 'text-[#86efac]' : 'text-amber-400'" x-text="getRemainingCalories(portalClient)"></div>
-                                    <span class="text-[10px] text-[#93c7bb]" x-text="getRemainingCalories(portalClient) >= 0 ? 'קלוריות זמינות' : 'חריגה קלה מהיעד'"></span>
+                                    <span class="text-[10px] text-[#93c7bb]" x-text="getRemainingCalories(portalClient) >= 0 ? 'קלוריות זמינות' : 'חריגה מהיעד'"></span>
                                 </div>
 
                                 <!-- סך שנאכל עד כה -->
                                 <div class="text-center sm:text-left space-y-0.5">
-                                    <span class="text-[10px] text-[#93c7bb] font-bold block">נאכל היום עד כה</span>
+                                    <span class="text-[10px] text-[#93c7bb] font-bold block" x-text="(!portalNutritionViewDate || portalNutritionViewDate === getTodayDate()) ? 'נאכל היום עד כה' : 'נאכל בתאריך זה'"></span>
                                     <div class="text-xl md:text-2xl font-black text-white" x-text="getTodayConsumedCalories(portalClient) + ' קל\''"></div>
                                     <span class="text-[9px] text-[#86efac]" x-text="Math.round((getTodayConsumedCalories(portalClient) / (portalClient?.macroCalculated?.targetCalories || 2000)) * 100) + '% מהיעד'"></span>
                                 </div>
@@ -1929,7 +1973,7 @@
                             <div class="flex items-center justify-between">
                                 <h4 class="text-sm md:text-base font-extrabold text-[#082722] flex items-center gap-2">
                                     <i data-lucide="clipboard-list" class="w-4 h-4 text-emerald-600"></i>
-                                    <span>יומן הארוחות של היום (בוקר, צהריים, ערב, ביניים)</span>
+                                    <span x-text="(!portalNutritionViewDate || portalNutritionViewDate === getTodayDate()) ? 'יומן הארוחות של היום (בוקר, צהריים, ערב, ביניים)' : ('יומן הארוחות לתאריך: ' + formatDate(portalNutritionViewDate))"></span>
                                 </h4>
                             </div>
 
@@ -1962,8 +2006,7 @@
                                     <!-- רשימת פריטים שנאכלו בארוחה זו היום -->
                                     <div class="space-y-2">
                                         <template x-if="getTodayMealLogsByType(portalClient, mCategory.type).length === 0">
-                                            <div class="py-2.5 text-center text-slate-400 text-xs italic">
-                                                טרם נרשמו פריטים בארוחה זו היום
+                                            <div class="py-2.5 text-center text-slate-400 text-xs italic" x-text="(!portalNutritionViewDate || portalNutritionViewDate === getTodayDate()) ? 'טרם נרשמו פריטים בארוחה זו היום' : 'לא נרשמו פריטים בארוחה זו בתאריך זה'">
                                             </div>
                                         </template>
 
@@ -5676,6 +5719,7 @@
                 portalMealType: 'ארוחת צהריים',
                 portalMealDescription: '',
                 portalMealPhoto: '',
+                portalNutritionViewDate: '',
                 previewMealPhotoModal: false,
                 previewMealPhotoUrl: '',
                 previewMealPhotoTitle: '',
@@ -7752,13 +7796,18 @@
                     this.isVoiceRecording = false;
                 },
 
+                setNutritionViewDate(dateStr) {
+                    this.portalNutritionViewDate = dateStr || this.getTodayDate();
+                    setTimeout(() => { if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
                 getTodayConsumedCalories(client) {
                     const c = client || this.portalClient || this.currentClient;
                     if (!c || !c.foodLogs) return 0;
-                    const today = this.getTodayDate();
+                    const date = this.portalNutritionViewDate || this.getTodayDate();
                     let sum = 0;
                     c.foodLogs.forEach(l => {
-                        if (l.date === today && l.calories) {
+                        if (l && l.date === date && l.calories) {
                             sum += parseFloat(l.calories) || 0;
                         }
                     });
@@ -7768,10 +7817,10 @@
                 getTodayConsumedProtein(client) {
                     const c = client || this.portalClient || this.currentClient;
                     if (!c || !c.foodLogs) return 0;
-                    const today = this.getTodayDate();
+                    const date = this.portalNutritionViewDate || this.getTodayDate();
                     let sum = 0;
                     c.foodLogs.forEach(l => {
-                        if (l.date === today && l.protein) {
+                        if (l && l.date === date && l.protein) {
                             sum += parseFloat(l.protein) || 0;
                         }
                     });
@@ -7781,10 +7830,10 @@
                 getTodayConsumedCarbs(client) {
                     const c = client || this.portalClient || this.currentClient;
                     if (!c || !c.foodLogs) return 0;
-                    const today = this.getTodayDate();
+                    const date = this.portalNutritionViewDate || this.getTodayDate();
                     let sum = 0;
                     c.foodLogs.forEach(l => {
-                        if (l.date === today && l.carbs) {
+                        if (l && l.date === date && l.carbs) {
                             sum += parseFloat(l.carbs) || 0;
                         }
                     });
@@ -7794,14 +7843,27 @@
                 getTodayConsumedFat(client) {
                     const c = client || this.portalClient || this.currentClient;
                     if (!c || !c.foodLogs) return 0;
-                    const today = this.getTodayDate();
+                    const date = this.portalNutritionViewDate || this.getTodayDate();
                     let sum = 0;
                     c.foodLogs.forEach(l => {
-                        if (l.date === today && l.fat) {
+                        if (l && l.date === date && l.fat) {
                             sum += parseFloat(l.fat) || 0;
                         }
                     });
                     return Math.round(sum * 10) / 10;
+                },
+
+                getConsumedCaloriesForDate(client, targetDate) {
+                    const c = client || this.portalClient || this.currentClient;
+                    if (!c || !c.foodLogs) return 0;
+                    const date = targetDate || this.getTodayDate();
+                    let sum = 0;
+                    c.foodLogs.forEach(l => {
+                        if (l && l.date === date && l.calories) {
+                            sum += parseFloat(l.calories) || 0;
+                        }
+                    });
+                    return Math.round(sum);
                 },
 
                 getRemainingCalories(client) {
@@ -7814,8 +7876,8 @@
                 getTodayMealLogsByType(client, mealType) {
                     const c = client || this.portalClient || this.currentClient;
                     if (!c || !c.foodLogs) return [];
-                    const today = this.getTodayDate();
-                    return c.foodLogs.filter(l => l.date === today && l.mealType === mealType);
+                    const date = this.portalNutritionViewDate || this.getTodayDate();
+                    return c.foodLogs.filter(l => l && l.date === date && l.mealType === mealType);
                 },
 
                 getMealTypeSummary(client, mealType) {
@@ -7849,9 +7911,10 @@
                     const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
 
                     const mealType = targetMealType || this.portalMealType || 'ארוחת צהריים';
+                    const targetDate = this.portalNutritionViewDate || this.getTodayDate();
                     const logObj = {
                         id: 'fl_' + Date.now(),
-                        date: this.getTodayDate(),
+                        date: targetDate,
                         time: timeStr,
                         mealType: mealType,
                         description: this.aiFoodQuery || this.portalMealDescription || 'ארוחה מחושבת ב-AI',
@@ -7900,9 +7963,10 @@
                     const now = new Date();
                     const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
 
+                    const targetDate = this.portalNutritionViewDate || this.getTodayDate();
                     const logObj = {
                         id: 'fl_' + Date.now(),
-                        date: this.getTodayDate(),
+                        date: targetDate,
                         time: timeStr,
                         mealType: this.quickAddMealType || 'ארוחת צהריים',
                         description: this.quickAddName || ('הוספה מהירה — ' + cals + ' קל׳'),
@@ -7981,9 +8045,9 @@
 
                     if (apiKey) {
                         try {
-                            const prompt = `אתה מאמן התזונה הדיגיטלי המהיר והמדויק ביותר של אילאי.
-עליך לזהות בדיוק של 100% כל מאכל, מותג, מנת מסעדה, סלנג, קינוח, פרי, ירק, צילום צלחת או מאכל עדתי בעולם.
-לעולם אל תחליף מאכל שהוזן במאכל אחר (למשל: דג אמנון זה דג אמנון, סלמון זה סלמון, שווארמה בלאפה זו לאפה, במבה זה במבה).
+                            const prompt = `אתה מחשבון התזונה והקלוריות הרשמי של המאמן אילאי, המבוסס ב-100% על מאגר FoodsDictionary הישראלי ומשרד הבריאות.
+עליך לזהות בדיוק של 100% כל מאכל, מותג, מנת מסעדה, סלנג, קינוח, פרי, ירק, צילום צלחת או מאכל עדתי.
+לעולם אל תחליף מאכל שהוזן במאכל אחר (דג אמנון הוא דג אמנון, סלמון הוא סלמון, שווארמה בלאפה היא לאפה, במבה היא במבה).
 
 פרופיל המתאמן:
 - יעד יומי: ${targetCal} קלוריות | ${targetPro} גרם חלבון.
@@ -7993,15 +8057,25 @@
 תיאור המנה שהמתאמן הזין:
 "${rawQuery || (this.portalMealPhoto ? 'צלחת שצולמה בתמונה' : '')}"
 
-כיול ישראלי מדויק:
-- כף הגשה פחמימה/קטניות מבושלת (אורז, פסטה, פתיתים, קוסקוס, עדשים) = 55 גרם (~75 קלוריות).
-- כוס מבושלת = 160 גרם (~215 קלוריות).
-- כף שמן / טחינה גולמית = 15 גרם (~98 קלוריות).
-- מנת חלבון ממוצעת = 180 גרם מוכן (דג אמנון מושט = ~128 קל'/100ג' ו-26ג' חלבון, דניס = ~150 קל'/100ג', סלמון = ~208 קל'/100ג', חזה עוף = ~165 קל'/100ג' ו-31ג' חלבון).
+ערכים תזונתיים רשמיים לפי FoodsDictionary (מזון מוכן/מבושל):
+- אורז לבן/יסמין/בסמטי מבושל: 130 קל', 2.7ג' חלבון, 28ג' פחמימה ל-100ג' (כף הגשה 55ג' = ~72 קל', כוס מבושלת 160ג' = ~208 קל').
+- פסטה/ספגטי מבושלים: 155 קל', 5.8ג' חלבון, 31ג' פחמימה ל-100ג' (כף הגשה 55ג' = ~85 קל').
+- פתיתים מבושלים: 160 קל', 5.2ג' חלבון, 32ג' פחמימה ל-100ג'.
+- תפוח אדמה אפוי/מבושל: 86 קל', 2ג' חלבון, 20ג' פחמימה ל-100ג' (יח' בינונית ~145 קל').
+- בטטה אפויה: 90 קל', 2ג' חלבון, 21ג' פחמימה ל-100ג' (יח' בינונית ~162 קל').
+- שיבולת שועל / קוואקר: 389 קל'/100ג' (חצי כוס ~40ג' = 155 קל', 6.8ג' חלבון).
+- חזה עוף מבושל/צלוי: 165 קל', 31ג' חלבון, 3.6ג' שומן ל-100ג' (מנה 180ג' = ~297 קל', 55.8ג' חלבון).
+- דג אמנון (מושט) אפוי: 128 קל', 26.2ג' חלבון, 2.6ג' שומן ל-100ג' (פילה 180ג' = ~230 קל', 47.1ג' חלבון).
+- פילה סלמון אפוי: 206 קל', 22.1ג' חלבון, 12.3ג' שומן ל-100ג' (מנה 180ג' = ~370 קל', 39.8ג' חלבון).
+- דג דניס אפוי: 150 קל', 20.5ג' חלבון ל-100ג'.
+- ביצה L: 75 קל', 6.8ג' חלבון, 5.2ג' שומן.
+- טחינה גולמית: 640 קל'/100ג' (כף 15ג' = 96 קל', 3.6ג' חלבון, 8.3ג' שומן).
+- שמן זית: 884 קל'/100ג' (כף 10ג' = 88 קל').
+- פיתה קלה: 99 קל'. פיתה רגילה: 255 קל'. לחם קל: 40-45 קל' לפרוסה. לחם מלא: 75 קל' לפרוסה.
 
 החזר אך ורק JSON תקין ומדויק ללא שום טקסט, הסברים או תגיות מסביב:
 {
-  "calories": סך קלוריות כמספר שלם,
+  "calories": סך קלוריות מחושב מדויק לפי FoodsDictionary,
   "protein": סך חלבון בגרמים,
   "carbs": סך פחמימות בגרמים,
   "fat": סך שומן בגרמים,
@@ -8169,7 +8243,33 @@
                         { category: 'prepared', keys: ['צ\'יפס מטוגן', 'ציפס מטוגן', 'צ\'יפס', 'ציפס'], name: 'צ\'יפס מטוגן (מנה קטנה/בינונית)', defaultGrams: 120, calPer100: 312, proPer100: 3.4, carbPer100: 41, fatPer100: 15, swap: 'צ\'יפס בטטה/תפו״א אפוי בנינג\'ה/תנור' },
                         { category: 'prepared', keys: ['מוקפץ עוף עם נודלס', 'מוקפץ עוף', 'מוקפץ נודלס', 'מוקפץ'], name: 'מוקפץ עוף, ירקות ונודלס', defaultGrams: 350, unitGrams: 350, calPer100: 145, proPer100: 11, carbPer100: 18, fatPer100: 3.5, swap: 'חזה עוף מוקפץ עם ירקות ואורז' },
 
-                        // --- 2. חלבונים רזים ואיכותיים ---
+                        // --- 2. פחמימות מבושלות, דגנים, מאפים ולחמים (ערכי FoodsDictionary) ---
+                        { category: 'carbs', keys: ['אורז לבן מבושל', 'אורז מבושל', 'אורז יסמין', 'אורז בסמטי', 'אורז פרסי', 'אורז'], name: 'אורז לבן / יסמין / בסמטי מבושל', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 130, proPer100: 2.7, carbPer100: 28, fatPer100: 0.3, swap: '2 כפות הגשה קינואה / בטטה אפויה' },
+                        { category: 'carbs', keys: ['אורז מלא מבושל', 'אורז מלא', 'אורז אדום', 'אורז בר'], name: 'אורז מלא מבושל', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 125, proPer100: 2.8, carbPer100: 26, fatPer100: 0.4, swap: 'אורז בסמטי / כוסמת' },
+                        { category: 'carbs', keys: ['פסטה מבושלת', 'ספגטי מבושל', 'מקרוני מבושל', 'פסטה', 'ספגטי', 'מקרוני', 'פנה', 'פוזילי'], name: 'פסטה / ספגטי מבושלים', defaultGrams: 150, cupGrams: 150, spoonGrams: 55, calPer100: 155, proPer100: 5.8, carbPer100: 31, fatPer100: 0.9, swap: 'פסטה מלאה / פסטת קטניות' },
+                        { category: 'carbs', keys: ['פתיתים מבושלים', 'פתיתים'], name: 'פתיתים מבושלים', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 160, proPer100: 5.2, carbPer100: 32, fatPer100: 1.2, swap: 'אורז מלא / בטטה' },
+                        { category: 'carbs', keys: ['תפוח אדמה אפוי', 'תפוח אדמה מבושל', 'תפוח אדמה בתנור', 'תפוח אדמה', 'תפוחי אדמה', 'תפו״א', 'פירה'], name: 'תפוח אדמה אפוי / מבושל', defaultGrams: 170, unitGrams: 170, calPer100: 86, proPer100: 2, carbPer100: 20, fatPer100: 0.1, swap: 'בטטה אפויה' },
+                        { category: 'carbs', keys: ['בטטה בתנור', 'בטטה אפויה', 'בטטה מבושלת', 'בטטה'], name: 'בטטה אפויה בתנור', defaultGrams: 180, unitGrams: 180, calPer100: 90, proPer100: 2, carbPer100: 21, fatPer100: 0.2, swap: 'תפוח אדמה אפוי' },
+                        { category: 'carbs', keys: ['שיבולת שועל', 'קוואקר', 'דייסת שיבולת שועל', 'דייסת קוואקר', 'דייסה'], name: 'שיבולת שועל / קוואקר (יבש)', defaultGrams: 40, cupGrams: 80, spoonGrams: 10, calPer100: 389, proPer100: 16.9, carbPer100: 66.3, fatPer100: 6.9, swap: '2 פרוסות לחם קל' },
+                        { category: 'carbs', keys: ['קינואה מבושלת', 'קינואה'], name: 'קינואה מבושלת', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 120, proPer100: 4.4, carbPer100: 21.3, fatPer100: 1.9, swap: 'אורז בסמטי / כוסמת' },
+                        { category: 'carbs', keys: ['קוסקוס מבושל', 'קוסקוס'], name: 'קוסקוס מבושל', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 112, proPer100: 3.8, carbPer100: 23.2, fatPer100: 0.2, swap: 'בורגול מבושל' },
+                        { category: 'carbs', keys: ['בורגול מבושל', 'בורגול'], name: 'בורגול מבושל', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 105, proPer100: 3.5, carbPer100: 22, fatPer100: 0.4, swap: 'קינואה מבושלת' },
+                        { category: 'carbs', keys: ['כוסמת מבושלת', 'כוסמת'], name: 'כוסמת מבושלת', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 115, proPer100: 4.5, carbPer100: 24, fatPer100: 0.7, swap: 'אורז מלא' },
+                        { category: 'carbs', keys: ['עדשים מבושלות', 'עדשים שחורות', 'עדשים ירוקות', 'עדשים חומות', 'עדשים', 'מג\'דרה', 'מגדרה'], name: 'עדשים מבושלות / מג\'דרה', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 116, proPer100: 9, carbPer100: 20, fatPer100: 0.4, swap: 'גרגרי חומוס מבושלים' },
+                        { category: 'carbs', keys: ['גרגרי חומוס מבושלים', 'גרגרי חומוס', 'גרגירי חומוס'], name: 'גרגרי חומוס מבושלים', defaultGrams: 130, cupGrams: 160, spoonGrams: 50, calPer100: 164, proPer100: 8.9, carbPer100: 27.4, fatPer100: 2.6, swap: 'עדשים מבושלות' },
+                        { category: 'carbs', keys: ['שעועית לבנה מבושלת', 'שעועית אדומה מבושלת', 'שעועית מבושלת', 'שעועית ברוטב'], name: 'שעועית מבושלת ברוטב', defaultGrams: 150, cupGrams: 160, spoonGrams: 55, calPer100: 120, proPer100: 8, carbPer100: 21, fatPer100: 0.5, swap: 'עדשים מבושלות' },
+                        { category: 'carbs', keys: ['פיתה קלה', 'פיתה כוסמין קלה', 'פיתה 99 קלוריות'], name: 'פיתה קלה (יחידה)', defaultGrams: 70, unitGrams: 70, calPer100: 140, proPer100: 10, carbPer100: 28, fatPer100: 1.1, swap: '2 פרוסות לחם קל' },
+                        { category: 'carbs', keys: ['פיתה רגילה', 'פיתה לבנה', 'פיתה'], name: 'פיתה רגילה (יחידה)', defaultGrams: 100, unitGrams: 100, calPer100: 255, proPer100: 9, carbPer100: 52, fatPer100: 1.2, swap: 'פיתה קלה / טורטיה' },
+                        { category: 'carbs', keys: ['לאפה', 'פיתה עיראקית'], name: 'לאפה (יחידה)', defaultGrams: 180, unitGrams: 180, calPer100: 275, proPer100: 8.5, carbPer100: 56, fatPer100: 1.5, swap: 'פיתה קלה' },
+                        { category: 'carbs', keys: ['לחם קל', 'לחם כוסמין קל', 'לחם שיפון קל', 'פרוסת לחם קל'], name: 'לחם קל (פרוסה)', defaultGrams: 30, sliceGrams: 30, unitGrams: 30, calPer100: 140, proPer100: 11.5, carbPer100: 25, fatPer100: 1.5, swap: 'פריכיות אורז' },
+                        { category: 'carbs', keys: ['לחם מלא', 'לחם מחמצת', 'לחם שיפון', 'לחם שחור', 'פרוסת לחם מלא', 'לחם'], name: 'לחם מלא / מחמצת (פרוסה)', defaultGrams: 35, sliceGrams: 35, unitGrams: 35, calPer100: 230, proPer100: 9, carbPer100: 43, fatPer100: 2.2, swap: 'פרוסת לחם קל' },
+                        { category: 'carbs', keys: ['לחמניה קלה', 'לחמניית כוסמין קלה'], name: 'לחמניה קלה (יחידה)', defaultGrams: 60, unitGrams: 60, calPer100: 155, proPer100: 10, carbPer100: 28, fatPer100: 1.8, swap: 'פיתה קלה' },
+                        { category: 'carbs', keys: ['לחמניה רגילה', 'לחמניית המבורגר', 'לחמניה'], name: 'לחמניה רגילה (יחידה)', defaultGrams: 85, unitGrams: 85, calPer100: 270, proPer100: 8.5, carbPer100: 52, fatPer100: 3, swap: 'לחמניה קלה' },
+                        { category: 'carbs', keys: ['טורטיה', 'טורטייה', 'טורטיה מקמח מלא'], name: 'טורטיה (יחידה)', defaultGrams: 50, unitGrams: 50, calPer100: 290, proPer100: 8, carbPer100: 52, fatPer100: 6, swap: 'פיתה קלה' },
+                        { category: 'carbs', keys: ['פריכיות אורז', 'פריכיות דקות', 'פריכית אורז', 'פריכית', 'פריכיות'], name: 'פריכיות אורז (יחידה)', defaultGrams: 8, unitGrams: 8, calPer100: 375, proPer100: 7.5, carbPer100: 81, fatPer100: 2.5, swap: 'פרוסת לחם קל' },
+                        { category: 'carbs', keys: ['קורנפלקס', 'דגני בוקר', 'ברנפלקס', 'צ\'יריוס'], name: 'דגני בוקר / ברנפלקס (מנה)', defaultGrams: 40, cupGrams: 40, calPer100: 360, proPer100: 10, carbPer100: 75, fatPer100: 2, swap: '40 גרם שיבולת שועל' },
+
+                        // --- 3. חלבונים רזים ואיכותיים ---
                         { category: 'protein', keys: ['חזה עוף צלוי', 'חזה עוף מבושל', 'חזה עוף', 'פילה עוף', 'סטייק עוף', 'עוף'], name: 'חזה עוף מבושל / צלוי', defaultGrams: 180, calPer100: 165, proPer100: 31, carbPer100: 0, fatPer100: 3.6, swap: '160 גרם פילה סלמון / 2 קופסאות טונה במים' },
                         { category: 'protein', keys: ['פרגית צלויה', 'פרגית', 'שווארמה הודו', 'שווארמה פרגית'], name: 'פרגית צלויה על האש', defaultGrams: 180, calPer100: 215, proPer100: 25, carbPer100: 0, fatPer100: 12.5, swap: '180 גרם חזה עוף + 10 גרם טחינה' },
                         { category: 'protein', keys: ['שניצל עוף מטוגן', 'שניצל עוף', 'שניצל ביתי', 'שניצל'], name: 'שניצל עוף', defaultGrams: 150, unitGrams: 120, calPer100: 260, proPer100: 22, carbPer100: 14, fatPer100: 13, swap: '160 גרם חזה עוף על האש' },
@@ -8268,7 +8368,7 @@
                                 const unit = (match[2] || match[4] || '').trim();
 
                                 if (unit.includes('הגשה') || unit.includes('מצק')) {
-                                    const single = entry.servingSpoonGrams || 50;
+                                    const single = entry.servingSpoonGrams || entry.spoonGrams || 55;
                                     grams = single * numVal;
                                     unitLabel = `${numVal} כפות הגשה (~${grams} גרם)`;
                                 } else if (unit.includes('כפית') || unit.includes('כפיות')) {
@@ -8280,7 +8380,7 @@
                                     grams = single * numVal;
                                     unitLabel = `${numVal} כפות (~${grams} גרם)`;
                                 } else if (unit.includes('כוס')) {
-                                    const single = entry.cupGrams || 180;
+                                    const single = entry.cupGrams || 160;
                                     grams = single * numVal;
                                     unitLabel = `${numVal} כוסות (~${grams} גרם/מ״ל)`;
                                 } else if (unit.includes('קופס') || unit.includes('גביע') || unit.includes('פחית')) {
@@ -8495,9 +8595,10 @@
                     const now = new Date();
                     const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
 
+                    const targetDate = this.portalNutritionViewDate || this.getTodayDate();
                     const logObj = {
                         id: 'fl_' + Date.now(),
-                        date: this.getTodayDate(),
+                        date: targetDate,
                         time: timeStr,
                         mealType: this.foodSearchTargetMeal || 'ארוחת צהריים',
                         description: `${food.name} (${unitLabel})`,
