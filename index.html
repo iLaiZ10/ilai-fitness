@@ -164,6 +164,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ILAICO">
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <!-- Canvas Confetti CDN (עבור שיאי כוח וצ'ק ליסט יומי) -->
@@ -505,9 +506,9 @@
         <!-- סרגל צד (Sidebar) - Desktop -->
         <aside x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="hidden md:flex w-64 bg-[#082722] border-l border-[#133d35] flex-col shrink-0 text-[#fbf8f2]" x-cloak>
             <!-- לוגו מותג -->
-            <div class="p-6 border-b border-[#133d35] flex flex-col items-center justify-center">
-                <span class="text-2xl font-black tracking-wider text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></span>
-                <span class="text-[11px] text-[#93c7bb] font-semibold tracking-widest mt-1">מערכת ניהול מתאמנים</span>
+            <div class="p-5 border-b border-[#133d35] flex flex-col items-center justify-center">
+                <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-14 w-auto object-contain drop-shadow-sm">
+                <span class="text-[10px] text-[#93c7bb] font-bold tracking-widest mt-2">מערכת ניהול מתאמנים</span>
             </div>
 
             <!-- ניווט טאבים -->
@@ -641,12 +642,9 @@
                         <div class="absolute -left-10 -bottom-10 w-36 h-36 bg-[#86efac]/10 rounded-full blur-2xl pointer-events-none"></div>
                         <div class="absolute -right-10 -top-10 w-36 h-36 bg-[#4ade80]/10 rounded-full blur-2xl pointer-events-none"></div>
 
-                        <div class="space-y-2">
-                            <div class="w-14 h-14 mx-auto rounded-2xl bg-[#051c17] border border-[#174e43] text-[#86efac] flex items-center justify-center text-xl font-bold shadow-inner">
-                                <i data-lucide="lock" class="w-6 h-6"></i>
-                            </div>
-                            <h2 class="text-2xl font-black text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></h2>
-                            <h3 class="text-base font-bold text-[#fbf8f2]">כניסת מאמן בלבד 🔒</h3>
+                        <div class="space-y-3">
+                            <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-16 w-auto mx-auto object-contain drop-shadow-md">
+                            <h3 class="text-sm font-bold text-[#fbf8f2]">כניסת מאמן בלבד 🔒</h3>
                             <p class="text-xs text-[#93c7bb]">הזן קוד גישה אישי לפתיחת מערכת ה-CRM</p>
                         </div>
 
@@ -687,7 +685,7 @@
                 <!-- 0. טאב שאלון קליטה דיגיטלי ללקוח -->
                 <div x-show="activeTab === 'intake'" x-cloak class="max-w-xl mx-auto py-6 md:py-12 space-y-6">
                     <div class="text-center space-y-2">
-                        <span class="text-2xl font-black tracking-wider text-emerald-500">IlaiCo</span>
+                        <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-14 w-auto mx-auto object-contain mb-1">
                         <h2 class="text-xl md:text-2xl font-black text-white">שאלון קליטה דיגיטלי למתאמן</h2>
                         <p class="text-xs text-slate-400">מאמן ראשי: אילאי. מלא את הפרטים הבאים כדי להתחיל את הליווי שלך בצורה הטובה ביותר.</p>
                     </div>
@@ -920,8 +918,8 @@
                         
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                             <div class="space-y-1">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-2xl md:text-3xl font-black tracking-wider text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></span>
+                                <div class="flex items-center gap-3">
+                                    <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-10 md:h-12 w-auto object-contain">
                                     <span class="text-[10px] bg-[#13443a] text-[#86efac] font-bold px-2.5 py-0.5 rounded-full border border-[#1b5e50]">ליווי פרימיום</span>
                                 </div>
                                 <h2 class="text-xl md:text-2xl font-black text-white" x-text="'היי ' + (portalClient?.name || 'מתאמן') + '! 👋'"></h2>
