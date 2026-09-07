@@ -20,21 +20,21 @@
                         display: ['Plus Jakarta Sans', 'Assistant', 'sans-serif']
                     },
                     colors: {
-                        // ערכת נושא פרימיום: סגול מלכותי, זהב יוקרתי ושמנת לבנדר
+                        // פלטה סגולה מלכותית, זהב יוקרתי ושמנת חמה - ניגודיות גבוהה
                         slate: {
                             50: '#ffffff',
-                            100: '#334155',
+                            100: '#faf6fc',
                             150: '#1a0730',
                             200: '#1a0730',
                             250: '#150329',
-                            300: '#260a45',
-                            350: '#421670',
-                            355: '#421670',
-                            400: '#6f5888',
-                            500: '#8c77a8',
-                            550: '#6f5888',
-                            600: '#cbbed9',
-                            700: '#e6dcef',
+                            300: '#2d0c4f',
+                            350: '#381061',
+                            355: '#381061',
+                            400: '#5c4075',
+                            500: '#75588f',
+                            550: '#5c4075',
+                            600: '#9b7eb8',
+                            700: '#ded0eb',
                             800: '#e6dcef',
                             850: '#f5effa',
                             900: '#ffffff',
@@ -54,7 +54,7 @@
                             950: '#100021'
                         },
                         mint: {
-                            50: '#fffbeb',
+                            50: '#fffdf5',
                             100: '#fef3c7',
                             200: '#fde68a',
                             300: '#fcd34d',
@@ -69,20 +69,24 @@
                         cream: {
                             50: '#fdfcfe',
                             100: '#faf6fc',
-                            200: '#f4eefa',
-                            300: '#eae0f4',
+                            200: '#f5effa',
+                            300: '#ede3f5',
                             400: '#ded0eb',
-                            500: '#cebce0',
-                            600: '#ba9ecc',
-                            700: '#9b76b2',
-                            800: '#795092',
-                            900: '#542d6c'
+                            500: '#c9b7de',
+                            600: '#ad95c7',
+                            700: '#8c70a8',
+                            800: '#5c4075',
+                            900: '#381061'
                         },
                         brand: {
-                            forest: '#1a0730',
-                            mint: '#fbbf24',
+                            purple: '#1a0730',
+                            plum: '#2d0c4f',
+                            gold: '#fbbf24',
+                            goldDark: '#92400e',
                             cream: '#faf6fc',
-                            white: '#ffffff'
+                            border: '#e6dcef',
+                            text: '#1a0730',
+                            textMuted: '#5c4075'
                         }
                     }
                 }
@@ -114,7 +118,6 @@
     <style>
         [x-cloak] { display: none !important; }
         
-        /* יציבות מלאה במובייל ומניעת קפיצות זום */
         html, body {
             touch-action: pan-x pan-y;
             -webkit-text-size-adjust: 100%;
@@ -132,11 +135,11 @@
 
         @media (max-width: 767px) {
             input:not([type="checkbox"]):not([type="range"]), select, textarea {
-                font-size: 16px !important; /* מונע זום אוטומטי של Safari/Chrome בלחיצה */
+                font-size: 16px !important;
             }
         }
         
-        /* סגנון טיפוגרפיה ורקע שמנת יוקרתי */
+        /* רקע שמנת יוקרתי ומלל חד ובולט */
         body {
             background-color: #faf6fc;
             color: #1a0730;
@@ -144,116 +147,83 @@
             letter-spacing: -0.01em;
         }
 
-        /* כרטיסים לבנים נקיים */
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1a0730\]) {
+        /* כרטיסים לבנים נקיים ומסגרות עדינות */
+        .bg-slate-900:not(.card-forest):not(.bg-[#1a0730]) {
             background-color: #ffffff;
             border-color: #e6dcef;
-            color: #1a0730;
-            box-shadow: 0 10px 30px -5px rgba(8, 39, 34, 0.04), 0 2px 6px -1px rgba(8, 39, 34, 0.02);
-        }
-        .bg-slate-950:not(.card-forest):not(.bg-\[\#1a0730\]):not(.bg-\[\#051c17\]) {
-            background-color: #faf6fc;
-            border-color: #e6dcef;
-            color: #1a0730;
         }
 
-        /* כותרות וטקסטים בכרטיסים בהירים - צבע יער כהה וקריא */
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1a0730\]) h1,
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1a0730\]) h2,
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1a0730\]) h3,
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1a0730\]) h4,
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1a0730\]) .text-white:not(button):not(a):not(.text-white-force),
-        .bg-slate-950:not(.card-forest):not(.bg-\[\#1a0730\]) .text-white:not(button):not(a):not(.text-white-force),
-        .bg-white .text-white:not(button):not(a):not(.text-white-force) {
-            color: #1a0730;
-        }
-
-        /* טקסטים כהים כלליים */
-        .text-slate-200, .text-slate-100 {
-            color: #1a0730;
-        }
-        .text-slate-300 {
-            color: #1e3d36;
-        }
+        /* מלל כהה וקריא בכל הכרטיסים */
         .text-slate-400 {
-            color: #6f5888;
+            color: #5c4075 !important;
+            font-weight: 600;
         }
         .text-slate-500 {
-            color: #7a918a;
+            color: #75588f !important;
+            font-weight: 600;
         }
-        .text-slate-600 {
-            color: #4a635c;
+        .text-slate-200, .text-slate-300 {
+            color: #1a0730 !important;
+            font-weight: 700;
         }
-
-        /* טקסט לבן בכפתורים ובאלמנטים כהים */
-        .bg-\[\#1a0730\] .text-white,
-        .bg-\[\#1a0730\] h1, .bg-\[\#1a0730\] h2, .bg-\[\#1a0730\] h3, .bg-\[\#1a0730\] h4,
-        .card-forest .text-white,
-        .card-forest h1, .card-forest h2, .card-forest h3, .card-forest h4,
-        button .text-white, a .text-white,
-        button.text-white, a.text-white,
-        .bg-emerald-500, .bg-emerald-600,
-        .bg-red-600, .bg-rose-600, .bg-blue-600,
-        .bg-gradient-to-r {
-            color: #ffffff;
+        .bg-slate-950 {
+            background-color: #faf6fc !important;
         }
 
-        /* אינטראקציה טקטילית לכפתורים */
-        button, a, input[type="submit"] {
-            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        /* החלפת גוונים ירוקים צעקניים בסגול-זהב רגוע */
+        .bg-emerald-500, .bg-[#22c55e] {
+            background-color: #2d0c4f !important;
+            color: #fbbf24 !important;
         }
-        button:active, a:active {
-            transform: scale(0.98);
+        .hover\:bg-emerald-600:hover, .hover\:bg-[#16a34a]:hover {
+            background-color: #381061 !important;
+        }
+        .text-emerald-700, .text-emerald-800, .text-emerald-600, .text-emerald-400 {
+            color: #1a0730 !important;
+            font-weight: 800;
+        }
+        .bg-emerald-50, .bg-emerald-100 {
+            background-color: #f5effa !important;
+            border-color: #ded0eb !important;
+            color: #1a0730 !important;
+        }
+        .border-emerald-300, .border-emerald-200, .border-emerald-500 {
+            border-color: #ded0eb !important;
         }
 
-        /* שדות קלט נקיים ויוקרתיים */
-        input:not([type="checkbox"]):not([type="range"]), select, textarea {
-            background-color: #ffffff;
-            border-color: #e6dcef;
+        /* תגיות זהב יוקרתיות */
+        .bg-amber-50, .bg-amber-100 {
+            background-color: #fffdf5 !important;
+            border-color: #fde68a !important;
+            color: #92400e !important;
+        }
+        .text-amber-800, .text-amber-700, .text-amber-900 {
+            color: #92400e !important;
+            font-weight: 800;
+        }
+        
+        /* כפתורי זהב פרימיום */
+        .btn-gold {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
             color: #1a0730;
+            font-weight: 900;
+            border: 1px solid rgba(146, 64, 14, 0.2);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
         }
-        input:not([type="checkbox"]):not([type="range"]):focus, select:focus, textarea:focus {
-            background-color: #ffffff;
-            border-color: #1a0730;
-            box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.3);
-        }
-
-        /* הסרת סרגל גלילה בטאבים לנייד */
-        .scrollbar-none::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-none {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
 
-        /* סגנונות מיוחדים להדפסת תוכנית האימון והתזונה ל-PDF */
-        @media print {
-            body {
-                background: white !important;
-                color: black !important;
-                font-size: 12px;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-only {
-                display: block !important;
-            }
-            .print-container {
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                box-shadow: none !important;
-                background: white !important;
-            }
-            .avoid-break {
-                page-break-inside: avoid;
-            }
-            .page-break {
-                page-break-after: always;
-            }
+        /* כפתורי סגול מלכותי */
+        .btn-royal {
+            background: linear-gradient(135deg, #1a0730 0%, #2d0c4f 100%);
+            color: #fbbf24;
+            font-weight: 900;
+            border: 1px solid #451675;
+            box-shadow: 0 4px 14px rgba(26, 7, 48, 0.25);
+        }
+        .btn-royal:hover {
+            background: linear-gradient(135deg, #2d0c4f 0%, #381061 100%);
         }
     </style>
 </head>
@@ -537,13 +507,13 @@
                     <div class="hidden sm:block text-xs text-[#6f5888] font-semibold" x-text="getTodayFormattedDate()"></div>
                     <button 
                         @click="openSendIntakeForClient(null)" 
-                        class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-3 py-1.5 md:px-3.5 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition shadow-md shadow-emerald-500/20 cursor-pointer">
+                        class="btn-royal px-3 py-1.5 md:px-3.5 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition cursor-pointer">
                         <i data-lucide="send" class="w-4 h-4 text-white"></i>
                         <span>שלח שאלון קליטה 🚀</span>
                     </button>
                     <button 
                         @click="openAddClientModal = true" 
-                        class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-3.5 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition border border-[#451675] shadow-md shadow-[#1a0730]/15 cursor-pointer">
+                        class="btn-gold px-3.5 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition cursor-pointer">
                         <i data-lucide="plus" class="w-4 h-4 text-[#fbbf24]"></i>
                         <span>מתאמן חדש</span>
                     </button>
@@ -2334,40 +2304,40 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
-                                <span class="text-slate-400 text-[10px] md:text-xs font-bold block mb-1">פעילים בליווי</span>
-                                <span class="text-xl md:text-3xl font-black text-white" x-text="getActiveClientsCount()"></span>
+                                <span class="text-[#5c4075] text-[10px] md:text-xs font-black block mb-1">פעילים בליווי</span>
+                                <span class="text-xl md:text-3xl font-black text-[#1a0730]" x-text="getActiveClientsCount()"></span>
                             </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-[#2d0c4f]/10 border border-[#2d0c4f]/20 text-[#2d0c4f] rounded-xl flex items-center justify-center">
                                 <i data-lucide="users" class="w-5 h-5"></i>
                             </div>
                         </div>
 
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
-                                <span class="text-slate-400 text-[10px] md:text-xs font-bold block mb-1">הכנסה חודשית</span>
-                                <span class="text-xl md:text-3xl font-black text-white" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
+                                <span class="text-[#5c4075] text-[10px] md:text-xs font-black block mb-1">הכנסה חודשית</span>
+                                <span class="text-xl md:text-3xl font-black text-[#1a0730]" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
                             </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-[#2d0c4f]/10 border border-[#2d0c4f]/20 text-[#2d0c4f] rounded-xl flex items-center justify-center">
                                 <i data-lucide="wallet" class="w-5 h-5"></i>
                             </div>
                         </div>
 
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
-                                <span class="text-slate-400 text-[10px] md:text-xs font-bold block mb-1">פגישות שבוצעו</span>
-                                <span class="text-xl md:text-3xl font-black text-white" x-text="getCompletedPersonalSessions() + ' / ' + getActiveClientsCount()"></span>
+                                <span class="text-[#5c4075] text-[10px] md:text-xs font-black block mb-1">פגישות שבוצעו</span>
+                                <span class="text-xl md:text-3xl font-black text-[#1a0730]" x-text="getCompletedPersonalSessions() + ' / ' + getActiveClientsCount()"></span>
                             </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-[#fbbf24]/15 border border-[#fbbf24]/30 text-[#92400e] rounded-xl flex items-center justify-center">
                                 <i data-lucide="dumbbell" class="w-5 h-5"></i>
                             </div>
                         </div>
 
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
-                                <span class="text-slate-400 text-[10px] md:text-xs font-bold block mb-1">בנפילה / קושי</span>
+                                <span class="text-[#5c4075] text-[10px] md:text-xs font-black block mb-1">בנפילה / קושי</span>
                                 <span class="text-xl md:text-3xl font-black text-red-400" x-text="getNeedsAttentionCount()"></span>
                             </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl flex items-center justify-center">
                                 <i data-lucide="alert-circle" class="w-5 h-5"></i>
                             </div>
                         </div>
@@ -2377,7 +2347,7 @@
                         <!-- מתאמנים הדורשים יחס מיוחד -->
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[350px] md:h-[400px]">
                             <div class="p-4 md:p-6 border-b border-slate-800 flex justify-between items-center">
-                                <h3 class="font-black text-sm md:text-base text-slate-200 flex items-center gap-2">
+                                <h3 class="font-black text-sm md:text-base text-[#1a0730] flex items-center gap-2">
                                     <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
                                     <span>צריכים יחס מיוחד (נפילה/קושי)</span>
                                 </h3>
@@ -2387,7 +2357,7 @@
                                 <template x-for="client in getAttentionClients()" :key="client.id">
                                     <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-slate-700 transition">
                                         <div class="space-y-1">
-                                            <button @click="selectClient(client.id)" class="text-xs md:text-sm font-bold text-slate-200 hover:text-emerald-400 text-right block" x-text="client.name"></button>
+                                            <button @click="selectClient(client.id)" class="text-xs md:text-sm font-bold text-[#1a0730] hover:text-emerald-400 text-right block" x-text="client.name"></button>
                                             <span class="text-[10px] text-red-400 bg-red-950/40 px-1.5 py-0.5 rounded border border-red-900/40 block truncate max-w-[180px] md:max-w-xs" x-text="getLastNote(client) || 'סומן ללא פירוט'"></span>
                                         </div>
                                         <div class="flex items-center gap-1.5">
@@ -2410,7 +2380,7 @@
                         <!-- משימות ליווי להיום -->
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[350px] md:h-[400px]">
                             <div class="p-4 md:p-6 border-b border-slate-800">
-                                <h3 class="font-black text-sm md:text-base text-slate-200 flex items-center gap-2">
+                                <h3 class="font-black text-sm md:text-base text-[#1a0730] flex items-center gap-2">
                                     <i data-lucide="calendar" class="w-5 h-5 text-emerald-400"></i>
                                     <span>משימות ופגישות קרובות</span>
                                 </h3>
@@ -2419,7 +2389,7 @@
                                 <template x-for="task in getUpcomingTasks()" :key="task.id">
                                     <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-slate-700 transition">
                                         <div class="space-y-1">
-                                            <button @click="selectClient(task.id)" class="text-xs md:text-sm font-bold text-slate-200 hover:text-emerald-400 text-right block" x-text="task.name"></button>
+                                            <button @click="selectClient(task.id)" class="text-xs md:text-sm font-bold text-[#1a0730] hover:text-emerald-400 text-right block" x-text="task.name"></button>
                                             <span class="text-[10px] block max-w-[180px] md:max-w-xs truncate" :class="task.type === 'zoom' ? 'text-blue-400' : 'text-amber-400'" x-text="task.desc"></span>
                                         </div>
                                         <div class="flex items-center gap-1.5">
@@ -2812,7 +2782,7 @@
                 <div x-show="activeTab === 'schedule'" x-cloak class="space-y-6">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
                         <div class="flex items-center gap-4 justify-between w-full md:w-auto">
-                            <h3 class="text-sm md:text-xl font-bold text-slate-200">יומן אימונים ושיחות</h3>
+                            <h3 class="text-sm md:text-xl font-black text-[#1a0730]">יומן אימונים ושיחות</h3>
                             <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
                                 <button @click="weekOffset--" class="p-2 hover:bg-slate-800 text-slate-400"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
                                 <span class="px-3 py-1.5 text-[10px] md:text-xs font-bold text-slate-200" x-text="getWeekRangeLabel()"></span>
@@ -4583,7 +4553,7 @@
 
                         <div x-show="detailSubTab === 'payments'" x-cloak class="space-y-6">
                             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
-                                <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 mb-4">מעקב תשלומים (מסלול 3 חודשים)</h4>
+                                <h4 class="text-xs md:text-sm font-bold text-[#1a0730] border-b border-slate-800 pb-2 mb-4">מעקב תשלומים (מסלול 3 חודשים)</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <template x-for="(payment, pIdx) in (currentClient?.payments || [])" :key="pIdx">
                                         <div :class="payment.status === 'paid' ? 'border-emerald-500/50 bg-emerald-950/20' : 'border-slate-800 bg-slate-950'" class="border rounded-2xl p-4 flex flex-col justify-between h-36 shadow-sm">
@@ -4613,7 +4583,7 @@
                 <div x-show="activeTab === 'finances'" x-cloak class="space-y-6 animate-fade-in text-[#1a0730]">
                     
                     <!-- כותרת ראשית ופעולות מהירות -->
-                    <div class="bg-gradient-to-r from-[#1a0730] via-[#0b332b] to-[#1a0730] border border-[#381061] rounded-3xl p-5 md:p-7 shadow-2xl text-white relative overflow-hidden">
+                    <div class="bg-gradient-to-r from-[#1a0730] via-[#2d0c4f] to-[#1a0730] border border-[#381061] rounded-3xl p-5 md:p-7 shadow-2xl text-white relative overflow-hidden">
                         <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-[#22c55e]/10 rounded-full blur-2xl pointer-events-none"></div>
                         <div class="absolute right-10 -top-10 w-48 h-48 bg-[#fbbf24]/10 rounded-full blur-2xl pointer-events-none"></div>
                         
