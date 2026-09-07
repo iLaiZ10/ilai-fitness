@@ -1242,8 +1242,8 @@
                             <div @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-gradient-to-br from-[#082722] to-[#123830] border border-[#174e43] rounded-3xl p-4 md:p-5 text-[#fbf8f2] shadow-xl hover:shadow-2xl transition cursor-pointer flex items-center justify-between group">
                                 <div class="space-y-1">
                                     <span class="text-[10px] text-[#86efac] font-black uppercase tracking-wider block">תוכנית אימונים חיה 🏋️‍♂️</span>
-                                    <h4 class="text-sm md:text-base font-black text-white group-hover:text-[#86efac] transition">התחל אימון בחדר כושר</h4>
-                                    <p class="text-[11px] text-[#93c7bb]">רישום משקלים, טיימר מנוחה, חישוב פלטות ו-PRs</p>
+                                    <h4 class="text-sm md:text-base font-black text-white group-hover:text-[#86efac] transition">תוכנית אימונים 🏋️‍♂️</h4>
+                                    <p class="text-[11px] text-[#93c7bb]">צפייה בתוכנית השבועית, תרגילים, סטים ומשקלי יעד</p>
                                 </div>
                                 <div class="p-3 rounded-2xl bg-[#13443a] text-[#86efac] group-hover:scale-110 transition shadow-md">
                                     <i data-lucide="arrow-left" class="w-5 h-5"></i>
@@ -1267,27 +1267,25 @@
                     <!-- תוכן לשונית 2: אימונים אינטראקטיביים (Gym Mode 2.0) -->
                     <div x-show="portalActiveSubTab === 'workouts'" x-cloak class="space-y-4">
                         
-                        <!-- באנר בלוק אימונים שבועי ושם האימון המומלץ להיום -->
+                        <!-- באנר בלוק אימונים שבועי (מידע על הבלוק ושבוע נוכחי) -->
                         <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days.length > 0">
                             <div class="bg-[#082722] border border-[#174e43] rounded-3xl p-4 md:p-5 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative overflow-hidden">
                                 <div class="flex items-center gap-3 relative z-10">
                                     <div class="p-2.5 rounded-2xl bg-[#86efac]/20 text-[#86efac] border border-[#86efac]/30 shrink-0">
-                                        <i data-lucide="zap" class="w-5 h-5 text-[#86efac]"></i>
+                                        <i data-lucide="dumbbell" class="w-5 h-5 text-[#86efac]"></i>
                                     </div>
                                     <div>
                                         <div class="flex items-center gap-2 flex-wrap">
-                                            <span class="text-[10px] bg-[#86efac] text-[#082722] font-black px-2 py-0.5 rounded-full" x-text="getHebrewDayOfWeek()"></span>
-                                            <span class="text-[11px] text-[#86efac] font-bold" x-text="(portalClient.workoutPlan.blockName || 'בלוק היכרות והסתגלות') + ' • ' + (portalClient.workoutPlan.currentWeek || 'שבוע 1')"></span>
+                                            <span class="text-[10px] bg-[#86efac] text-[#082722] font-black px-2.5 py-0.5 rounded-full" x-text="getHebrewDayOfWeek()"></span>
+                                            <span class="text-xs text-[#86efac] font-bold" x-text="(portalClient.workoutPlan.blockName || 'בלוק אימונים') + ' • ' + (portalClient.workoutPlan.currentWeek || 'שבוע 1')"></span>
                                         </div>
-                                        <h3 class="text-sm md:text-base font-black text-white mt-0.5" x-text="portalClient.workoutPlan.days[getTodayRecommendedWorkoutIndex(portalClient)]?.name || 'אימון יומי'"></h3>
+                                        <h3 class="text-sm md:text-base font-black text-white mt-1" x-text="portalClient.workoutPlan.days[portalSelectedWorkoutDayIdx]?.name || 'תוכנית אימונים'"></h3>
                                     </div>
                                 </div>
-                                <button type="button" 
-                                        @click="portalSelectedWorkoutDayIdx = getTodayRecommendedWorkoutIndex(portalClient); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
-                                        class="bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black px-4 py-2.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md shadow-[#86efac]/20 transition cursor-pointer shrink-0 relative z-10">
-                                    <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
-                                    <span>🚀 התחל אימון זה</span>
-                                </button>
+                                <div class="flex items-center gap-2 bg-[#13443a] border border-[#1f5c50] px-3.5 py-2 rounded-2xl text-xs font-bold text-[#86efac] shrink-0">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                    <span x-text="(portalClient.workoutPlan.days.length) + ' ימי אימון בתוכנית'"></span>
+                                </div>
                             </div>
                         </template>
 
@@ -1309,26 +1307,26 @@
                             </div>
                         </template>
 
-                        <!-- סרגל התקדמות ביצוע אימון חי -->
-                        <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days[portalSelectedWorkoutDayIdx]">
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-xl space-y-2.5">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        <span class="text-xs font-black text-[#082722]">סטים שהושלמו באימון זה:</span>
-                                        <span class="text-xs font-black text-[#22c55e]" x-text="getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).completed + ' / ' + getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).total + ' סטים 🏋️‍♂️'"></span>
-                                    </div>
-                                    <span class="text-xs font-black text-[#082722] bg-[#fbf8f2] border border-[#e5dfd3] px-2.5 py-1 rounded-xl" x-text="getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '% הושלם'"></span>
-                                </div>
-                                <div class="h-2.5 w-full bg-[#f0eae1] rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-[#86efac] to-[#22c55e] transition-all duration-300 rounded-full"
-                                         :style="'width: ' + getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></div>
-                                </div>
-                            </div>
-                        </template>
-
-                        <!-- טיימר מנוחה חכם + מחשבון פלטות למוט -->
+                        <!-- סרגל התקדמות ביצוע וטיימר מנוחה חכם -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- סרגל סטים שהושלמו -->
+                            <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days[portalSelectedWorkoutDayIdx]">
+                                <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 shadow-md flex flex-col justify-between gap-2">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            <span class="text-xs font-black text-[#082722]">סטים שבוצעו:</span>
+                                            <span class="text-xs font-black text-[#22c55e]" x-text="getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).completed + ' / ' + getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).total"></span>
+                                        </div>
+                                        <span class="text-[11px] font-black text-[#082722] bg-[#fbf8f2] border border-[#e5dfd3] px-2 py-0.5 rounded-lg" x-text="getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></span>
+                                    </div>
+                                    <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-[#86efac] to-[#22c55e] transition-all duration-300 rounded-full"
+                                             :style="'width: ' + getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></div>
+                                    </div>
+                                </div>
+                            </template>
+
                             <!-- טיימר מנוחה -->
                             <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex items-center justify-between shadow-md">
                                 <div class="flex items-center gap-3">
@@ -1336,7 +1334,7 @@
                                         <i data-lucide="timer" class="w-5 h-5"></i>
                                     </div>
                                     <div>
-                                        <span class="text-[10px] text-[#5f756e] font-bold block">טיימר מנוחה בין סטים:</span>
+                                        <span class="text-[10px] text-[#5f756e] font-bold block">טיימר מנוחה:</span>
                                         <span class="text-xl font-black text-[#082722]" x-text="formatRestTimer(restTimerSeconds)"></span>
                                     </div>
                                 </div>
@@ -1347,23 +1345,6 @@
                                     <button type="button" @click="stopRestTimer()" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 p-1.5 rounded-xl cursor-pointer" title="אפס טיימר">
                                         <i data-lucide="square" class="w-4 h-4"></i>
                                     </button>
-                                </div>
-                            </div>
-
-                            <!-- מחשבון פלטות למוט -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex items-center justify-between shadow-md">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
-                                        <i data-lucide="disc" class="w-5 h-5"></i>
-                                    </div>
-                                    <div>
-                                        <span class="text-[10px] text-[#5f756e] font-bold block">מחשבון פלטות למוט:</span>
-                                        <span class="text-xs font-black text-[#082722]">חישוב פלטות לכל צד</span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <input type="number" step="2.5" placeholder="משקל" x-model="plateCalcWeight" class="w-20 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1 text-xs font-bold text-center text-[#082722] focus:outline-none focus:border-[#22c55e]">
-                                    <button type="button" @click="openPlateCalcModal = true" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer">חשב</button>
                                 </div>
                             </div>
                         </div>
@@ -5618,114 +5599,6 @@
         </div>
     </div>
 
-    <!-- מודל מחשבון פלטות למוט אולימפי (Barbell Plate Calculator) -->
-    <div x-show="openPlateCalculatorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openPlateCalculatorModal = false">
-        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
-                <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                        <i data-lucide="disc" class="w-5 h-5 text-[#86efac]"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-black text-[#082722]">מחשבון פלטות למוט 🏋️‍♂️</h3>
-                        <p class="text-xs text-[#5f756e]">חישוב פלטות מדויק לכל צד של המוט האולימפי</p>
-                    </div>
-                </div>
-                <button @click="openPlateCalculatorModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <div class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs">
-                <!-- הגדרות משקל יעד ומשקל מוט -->
-                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל כולל להרמה (ק״ג):</label>
-                            <div class="flex items-center gap-1">
-                                <button type="button" @click="plateTargetWeight = Math.max(plateBarWeight, (parseFloat(plateTargetWeight) || 0) - 2.5)" class="w-8 h-8 rounded-xl bg-white border border-[#e5dfd3] text-[#082722] font-black hover:bg-slate-100 cursor-pointer">-</button>
-                                <input type="number" step="0.5" x-model.number="plateTargetWeight" placeholder="80" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-2 py-1.5 text-sm font-black text-[#082722] text-center focus:outline-none focus:border-[#22c55e]">
-                                <button type="button" @click="plateTargetWeight = (parseFloat(plateTargetWeight) || 0) + 2.5" class="w-8 h-8 rounded-xl bg-white border border-[#e5dfd3] text-[#082722] font-black hover:bg-slate-100 cursor-pointer">+</button>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל המוט (ק״ג):</label>
-                            <select x-model.number="plateBarWeight" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-3 py-2 text-xs font-bold text-[#082722] focus:outline-none focus:border-[#22c55e]">
-                                <option :value="20">20 ק״ג (מוט אולימפי גברים סטנדרטי)</option>
-                                <option :value="15">15 ק״ג (מוט אולימפי נשים)</option>
-                                <option :value="10">10 ק״ג (מוט טכניקה / קל)</option>
-                                <option :value="8">8 ק״ג (מוט W / EZ Bar)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- כפתורי קיצור מהירים למשקלים פופולריים -->
-                    <div class="flex items-center gap-1.5 flex-wrap pt-1">
-                        <span class="text-[10px] text-[#5f756e] font-bold">משקלים נפוצים:</span>
-                        <template x-for="tw in [40, 60, 80, 100, 120, 140, 160]" :key="tw">
-                            <button type="button" @click="plateTargetWeight = tw" :class="plateTargetWeight === tw ? 'bg-[#082722] text-[#86efac]' : 'bg-white text-[#082722]'" class="border border-[#e5dfd3] px-2 py-0.5 rounded-lg text-[10px] font-black transition cursor-pointer" x-text="tw + 'kg'"></button>
-                        </template>
-                    </div>
-                </div>
-
-                <!-- תוצאת חישוב לכל צד -->
-                <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e5dfd3] rounded-2xl p-4 text-center space-y-2 text-[#082722]">
-                    <span class="text-[10px] text-emerald-800 font-black block uppercase tracking-wider">משקל שיש להעמיס על כל צד 🏋️‍♂️</span>
-                    <div class="text-3xl font-black text-emerald-700" x-text="calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג'"></div>
-                    <span class="text-[10px] text-[#5f756e]" x-text="'מוט (' + plateBarWeight + ' ק״ג) + 2 צדדים × ' + calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג = ' + plateTargetWeight + ' ק״ג סה״כ'"></span>
-                </div>
-
-                <!-- פירוט הפלטות שיש להרכיב על כל צד -->
-                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3">
-                    <h4 class="font-black text-[#082722] text-xs border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
-                        <span>פלטות להרכבה על כל צד (מימין ומשמאל):</span>
-                        <span class="text-[10px] text-[#5f756e]">מבפנים החוצה ➔</span>
-                    </h4>
-
-                    <template x-if="calculatePlates(plateTargetWeight, plateBarWeight).plates.length === 0">
-                        <div class="text-center py-4 text-[#5f756e] text-xs italic">
-                            מוט ריק בלבד (אין צורך בהוספת פלטות)
-                        </div>
-                    </template>
-
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                        <template x-for="p in calculatePlates(plateTargetWeight, plateBarWeight).plates" :key="p.plate">
-                            <div class="bg-white border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between shadow-xs">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-8 h-8 rounded-xl font-black text-xs flex items-center justify-center border"
-                                          :class="{
-                                              'bg-red-500 text-white border-red-600': p.plate === 25,
-                                              'bg-blue-600 text-white border-blue-700': p.plate === 20,
-                                              'bg-amber-400 text-slate-900 border-amber-500': p.plate === 15,
-                                              'bg-emerald-600 text-white border-emerald-700': p.plate === 10,
-                                              'bg-slate-100 text-slate-800 border-slate-300': p.plate === 5,
-                                              'bg-slate-800 text-white border-slate-950': p.plate === 2.5,
-                                              'bg-slate-300 text-slate-900 border-slate-400': p.plate === 1.25
-                                          }"
-                                          x-text="p.plate"></span>
-                                    <span class="font-bold text-xs text-[#082722]" x-text="p.plate + ' ק״ג'"></span>
-                                </div>
-                                <span class="bg-[#082722] text-[#86efac] px-2.5 py-1 rounded-xl text-xs font-black" x-text="'× ' + p.count"></span>
-                            </div>
-                        </template>
-                    </div>
-
-                    <template x-if="calculatePlates(plateTargetWeight, plateBarWeight).remainder > 0">
-                        <div class="p-2.5 bg-amber-50 border border-amber-300 text-amber-900 rounded-xl text-[10px] font-bold">
-                            ⚠️ שארית של <span x-text="calculatePlates(plateTargetWeight, plateBarWeight).remainder"></span> ק״ג לא ניתנת להרכבה מדויקת עם פלטות סטנדרטיות (מינימום 1.25 ק״ג לצד).
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
-                <button type="button" @click="openPlateCalculatorModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
-                    סגור מחשבון
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- מודל הוספה מהירה של קלוריות ומאקרו (Quick Add Calorie Modal) -->
     <div x-show="openQuickAddCalorieModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openQuickAddCalorieModal = false">
         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-md w-full shadow-2xl space-y-4 animate-scale-up mx-2 text-[#082722]">
@@ -6668,9 +6541,7 @@
                 portalSelectedWorkoutDayIdx: 0,
                 portalScorecardViewDate: '',
                 openScorecardHistoryModal: false,
-                openPlateCalculatorModal: false,
-                plateTargetWeight: 80,
-                plateBarWeight: 20,
+                
                 portalNewCheckin: { weight: '', waist: '', adherenceNutrition: 10, adherenceTraining: 10, notes: '' },
                 portalTodayJournal: '',
                 portalCheckinSuccess: false,
@@ -10042,23 +9913,7 @@ saveWorkoutPlanWithToast() {
                     this.playVictorySound();
                 },
 
-                calculatePlates(targetWeight, barWeight = 20) {
-                    const target = parseFloat(targetWeight) || 0;
-                    const bar = parseFloat(barWeight) || 20;
-                    if (target <= bar) return { perSideWeight: 0, plates: [], remainder: 0 };
-                    const perSideWeight = (target - bar) / 2;
-                    let remaining = perSideWeight;
-                    const availablePlates = [25, 20, 15, 10, 5, 2.5, 1.25];
-                    const plates = [];
-                    availablePlates.forEach(p => {
-                        const count = Math.floor(remaining / p);
-                        if (count > 0) {
-                            plates.push({ plate: p, count: count });
-                            remaining = Math.round((remaining - (count * p)) * 100) / 100;
-                        }
-                    });
-                    return { perSideWeight, plates, remainder: remaining };
-                },
+                
 
                 getWorkoutCompletionPercent(dayIdx) {
                     const client = this.portalClient || this.currentClient;
