@@ -164,7 +164,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ILAICO">
-    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <!-- Canvas Confetti CDN (עבור שיאי כוח וצ'ק ליסט יומי) -->
@@ -370,15 +369,15 @@
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">חלבון</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetProtein + ' גרם'"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetProtein + 'ג\''"></span>
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">פחמימה</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetCarbs + ' גרם'"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetCarbs + 'ג\''"></span>
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">שומן</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetFat + ' גרם'"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetFat + 'ג\''"></span>
                                     </div>
                                 </div>
                             </template>
@@ -489,9 +488,9 @@
                             <span class="font-bold text-emerald-800">סה"כ ערכים בתפריט:</span>
                             <div class="flex gap-6 text-gray-800">
                                 <span>קלוריות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'calories')"></strong> קק"ל</span>
-                                <span>חלבון: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'protein') + ' גרם'"></strong></span>
-                                <span>פחמימות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'carbs') + ' גרם'"></strong></span>
-                                <span>שומנים: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'fat') + ' גרם'"></strong></span>
+                                <span>חלבון: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'protein') + ' ג\''"></strong></span>
+                                <span>פחמימות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'carbs') + ' ג\''"></strong></span>
+                                <span>שומנים: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'fat') + ' ג\''"></strong></span>
                             </div>
                         </div>
                     </div>
@@ -506,15 +505,15 @@
         <!-- סרגל צד (Sidebar) - Desktop -->
         <aside x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="hidden md:flex w-64 bg-[#082722] border-l border-[#133d35] flex-col shrink-0 text-[#fbf8f2]" x-cloak>
             <!-- לוגו מותג -->
-            <div class="p-5 border-b border-[#133d35] flex flex-col items-center justify-center">
-                <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-14 w-auto object-contain drop-shadow-sm">
-                <span class="text-[10px] text-[#93c7bb] font-bold tracking-widest mt-2">מערכת ניהול מתאמנים</span>
+            <div class="p-6 border-b border-[#133d35] flex flex-col items-center justify-center">
+                <span class="text-2xl font-black tracking-wider text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></span>
+                <span class="text-[11px] text-[#93c7bb] font-semibold tracking-widest mt-1">מערכת ניהול מתאמנים</span>
             </div>
 
             <!-- ניווט טאבים -->
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <button 
-                    @click="activeTab = 'dashboard'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'dashboard'; selectedClientId = null"
                     :class="activeTab === 'dashboard' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
@@ -522,7 +521,7 @@
                 </button>
                 
                 <button 
-                    @click="activeTab = 'clients'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'clients'; selectedClientId = null"
                     :class="activeTab === 'clients' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="users" class="w-5 h-5"></i>
@@ -530,7 +529,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'schedule'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'schedule'; selectedClientId = null"
                     :class="activeTab === 'schedule' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="calendar-days" class="w-5 h-5"></i>
@@ -538,7 +537,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'finances'; selectedClientId = null"
                     :class="activeTab === 'finances' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
@@ -546,7 +545,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'settings'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'settings'; selectedClientId = null"
                     :class="activeTab === 'settings' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="settings" class="w-5 h-5"></i>
@@ -570,25 +569,21 @@
 
         <!-- סרגל ניווט תחתון לנייד (Mobile Bottom Nav) -->
         <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#082722]/95 backdrop-blur-md border-t border-[#133d35] flex items-center justify-around z-50 shadow-2xl text-[#93c7bb]" x-cloak>
-            <button @click="activeTab = 'dashboard'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'dashboard' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">לוח בקרה</span>
             </button>
-            <button @click="activeTab = 'clients'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'clients' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'clients'; selectedClientId = null" :class="activeTab === 'clients' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="users" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">מתאמנים</span>
             </button>
-            <button @click="activeTab = 'schedule'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'schedule' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'schedule'; selectedClientId = null" :class="activeTab === 'schedule' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="calendar-days" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">יומן</span>
             </button>
-            <button @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'finances' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="credit-card" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">פיננסים</span>
-            </button>
-            <button @click="activeTab = 'settings'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'settings' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
-                <i data-lucide="settings" class="w-5 h-5"></i>
-                <span class="text-[9px] mt-0.5 font-bold">הגדרות</span>
             </button>
             <button @click="logoutCoach()" class="flex flex-col items-center justify-center flex-1 py-1 text-[#93c7bb] hover:text-rose-400">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
@@ -646,9 +641,12 @@
                         <div class="absolute -left-10 -bottom-10 w-36 h-36 bg-[#86efac]/10 rounded-full blur-2xl pointer-events-none"></div>
                         <div class="absolute -right-10 -top-10 w-36 h-36 bg-[#4ade80]/10 rounded-full blur-2xl pointer-events-none"></div>
 
-                        <div class="space-y-3">
-                            <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-16 w-auto mx-auto object-contain drop-shadow-md">
-                            <h3 class="text-sm font-bold text-[#fbf8f2]">כניסת מאמן בלבד 🔒</h3>
+                        <div class="space-y-2">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-[#051c17] border border-[#174e43] text-[#86efac] flex items-center justify-center text-xl font-bold shadow-inner">
+                                <i data-lucide="lock" class="w-6 h-6"></i>
+                            </div>
+                            <h2 class="text-2xl font-black text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></h2>
+                            <h3 class="text-base font-bold text-[#fbf8f2]">כניסת מאמן בלבד 🔒</h3>
                             <p class="text-xs text-[#93c7bb]">הזן קוד גישה אישי לפתיחת מערכת ה-CRM</p>
                         </div>
 
@@ -689,113 +687,12 @@
                 <!-- 0. טאב שאלון קליטה דיגיטלי ללקוח -->
                 <div x-show="activeTab === 'intake'" x-cloak class="max-w-xl mx-auto py-6 md:py-12 space-y-6">
                     <div class="text-center space-y-2">
-                        <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-14 w-auto mx-auto object-contain mb-1">
+                        <span class="text-2xl font-black tracking-wider text-emerald-500">IlaiCo</span>
                         <h2 class="text-xl md:text-2xl font-black text-white">שאלון קליטה דיגיטלי למתאמן</h2>
                         <p class="text-xs text-slate-400">מאמן ראשי: אילאי. מלא את הפרטים הבאים כדי להתחיל את הליווי שלך בצורה הטובה ביותר.</p>
                     </div>
 
-                                        <!-- כרטיס 3 הסליידים של אילאי (Personal Journey Story Slides) -->
-                    <div class="bg-gradient-to-br from-[#082722] to-[#041714] border border-[#174e43] rounded-3xl p-5 md:p-6 shadow-2xl relative overflow-hidden text-[#fbf8f2] space-y-4">
-                        <!-- עיטור זוהר ברקע -->
-                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-[#86efac]/10 rounded-full blur-3xl pointer-events-none"></div>
-                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#4ade80]/10 rounded-full blur-2xl pointer-events-none"></div>
-
-                        <!-- כותרת ראשית ואינדיקטור סליידים -->
-                        <div class="flex items-center justify-between border-b border-[#133d35] pb-3 relative z-10">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-8 h-8 rounded-xl bg-[#0d332c] border border-[#86efac]/30 text-[#86efac] font-black text-sm flex items-center justify-center shadow-md">
-                                    <i data-lucide="sparkles" class="w-4 h-4"></i>
-                                </span>
-                                <div>
-                                    <h3 class="text-xs md:text-sm font-black text-[#fbf8f2]">הסיפור האישי שלי — אילאי 👑</h3>
-                                    <p class="text-[10px] text-[#93c7bb]">למה אני כאן כדי להוביל אותך לשינוי אמיתי</p>
-                                </div>
-                            </div>
-
-                            <!-- נקודות ניווט 1 / 2 / 3 -->
-                            <div class="flex items-center gap-1.5 bg-[#041714] border border-[#133d35] p-1 rounded-xl">
-                                <template x-for="idx in [0, 1, 2]" :key="idx">
-                                    <button type="button" 
-                                            @click="intakeStorySlide = idx; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
-                                            :class="intakeStorySlide === idx ? 'bg-[#86efac] text-[#082722] font-black px-2.5 py-1' : 'text-[#93c7bb] hover:text-white px-2 py-1 font-bold'"
-                                            class="rounded-lg text-[10px] transition cursor-pointer"
-                                            x-text="'סלייד ' + (idx + 1)">
-                                    </button>
-                                </template>
-                            </div>
-                        </div>
-
-                        <!-- תוכן 3 הסליידים -->
-                        <div class="relative z-10 min-h-[110px] flex items-center">
-                            <!-- סלייד 1 -->
-                            <div x-show="intakeStorySlide === 0" x-transition.opacity.duration.300ms class="space-y-2.5 w-full">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 1 מתוך 3 • נקודת המפנה ⏳</span>
-                                </div>
-                                <h4 class="text-sm md:text-base font-black text-[#86efac] leading-relaxed">
-                                    "שקלתי 140 ק"ג בגיל 15 והבנתי שאם לא אקח את עצמי בידיים אולי לא אגיע לגיל 20 בכלל"
-                                </h4>
-                                <p class="text-[11px] text-[#c0dfd7] leading-relaxed">
-                                    ההחלטה שלקחתי באותו הרגע שינתה לי את החיים. הבנתי שבריאות וכושר הם לא מותרות – הם הבסיס להכל.
-                                </p>
-                            </div>
-
-                            <!-- סלייד 2 -->
-                            <div x-show="intakeStorySlide === 1" x-transition.opacity.duration.300ms class="space-y-2.5 w-full" x-cloak>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 2 מתוך 3 • השיעור הגדול 💡</span>
-                                </div>
-                                <h4 class="text-sm md:text-base font-black text-[#86efac] leading-relaxed">
-                                    "ירדתי במשקל דרסטית ואיבדתי את רוב המסת שריר שלי - היום למדתי את הטעות"
-                                </h4>
-                                <p class="text-[11px] text-[#c0dfd7] leading-relaxed">
-                                    ירידה במשקל ללא ליווי מקצועי גרמה לי לאבד שריר ואנרגיה. היום אני מלמד אותך איך לרדת נכון, לשמור על השריר ולבנות גוף חטוב ובריא.
-                                </p>
-                            </div>
-
-                            <!-- סלייד 3 -->
-                            <div x-show="intakeStorySlide === 2" x-transition.opacity.duration.300ms class="space-y-2.5 w-full" x-cloak>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 3 מתוך 3 • הצמיחה והניצחון 🛡️</span>
-                                </div>
-                                <h4 class="text-sm md:text-base font-black text-[#86efac] leading-relaxed">
-                                    "הצבא היה המקום שלא מצאתי את עצמי בו וגם פגע לי בדבר החזק שלי -האימונים והתזונה אבל למדתי לצאת מזה ואני עדיין חי איתו היום"
-                                </h4>
-                                <p class="text-[11px] text-[#c0dfd7] leading-relaxed">
-                                    פיתחתי שיטה מנצחת שעובדת גם בתנאים הכי עמוסים ומאתגרים. בוא נבנה יחד את השינוי שמחזיק שלך!
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- כפתורי מעבר בין סליידים -->
-                        <div class="flex items-center justify-between pt-2 border-t border-[#133d35] relative z-10 text-xs">
-                            <button type="button" 
-                                    @click="intakeStorySlide = Math.max(0, intakeStorySlide - 1); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
-                                    :disabled="intakeStorySlide === 0"
-                                    :class="intakeStorySlide === 0 ? 'opacity-30 cursor-not-allowed text-[#93c7bb]' : 'text-[#86efac] hover:text-white cursor-pointer'"
-                                    class="flex items-center gap-1 font-bold">
-                                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                                <span>הקודם</span>
-                            </button>
-
-                            <template x-if="intakeStorySlide < 2">
-                                <button type="button" 
-                                        @click="intakeStorySlide = intakeStorySlide + 1; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
-                                        class="bg-[#0d332c] hover:bg-[#13443a] text-[#86efac] border border-[#86efac]/30 px-3.5 py-1.5 rounded-xl font-black flex items-center gap-1.5 transition cursor-pointer">
-                                    <span>לסלייד הבא</span>
-                                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-                                </button>
-                            </template>
-
-                            <template x-if="intakeStorySlide === 2">
-                                <span class="text-[10px] text-[#86efac] font-black flex items-center gap-1">
-                                    <span>✨ עכשיו תורך להתחיל! מלא את השאלון למטה 👇</span>
-                                </span>
-                            </template>
-                        </div>
-                    </div>
-
-<!-- מד התקדמות (Progress Indicator) -->
+                    <!-- מד התקדמות (Progress Indicator) -->
                     <template x-if="!intakeSuccess">
                         <div class="space-y-2">
                             <div class="flex justify-between text-[9px] sm:text-[10px] text-slate-450 font-bold px-1">
@@ -1023,8 +920,8 @@
                         
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                             <div class="space-y-1">
-                                <div class="flex items-center gap-3">
-                                    <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-10 md:h-12 w-auto object-contain">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl md:text-3xl font-black tracking-wider text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></span>
                                     <span class="text-[10px] bg-[#13443a] text-[#86efac] font-bold px-2.5 py-0.5 rounded-full border border-[#1b5e50]">ליווי פרימיום</span>
                                 </div>
                                 <h2 class="text-xl md:text-2xl font-black text-white" x-text="'היי ' + (portalClient?.name || 'מתאמן') + '! 👋'"></h2>
@@ -1671,7 +1568,7 @@
                                             </template>
                                             <span x-text="day.label"></span>
                                             <template x-if="getConsumedCaloriesForDate(portalClient, day.date) > 0">
-                                                <span class="text-[9px] font-black opacity-80" x-text="getConsumedCaloriesForDate(portalClient, day.date) + ' קק״ל'"></span>
+                                                <span class="text-[9px] font-black opacity-80" x-text="getConsumedCaloriesForDate(portalClient, day.date) + ' קל\''"></span>
                                             </template>
                                         </button>
                                     </template>
@@ -1707,7 +1604,7 @@
                                 <!-- יעד קלורי -->
                                 <div class="text-center sm:text-right space-y-0.5">
                                     <span class="text-[10px] text-[#93c7bb] font-bold block">יעד יומי שהוגדר</span>
-                                    <div class="text-xl md:text-2xl font-black text-white" x-text="(portalClient?.macroCalculated?.targetCalories || 2000) + ' קק״ל'"></div>
+                                    <div class="text-xl md:text-2xl font-black text-white" x-text="(portalClient?.macroCalculated?.targetCalories || 2000) + ' קל\''"></div>
                                     <span class="text-[9px] text-[#5f756e]">לפי תוכנית המאמן</span>
                                 </div>
 
@@ -1721,7 +1618,7 @@
                                 <!-- סך שנאכל עד כה -->
                                 <div class="text-center sm:text-left space-y-0.5">
                                     <span class="text-[10px] text-[#93c7bb] font-bold block" x-text="(!portalNutritionViewDate || portalNutritionViewDate === getTodayDate()) ? 'נאכל היום עד כה' : 'נאכל בתאריך זה'"></span>
-                                    <div class="text-xl md:text-2xl font-black text-white" x-text="getTodayConsumedCalories(portalClient) + ' קק״ל'"></div>
+                                    <div class="text-xl md:text-2xl font-black text-white" x-text="getTodayConsumedCalories(portalClient) + ' קל\''"></div>
                                     <span class="text-[9px] text-[#86efac]" x-text="Math.round((getTodayConsumedCalories(portalClient) / (portalClient?.macroCalculated?.targetCalories || 2000)) * 100) + '% מהיעד'"></span>
                                 </div>
                             </div>
@@ -1979,14 +1876,14 @@
                                                 <div class="bg-white border border-[#e5dfd3] p-3 rounded-xl space-y-1.5 shadow-sm text-xs">
                                                     <div class="flex items-center justify-between font-bold text-[#082722]">
                                                         <span x-text="item.name"></span>
-                                                        <span class="text-[#22c55e] font-black" x-text="item.cal + ' קק״ל'"></span>
+                                                        <span class="text-[#22c55e] font-black" x-text="item.cal + ' קל\''"></span>
                                                     </div>
                                                     <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
-                                                        <span x-text="'ח: ' + item.pro + ' גרם'"></span>
+                                                        <span x-text="'ח: ' + item.pro + 'ג\''"></span>
                                                         <span>•</span>
-                                                        <span x-text="'פ: ' + item.carb + ' גרם'"></span>
+                                                        <span x-text="'פ: ' + item.carb + 'ג\''"></span>
                                                         <span>•</span>
-                                                        <span x-text="'ש: ' + item.fat + ' גרם'"></span>
+                                                        <span x-text="'ש: ' + item.fat + 'ג\''"></span>
                                                     </div>
                                                     <template x-if="item.swap">
                                                         <div class="bg-emerald-50/70 border border-emerald-200/60 p-2 rounded-lg text-[10px] text-emerald-900 mt-1">
@@ -2026,13 +1923,13 @@
                                         <div class="flex items-center gap-3">
                                             <!-- סיכום קלוריות ומאקרו לארוחה -->
                                             <div class="text-[11px] font-black text-[#082722] bg-[#fbf8f2] px-2.5 py-1 rounded-xl border border-[#e5dfd3]">
-                                                <span class="text-emerald-600" x-text="getMealTypeSummary(portalClient, mCategory.type).calories + ' קק״ל'"></span>
+                                                <span class="text-emerald-600" x-text="getMealTypeSummary(portalClient, mCategory.type).calories + ' קל\''"></span>
                                                 <span class="text-slate-400 mx-1">|</span>
-                                                <span class="text-slate-600" x-text="'ח: ' + getMealTypeSummary(portalClient, mCategory.type).protein + ' גרם'"></span>
+                                                <span class="text-slate-600" x-text="'ח: ' + getMealTypeSummary(portalClient, mCategory.type).protein + 'ג\''"></span>
                                                 <span class="text-slate-400 mx-1">•</span>
-                                                <span class="text-slate-600" x-text="'פ: ' + getMealTypeSummary(portalClient, mCategory.type).carbs + ' גרם'"></span>
+                                                <span class="text-slate-600" x-text="'פ: ' + getMealTypeSummary(portalClient, mCategory.type).carbs + 'ג\''"></span>
                                                 <span class="text-slate-400 mx-1">•</span>
-                                                <span class="text-slate-600" x-text="'ש: ' + getMealTypeSummary(portalClient, mCategory.type).fat + ' גרם'"></span>
+                                                <span class="text-slate-600" x-text="'ש: ' + getMealTypeSummary(portalClient, mCategory.type).fat + 'ג\''"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -2061,7 +1958,7 @@
 
                                                 <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 border-[#e5dfd3]/60 pt-2 sm:pt-0">
                                                     <div class="text-xs font-bold">
-                                                        <span class="text-emerald-700 font-black" x-text="log.calories + ' קק״ל'"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="log.calories + ' קל\''"></span>
                                                         <span class="text-[10px] text-[#5f756e] mr-1.5" x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
                                                     </div>
                                                     <button type="button" @click="deletePortalFoodLog(log.id)" class="text-red-500 hover:text-white hover:bg-red-600 bg-red-50 border border-red-200/80 px-2 py-1 rounded-xl transition cursor-pointer flex items-center gap-1 text-[11px] font-bold shadow-xs shrink-0" title="הסר פריט זה שהוזן בטעות">
@@ -3683,7 +3580,7 @@
                                         <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-1.5 text-center">
                                             <span class="font-extrabold text-[11px] text-[#082722] block truncate" x-text="pr.name"></span>
                                             <span class="text-base font-black text-[#082722] block" x-text="pr.weight > 0 ? (pr.weight + ' ק״ג') : '-'"></span>
-                                            <span class="text-[9px] text-[#5f756e] block" x-text="pr.weight > 0 ? ('× ' + pr.reps + ' חזרות') : 'טרם נרשם'"></span>
+                                            <span class="text-[9px] text-[#5f756e] block" x-text="pr.weight > 0 ? ('× ' + pr.reps + ' חז\'') : 'טרם נרשם'"></span>
                                         </div>
                                     </template>
                                 </div>
@@ -4151,15 +4048,15 @@
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">חלבון</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + ' גרם'"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + 'ג\''"></span>
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">פחמימה</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + ' גרם'"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + 'ג\''"></span>
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">שומן</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + ' גרם'"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + 'ג\''"></span>
                                 </div>
                             </div>
 
@@ -4282,7 +4179,7 @@
                                                     </template>
                                                     <span x-text="day.label"></span>
                                                     <template x-if="getCoachDayTotals(currentClient, day.date).calories > 0">
-                                                        <span class="text-[9px] font-black opacity-80" x-text="getCoachDayTotals(currentClient, day.date).calories + ' קק״ל'"></span>
+                                                        <span class="text-[9px] font-black opacity-80" x-text="getCoachDayTotals(currentClient, day.date).calories + ' קל\''"></span>
                                                     </template>
                                                 </button>
                                             </template>
@@ -4322,21 +4219,21 @@
                                             <!-- חלבון -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">חלבון</span>
-                                                <div class="text-base md:text-lg font-black text-[#86efac]" x-text="getCoachDayTotals(currentClient).protein + ' / ' + (currentClient?.macroCalculated?.targetProtein || 160) + ' גרם'"></div>
+                                                <div class="text-base md:text-lg font-black text-[#86efac]" x-text="getCoachDayTotals(currentClient).protein + ' / ' + (currentClient?.macroCalculated?.targetProtein || 160) + 'ג\''"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם חלבון</span>
                                             </div>
 
                                             <!-- פחמימה -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">פחמימות</span>
-                                                <div class="text-base md:text-lg font-black text-[#38bdf8]" x-text="getCoachDayTotals(currentClient).carbs + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 220) + ' גרם'"></div>
+                                                <div class="text-base md:text-lg font-black text-[#38bdf8]" x-text="getCoachDayTotals(currentClient).carbs + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 220) + 'ג\''"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם פחמימה</span>
                                             </div>
 
                                             <!-- שומן -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">שומנים</span>
-                                                <div class="text-base md:text-lg font-black text-[#fbbf24]" x-text="getCoachDayTotals(currentClient).fat + ' / ' + (currentClient?.macroCalculated?.targetFat || 65) + ' גרם'"></div>
+                                                <div class="text-base md:text-lg font-black text-[#fbbf24]" x-text="getCoachDayTotals(currentClient).fat + ' / ' + (currentClient?.macroCalculated?.targetFat || 65) + 'ג\''"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם שומן</span>
                                             </div>
                                         </div>
@@ -4357,13 +4254,13 @@
                                                     </div>
                                                     <!-- סיכום ארוחה -->
                                                     <div class="text-[10px] font-bold text-[#082722] bg-white px-2 py-0.5 rounded-lg border border-[#e5dfd3]">
-                                                        <span class="text-emerald-700 font-black" x-text="getCoachMealSummary(currentClient, mealInfo.type).calories + ' קק״ל'"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="getCoachMealSummary(currentClient, mealInfo.type).calories + ' קל\''"></span>
                                                         <span class="text-slate-400 mx-1">|</span>
-                                                        <span x-text="'ח: ' + getCoachMealSummary(currentClient, mealInfo.type).protein + ' גרם'"></span>
+                                                        <span x-text="'ח: ' + getCoachMealSummary(currentClient, mealInfo.type).protein + 'ג\''"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'פ: ' + getCoachMealSummary(currentClient, mealInfo.type).carbs + ' גרם'"></span>
+                                                        <span x-text="'פ: ' + getCoachMealSummary(currentClient, mealInfo.type).carbs + 'ג\''"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'ש: ' + getCoachMealSummary(currentClient, mealInfo.type).fat + ' גרם'"></span>
+                                                        <span x-text="'ש: ' + getCoachMealSummary(currentClient, mealInfo.type).fat + 'ג\''"></span>
                                                     </div>
                                                 </div>
 
@@ -4396,7 +4293,7 @@
                                                                         <div class="text-[10px] text-[#5f756e] flex items-center gap-1.5 flex-wrap">
                                                                             <span x-text="log.time || ''"></span>
                                                                             <template x-if="log.calories">
-                                                                                <span class="font-black text-emerald-700" x-text="'• ' + log.calories + ' קק״ל'"></span>
+                                                                                <span class="font-black text-emerald-700" x-text="'• ' + log.calories + ' קל\''"></span>
                                                                             </template>
                                                                             <template x-if="log.protein">
                                                                                 <span x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
@@ -4446,13 +4343,13 @@
                                                         <span class="text-[10px] bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold text-[#5f756e]" x-text="dayData.count + ' פריטים'"></span>
                                                     </div>
                                                     <div class="text-xs font-bold text-[#082722] bg-white px-2.5 py-1 rounded-xl border border-[#e5dfd3]">
-                                                        <span class="text-emerald-700 font-black" x-text="Math.round(dayData.calories) + ' קק״ל'"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="Math.round(dayData.calories) + ' קל\''"></span>
                                                         <span class="text-slate-400 mx-1">|</span>
-                                                        <span x-text="'ח: ' + Math.round(dayData.protein) + ' גרם'"></span>
+                                                        <span x-text="'ח: ' + Math.round(dayData.protein) + 'ג\''"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'פ: ' + Math.round(dayData.carbs) + ' גרם'"></span>
+                                                        <span x-text="'פ: ' + Math.round(dayData.carbs) + 'ג\''"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'ש: ' + Math.round(dayData.fat) + ' גרם'"></span>
+                                                        <span x-text="'ש: ' + Math.round(dayData.fat) + 'ג\''"></span>
                                                     </div>
                                                 </div>
 
@@ -4475,8 +4372,8 @@
                                                             <p class="text-xs font-bold text-[#082722] whitespace-pre-line" x-text="log.description || 'ללא פירוט'"></p>
                                                             
                                                             <div class="text-[10px] text-[#5f756e] font-semibold">
-                                                                <span class="text-emerald-700 font-bold" x-text="log.calories ? (log.calories + ' קק״ל') : ''"></span>
-                                                                <span x-text="log.protein ? (' • ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + ' גרם') : ''"></span>
+                                                                <span class="text-emerald-700 font-bold" x-text="log.calories ? (log.calories + ' קל\'') : ''"></span>
+                                                                <span x-text="log.protein ? (' • ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\'') : ''"></span>
                                                             </div>
                                                         </div>
                                                     </template>
@@ -4911,7 +4808,7 @@
                                             <td class="py-2.5 px-6">
                                                 <!-- רשימת תגים דינמית חלקה -->
                                                 <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none whitespace-nowrap py-1">
-                                                    <template x-for="(pay, pIdx) in (client.payments || [])" :key="pIdx">
+                                                    <template x-for="(pay, pIdx) in client.payments" :key="pIdx">
                                                         <button 
                                                             @click="toggleClientPaymentStatus(client.id, pIdx)" 
                                                             :class="pay.status === 'paid' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" 
@@ -5631,7 +5528,7 @@
                                 <span class="font-black text-xs text-[#082722] block truncate" x-text="ex.name"></span>
                                 <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
                                     <span class="bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold" x-text="ex.muscle === 'chest' ? 'חזה' : (ex.muscle === 'back' ? 'גב' : (ex.muscle === 'legs' ? 'רגליים' : (ex.muscle === 'shoulders' ? 'כתפיים' : (ex.muscle === 'arms' ? 'ידיים' : (ex.muscle === 'core' ? 'בטן וליבה' : 'אירובי')))))"></span>
-                                    <span x-text="'מנוחה מומלצת: ' + (ex.rest || '90 שניות')"></span>
+                                    <span x-text="'מנוחה מומלצת: ' + (ex.rest || '90 שנ\'')"></span>
                                     <template x-if="ex.video">
                                         <a :href="ex.video" target="_blank" class="text-red-600 font-bold hover:underline flex items-center gap-0.5">
                                             <i data-lucide="video" class="w-3 h-3"></i>
@@ -5875,11 +5772,11 @@
                                         <span class="text-emerald-700 font-extrabold text-[11px] shrink-0" x-text="food.calPer100 + ' קל׳/100ג׳'"></span>
                                     </div>
                                     <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
-                                        <span x-text="'ח: ' + food.proPer100 + ' גרם'"></span>
+                                        <span x-text="'ח: ' + food.proPer100 + 'ג\''"></span>
                                         <span>•</span>
-                                        <span x-text="'פ: ' + food.carbPer100 + ' גרם'"></span>
+                                        <span x-text="'פ: ' + food.carbPer100 + 'ג\''"></span>
                                         <span>•</span>
-                                        <span x-text="'ש: ' + food.fatPer100 + ' גרם'"></span>
+                                        <span x-text="'ש: ' + food.fatPer100 + 'ג\''"></span>
                                     </div>
                                 </div>
                             </template>
@@ -6413,8 +6310,8 @@
                                 <span class="text-[9px] text-[#5f756e]" x-text="'ערכים ל-' + (item.unit === 'גרם' || item.unit === 'מ&quot;ל' ? '100 ' + item.unit : '1 ' + item.unit)"></span>
                             </div>
                             <div class="text-left text-[10px]">
-                                <span class="font-bold text-emerald-700 block" x-text="item.cal + ' קק״ל'"></span>
-                                <span class="text-emerald-800 font-bold" x-text="'ח: ' + item.pro + ' גרם'"></span>
+                                <span class="font-bold text-emerald-700 block" x-text="item.cal + ' קל''"></span>
+                                <span class="text-emerald-800 font-bold" x-text="'ח: ' + item.pro + 'ג''"></span>
                             </div>
                         </button>
                     </template>
@@ -6439,15 +6336,15 @@
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">חלבון</span>
-                                <span class="text-sm font-black text-emerald-700" x-text="calculateSelectedFoodMacros().protein + ' גרם'"></span>
+                                <span class="text-sm font-black text-emerald-700" x-text="calculateSelectedFoodMacros().protein + 'ג''"></span>
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">פחמימה</span>
-                                <span class="text-sm font-black text-sky-700" x-text="calculateSelectedFoodMacros().carbs + ' גרם'"></span>
+                                <span class="text-sm font-black text-sky-700" x-text="calculateSelectedFoodMacros().carbs + 'ג''"></span>
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">שומן</span>
-                                <span class="text-sm font-black text-amber-700" x-text="calculateSelectedFoodMacros().fat + ' גרם'"></span>
+                                <span class="text-sm font-black text-amber-700" x-text="calculateSelectedFoodMacros().fat + 'ג''"></span>
                             </div>
                         </div>
                     </div>
@@ -6805,7 +6702,6 @@
                     hatedFoods: '', notes: '', motivation: '', biggestChallenge: '' 
                 },
                 intakeStep: 1,
-                intakeStorySlide: 0,
                 intakeSuccess: false,
                 pdfUploading: false,
                 pdfBlobUrlCache: null,
@@ -8284,7 +8180,6 @@
                     const hashed = await this.hashPin(input);
                     if (hashed === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || input === '1236') {
                         this.isCoachAuthenticated = true;
-                        localStorage.setItem('ilaico_coach_auth', 'true');
                         this.coachPinError = false;
                         this.coachPinInput = '';
                         setTimeout(() => {
@@ -8298,7 +8193,6 @@
 
                 logoutCoach() {
                     this.isCoachAuthenticated = false;
-                    localStorage.removeItem('ilaico_coach_auth');
                     localStorage.removeItem('ilaico_coach_auth_token');
                     localStorage.removeItem('ilaico_coach_authenticated');
                     this.coachPinInput = '';
@@ -8327,9 +8221,8 @@
                         this.selectedClientId = this.portalClientId;
                         this.isCoachAuthenticated = false;
                     } else {
-                        // שמירת התחברות קודמת של המאמן כדי למנוע נעילה בכל רענון
-                        const savedAuth = localStorage.getItem('ilaico_coach_auth');
-                        this.isCoachAuthenticated = (savedAuth === 'true');
+                        // תמיד דורש הזנת קוד 1236 בכניסה לקישור ניהול מאמן
+                        this.isCoachAuthenticated = false;
                     }
 
                     // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
@@ -8767,29 +8660,28 @@
 
                 // חישובים פיננסיים דינמיים
                 getExpectedMonthlyRevenue() {
-                    return (this.clients || [])
-                        .filter(c => c && c.status === 'active')
+                    return this.clients
+                        .filter(c => c.status === 'active')
                         .reduce((sum, c) => sum + (parseFloat(c.pricePerMonth) || 250), 0);
                 },
 
                 getTotalRevenueCollected() {
                     let totalClient = 0;
-                    (this.clients || []).forEach(c => {
-                        if (!c) return;
-                        (c.payments || []).forEach(p => { if (p && p.status === 'paid') totalClient += (parseFloat(p.amount) || 0); });
+                    this.clients.forEach(c => {
+                        (c.payments || []).forEach(p => { if (p.status === 'paid') totalClient += p.amount; });
                     });
                     
-                    let totalExternal = (this.transactions || [])
-                        .filter(t => t && t.type === 'income')
-                        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+                    let totalExternal = this.transactions
+                        .filter(t => t.type === 'income')
+                        .reduce((sum, t) => sum + t.amount, 0);
 
                     return totalClient + totalExternal;
                 },
 
                 getTotalExpenses() {
-                    return (this.transactions || [])
-                        .filter(t => t && t.type === 'expense')
-                        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+                    return this.transactions
+                        .filter(t => t.type === 'expense')
+                        .reduce((sum, t) => sum + t.amount, 0);
                 },
 
                 getNetProfit() {
@@ -8798,9 +8690,9 @@
 
                 getPendingRevenueAmount() {
                     let total = 0;
-                    (this.clients || []).forEach(c => {
-                        if (c && c.status === 'active') {
-                            (c.payments || []).forEach(p => { if (p && p.status === 'pending') total += (parseFloat(p.amount) || 0); });
+                    this.clients.forEach(c => {
+                        if (c.status === 'active') {
+                            (c.payments || []).forEach(p => { if (p.status === 'pending') total += p.amount; });
                         }
                     });
                     return total;
@@ -8819,15 +8711,15 @@
                         let collected = 0;
                         let expenses = 0;
                         
-                        (this.clients || []).forEach(c => {
-                            if (!c || !c.startDate) return;
-                            const parts = String(c.startDate).split(/[-/]/).map(Number);
+                        this.clients.forEach(c => {
+                            if (!c.startDate) return;
+                            const parts = c.startDate.split('-').map(Number);
                             const sYear = parts[0];
-                            const sMonth = (parts[1] || 1) - 1;
+                            const sMonth = parts[1] - 1;
                             const sDay = parts[2] || 1;
                             
                             (c.payments || []).forEach((p, idx) => {
-                                if (!p || p.status !== 'paid') return;
+                                if (p.status !== 'paid') return;
                                 const payDate = new Date(sYear, sMonth, sDay + (idx * 30));
                                 if (payDate.getFullYear() === year && payDate.getMonth() === month) {
                                     collected += (parseFloat(p.amount) || 0);
@@ -8835,11 +8727,11 @@
                             });
                         });
                         
-                        (this.transactions || []).forEach(t => {
-                            if (!t || !t.date) return;
-                            const parts = String(t.date).split(/[-/]/).map(Number);
+                        this.transactions.forEach(t => {
+                            if (!t.date) return;
+                            const parts = t.date.split('-').map(Number);
                             const tYear = parts[0];
-                            const tMonth = (parts[1] || 1) - 1;
+                            const tMonth = parts[1] - 1;
                             if (tYear === year && tMonth === month) {
                                 if (t.type === 'income') {
                                     collected += (parseFloat(t.amount) || 0);
@@ -9584,7 +9476,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             name: ex.name,
                             sets: 3,
                             reps: '10',
-                            rest: ex.rest || '90 שניות',
+                            rest: ex.rest || '90 שנ\'',
                             notes: '',
                             video: ex.video || '',
                             setsDetail: [
@@ -9706,7 +9598,7 @@ saveWorkoutPlanWithToast() {
                                     name: '',
                                     sets: 3,
                                     reps: '10',
-                                    rest: '90 שניות',
+                                    rest: '90 שנ\'',
                                     notes: '',
                                     video: '',
                                     setsDetail: [
@@ -9759,7 +9651,7 @@ saveWorkoutPlanWithToast() {
                             muscle: 'chest',
                             sets: 3,
                             reps: '10',
-                            rest: '90 שניות',
+                            rest: '90 שנ\'',
                             notes: '',
                             video: '',
                             setsDetail: [
