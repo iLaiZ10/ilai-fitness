@@ -499,7 +499,7 @@
         </aside>
 
         <!-- סרגל ניווט תחתון לנייד (Mobile Bottom Nav) -->
-        <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#1a0730]/95 backdrop-blur-md border-t border-[#133d35] flex items-center justify-around z-50 shadow-2xl text-[#d8b4fe]" x-cloak>
+        <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#1a0730]/95 backdrop-blur-md border-t border-[#381061] flex items-center justify-around z-50 shadow-2xl text-[#d8b4fe]" x-cloak>
             <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-[#fbbf24] font-black' : 'text-[#d8b4fe]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">לוח בקרה</span>
@@ -516,6 +516,10 @@
                 <i data-lucide="credit-card" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">פיננסים</span>
             </button>
+            <button @click="activeTab = 'settings'; selectedClientId = null" :class="activeTab === 'settings' ? 'text-[#fbbf24] font-black' : 'text-[#d8b4fe]'" class="flex flex-col items-center justify-center flex-1 py-1">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-[9px] mt-0.5 font-bold">הגדרות</span>
+            </button>
             <button @click="logoutCoach()" class="flex flex-col items-center justify-center flex-1 py-1 text-[#d8b4fe] hover:text-rose-400">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">התנתק</span>
@@ -526,22 +530,55 @@
         <main class="flex-1 bg-slate-950 overflow-y-auto flex flex-col pb-20 md:pb-0">
             
             <!-- סרגל עליון (Top Header) -->
-            <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="h-16 border-b border-[#e6dcef] flex items-center justify-between px-4 md:px-8 bg-white/90 backdrop-blur-md sticky top-0 z-40" x-cloak>
-                <h2 class="text-base md:text-lg font-black text-[#1a0730]" x-text="getTabTitle()"></h2>
+            <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="h-16 border-b border-[#e6dcef] flex items-center justify-between px-3 md:px-8 bg-white/95 backdrop-blur-md sticky top-0 z-40" x-cloak>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <h2 class="text-sm md:text-lg font-black text-[#1a0730]" x-text="getTabTitle()"></h2>
+                    
+                    <!-- טאבים מהירים בכותרת עליונה -->
+                    <div class="hidden lg:flex items-center bg-[#faf6fc] border border-[#e6dcef] p-1 rounded-xl gap-1">
+                        <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'bg-[#1a0730] text-[#fbbf24] font-black shadow-sm' : 'text-[#6f5888] hover:text-[#1a0730] font-bold'" class="px-2.5 py-1 rounded-lg text-xs transition flex items-center gap-1">
+                            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+                            <span>לוח בקרה</span>
+                        </button>
+                        <button @click="activeTab = 'clients'; selectedClientId = null" :class="activeTab === 'clients' ? 'bg-[#1a0730] text-[#fbbf24] font-black shadow-sm' : 'text-[#6f5888] hover:text-[#1a0730] font-bold'" class="px-2.5 py-1 rounded-lg text-xs transition flex items-center gap-1">
+                            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                            <span>מתאמנים</span>
+                        </button>
+                        <button @click="activeTab = 'schedule'; selectedClientId = null" :class="activeTab === 'schedule' ? 'bg-[#1a0730] text-[#fbbf24] font-black shadow-sm' : 'text-[#6f5888] hover:text-[#1a0730] font-bold'" class="px-2.5 py-1 rounded-lg text-xs transition flex items-center gap-1">
+                            <i data-lucide="calendar-days" class="w-3.5 h-3.5"></i>
+                            <span>יומן</span>
+                        </button>
+                        <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'bg-[#1a0730] text-[#fbbf24] font-black shadow-sm' : 'text-[#6f5888] hover:text-[#1a0730] font-bold'" class="px-2.5 py-1 rounded-lg text-xs transition flex items-center gap-1">
+                            <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                            <span>מעקב פיננסי</span>
+                        </button>
+                        <button @click="activeTab = 'settings'; selectedClientId = null" :class="activeTab === 'settings' ? 'bg-[#1a0730] text-[#fbbf24] font-black shadow-sm' : 'text-[#6f5888] hover:text-[#1a0730] font-bold'" class="px-2.5 py-1 rounded-lg text-xs transition flex items-center gap-1">
+                            <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+                            <span>הגדרות וסנכרון</span>
+                        </button>
+                    </div>
+                </div>
                 
-                <div class="flex items-center gap-2.5">
-                    <div class="hidden sm:block text-xs text-[#6f5888] font-semibold" x-text="getTodayFormattedDate()"></div>
+                <div class="flex items-center gap-1.5 md:gap-2.5">
+                    <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'bg-[#1a0730] text-[#fbbf24] font-black border-[#fbbf24]' : 'bg-[#faf6fc] text-[#1a0730] hover:bg-slate-100 border-[#e6dcef]'" class="lg:hidden px-2.5 py-1.5 rounded-xl text-xs font-bold border flex items-center gap-1 transition shadow-xs">
+                        <i data-lucide="credit-card" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
+                        <span class="hidden sm:inline">פיננסים</span>
+                    </button>
+                    <button @click="activeTab = 'settings'; selectedClientId = null" :class="activeTab === 'settings' ? 'bg-[#1a0730] text-[#fbbf24] font-black border-[#fbbf24]' : 'bg-[#faf6fc] text-[#1a0730] hover:bg-slate-100 border-[#e6dcef]'" class="lg:hidden px-2.5 py-1.5 rounded-xl text-xs font-bold border flex items-center gap-1 transition shadow-xs">
+                        <i data-lucide="settings" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
+                        <span class="hidden sm:inline">הגדרות</span>
+                    </button>
                     <button 
                         @click="openSendIntakeForClient(null)" 
                         class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black px-3 py-1.5 md:px-3.5 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition shadow-md shadow-emerald-500/20">
                         <i data-lucide="send" class="w-4 h-4 text-white"></i>
-                        <span>שלח שאלון קליטה 🚀</span>
+                        <span class="hidden sm:inline">שאלון קליטה 🚀</span>
                     </button>
                     <button 
                         @click="openAddClientModal = true" 
                         class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-3.5 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition border border-[#451675] shadow-md shadow-[#1a0730]/15">
                         <i data-lucide="plus" class="w-4 h-4 text-[#fbbf24]"></i>
-                        <span>מתאמן חדש</span>
+                        <span class="hidden sm:inline">מתאמן חדש</span>
                     </button>
                     <button 
                         @click="logoutCoach()" 
@@ -2256,6 +2293,77 @@
 
                 <!-- 1. טאב לוח בקרה -->
                 <div x-show="activeTab === 'dashboard' && !selectedClientId" x-cloak class="space-y-6">
+                    
+                    <!-- באנר כניסה מהירה למערכות הליבה של אילאי (Executive Hub 2.0) -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+                        <!-- מעקב פיננסי -->
+                        <div @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
+                             class="bg-gradient-to-br from-[#1a0730] via-[#2d0c4f] to-[#1a0730] border-2 border-[#451675] hover:border-[#fbbf24] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group text-white">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-[#fbbf24]/20 text-[#fbbf24] border border-[#fbbf24]/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">חדש • 2.0</span>
+                                <div class="w-9 h-9 rounded-2xl bg-[#fbbf24]/20 border border-[#fbbf24]/30 flex items-center justify-center text-[#fbbf24] group-hover:scale-110 transition">
+                                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-sm md:text-base font-black text-white group-hover:text-[#fbbf24] transition">מעקב פיננסי וגבייה</h4>
+                            <p class="text-[11px] text-[#d8b4fe] mt-0.5 font-medium">יעדים, הכנסות מנויים ותזרים</p>
+                            <div class="mt-3 flex items-center gap-1 text-[11px] font-black text-[#fbbf24]">
+                                <span>פתח מעקב מלא</span>
+                                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+
+                        <!-- הגדרות וסנכרון ענן -->
+                        <div @click="activeTab = 'settings'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
+                             class="bg-gradient-to-br from-[#1a0730] via-[#2d0c4f] to-[#1a0730] border-2 border-[#451675] hover:border-[#fbbf24] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group text-white">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-[#fbbf24]/20 text-[#fbbf24] border border-[#fbbf24]/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Firebase Cloud</span>
+                                <div class="w-9 h-9 rounded-2xl bg-[#fbbf24]/20 border border-[#fbbf24]/30 flex items-center justify-center text-[#fbbf24] group-hover:scale-110 transition">
+                                    <i data-lucide="settings" class="w-5 h-5"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-sm md:text-base font-black text-white group-hover:text-[#fbbf24] transition">הגדרות וסנכרון ענן</h4>
+                            <p class="text-[11px] text-[#d8b4fe] mt-0.5 font-medium">חיבור Firebase, גיבויים ואבטחה</p>
+                            <div class="mt-3 flex items-center gap-1 text-[11px] font-black text-[#fbbf24]">
+                                <span>הגדר סנכרון ענן</span>
+                                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+
+                        <!-- רשימת מתאמנים -->
+                        <div @click="activeTab = 'clients'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
+                             class="bg-white border-2 border-[#e6dcef] hover:border-[#1a0730] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-[#faf6fc] text-[#1a0730] border border-[#e6dcef] text-[10px] font-black px-2 py-0.5 rounded-full" x-text="getActiveClientsCount() + ' פעילים'"></span>
+                                <div class="w-9 h-9 rounded-2xl bg-[#faf6fc] border border-[#e6dcef] flex items-center justify-center text-[#1a0730] group-hover:scale-110 transition">
+                                    <i data-lucide="users" class="w-5 h-5"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-sm md:text-base font-black text-[#1a0730] group-hover:text-[#6b21a8] transition">רשימת מתאמנים</h4>
+                            <p class="text-[11px] text-[#6f5888] mt-0.5 font-medium">כרטיסי מתאמן, אימונים ותפריטים</p>
+                            <div class="mt-3 flex items-center gap-1 text-[11px] font-black text-[#1a0730]">
+                                <span>לכל המתאמנים</span>
+                                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+
+                        <!-- יומן שבועי -->
+                        <div @click="activeTab = 'schedule'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
+                             class="bg-white border-2 border-[#e6dcef] hover:border-[#1a0730] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-[#faf6fc] text-[#1a0730] border border-[#e6dcef] text-[10px] font-black px-2 py-0.5 rounded-full">יומן שבועי</span>
+                                <div class="w-9 h-9 rounded-2xl bg-[#faf6fc] border border-[#e6dcef] flex items-center justify-center text-[#1a0730] group-hover:scale-110 transition">
+                                    <i data-lucide="calendar-days" class="w-5 h-5"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-sm md:text-base font-black text-[#1a0730] group-hover:text-[#6b21a8] transition">יומן אימונים ופגישות</h4>
+                            <p class="text-[11px] text-[#6f5888] mt-0.5 font-medium">שיחות אישיות, זום ולו״ז שבועי</p>
+                            <div class="mt-3 flex items-center gap-1 text-[11px] font-black text-[#1a0730]">
+                                <span>פתח יומן</span>
+                                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                            </div>
+                        </div>
+                    </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
