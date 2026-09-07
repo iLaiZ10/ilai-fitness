@@ -514,7 +514,7 @@
             <!-- ניווט טאבים -->
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <button 
-                    @click="activeTab = 'dashboard'; selectedClientId = null"
+                    @click="activeTab = 'dashboard'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
                     :class="activeTab === 'dashboard' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
@@ -522,7 +522,7 @@
                 </button>
                 
                 <button 
-                    @click="activeTab = 'clients'; selectedClientId = null"
+                    @click="activeTab = 'clients'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
                     :class="activeTab === 'clients' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="users" class="w-5 h-5"></i>
@@ -530,7 +530,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'schedule'; selectedClientId = null"
+                    @click="activeTab = 'schedule'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
                     :class="activeTab === 'schedule' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="calendar-days" class="w-5 h-5"></i>
@@ -538,7 +538,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'finances'; selectedClientId = null"
+                    @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
                     :class="activeTab === 'finances' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
@@ -546,7 +546,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'settings'; selectedClientId = null"
+                    @click="activeTab = 'settings'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
                     :class="activeTab === 'settings' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="settings" class="w-5 h-5"></i>
@@ -570,21 +570,25 @@
 
         <!-- סרגל ניווט תחתון לנייד (Mobile Bottom Nav) -->
         <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#082722]/95 backdrop-blur-md border-t border-[#133d35] flex items-center justify-around z-50 shadow-2xl text-[#93c7bb]" x-cloak>
-            <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'dashboard'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'dashboard' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">לוח בקרה</span>
             </button>
-            <button @click="activeTab = 'clients'; selectedClientId = null" :class="activeTab === 'clients' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'clients'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'clients' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="users" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">מתאמנים</span>
             </button>
-            <button @click="activeTab = 'schedule'; selectedClientId = null" :class="activeTab === 'schedule' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'schedule'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'schedule' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="calendar-days" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">יומן</span>
             </button>
-            <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'finances' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="credit-card" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">פיננסים</span>
+            </button>
+            <button @click="activeTab = 'settings'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'settings' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-[9px] mt-0.5 font-bold">הגדרות</span>
             </button>
             <button @click="logoutCoach()" class="flex flex-col items-center justify-center flex-1 py-1 text-[#93c7bb] hover:text-rose-400">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
@@ -8280,6 +8284,7 @@
                     const hashed = await this.hashPin(input);
                     if (hashed === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || input === '1236') {
                         this.isCoachAuthenticated = true;
+                        localStorage.setItem('ilaico_coach_auth', 'true');
                         this.coachPinError = false;
                         this.coachPinInput = '';
                         setTimeout(() => {
@@ -8293,6 +8298,7 @@
 
                 logoutCoach() {
                     this.isCoachAuthenticated = false;
+                    localStorage.removeItem('ilaico_coach_auth');
                     localStorage.removeItem('ilaico_coach_auth_token');
                     localStorage.removeItem('ilaico_coach_authenticated');
                     this.coachPinInput = '';
@@ -8321,8 +8327,9 @@
                         this.selectedClientId = this.portalClientId;
                         this.isCoachAuthenticated = false;
                     } else {
-                        // תמיד דורש הזנת קוד 1236 בכניסה לקישור ניהול מאמן
-                        this.isCoachAuthenticated = false;
+                        // שמירת התחברות קודמת של המאמן כדי למנוע נעילה בכל רענון
+                        const savedAuth = localStorage.getItem('ilaico_coach_auth');
+                        this.isCoachAuthenticated = (savedAuth === 'true');
                     }
 
                     // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
@@ -8760,28 +8767,29 @@
 
                 // חישובים פיננסיים דינמיים
                 getExpectedMonthlyRevenue() {
-                    return this.clients
-                        .filter(c => c.status === 'active')
+                    return (this.clients || [])
+                        .filter(c => c && c.status === 'active')
                         .reduce((sum, c) => sum + (parseFloat(c.pricePerMonth) || 250), 0);
                 },
 
                 getTotalRevenueCollected() {
                     let totalClient = 0;
-                    this.clients.forEach(c => {
-                        (c.payments || []).forEach(p => { if (p.status === 'paid') totalClient += p.amount; });
+                    (this.clients || []).forEach(c => {
+                        if (!c) return;
+                        (c.payments || []).forEach(p => { if (p && p.status === 'paid') totalClient += (parseFloat(p.amount) || 0); });
                     });
                     
-                    let totalExternal = this.transactions
-                        .filter(t => t.type === 'income')
-                        .reduce((sum, t) => sum + t.amount, 0);
+                    let totalExternal = (this.transactions || [])
+                        .filter(t => t && t.type === 'income')
+                        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
 
                     return totalClient + totalExternal;
                 },
 
                 getTotalExpenses() {
-                    return this.transactions
-                        .filter(t => t.type === 'expense')
-                        .reduce((sum, t) => sum + t.amount, 0);
+                    return (this.transactions || [])
+                        .filter(t => t && t.type === 'expense')
+                        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
                 },
 
                 getNetProfit() {
@@ -8790,9 +8798,9 @@
 
                 getPendingRevenueAmount() {
                     let total = 0;
-                    this.clients.forEach(c => {
-                        if (c.status === 'active') {
-                            (c.payments || []).forEach(p => { if (p.status === 'pending') total += p.amount; });
+                    (this.clients || []).forEach(c => {
+                        if (c && c.status === 'active') {
+                            (c.payments || []).forEach(p => { if (p && p.status === 'pending') total += (parseFloat(p.amount) || 0); });
                         }
                     });
                     return total;
@@ -8811,15 +8819,15 @@
                         let collected = 0;
                         let expenses = 0;
                         
-                        this.clients.forEach(c => {
-                            if (!c.startDate) return;
-                            const parts = c.startDate.split('-').map(Number);
+                        (this.clients || []).forEach(c => {
+                            if (!c || !c.startDate) return;
+                            const parts = String(c.startDate).split(/[-/]/).map(Number);
                             const sYear = parts[0];
-                            const sMonth = parts[1] - 1;
+                            const sMonth = (parts[1] || 1) - 1;
                             const sDay = parts[2] || 1;
                             
                             (c.payments || []).forEach((p, idx) => {
-                                if (p.status !== 'paid') return;
+                                if (!p || p.status !== 'paid') return;
                                 const payDate = new Date(sYear, sMonth, sDay + (idx * 30));
                                 if (payDate.getFullYear() === year && payDate.getMonth() === month) {
                                     collected += (parseFloat(p.amount) || 0);
@@ -8827,11 +8835,11 @@
                             });
                         });
                         
-                        this.transactions.forEach(t => {
-                            if (!t.date) return;
-                            const parts = t.date.split('-').map(Number);
+                        (this.transactions || []).forEach(t => {
+                            if (!t || !t.date) return;
+                            const parts = String(t.date).split(/[-/]/).map(Number);
                             const tYear = parts[0];
-                            const tMonth = parts[1] - 1;
+                            const tMonth = (parts[1] || 1) - 1;
                             if (tYear === year && tMonth === month) {
                                 if (t.type === 'income') {
                                     collected += (parseFloat(t.amount) || 0);
