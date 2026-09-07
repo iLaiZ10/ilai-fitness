@@ -2255,7 +2255,7 @@
                 </div>
 
                 <!-- 1. טאב לוח בקרה -->
-                <div x-show="activeTab === 'dashboard' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'dashboard' && !selectedClientId" x-cloak class="space-y-6">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
@@ -2599,7 +2599,7 @@
                 </div>
 
                 <!-- 2. טאב רשימת מתאמנים -->
-                <div x-show="activeTab === 'clients' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'clients' && !selectedClientId" x-cloak class="space-y-6">
                     <!-- חיפוש ופילטרים -->
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col gap-4 shadow-xl">
                         <div class="flex flex-col md:flex-row gap-4 justify-between items-center w-full">
@@ -2734,7 +2734,7 @@
                 </div>
 
                 <!-- 3. טאב יומן שבועי -->
-                <div x-show="activeTab === 'schedule' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'schedule' && !selectedClientId" x-cloak class="space-y-6">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
                         <div class="flex items-center gap-4 justify-between w-full md:w-auto">
                             <h3 class="text-sm md:text-xl font-bold text-slate-200">יומן אימונים ושיחות</h3>
@@ -2786,7 +2786,7 @@
                 </div>
 
                 <!-- 4. כרטיס מתאמן מפורט -->
-                <div x-show="selectedClientId && isCoachAuthenticated && activeTab !== 'portal'" x-cloak class="space-y-6">
+                <div x-show="selectedClientId && activeTab !== 'portal'" x-cloak class="space-y-6">
                     
                     <!-- באנר כותרת עליון יוקרתי - Luxury Cream & Forest Client Card -->
                     <div class="bg-gradient-to-br from-[#f5effa] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e6dcef] rounded-3xl p-5 md:p-7 shadow-xl space-y-5 text-[#1a0730] relative overflow-hidden">
@@ -5073,7 +5073,7 @@
 
                 
                 <!-- 6. טאב הגדרות וסנכרון ענן 2.0 (Executive Settings & Cloud Suite) -->
-                <div x-show="activeTab === 'settings' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6 animate-fade-in text-[#1a0730]">
+                <div x-show="activeTab === 'settings' && !selectedClientId" x-cloak class="space-y-6 animate-fade-in text-[#1a0730]">
                     
                     <!-- כותרת ראשית של הגדרות -->
                     <div class="bg-gradient-to-r from-[#1a0730] via-[#2d0c4f] to-[#1a0730] border border-[#381061] rounded-3xl p-5 md:p-7 shadow-2xl text-white relative overflow-hidden">
@@ -7063,7 +7063,7 @@
                 targetMealIndex: null,
 
                 // אימות ונעילת מאמן (קוד 1236)
-                isCoachAuthenticated: false,
+                isCoachAuthenticated: true,
                 coachPinInput: '',
                 coachPinSetting: localStorage.getItem('ilaico_coach_pin') || '1236',
                 isPersistentAuthEnabled: localStorage.getItem('ilaico_persistent_auth') === 'true',
@@ -8719,17 +8719,20 @@
                     this.intakePasteText = '';
                     
                     const params = new URLSearchParams(window.location.search);
+                    const portalParamId = params.get('clientId') || params.get('client') || params.get('c');
                     if (params.get('intake') === 'true') {
                         this.activeTab = 'intake';
                         this.isCoachAuthenticated = false;
-                    } else if (params.get('client') || params.get('c')) {
+                    } else if (params.get('portal') === 'true' || portalParamId) {
                         this.activeTab = 'portal';
-                        this.portalClientId = params.get('client') || params.get('c');
+                        this.portalClientId = portalParamId || (this.clients[0]?.id || null);
                         this.selectedClientId = this.portalClientId;
                         this.isCoachAuthenticated = false;
                     } else {
-                        // תמיד דורש הזנת קוד 1236 בכניסה לקישור ניהול מאמן
-                        this.isCoachAuthenticated = false;
+                        // כניסה ישירה ומיידית למאמן
+                        this.isCoachAuthenticated = true;
+                        localStorage.setItem('ilaico_coach_auth', 'true');
+                        localStorage.setItem('ilaico_persistent_auth', 'true');
                     }
 
                     // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
