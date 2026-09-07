@@ -500,26 +500,48 @@
         <main class="flex-1 bg-slate-950 overflow-y-auto flex flex-col pb-20 md:pb-0">
             
             <!-- סרגל עליון (Top Header) -->
-            <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="h-16 border-b border-[#e6dcef] flex items-center justify-between px-4 md:px-8 bg-white/90 backdrop-blur-md sticky top-0 z-40" x-cloak>
-                <h2 class="text-base md:text-lg font-black text-[#1a0730]" x-text="getTabTitle()"></h2>
+            <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" 
+                    class="h-20 border-b border-[#e6dcef] flex items-center justify-between px-6 md:px-10 bg-white/95 backdrop-blur-md sticky top-0 z-40 shadow-xs" x-cloak>
                 
-                <div class="flex items-center gap-2.5">
-                    <div class="hidden sm:block text-xs text-[#6f5888] font-semibold" x-text="getTodayFormattedDate()"></div>
+                <!-- צד ימין: כותרת הטאב ותאריך מעודכן -->
+                <div class="flex items-center gap-4">
+                    <div class="space-y-0.5">
+                        <div class="flex items-center gap-2.5">
+                            <h2 class="text-lg md:text-2xl font-black text-[#1a0730] tracking-tight" x-text="getTabTitle()"></h2>
+                            <span class="hidden sm:inline-flex items-center gap-1 bg-[#f5effa] text-[#5c4075] border border-[#ded0eb] text-[11px] font-bold px-2.5 py-1 rounded-full" x-text="getTodayFormattedDate()"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- צד שמאל: כפתורי פעולה מרווחים ואלגנטיים -->
+                <div class="flex items-center gap-3 md:gap-4">
+                    <!-- כפתור שאלון קליטה -->
                     <button 
+                        type="button"
                         @click="openSendIntakeForClient(null)" 
-                        class="btn-royal px-3 py-1.5 md:px-3.5 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition cursor-pointer">
-                        <i data-lucide="send" class="w-4 h-4 text-white"></i>
-                        <span>שלח שאלון קליטה 🚀</span>
+                        class="bg-[#faf6fc] hover:bg-[#2d0c4f] text-[#2d0c4f] hover:text-[#fbbf24] border border-[#ded0eb] hover:border-[#451675] font-black px-4 py-2.5 rounded-2xl text-xs md:text-sm flex items-center gap-2 transition-all duration-200 shadow-xs cursor-pointer group">
+                        <div class="w-6 h-6 rounded-lg bg-[#2d0c4f]/10 group-hover:bg-[#fbbf24]/20 flex items-center justify-center transition">
+                            <i data-lucide="send" class="w-3.5 h-3.5 text-[#2d0c4f] group-hover:text-[#fbbf24]"></i>
+                        </div>
+                        <span>שלח שאלון קליטה</span>
                     </button>
+
+                    <!-- כפתור מתאמן חדש (זהב יוקרתי ראשי) -->
                     <button 
+                        type="button"
                         @click="openAddClientModal = true" 
-                        class="btn-gold px-3.5 py-1.5 md:px-4 md:py-2 rounded-xl text-xs md:text-sm flex items-center gap-1.5 transition cursor-pointer">
-                        <i data-lucide="plus" class="w-4 h-4 text-[#fbbf24]"></i>
+                        class="bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] hover:from-[#f59e0b] hover:to-[#d97706] text-[#1a0730] font-black px-4 md:px-5 py-2.5 rounded-2xl text-xs md:text-sm flex items-center gap-2 transition-all duration-200 shadow-md shadow-amber-500/15 border border-[#b45309]/20 cursor-pointer">
+                        <i data-lucide="user-plus" class="w-4 h-4 text-[#1a0730]"></i>
                         <span>מתאמן חדש</span>
                     </button>
+
+                    <div class="hidden sm:block h-6 w-px bg-[#e6dcef]"></div>
+
+                    <!-- כפתור התנתקות מעוצב ועדין -->
                     <button 
+                        type="button"
                         @click="logoutCoach()" 
-                        class="text-[#6f5888] hover:text-rose-600 p-2 rounded-xl border border-[#e6dcef] bg-white hover:bg-rose-50 transition cursor-pointer" 
+                        class="text-[#5c4075] hover:text-rose-600 p-2.5 rounded-2xl border border-[#e6dcef] bg-[#faf6fc] hover:bg-rose-50 transition cursor-pointer" 
                         title="התנתק מניהול מאמן">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
@@ -4690,22 +4712,24 @@
                             </div>
                         </div>
 
-                        <!-- יעד הכנסה חודשי (Target Goal) -->
-                        <div class="bg-gradient-to-br from-[#f5effa] to-[#ece1f7] border border-[#e6dcef] rounded-3xl p-4 shadow-xl flex flex-col justify-between relative overflow-hidden">
+                        <!-- יעד הכנסה חודשי (Target Goal) - Clickable Card -->
+                        <div @click="tempGoalInput = financeMonthlyGoal; openGoalEditModal = true; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
+                             class="bg-gradient-to-br from-[#f5effa] to-[#ece1f7] border-2 border-[#e6dcef] hover:border-[#fbbf24] rounded-3xl p-4 shadow-xl flex flex-col justify-between relative overflow-hidden cursor-pointer transition transform hover:-translate-y-0.5 group">
                             <div class="flex items-center justify-between mb-1">
-                                <span class="text-[#6f5888] text-[10px] md:text-xs font-bold">יעד חודשי</span>
-                                <button type="button" @click="tempGoalInput = financeMonthlyGoal; openGoalEditModal = true" class="text-[10px] font-black text-[#1a0730] hover:text-emerald-700 flex items-center gap-0.5 cursor-pointer">
-                                    <i data-lucide="edit-3" class="w-3 h-3"></i>
+                                <span class="text-[#5c4075] text-[10px] md:text-xs font-bold">יעד חודשי</span>
+                                <button type="button" @click.stop="tempGoalInput = financeMonthlyGoal; openGoalEditModal = true; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
+                                        class="p-1.5 rounded-xl bg-white border border-[#ded0eb] text-[#1a0730] group-hover:text-[#fbbf24] group-hover:bg-[#1a0730] flex items-center justify-center transition shadow-2xs cursor-pointer" title="ערוך יעד חודשי">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                 </button>
                             </div>
                             <div>
                                 <div class="flex items-baseline justify-between">
                                     <span class="text-base md:text-xl font-black text-[#1a0730]" x-text="financeMonthlyGoal + ' ₪'"></span>
-                                    <span class="text-xs font-black text-emerald-700" x-text="getGoalProgressPercent() + '%'"></span>
+                                    <span class="text-xs font-black text-[#2d0c4f]" x-text="getGoalProgressPercent() + '%'"></span>
                                 </div>
                                 <!-- מד התקדמות גרפי -->
-                                <div class="w-full bg-[#e6dcef] h-2 rounded-full overflow-hidden mt-1.5">
-                                    <div class="h-full bg-gradient-to-r from-[#1a0730] to-[#22c55e] rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, getGoalProgressPercent()) + '%;'"></div>
+                                <div class="w-full bg-[#ded0eb] h-2 rounded-full overflow-hidden mt-1.5">
+                                    <div class="h-full bg-gradient-to-r from-[#1a0730] via-[#2d0c4f] to-[#fbbf24] rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, getGoalProgressPercent()) + '%;'"></div>
                                 </div>
                             </div>
                         </div>
@@ -5386,6 +5410,65 @@
             <option :value="f.name"></option>
         </template>
     </datalist>
+
+        <!-- מודל עדכון יעד הכנסה חודשי (Goal Edit Modal) -->
+    <div x-show="openGoalEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openGoalEditModal = false">
+        <div class="bg-white border-2 border-[#e6dcef] rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl space-y-6 animate-scale-up mx-2 text-[#1a0730] relative overflow-hidden">
+            <div class="absolute -left-10 -bottom-10 w-36 h-36 bg-[#fbbf24]/15 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="flex items-center justify-between border-b border-[#e6dcef] pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 rounded-2xl bg-[#1a0730] text-[#fbbf24] shadow-md shadow-[#1a0730]/20">
+                        <i data-lucide="target" class="w-6 h-6 text-[#fbbf24]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base md:text-lg font-black text-[#1a0730]">הגדרת יעד הכנסה חודשי 🎯</h3>
+                        <p class="text-xs text-[#5c4075]">קביעת יעד עסקי לליווי הכושר של אילאי</p>
+                    </div>
+                </div>
+                <button type="button" @click="openGoalEditModal = false" class="text-[#5c4075] hover:text-[#1a0730] p-1.5 rounded-xl hover:bg-[#faf6fc] transition cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form @submit.prevent="saveMonthlyGoal(tempGoalInput)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-black text-[#1a0730] mb-2">סכום יעד חודשי רצוי (₪):</label>
+                    <div class="relative">
+                        <input 
+                            type="number" 
+                            step="500" 
+                            min="1000" 
+                            required 
+                            autofocus 
+                            x-model="tempGoalInput" 
+                            class="w-full bg-[#faf6fc] border-2 border-[#ded0eb] focus:border-[#fbbf24] rounded-2xl py-3 px-4 text-xl font-black text-[#1a0730] focus:outline-none transition shadow-inner">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-black text-[#5c4075]">₪ לחודש</span>
+                    </div>
+                </div>
+
+                <!-- כפתורי סכום מהירים -->
+                <div class="space-y-1.5">
+                    <span class="text-[11px] font-bold text-[#5c4075] block">בחירה מהירה:</span>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button type="button" @click="tempGoalInput = 10000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 10000 ? 'bg-[#1a0730] text-[#fbbf24] border-[#1a0730]' : 'bg-[#faf6fc] text-[#1a0730] border-[#ded0eb]'">10,000 ₪</button>
+                        <button type="button" @click="tempGoalInput = 15000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 15000 ? 'bg-[#1a0730] text-[#fbbf24] border-[#1a0730]' : 'bg-[#faf6fc] text-[#1a0730] border-[#ded0eb]'">15,000 ₪</button>
+                        <button type="button" @click="tempGoalInput = 20000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 20000 ? 'bg-[#1a0730] text-[#fbbf24] border-[#1a0730]' : 'bg-[#faf6fc] text-[#1a0730] border-[#ded0eb]'">20,000 ₪</button>
+                        <button type="button" @click="tempGoalInput = 30000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 30000 ? 'bg-[#1a0730] text-[#fbbf24] border-[#1a0730]' : 'bg-[#faf6fc] text-[#1a0730] border-[#ded0eb]'">30,000 ₪</button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2.5 pt-2">
+                    <button type="button" @click="openGoalEditModal = false" class="bg-[#faf6fc] hover:bg-slate-100 text-[#1a0730] font-bold px-4 py-2.5 rounded-xl text-xs transition cursor-pointer">
+                        ביטול
+                    </button>
+                    <button type="submit" class="btn-royal px-6 py-2.5 rounded-xl text-xs font-black shadow-md cursor-pointer flex items-center gap-1.5">
+                        <span>שמור יעד חודשי ✓</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- מודל עריכת / הוספת דיווח יומי למאמן בלבד -->
     <div x-show="openCoachScorecardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openCoachScorecardModal = false">
