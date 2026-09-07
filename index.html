@@ -4615,206 +4615,545 @@
                     </div>
                 </div>
 
-                <!-- 5. טאב מעקב פיננסי -->
-                <div x-show="activeTab === 'finances' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
+                
+                <!-- 5. טאב מעקב פיננסי 2.0 (Executive Financial Suite) -->
+                <div x-show="activeTab === 'finances' && !selectedClientId" x-cloak class="space-y-6 animate-fade-in text-[#082722]">
                     
-                    <!-- סיכום פיננסי מעורב -->
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl">
-                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">הכנסה חודשית צפויה</span>
-                            <span class="text-base md:text-xl font-black text-[#082722]" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
-                        </div>
-
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl">
-                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">סה״כ הכנסות שנגבו</span>
-                            <span class="text-base md:text-xl font-black text-emerald-700" x-text="getTotalRevenueCollected() + ' ₪'"></span>
-                        </div>
-
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl">
-                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">סה״כ הוצאות תפעול</span>
-                            <span class="text-base md:text-xl font-black text-rose-600" x-text="getTotalExpenses() + ' ₪'"></span>
-                        </div>
-
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl">
-                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">רווח נקי לעסק</span>
-                            <span :class="getNetProfit() >= 0 ? 'text-emerald-700' : 'text-rose-600'" class="text-base md:text-xl font-black" x-text="getNetProfit() + ' ₪'"></span>
-                        </div>
-
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl col-span-2 md:col-span-1">
-                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">חובות לקוחות פעילים</span>
-                            <span class="text-base md:text-xl font-black text-amber-700" x-text="getPendingRevenueAmount() + ' ₪'"></span>
+                    <!-- כותרת ראשית ופעולות מהירות -->
+                    <div class="bg-gradient-to-r from-[#082722] via-[#0b332b] to-[#082722] border border-[#13443a] rounded-3xl p-5 md:p-7 shadow-2xl text-white relative overflow-hidden">
+                        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-[#22c55e]/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute right-10 -top-10 w-48 h-48 bg-[#86efac]/10 rounded-full blur-2xl pointer-events-none"></div>
+                        
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <span class="bg-[#86efac]/20 text-[#86efac] border border-[#86efac]/30 text-[10px] md:text-xs font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+                                        <i data-lucide="trending-up" class="w-3 h-3 text-[#86efac]"></i>
+                                        <span>Financial Hub 2.0</span>
+                                    </span>
+                                    <span class="text-xs text-[#93c7bb] font-medium" x-text="'מעודכן להיום • ' + getTodayDate()"></span>
+                                </div>
+                                <h2 class="text-xl md:text-2xl font-black text-white tracking-tight">ניהול פיננסי, תזרים מזומנים וגבייה</h2>
+                                <p class="text-xs md:text-sm text-[#93c7bb] mt-0.5">מעקב בזמן אמת אחר הכנסות מנויים, הוצאות תפעול, גביית מתאמנים ועמידה ביעדים עסקיים</p>
+                            </div>
+                            
+                            <!-- כפתורי פעולה מהירים -->
+                            <div class="flex items-center gap-2 flex-wrap shrink-0">
+                                <button type="button" @click="tempGoalInput = financeMonthlyGoal; openGoalEditModal = true" class="bg-[#13443a] hover:bg-[#1b5e50] text-[#86efac] border border-[#86efac]/30 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm">
+                                    <i data-lucide="target" class="w-3.5 h-3.5"></i>
+                                    <span>הגדר יעד חודשי</span>
+                                </button>
+                                <button type="button" @click="exportTransactionsToCSV()" class="bg-white hover:bg-slate-100 text-[#082722] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-md">
+                                    <i data-lucide="download" class="w-3.5 h-3.5 text-[#082722]"></i>
+                                    <span>ייצוא לאקסל (CSV)</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- גרף הכנסות ורווחים מעוצב עם אנימציה יוקרתית -->
-                    <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-7 shadow-xl space-y-4">
-                        <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
-                            <div>
-                                <h4 class="text-sm md:text-base font-extrabold text-[#082722]">רווח נקי חודשי (חצי שנה אחרונה)</h4>
-                                <p class="text-[11px] text-[#5f756e]">מעקב הכנסות שנגבו בניכוי הוצאות לפי חודשים</p>
+                    <!-- שורת כרטיסי KPI ומדדים עסקיים (Executive Grid) -->
+                    <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 md:gap-4">
+                        
+                        <!-- הכנסה חודשית צפויה (MRR) -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl hover:shadow-2xl transition duration-300 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[#5f756e] text-[10px] md:text-xs font-bold">הכנסה חודשית צפויה</span>
+                                <div class="w-7 h-7 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
+                                    <i data-lucide="repeat" class="w-3.5 h-3.5"></i>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2 text-xs">
-                                <span class="flex items-center gap-1.5 text-[11px] font-bold text-[#082722] bg-[#f5efe0] px-2.5 py-1 rounded-full border border-[#e5dfd3]">
-                                    <span class="w-2 h-2 rounded-full bg-[#22c55e]"></span>
-                                    <span>רווח נקי (₪)</span>
+                            <div>
+                                <div class="text-lg md:text-2xl font-black text-[#082722]" x-text="getExpectedMonthlyRevenue() + ' ₪'"></div>
+                                <span class="text-[10px] text-[#5f756e] font-semibold mt-0.5 block" x-text="getActiveClientsCount() + ' מתאמנים פעילים'"></span>
+                            </div>
+                        </div>
+
+                        <!-- סה״כ הכנסות שנגבו בפועל -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl hover:shadow-2xl transition duration-300 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[#5f756e] text-[10px] md:text-xs font-bold">סה״כ נגבה בפועל</span>
+                                <div class="w-7 h-7 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-800">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-lg md:text-2xl font-black text-emerald-700" x-text="getTotalRevenueCollected() + ' ₪'"></div>
+                                <span class="text-[10px] text-emerald-600 font-bold mt-0.5 block">מנויים + הכנסות חיצוניות</span>
+                            </div>
+                        </div>
+
+                        <!-- סה״כ הוצאות תפעול -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl hover:shadow-2xl transition duration-300 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[#5f756e] text-[10px] md:text-xs font-bold">הוצאות תפעול</span>
+                                <div class="w-7 h-7 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600">
+                                    <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-lg md:text-2xl font-black text-rose-600" x-text="getTotalExpenses() + ' ₪'"></div>
+                                <span class="text-[10px] text-rose-500 font-semibold mt-0.5 block" x-text="transactions.filter(t => t.type === 'expense').length + ' תנועות הוצאה'"></span>
+                            </div>
+                        </div>
+
+                        <!-- רווח נקי לעסק -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl hover:shadow-2xl transition duration-300 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[#5f756e] text-[10px] md:text-xs font-bold">רווח נקי לעסק</span>
+                                <div class="w-7 h-7 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#082722]">
+                                    <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div :class="getNetProfit() >= 0 ? 'text-emerald-700' : 'text-rose-600'" class="text-lg md:text-2xl font-black" x-text="getNetProfit() + ' ₪'"></div>
+                                <span class="text-[10px] text-[#5f756e] font-semibold mt-0.5 block">הכנסות פחות הוצאות</span>
+                            </div>
+                        </div>
+
+                        <!-- חובות לקוחות פעילים -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl hover:shadow-2xl transition duration-300 flex flex-col justify-between cursor-pointer group" @click="financeClientFilter = 'debt_only'">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[#5f756e] text-[10px] md:text-xs font-bold">חובות פתוחים</span>
+                                <div class="w-7 h-7 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 group-hover:scale-110 transition">
+                                    <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-lg md:text-2xl font-black text-amber-700" x-text="getPendingRevenueAmount() + ' ₪'"></div>
+                                <span class="text-[10px] text-amber-600 font-bold mt-0.5 block flex items-center gap-1">
+                                    <span x-text="getClientsWithDebtCount() + ' מתאמנים עם יתרה'"></span>
+                                    <i data-lucide="chevron-left" class="w-3 h-3"></i>
                                 </span>
                             </div>
                         </div>
 
+                        <!-- יעד הכנסה חודשי (Target Goal) -->
+                        <div class="bg-gradient-to-br from-[#fcf9f2] to-[#f5eedf] border border-[#e5dfd3] rounded-3xl p-4 shadow-xl flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[#5f756e] text-[10px] md:text-xs font-bold">יעד חודשי</span>
+                                <button type="button" @click="tempGoalInput = financeMonthlyGoal; openGoalEditModal = true" class="text-[10px] font-black text-[#082722] hover:text-emerald-700 flex items-center gap-0.5 cursor-pointer">
+                                    <i data-lucide="edit-3" class="w-3 h-3"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <div class="flex items-baseline justify-between">
+                                    <span class="text-base md:text-xl font-black text-[#082722]" x-text="financeMonthlyGoal + ' ₪'"></span>
+                                    <span class="text-xs font-black text-emerald-700" x-text="getGoalProgressPercent() + '%'"></span>
+                                </div>
+                                <!-- מד התקדמות גרפי -->
+                                <div class="w-full bg-[#e5dfd3] h-2 rounded-full overflow-hidden mt-1.5">
+                                    <div class="h-full bg-gradient-to-r from-[#082722] to-[#22c55e] rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, getGoalProgressPercent()) + '%;'"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- גרף פיננסי אינטראקטיבי משודרג (Financial Analytics Chart) -->
+                    <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-7 shadow-xl space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3">
+                            <div>
+                                <h4 class="text-sm md:text-base font-extrabold text-[#082722] flex items-center gap-2">
+                                    <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-700"></i>
+                                    <span>ניתוח תזרים פיננסי חצי שנתי</span>
+                                </h4>
+                                <p class="text-[11px] text-[#5f756e]">מעקב הכנסות, הוצאות ורווח נקי ב-6 החודשים האחרונים</p>
+                            </div>
+                            
+                            <!-- בורר תצוגת גרף -->
+                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] p-1 rounded-2xl border border-[#e5dfd3] self-start sm:self-auto">
+                                <button type="button" @click="financeChartMode = 'net'" :class="financeChartMode === 'net' ? 'bg-[#082722] text-[#86efac] font-black shadow-sm' : 'text-[#5f756e] hover:text-[#082722] font-bold'" class="text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
+                                    רווח נקי
+                                </button>
+                                <button type="button" @click="financeChartMode = 'compare'" :class="financeChartMode === 'compare' ? 'bg-[#082722] text-[#86efac] font-black shadow-sm' : 'text-[#5f756e] hover:text-[#082722] font-bold'" class="text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
+                                    הכנסות מול הוצאות
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- תצוגת הגרף -->
                         <div class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-6 relative overflow-hidden">
-                            <!-- קווי רשת עדינים ברקע -->
-                            <div class="absolute inset-x-4 top-6 border-b border-dashed border-[#e5dfd3]/80 pointer-events-none"></div>
-                            <div class="absolute inset-x-4 top-20 border-b border-dashed border-[#e5dfd3]/80 pointer-events-none"></div>
+                            <div class="absolute inset-x-4 top-8 border-b border-dashed border-[#e5dfd3]/80 pointer-events-none"></div>
+                            <div class="absolute inset-x-4 top-24 border-b border-dashed border-[#e5dfd3]/80 pointer-events-none"></div>
                             <div class="absolute inset-x-4 bottom-14 border-b border-dashed border-[#e5dfd3]/80 pointer-events-none"></div>
 
-                            <div class="flex items-end justify-around h-48 pt-6 pb-2 relative z-10">
-                                <template x-for="item in getMonthlyFinancialData()" :key="item.name">
-                                    <div class="flex flex-col items-center justify-end h-full group cursor-pointer relative" style="width: 14%;">
-                                        <!-- תגית סכום מעל העמודה -->
-                                        <div class="mb-2 transition-all duration-300 transform group-hover:-translate-y-1">
-                                            <span :class="item.value > 0 ? 'bg-[#082722] text-[#86efac] font-black border border-[#133d35] shadow-md' : 'bg-white text-[#5f756e] border border-[#e5dfd3] font-bold'"
-                                                  class="text-[10px] sm:text-xs px-2 py-0.5 rounded-lg whitespace-nowrap block text-center"
-                                                  x-text="item.value + ' ₪'">
-                                            </span>
-                                        </div>
-
-                                        <!-- עמודת הגרף עם אנימציית עלייה חלקה -->
-                                        <div class="w-full max-w-[38px] bg-[#e5dfd3]/50 rounded-t-xl overflow-hidden flex items-end h-32 p-0.5">
-                                            <div class="w-full rounded-t-lg transition-all duration-700 ease-out relative overflow-hidden shadow-sm"
-                                                 :class="item.value > 0 ? 'bg-gradient-to-t from-[#082722] via-[#0b332b] to-[#22c55e] shadow-md shadow-[#22c55e]/20' : 'bg-[#dcd5c4]'"
-                                                 :style="'height: ' + getBarHeightPercentage(item.value) + '%;'">
-                                                <!-- קו זוהר בראש העמודה -->
-                                                <template x-if="item.value > 0">
-                                                    <div class="w-full h-1 bg-[#86efac] rounded-t-lg shadow-sm"></div>
-                                                </template>
-                                            </div>
-                                        </div>
-
-                                        <!-- שם החודש -->
-                                        <span class="text-[11px] font-bold mt-2.5 block text-center"
-                                              :class="item.value > 0 ? 'text-[#082722] font-black' : 'text-[#5f756e]'"
-                                              x-text="item.name">
+                            <!-- מקרא מקצועי -->
+                            <div class="flex items-center justify-end gap-3 text-xs mb-2">
+                                <template x-if="financeChartMode === 'net'">
+                                    <span class="flex items-center gap-1.5 text-[11px] font-bold text-[#082722] bg-white px-2.5 py-1 rounded-full border border-[#e5dfd3]">
+                                        <span class="w-2 h-2 rounded-full bg-[#22c55e]"></span>
+                                        <span>רווח נקי (₪)</span>
+                                    </span>
+                                </template>
+                                <template x-if="financeChartMode === 'compare'">
+                                    <div class="flex items-center gap-2">
+                                        <span class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 bg-white px-2.5 py-1 rounded-full border border-[#e5dfd3]">
+                                            <span class="w-2 h-2 rounded-full bg-[#22c55e]"></span>
+                                            <span>הכנסות (₪)</span>
+                                        </span>
+                                        <span class="flex items-center gap-1.5 text-[11px] font-bold text-rose-800 bg-white px-2.5 py-1 rounded-full border border-[#e5dfd3]">
+                                            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                            <span>הוצאות (₪)</span>
                                         </span>
                                     </div>
                                 </template>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- ניהול הוצאות והכנסות חיצוניות -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- הזנת תנועה פיננסית -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4 lg:col-span-1">
-                            <h4 class="text-xs md:text-sm font-black text-[#082722] border-b border-[#e5dfd3] pb-3">הוספת תנועה פיננסית חדשה 💰</h4>
-                            <form @submit.prevent="addTransaction()" class="space-y-3 text-xs">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סוג תנועה</label>
-                                    <select x-model="newTransaction.type" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
-                                        <option value="expense">הוצאת עסק (-)</option>
-                                        <option value="income">הכנסה חיצונית (+)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סכום (₪)</label>
-                                    <input type="number" x-model="newTransaction.amount" required placeholder="500" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-black focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תיאור תנועה</label>
-                                    <input type="text" x-model="newTransaction.description" required placeholder="למשל: שכירות סטודיו, רכישת ציוד..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-medium focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תאריך</label>
-                                    <input type="date" x-model="newTransaction.date" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                                <button type="submit" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-2.5 rounded-xl transition shadow-md mt-2 cursor-pointer">
-                                    <span>רשום תנועה</span>
-                                </button>
-                            </form>
-                        </div>
+                            <!-- עמודות הגרף -->
+                            <div class="flex items-end justify-around h-52 pt-6 pb-2 relative z-10">
+                                
+                                <!-- מצב רווח נקי -->
+                                <template x-if="financeChartMode === 'net'">
+                                    <template x-for="item in getMonthlyFinancialData()" :key="item.name">
+                                        <div class="flex flex-col items-center justify-end h-full group cursor-pointer relative" style="width: 14%;">
+                                            <div class="mb-2 transition-all duration-300 transform group-hover:-translate-y-1">
+                                                <span :class="item.value > 0 ? 'bg-[#082722] text-[#86efac] font-black border border-[#133d35] shadow-md' : 'bg-white text-[#5f756e] border border-[#e5dfd3] font-bold'"
+                                                      class="text-[10px] sm:text-xs px-2 py-0.5 rounded-lg whitespace-nowrap block text-center"
+                                                      x-text="item.value + ' ₪'">
+                                                </span>
+                                            </div>
 
-                        <!-- יומן תנועות עסק (Ledger) -->
-                        <div class="bg-white border border-[#e5dfd3] rounded-3xl shadow-xl overflow-hidden lg:col-span-2 flex flex-col h-[350px]">
-                            <div class="p-4 md:p-5 border-b border-[#e5dfd3] bg-[#fcf9f2]">
-                                <h4 class="text-xs md:text-sm font-black text-[#082722]">יומן תנועות פיננסיות בעסק</h4>
-                            </div>
-                            <div class="flex-1 overflow-y-auto">
-                                <table class="w-full text-right border-collapse text-xs">
-                                    <thead>
-                                        <tr class="bg-[#fcf9f2] border-b border-[#e5dfd3] text-[#5f756e] font-black">
-                                            <th class="py-2.5 px-4">תאריך</th>
-                                            <th class="py-2.5 px-4">תיאור</th>
-                                            <th class="py-2.5 px-4 text-center">סוג</th>
-                                            <th class="py-2.5 px-4 text-center">סכום</th>
-                                            <th class="py-2.5 px-4 text-left">מחיקה</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-[#e5dfd3]/50">
-                                        <template x-for="tx in transactions" :key="tx.id">
-                                            <tr class="hover:bg-[#fbf8f2] transition">
-                                                <td class="py-2.5 px-4 text-[#5f756e]" x-text="formatDate(tx.date)"></td>
-                                                <td class="py-2.5 px-4 text-[#082722] font-black" x-text="tx.description"></td>
-                                                <td class="py-2.5 px-4 text-center">
-                                                    <span :class="tx.type === 'income' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-rose-100 text-rose-800 border-rose-300'" class="text-[9px] px-2.5 py-0.5 rounded-full border font-bold" x-text="tx.type === 'income' ? 'הכנסה' : 'הוצאה'"></span>
-                                                </td>
-                                                <td :class="tx.type === 'income' ? 'text-emerald-700 font-black' : 'text-rose-600 font-black'" class="py-2.5 px-4 text-center text-xs" x-text="(tx.type === 'income' ? '+' : '-') + tx.amount + ' ₪'"></td>
-                                                <td class="py-2.5 px-4 text-left">
-                                                    <button @click="deleteTransaction(tx.id)" class="text-[#5f756e] hover:text-rose-600 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-                                                </td>
-                                            </tr>
-                                        </template>
-                                        <template x-if="transactions.length === 0">
-                                            <tr>
-                                                <td colspan="5" class="py-8 text-center text-[#5f756e] italic">טרם נרשמו תנועות פיננסיות השנה.</td>
-                                            </tr>
-                                        </template>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- מעקב תשלומי מתאמנים דינמי -->
-                    <div class="bg-white border border-[#e5dfd3] rounded-3xl shadow-xl overflow-hidden">
-                        <div class="p-4 md:p-5 border-b border-[#e5dfd3] bg-[#fcf9f2]">
-                            <h4 class="text-xs md:text-sm font-black text-[#082722]">מעקב תשלומי מתאמנים פעילים</h4>
-                        </div>
-                        <div class="overflow-x-auto w-full">
-                            <table class="w-full text-right border-collapse min-w-[650px] text-xs">
-                                <thead>
-                                    <tr class="bg-[#fcf9f2] border-b border-[#e5dfd3] text-[#5f756e] font-black">
-                                        <th class="py-3 px-6 w-1/4">שם המתאמן</th>
-                                        <th class="py-3 px-6">תשלומים חודשיים (לחץ לשינוי סטטוס)</th>
-                                        <th class="py-3 px-6 text-center w-24">סה״כ שולם</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-[#e5dfd3]/50">
-                                    <template x-for="client in clients" :key="client.id">
-                                        <tr class="hover:bg-[#fbf8f2] transition">
-                                            <td class="py-2.5 px-6">
-                                                <button @click="selectClient(client.id)" class="text-xs font-black text-[#082722] hover:text-emerald-700 transition" x-text="client.name"></button>
-                                                <span class="text-[9px] text-[#5f756e] block" x-text="'מנוי: ' + (client.pricePerMonth || 250) + ' ₪ לחודש'"></span>
-                                            </td>
-                                            <td class="py-2.5 px-6">
-                                                <!-- רשימת תגים דינמית חלקה -->
-                                                <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none whitespace-nowrap py-1">
-                                                    <template x-for="(pay, pIdx) in client.payments" :key="pIdx">
-                                                        <button 
-                                                            @click="toggleClientPaymentStatus(client.id, pIdx)" 
-                                                            :class="pay.status === 'paid' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" 
-                                                            class="text-[9px] px-2.5 py-0.5 rounded-full font-bold border transition cursor-pointer select-none"
-                                                            x-text="'ח׳ ' + pay.month + ': ' + pay.amount + ' ₪'">
-                                                        </button>
+                                            <div class="w-full max-w-[42px] bg-[#e5dfd3]/50 rounded-t-xl overflow-hidden flex items-end h-32 p-0.5">
+                                                <div class="w-full rounded-t-lg transition-all duration-700 ease-out relative overflow-hidden shadow-sm"
+                                                     :class="item.value > 0 ? 'bg-gradient-to-t from-[#082722] via-[#0b332b] to-[#22c55e] shadow-md shadow-[#22c55e]/20' : 'bg-[#dcd5c4]'"
+                                                     :style="'height: ' + getBarHeightPercentage(item.value) + '%;'">
+                                                    <template x-if="item.value > 0">
+                                                        <div class="w-full h-1 bg-[#86efac] rounded-t-lg shadow-sm"></div>
                                                     </template>
                                                 </div>
+                                            </div>
+
+                                            <span class="text-[11px] font-bold mt-2.5 block text-center"
+                                                  :class="item.value > 0 ? 'text-[#082722] font-black' : 'text-[#5f756e]'"
+                                                  x-text="item.name">
+                                            </span>
+                                        </div>
+                                    </template>
+                                </template>
+
+                                <!-- מצב השוואת הכנסות מול הוצאות -->
+                                <template x-if="financeChartMode === 'compare'">
+                                    <template x-for="item in getMonthlyFinancialComparisonData()" :key="item.name">
+                                        <div class="flex flex-col items-center justify-end h-full group cursor-pointer relative" style="width: 14%;">
+                                            <div class="mb-1.5 transition-all duration-300 transform group-hover:-translate-y-1 text-center">
+                                                <span class="text-[9px] font-black text-emerald-700 block" x-text="'+' + item.income"></span>
+                                                <span class="text-[9px] font-bold text-rose-600 block" x-text="'-' + item.expenses"></span>
+                                            </div>
+
+                                            <div class="w-full max-w-[48px] flex items-end justify-center gap-1 h-32 bg-[#e5dfd3]/30 rounded-t-xl p-1">
+                                                <!-- עמודת הכנסה -->
+                                                <div class="w-1/2 bg-gradient-to-t from-emerald-800 to-[#22c55e] rounded-t-md transition-all duration-700 shadow-sm"
+                                                     :style="'height: ' + getComparisonBarHeight(item.income) + '%;'"
+                                                     :title="'הכנסות: ' + item.income + ' ₪'"></div>
+                                                <!-- עמודת הוצאה -->
+                                                <div class="w-1/2 bg-gradient-to-t from-rose-700 to-rose-400 rounded-t-md transition-all duration-700 shadow-sm"
+                                                     :style="'height: ' + getComparisonBarHeight(item.expenses) + '%;'"
+                                                     :title="'הוצאות: ' + item.expenses + ' ₪'"></div>
+                                            </div>
+
+                                            <span class="text-[11px] font-bold mt-2.5 block text-center text-[#082722]" x-text="item.name"></span>
+                                        </div>
+                                    </template>
+                                </template>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- מעקב תשלומי וגביית מתאמנים 2.0 (Smart Billing Matrix) -->
+                    <div class="bg-white border border-[#e5dfd3] rounded-3xl shadow-xl overflow-hidden">
+                        <div class="p-4 md:p-6 border-b border-[#e5dfd3] bg-[#fcf9f2] flex flex-col md:flex-row md:items-center justify-between gap-3">
+                            <div>
+                                <h4 class="text-sm md:text-base font-black text-[#082722] flex items-center gap-2">
+                                    <i data-lucide="users" class="w-4 h-4 text-emerald-700"></i>
+                                    <span>מעקב גבייה ותשלומי מתאמנים</span>
+                                </h4>
+                                <p class="text-[11px] text-[#5f756e]">ניהול מחזורי חיוב, סימון תשלומים ושליחת תזכורות וואטסאפ אישיות</p>
+                            </div>
+
+                            <!-- סינונים וחיפוש מתאמנים -->
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <div class="relative min-w-[180px]">
+                                    <i data-lucide="search" class="w-3.5 h-3.5 absolute right-3 top-3 text-[#5f756e]"></i>
+                                    <input type="text" x-model="financeClientSearch" placeholder="חיפוש מתאמן..." class="w-full bg-white border border-[#e5dfd3] rounded-xl pr-8 pl-3 py-1.5 text-xs text-[#082722] font-medium focus:outline-none focus:border-[#22c55e]">
+                                </div>
+                                <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-[#e5dfd3]">
+                                    <button type="button" @click="financeClientFilter = 'all'" :class="financeClientFilter === 'all' ? 'bg-[#082722] text-[#86efac] font-black' : 'text-[#5f756e] font-bold'" class="text-[11px] px-2.5 py-1 rounded-lg transition cursor-pointer">
+                                        הכל (<span x-text="clients.length"></span>)
+                                    </button>
+                                    <button type="button" @click="financeClientFilter = 'debt_only'" :class="financeClientFilter === 'debt_only' ? 'bg-amber-600 text-white font-black' : 'text-amber-800 font-bold'" class="text-[11px] px-2.5 py-1 rounded-lg transition cursor-pointer flex items-center gap-1">
+                                        <span>בעלי חוב</span>
+                                        <span class="bg-amber-100 text-amber-900 text-[9px] px-1.5 py-0.2 rounded-full font-black" x-text="getClientsWithDebtCount()"></span>
+                                    </button>
+                                    <button type="button" @click="financeClientFilter = 'paid_only'" :class="financeClientFilter === 'paid_only' ? 'bg-emerald-700 text-white font-black' : 'text-emerald-800 font-bold'" class="text-[11px] px-2.5 py-1 rounded-lg transition cursor-pointer">
+                                        שילמו הכל ✓
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- טבלת המתאמנים -->
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full text-right border-collapse min-w-[750px] text-xs">
+                                <thead>
+                                    <tr class="bg-[#fcf9f2] border-b border-[#e5dfd3] text-[#5f756e] font-black">
+                                        <th class="py-3 px-5 w-48">שם המתאמן ומנוי</th>
+                                        <th class="py-3 px-5">מחזורי תשלום (לחץ לשינוי סטטוס / הוספת חודש)</th>
+                                        <th class="py-3 px-4 text-center w-28">שולם בפועל</th>
+                                        <th class="py-3 px-4 text-center w-28">יתרת חוב</th>
+                                        <th class="py-3 px-4 text-left w-28">פעולות</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-[#e5dfd3]/60">
+                                    <template x-for="client in getFilteredBillingClients()" :key="client.id">
+                                        <tr class="hover:bg-[#fbf8f2] transition group">
+                                            
+                                            <!-- שם המתאמן -->
+                                            <td class="py-3 px-5">
+                                                <div class="flex items-center gap-2.5">
+                                                    <div class="w-8 h-8 rounded-full bg-[#082722] text-[#86efac] font-black text-xs flex items-center justify-center border border-[#13443a] shrink-0" x-text="client.name.charAt(0)"></div>
+                                                    <div>
+                                                        <button type="button" @click="selectClient(client.id)" class="text-xs font-black text-[#082722] hover:text-emerald-700 transition cursor-pointer text-right block" x-text="client.name"></button>
+                                                        <span class="text-[10px] text-[#5f756e] block" x-text="(client.pricePerMonth || 250) + ' ₪ / חודש'"></span>
+                                                    </div>
+                                                </div>
                                             </td>
-                                            <td class="py-2.5 px-6 text-center text-[#082722] font-black text-xs" x-text="getClientPaidSum(client) + ' ₪'"></td>
+
+                                            <!-- תגיות חודשי תשלום -->
+                                            <td class="py-3 px-5">
+                                                <div class="flex items-center gap-1.5 flex-wrap">
+                                                    <template x-for="(pay, pIdx) in (client.payments || [])" :key="pIdx">
+                                                        <button 
+                                                            type="button"
+                                                            @click="toggleClientPaymentStatus(client.id, pIdx)" 
+                                                            :class="pay.status === 'paid' ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-emerald-300' : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300 animate-pulse'" 
+                                                            class="text-[10px] px-2.5 py-1 rounded-xl font-bold border transition cursor-pointer select-none flex items-center gap-1 shadow-xs"
+                                                            :title="pay.status === 'paid' ? 'שולם - לחץ לסימון כממתין' : 'ממתין לתשלום - לחץ לסימון כשולם'">
+                                                            <span x-text="'ח׳ ' + pay.month + ': ' + pay.amount + ' ₪'"></span>
+                                                            <span class="text-[8px] font-black" x-text="pay.status === 'paid' ? '✓' : '⏳'"></span>
+                                                        </button>
+                                                    </template>
+
+                                                    <!-- כפתור הוספת חודש חיוב נוסף -->
+                                                    <button type="button" @click="addClientBillingMonth(client.id)" class="bg-white hover:bg-slate-50 border border-dashed border-[#e5dfd3] hover:border-[#082722] text-[#5f756e] hover:text-[#082722] text-[10px] font-bold px-2 py-1 rounded-xl transition cursor-pointer flex items-center gap-1" title="הוסף חודש חיוב נוסף ללקוח זה">
+                                                        <i data-lucide="plus" class="w-3 h-3"></i>
+                                                        <span>חודש נוסף</span>
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                            <!-- סה״כ שולם -->
+                                            <td class="py-3 px-4 text-center">
+                                                <span class="text-xs font-black text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200" x-text="getClientPaidSum(client) + ' ₪'"></span>
+                                            </td>
+
+                                            <!-- יתרת חוב -->
+                                            <td class="py-3 px-4 text-center">
+                                                <template x-if="getClientTotalDebt(client) > 0">
+                                                    <span class="text-xs font-black text-amber-900 bg-amber-100 px-2.5 py-1 rounded-xl border border-amber-300" x-text="getClientTotalDebt(client) + ' ₪'"></span>
+                                                </template>
+                                                <template x-if="getClientTotalDebt(client) === 0">
+                                                    <span class="text-[11px] font-bold text-emerald-700">הכל שולם ✓</span>
+                                                </template>
+                                            </td>
+
+                                            <!-- פעולות -->
+                                            <td class="py-3 px-4 text-left">
+                                                <div class="flex items-center justify-end gap-1.5">
+                                                    <button type="button" @click="sendClientDebtWhatsApp(client)" class="bg-[#25D366] hover:bg-[#1ebd5a] text-white p-2 rounded-xl transition cursor-pointer shadow-xs" title="שלח תזכורת תשלום בוואטסאפ">
+                                                        <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                                                    </button>
+                                                    <button type="button" @click="selectClient(client.id)" class="bg-white hover:bg-slate-100 border border-[#e5dfd3] text-[#082722] p-2 rounded-xl transition cursor-pointer" title="פתח כרטיס לקוח">
+                                                        <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </template>
+
+                                    <template x-if="getFilteredBillingClients().length === 0">
+                                        <tr>
+                                            <td colspan="5" class="py-8 text-center text-[#5f756e] italic">לא נמצאו מתאמנים התואמים את החיפוש או הסינון שנבחרו.</td>
                                         </tr>
                                     </template>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
+                    <!-- ניהול תנועות והוצאות עסק 2.0 (Business Ledger & Quick Entry) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        
+                        <!-- טופס הוספת תנועה פיננסית חדשה -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4 lg:col-span-1">
+                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
+                                <h4 class="text-xs md:text-sm font-black text-[#082722] flex items-center gap-1.5">
+                                    <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-700"></i>
+                                    <span>רישום תנועה פיננסית</span>
+                                </h4>
+                                <span class="text-[10px] text-[#5f756e] font-semibold">הכנסה או הוצאה</span>
+                            </div>
+
+                            <form @submit.prevent="addTransaction()" class="space-y-3.5 text-xs">
+                                
+                                <!-- סוג תנועה -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סוג תנועה</label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button type="button" @click="newTransaction.type = 'expense'" :class="newTransaction.type === 'expense' ? 'bg-rose-600 text-white font-black border-rose-700 shadow-sm' : 'bg-[#fbf8f2] text-[#082722] font-bold border-[#e5dfd3]'" class="border p-2 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1">
+                                            <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i>
+                                            <span>הוצאת עסק (-)</span>
+                                        </button>
+                                        <button type="button" @click="newTransaction.type = 'income'" :class="newTransaction.type === 'income' ? 'bg-emerald-700 text-white font-black border-emerald-800 shadow-sm' : 'bg-[#fbf8f2] text-[#082722] font-bold border-[#e5dfd3]'" class="border p-2 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1">
+                                            <i data-lucide="arrow-up-left" class="w-3.5 h-3.5"></i>
+                                            <span>הכנסה (+)</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- קטגוריית תנועה -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">קטגוריה</label>
+                                    <select x-model="newTransaction.category" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
+                                        <option value="equipment">🏋️‍♂️ ציוד וביגוד כושר</option>
+                                        <option value="marketing">📢 שיווק ופרסום</option>
+                                        <option value="rent">🏢 שכירות וסטודיו</option>
+                                        <option value="software">💻 תוכנות, אחסון ומנויים</option>
+                                        <option value="supplements">💊 תוספי תזונה</option>
+                                        <option value="personal_training">🥊 אימון אישי פרונטלי</option>
+                                        <option value="mentorship">🌟 ליווי אונליין פרימיום</option>
+                                        <option value="other">📁 אחר / כללי</option>
+                                    </select>
+                                </div>
+
+                                <!-- אמצעי תשלום -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">אמצעי תשלום</label>
+                                    <select x-model="newTransaction.paymentMethod" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
+                                        <option value="bit">📲 ביט / פייבוקס (Bit / PayBox)</option>
+                                        <option value="transfer">🏦 העברה בנקאית</option>
+                                        <option value="credit">💳 כרטיס אשראי</option>
+                                        <option value="cash">💵 מזומן</option>
+                                        <option value="other">📁 אחר</option>
+                                    </select>
+                                </div>
+
+                                <!-- סכום ותאריך -->
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סכום (₪)</label>
+                                        <input type="number" step="any" x-model="newTransaction.amount" required placeholder="500" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-black focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תאריך</label>
+                                        <input type="date" x-model="newTransaction.date" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+                                </div>
+
+                                <!-- תיאור תנועה -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תיאור תנועה</label>
+                                    <input type="text" x-model="newTransaction.description" required placeholder="למשל: רכישת רצועות התנגדות, שיווק אינסטגרם..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-medium focus:outline-none focus:border-[#22c55e]">
+                                </div>
+
+                                <button type="submit" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3 rounded-xl transition shadow-md mt-2 cursor-pointer flex items-center justify-center gap-1.5">
+                                    <i data-lucide="check" class="w-4 h-4"></i>
+                                    <span>שמור תנועה במערכת</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- יומן תנועות עסק (Ledger) -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl shadow-xl overflow-hidden lg:col-span-2 flex flex-col h-[520px]">
+                            
+                            <!-- בר עליון של היומן -->
+                            <div class="p-4 md:p-5 border-b border-[#e5dfd3] bg-[#fcf9f2] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <h4 class="text-xs md:text-sm font-black text-[#082722] flex items-center gap-1.5">
+                                        <i data-lucide="file-text" class="w-4 h-4 text-emerald-700"></i>
+                                        <span>יומן תנועות פיננסיות בעסק</span>
+                                    </h4>
+                                    <span class="text-[10px] text-[#5f756e]" x-text="transactions.length + ' תנועות רשומות בסה״כ'"></span>
+                                </div>
+
+                                <!-- סינונים -->
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <div class="relative">
+                                        <input type="text" x-model="financeSearchQuery" placeholder="חיפוש ביומן..." class="bg-white border border-[#e5dfd3] rounded-xl px-3 py-1.5 text-xs text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+                                    <select x-model="financeTypeFilter" class="bg-white border border-[#e5dfd3] rounded-xl px-2.5 py-1.5 text-xs text-[#082722] font-bold focus:outline-none">
+                                        <option value="all">כל הסוגים</option>
+                                        <option value="income">הכנסות בלבד (+)</option>
+                                        <option value="expense">הוצאות בלבד (-)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- טבלת התנועות -->
+                            <div class="flex-1 overflow-y-auto">
+                                <table class="w-full text-right border-collapse text-xs">
+                                    <thead>
+                                        <tr class="bg-[#fcf9f2] border-b border-[#e5dfd3] text-[#5f756e] font-black sticky top-0 z-10">
+                                            <th class="py-2.5 px-4">תאריך</th>
+                                            <th class="py-2.5 px-4">תיאור וקטגוריה</th>
+                                            <th class="py-2.5 px-3 text-center">אמצעי תשלום</th>
+                                            <th class="py-2.5 px-3 text-center">סוג</th>
+                                            <th class="py-2.5 px-4 text-center">סכום</th>
+                                            <th class="py-2.5 px-3 text-left">מחיקה</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-[#e5dfd3]/50">
+                                        <template x-for="tx in getFilteredTransactions()" :key="tx.id">
+                                            <tr class="hover:bg-[#fbf8f2] transition">
+                                                
+                                                <!-- תאריך -->
+                                                <td class="py-2.5 px-4 text-[#5f756e] whitespace-nowrap" x-text="formatDate(tx.date)"></td>
+                                                
+                                                <!-- תיאור וקטגוריה -->
+                                                <td class="py-2.5 px-4">
+                                                    <div class="text-[#082722] font-black" x-text="tx.description"></div>
+                                                    <span class="text-[9px] px-2 py-0.2 rounded-md font-bold mt-0.5 inline-block" :class="getCategoryColor(tx.category)" x-text="getCategoryLabel(tx.category)"></span>
+                                                </td>
+
+                                                <!-- אמצעי תשלום -->
+                                                <td class="py-2.5 px-3 text-center whitespace-nowrap">
+                                                    <span class="text-[10px] text-[#5f756e] font-medium" x-text="getPaymentMethodLabel(tx.paymentMethod)"></span>
+                                                </td>
+
+                                                <!-- סוג -->
+                                                <td class="py-2.5 px-3 text-center">
+                                                    <span :class="tx.type === 'income' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-rose-100 text-rose-800 border-rose-300'" class="text-[9px] px-2 py-0.5 rounded-full border font-bold" x-text="tx.type === 'income' ? 'הכנסה' : 'הוצאה'"></span>
+                                                </td>
+
+                                                <!-- סכום -->
+                                                <td :class="tx.type === 'income' ? 'text-emerald-700 font-black' : 'text-rose-600 font-black'" class="py-2.5 px-4 text-center text-xs whitespace-nowrap" x-text="(tx.type === 'income' ? '+' : '-') + tx.amount + ' ₪'"></td>
+
+                                                <!-- מחיקה -->
+                                                <td class="py-2.5 px-3 text-left">
+                                                    <button type="button" @click="deleteTransaction(tx.id)" class="text-[#5f756e] hover:text-rose-600 p-1 transition cursor-pointer" title="מחק תנועה">
+                                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </template>
+
+                                        <template x-if="getFilteredTransactions().length === 0">
+                                            <tr>
+                                                <td colspan="6" class="py-12 text-center text-[#5f756e] italic">
+                                                    לא נמצאו תנועות פיננסיות בסינון הנוכחי.
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
+
 
                 <!-- 6. טאב הגדרות וסנכרון ענן -->
                 <div x-show="activeTab === 'settings' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
@@ -6580,6 +6919,16 @@
             return {
                 // ניווט ומצב
                 activeTab: 'dashboard',
+                financeMonthlyGoal: parseFloat(localStorage.getItem('ilaico_finance_goal')) || 10000,
+                openGoalEditModal: false,
+                tempGoalInput: 10000,
+                financePeriodFilter: 'all',
+                financeTypeFilter: 'all',
+                financeSearchQuery: '',
+                financeClientFilter: 'all',
+                financeClientSearch: '',
+                financeChartMode: 'net',
+                financeToast: { show: false, message: '' },
                 selectedClientId: null,
                 detailSubTab: 'profile',
                 searchQuery: '',
@@ -6793,7 +7142,7 @@
                 editingClient: {},
                 newCheckin: { date: '', weight: '', bodyFat: '', waist: '', adherenceNutrition: 5, adherenceTraining: 5, notes: '', isDrop: false },
                 newEvent: { clientId: '', type: 'zoom', date: '', time: '' },
-                newTransaction: { type: 'expense', amount: '', description: '', date: '' },
+                newTransaction: { type: 'expense', category: 'equipment', paymentMethod: 'bit', amount: '', description: '', date: '' },
                 newIntake: { 
                     name: '', phone: '', email: '', age: '', height: '', startWeight: '', 
                     sleepHours: '', activityLevel: 'יושבני', experience: 'מתחיל', weeklyWorkouts: '3 אימונים בשבוע', 
@@ -8721,7 +9070,230 @@
 
                 getActiveClientsCount() { return this.clients.filter(c => c.status === 'active').length; },
                 
-                // הוספת עסקאות
+                
+                // --- שיטות ניהול פיננסי 2.0 (Executive Financial Suite) ---
+                showSaveToast(msg) {
+                    this.financeToast = { show: true, message: msg };
+                    setTimeout(() => { this.financeToast.show = false; }, 3000);
+                },
+
+                saveMonthlyGoal(goal) {
+                    const num = parseFloat(goal) || 10000;
+                    this.financeMonthlyGoal = num;
+                    localStorage.setItem('ilaico_finance_goal', num.toString());
+                    this.openGoalEditModal = false;
+                    this.showSaveToast("יעד ההכנסה החודשי עודכן ל-" + num + " ₪!");
+                },
+
+                getGoalProgressPercent() {
+                    const collected = this.getTotalRevenueCollected();
+                    const goal = this.financeMonthlyGoal || 10000;
+                    return Math.round((collected / goal) * 100);
+                },
+
+                getClientsWithDebtCount() {
+                    return this.clients.filter(c => {
+                        const debt = this.getClientTotalDebt(c);
+                        return debt > 0;
+                    }).length;
+                },
+
+                getClientTotalDebt(client) {
+                    if (!client || !client.payments) return 0;
+                    return client.payments
+                        .filter(p => p.status === 'pending')
+                        .reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                },
+
+                getFilteredBillingClients() {
+                    let list = this.clients || [];
+                    if (this.financeClientSearch && this.financeClientSearch.trim()) {
+                        const q = this.financeClientSearch.toLowerCase().trim();
+                        list = list.filter(c => (c.name || '').toLowerCase().includes(q) || (c.phone || '').includes(q));
+                    }
+                    if (this.financeClientFilter === 'debt_only') {
+                        list = list.filter(c => this.getClientTotalDebt(c) > 0);
+                    } else if (this.financeClientFilter === 'paid_only') {
+                        list = list.filter(c => this.getClientTotalDebt(c) === 0);
+                    }
+                    return list;
+                },
+
+                addClientBillingMonth(clientId) {
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (!client) return;
+                    if (!client.payments) client.payments = [];
+                    const nextMonth = client.payments.length + 1;
+                    const amount = parseFloat(client.pricePerMonth) || 250;
+                    client.payments.push({
+                        month: nextMonth,
+                        amount: amount,
+                        status: 'pending'
+                    });
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    this.showSaveToast("נוסף חודש חיוב " + nextMonth + " ל-" + client.name + " (" + amount + " ₪)!");
+                },
+
+                sendClientDebtWhatsApp(client) {
+                    if (!client) return;
+                    const debt = this.getClientTotalDebt(client);
+                    const pendingMonths = (client.payments || []).filter(p => p.status === 'pending').map(p => 'חודש ' + p.month).join(', ');
+                    const phone = (client.phone || '').replace(/[^0-9]/g, '');
+                    const cleanPhone = phone.startsWith('0') ? '972' + phone.substring(1) : phone;
+                    
+                    let msg = "";
+                    if (debt > 0) {
+                        msg = "היי " + client.name + " יקר/ה! 💪\n\nתזכורת ידידותית לגבי תשלום דמי הליווי ב-ILAI Fitness עבור " + (pendingMonths || 'החודש הנוכחי') + " על סך " + debt + " ₪.\n\nניתן להעביר בביט / פייבוקס למספר זה, או בהעברה בנקאית.\nתודה רבה וממשיכים בכל הכוח! 🔥";
+                    } else {
+                        msg = "היי " + client.name + " יקר/ה! 💪\nכל התשלומים עבור הליווי ב-ILAI Fitness מוסדרים ומעודכנים! תודה רבה וממשיכים בשיא הכוח! 🔥";
+                    }
+                    window.open('https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg), '_blank');
+                },
+
+                getFilteredTransactions() {
+                    let list = this.transactions || [];
+                    if (this.financeTypeFilter !== 'all') {
+                        list = list.filter(t => t.type === this.financeTypeFilter);
+                    }
+                    if (this.financeSearchQuery && this.financeSearchQuery.trim()) {
+                        const q = this.financeSearchQuery.toLowerCase().trim();
+                        list = list.filter(t => (t.description || '').toLowerCase().includes(q) || (t.category || '').toLowerCase().includes(q));
+                    }
+                    return list;
+                },
+
+                exportTransactionsToCSV() {
+                    let csv = "\uFEFFתאריך,סוג,קטגוריה,אמצעי תשלום,סכום (₪),תיאור\n";
+                    this.transactions.forEach(t => {
+                        const typeStr = t.type === 'income' ? 'הכנסה' : 'הוצאה';
+                        const catStr = this.getCategoryLabel(t.category);
+                        const methodStr = this.getPaymentMethodLabel(t.paymentMethod);
+                        const desc = (t.description || '').replace(/"/g, '""');
+                        csv += `"${t.date || ''}","${typeStr}","${catStr}","${methodStr}","${t.amount || 0}","${desc}"\n`;
+                    });
+                    
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.setAttribute("download", "ilai_fitness_transactions_" + this.getTodayDate() + ".csv");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    this.showSaveToast("דוח העסקאות יוצא בהצלחה לקובץ CSV!");
+                },
+
+                getMonthlyFinancialComparisonData() {
+                    const data = [];
+                    const now = new Date();
+                    for (let i = 5; i >= 0; i--) {
+                        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                        const monthName = d.toLocaleDateString('he-IL', { month: 'short' });
+                        const year = d.getFullYear();
+                        const month = d.getMonth();
+                        
+                        let income = 0;
+                        let expenses = 0;
+                        
+                        this.clients.forEach(c => {
+                            if (!c.startDate) return;
+                            const parts = c.startDate.split('-').map(Number);
+                            const sYear = parts[0];
+                            const sMonth = parts[1] - 1;
+                            const sDay = parts[2] || 1;
+                            (c.payments || []).forEach((p, idx) => {
+                                if (p.status !== 'paid') return;
+                                const payDate = new Date(sYear, sMonth, sDay + (idx * 30));
+                                if (payDate.getFullYear() === year && payDate.getMonth() === month) {
+                                    income += (parseFloat(p.amount) || 0);
+                                }
+                            });
+                        });
+                        
+                        this.transactions.forEach(t => {
+                            if (!t.date) return;
+                            const parts = t.date.split('-').map(Number);
+                            const tYear = parts[0];
+                            const tMonth = parts[1] - 1;
+                            if (tYear === year && tMonth === month) {
+                                if (t.type === 'income') {
+                                    income += (parseFloat(t.amount) || 0);
+                                } else {
+                                    expenses += (parseFloat(t.amount) || 0);
+                                }
+                            }
+                        });
+                        
+                        data.push({
+                            name: monthName,
+                            year: year,
+                            month: month,
+                            income: income,
+                            expenses: expenses
+                        });
+                    }
+                    return data;
+                },
+
+                getComparisonChartMax() {
+                    const data = this.getMonthlyFinancialComparisonData();
+                    let max = 0;
+                    data.forEach(d => {
+                        if (d.income > max) max = d.income;
+                        if (d.expenses > max) max = d.expenses;
+                    });
+                    return max > 0 ? max : 500;
+                },
+
+                getComparisonBarHeight(value) {
+                    if (!value || value <= 0) return 4;
+                    const max = this.getComparisonChartMax();
+                    const pct = Math.round((value / max) * 92);
+                    return Math.max(12, Math.min(100, pct));
+                },
+
+                getCategoryLabel(category) {
+                    const map = {
+                        equipment: 'ציוד וביגוד כושר',
+                        marketing: 'שיווק ופרסום',
+                        rent: 'שכירות וסטודיו',
+                        software: 'תוכנות ומנויים',
+                        supplements: 'תוספי תזונה',
+                        personal_training: 'אימון אישי פרונטלי',
+                        mentorship: 'ליווי אונליין פרימיום',
+                        other: 'כללי / אחר'
+                    };
+                    return map[category] || 'כללי';
+                },
+
+                getCategoryColor(category) {
+                    const map = {
+                        equipment: 'bg-blue-50 text-blue-700 border border-blue-200',
+                        marketing: 'bg-purple-50 text-purple-700 border border-purple-200',
+                        rent: 'bg-amber-50 text-amber-700 border border-amber-200',
+                        software: 'bg-sky-50 text-sky-700 border border-sky-200',
+                        supplements: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+                        personal_training: 'bg-lime-50 text-lime-800 border border-lime-200',
+                        mentorship: 'bg-teal-50 text-teal-800 border border-teal-200',
+                        other: 'bg-slate-50 text-slate-700 border border-slate-200'
+                    };
+                    return map[category] || 'bg-slate-50 text-slate-700 border border-slate-200';
+                },
+
+                getPaymentMethodLabel(method) {
+                    const map = {
+                        bit: 'ביט / פייבוקס',
+                        transfer: 'העברה בנקאית',
+                        credit: 'כרטיס אשראי',
+                        cash: 'מזומן',
+                        other: 'אחר'
+                    };
+                    return map[method] || 'ביט / פייבוקס';
+                },
+
+                // עדכון addTransaction לתמיכה בשדות העשירים
                 addTransaction() {
                     if (!this.newTransaction.amount || !this.newTransaction.description) {
                         alert("אנא מלא סכום ותיאור!");
@@ -8729,7 +9301,9 @@
                     }
                     const tx = {
                         id: 'tx_' + Date.now(),
-                        type: this.newTransaction.type, // 'income' or 'expense'
+                        type: this.newTransaction.type || 'expense',
+                        category: this.newTransaction.category || 'other',
+                        paymentMethod: this.newTransaction.paymentMethod || 'bit',
                         amount: parseFloat(this.newTransaction.amount),
                         description: this.newTransaction.description,
                         date: this.newTransaction.date || this.getTodayDate()
@@ -8744,18 +9318,17 @@
                     this.saveData();
 
                     // איפוס הטופס
-                    this.newTransaction = { type: 'expense', amount: '', description: '', date: this.getTodayDate() };
+                    this.newTransaction = { 
+                        type: 'expense', 
+                        category: 'equipment', 
+                        paymentMethod: 'bit', 
+                        amount: '', 
+                        description: '', 
+                        date: this.getTodayDate() 
+                    };
+                    this.showSaveToast("תנועה פיננסית נרשמה בהצלחה!");
                 },
 
-                deleteTransaction(id) {
-                    if (confirm("למחוק תנועה זו?")) {
-                        this.transactions = this.transactions.filter(t => t.id !== id);
-                        if (this.isCloudSynced && this.db) {
-                            this.db.collection("transactions").doc(id).delete();
-                        }
-                        this.saveData();
-                    }
-                },
 
                 // חישובים פיננסיים דינמיים
                 getExpectedMonthlyRevenue() {
@@ -9603,7 +10176,103 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         return matchMuscle && matchQuery;
                     });
                 },
-saveWorkoutPlanWithToast() {
+
+                // --- פונקציות עזר לפרופיל מתאמן וקישורים ---
+                openEditClient(client) {
+                    this.openEditClientModal(client || this.currentClient);
+                },
+
+                sendPortalLinkWhatsApp(client) {
+                    if (!client) return;
+                    const phone = (client.phone || '').replace(/[^0-9]/g, '');
+                    const cleanPhone = phone.startsWith('0') ? '972' + phone.substring(1) : phone;
+                    const portalUrl = window.location.origin + window.location.pathname + '?portal=true&clientId=' + client.id;
+                    const msg = "היי " + client.name + " יקר/ה! 💪\nהנה הקישור הישיר שלך לפורטל האימונים והתזונה האישי ב-ILAI Fitness:\n\n" + portalUrl + "\n\nמומלץ לשמור במסך הבית בטלפון לגישה מהירה בכל יום! 👑";
+                    window.open('https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg), '_blank');
+                },
+
+                copyPortalLink(client) {
+                    if (!client) return;
+                    const portalUrl = window.location.origin + window.location.pathname + '?portal=true&clientId=' + client.id;
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(portalUrl).then(() => {
+                            alert("הקישור לפורטל של " + client.name + " הועתק ללוח בהצלחה!\n\n" + portalUrl);
+                        }).catch(() => {
+                            prompt('העתק את הקישור לפורטל:', portalUrl);
+                        });
+                    } else {
+                        prompt('העתק את הקישור לפורטל:', portalUrl);
+                    }
+                },
+
+                updateClientDriveUrl(clientId, url) {
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (client) {
+                        client.googleDriveUrl = url;
+                        client.googleDriveFolderUrl = url;
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
+                    }
+                },
+
+                updateClientSheetsUrl(clientId, url) {
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (client) {
+                        client.googleSheetsUrl = url;
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
+                    }
+                },
+
+                sendWhatsAppReminder(type, client) {
+                    if (!client) return;
+                    const phone = (client.phone || '').replace(/[^0-9]/g, '');
+                    const cleanPhone = phone.startsWith('0') ? '972' + phone.substring(1) : phone;
+                    let msg = '';
+                    if (type === 'שקילה') {
+                        msg = "היי " + client.name + "! 💪 בוקר טוב!\nתזכורת ידידותית לביצוע שקילה שבועית ועדכון המדדים והמשקל באפליקציית ILAI Fitness.\nשיהיה יום מנצח! 🔥";
+                    } else if (type === 'שיחה') {
+                        msg = "היי " + client.name + "! 💪\nתזכורת לשיחת המעקב השבועית שלנו. תעדכן אותי כשאתה פנוי! 🎯";
+                    } else if (type === 'זום') {
+                        msg = "היי " + client.name + "! 💪\nתזכורת למפגש הזום והייעוץ האישי שלנו. נתראה בקרוב! 🚀";
+                    } else {
+                        msg = "היי " + client.name + "! 💪\nתזכורת ממאמן הכושר שלך אילאי.";
+                    }
+                    window.open('https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg), '_blank');
+                },
+
+                getLatestWeight(client) {
+                    if (!client) return null;
+                    if (client.checkins && client.checkins.length > 0) {
+                        const sorted = [...client.checkins].sort((a, b) => new Date(b.date) - new Date(a.date));
+                        const latest = sorted.find(c => c.weight && !isNaN(parseFloat(c.weight)));
+                        if (latest) return parseFloat(latest.weight);
+                    }
+                    return client.startWeight ? parseFloat(client.startWeight) : null;
+                },
+
+                getWeightChangeTotal(client) {
+                    if (!client || !client.startWeight) return 0;
+                    const start = parseFloat(client.startWeight);
+                    const curr = parseFloat(this.getLatestWeight(client));
+                    if (isNaN(start) || isNaN(curr)) return 0;
+                    return Math.round((curr - start) * 10) / 10;
+                },
+
+                getWeightDiffFromPrev(client, index) {
+                    if (!client || !client.checkins || client.checkins.length <= 1 || index >= client.checkins.length - 1) return 0;
+                    const curr = parseFloat(client.checkins[index].weight);
+                    const prev = parseFloat(client.checkins[index + 1].weight);
+                    if (isNaN(curr) || isNaN(prev)) return 0;
+                    return Math.round((curr - prev) * 10) / 10;
+                },
+
+
+                saveWorkoutPlanWithToast() {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (client) {
                         if (this.isCloudSynced && this.db) {
