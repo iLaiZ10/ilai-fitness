@@ -3381,7 +3381,7 @@
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            <button type="button" @click="openEditIntakeModal = true; editingIntake = JSON.parse(JSON.stringify(currentClient?.intake || {})); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+                                            <button type="button" @click="openEditIntake(currentClient)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                                 <span>ערוך שאלון ✏️</span>
                                             </button>
@@ -3400,8 +3400,8 @@
                                                 <i data-lucide="dumbbell" class="w-3.5 h-3.5 text-[#22c55e]"></i>
                                                 <span>רקע ספורטיבי ואימונים:</span>
                                             </span>
-                                            <p class="text-xs text-[#5f756e] font-semibold" x-text="currentClient?.intake?.trainingExperience || 'לא הוזן ניסיון עבר'"></p>
-                                            <span class="text-[10px] text-[#082722] font-bold block" x-text="'תדירות אימונים שבועית: ' + (currentClient?.intake?.weeklyWorkouts || '3-4 פעמים בשבוע')"></span>
+                                            <p class="text-xs text-[#5f756e] font-semibold" x-text="getClientIntake(currentClient).experience || currentClient?.experience || 'לא הוזן ניסיון עבר'"></p>
+                                            <span class="text-[10px] text-[#082722] font-bold block" x-text="'תדירות אימונים שבועית: ' + (getClientIntake(currentClient).weeklyWorkouts || currentClient?.weeklyWorkouts || '3-4 פעמים בשבוע')"></span>
                                         </div>
 
                                         <!-- פציעות ומגבלות -->
@@ -3410,7 +3410,7 @@
                                                 <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-rose-500"></i>
                                                 <span>פציעות, כאבים ומגבלות:</span>
                                             </span>
-                                            <p class="text-xs text-[#5f756e] font-semibold" x-text="currentClient?.intake?.injuries || currentClient?.notes || 'אין פציעות מיוחדות שצוינו'"></p>
+                                            <p class="text-xs text-[#5f756e] font-semibold" x-text="getClientIntake(currentClient).injuries || currentClient?.notes || 'אין פציעות מיוחדות שצוינו'"></p>
                                         </div>
 
                                         <!-- סדר יום ושינה -->
@@ -3419,8 +3419,8 @@
                                                 <i data-lucide="moon" class="w-3.5 h-3.5 text-indigo-500"></i>
                                                 <span>סדר יום והרגלי שינה:</span>
                                             </span>
-                                            <p class="text-xs text-[#5f756e] font-semibold" x-text="'עיסוק: ' + (currentClient?.intake?.occupation || 'לא צוין')"></p>
-                                            <span class="text-[10px] text-[#082722] font-bold block" x-text="'שעות שינה בלילה: ' + (currentClient?.intake?.sleepHours || '7-8') + ' שעות'"></span>
+                                            <p class="text-xs text-[#5f756e] font-semibold" x-text="'רמת פעילות: ' + (getClientIntake(currentClient).activityLevel || currentClient?.activityLevel || 'פעילות בינונית')"></p>
+                                            <span class="text-[10px] text-[#082722] font-bold block" x-text="'שעות שינה בלילה: ' + (getClientIntake(currentClient).sleepHours || currentClient?.sleepHours || '7.5') + ' שעות'"></span>
                                         </div>
 
                                         <!-- העדפות מזון ואלרגיות -->
@@ -3429,8 +3429,8 @@
                                                 <i data-lucide="utensils" class="w-3.5 h-3.5 text-amber-500"></i>
                                                 <span>העדפות מזון ואלרגיות:</span>
                                             </span>
-                                            <p class="text-xs text-[#5f756e] font-semibold" x-text="'אהובים: ' + (currentClient?.intake?.favoriteFoods || 'הכל')"></p>
-                                            <span class="text-[10px] text-[#082722] font-bold block" x-text="'נמנע / אלרגיות: ' + (currentClient?.intake?.dislikedFoods || currentClient?.intake?.allergies || 'אין')"></span>
+                                            <p class="text-xs text-[#5f756e] font-semibold" x-text="'העדפות: ' + (getClientIntake(currentClient).dietPreference || currentClient?.dietPreference || 'אוכל הכל')"></p>
+                                            <span class="text-[10px] text-[#082722] font-bold block" x-text="'נמנע / שנוא: ' + (getClientIntake(currentClient).hatedFoods || currentClient?.hatedFoods || 'אין')"></span>
                                         </div>
                                     </div>
 
@@ -3438,11 +3438,13 @@
                                     <div x-show="openFullIntake" x-transition class="pt-3 border-t border-[#e5dfd3] space-y-3 text-xs">
                                         <div class="bg-[#fbf8f2] p-4 rounded-2xl border border-[#e5dfd3] space-y-2">
                                             <h5 class="font-black text-[#082722] text-xs">פירוט שאלון קליטה מורחב:</h5>
-                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-                                                <div><strong class="text-[#082722]">מטרת ליווי ראשית:</strong> <span class="text-[#5f756e]" x-text="currentClient?.intake?.mainGoal || currentClient?.goal || 'לא צוין'"></span></div>
-                                                <div><strong class="text-[#082722]">דיאטות עבר:</strong> <span class="text-[#5f756e]" x-text="currentClient?.intake?.pastDiets || 'לא צוין'"></span></div>
-                                                <div><strong class="text-[#082722]">תוספי תזונה בשימוש:</strong> <span class="text-[#5f756e]" x-text="currentClient?.intake?.supplements || 'אין'"></span></div>
-                                                <div><strong class="text-[#082722]">למה עכשיו / מוטיבציה:</strong> <span class="text-[#5f756e]" x-text="currentClient?.intake?.motivationReason || 'לא צוין'"></span></div>
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px]">
+                                                <div><strong class="text-[#082722]">מטרת ליווי ראשית:</strong> <span class="text-[#5f756e]" x-text="getClientIntake(currentClient).goal || currentClient?.goal || 'חיטוב ושיפור כוח'"></span></div>
+                                                <div><strong class="text-[#082722]">מיקום אימונים:</strong> <span class="text-[#5f756e]" x-text="getClientIntake(currentClient).trainingLocation || currentClient?.trainingLocation || 'חדר כושר מאובזר'"></span></div>
+                                                <div><strong class="text-[#082722]">כמות ארוחות ביום:</strong> <span class="text-[#5f756e]" x-text="getClientIntake(currentClient).mealsPerDay || currentClient?.mealsPerDay || '4 ארוחות'"></span></div>
+                                                <div><strong class="text-[#082722]">למה עכשיו / מוטיבציה:</strong> <span class="text-[#5f756e]" x-text="getClientIntake(currentClient).motivation || currentClient?.motivation || 'להגיע לחיטוב מקסימלי ולהרים משקלים'"></span></div>
+                                                <div><strong class="text-[#082722]">האתגר הגדול ביותר:</strong> <span class="text-[#5f756e]" x-text="getClientIntake(currentClient).biggestChallenge || currentClient?.biggestChallenge || 'נשנושים בסופ״ש והתמדה'"></span></div>
+                                                <div><strong class="text-[#082722]">דגשים רפואיים:</strong> <span class="text-[#5f756e]" x-text="getClientIntake(currentClient).notes || currentClient?.notes || 'אין'"></span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -4294,7 +4296,222 @@
                         </div>
 
                         <!-- טאב 5: תשלומים -->
-                        <div x-show="detailSubTab === 'payments'" x-cloak class="space-y-6">
+                        <div 
+                        <!-- טאב 4: מדדים, שקילות, דוחות ושיקוף (Checkins, Metrics & Reflections) -->
+                        <div x-show="detailSubTab === 'checkins'" x-cloak class="space-y-6">
+                            
+                            <!-- שורת כרטיסי KPI עליונה למעקב משקל והתקדמות -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <div class="bg-white border border-[#e5dfd3] p-4 rounded-3xl shadow-md text-center space-y-1">
+                                    <span class="text-[10px] text-[#5f756e] font-bold block">משקל התחלתי</span>
+                                    <span class="text-base sm:text-xl font-black text-[#082722]" x-text="(currentClient?.startWeight || 80) + ' ק״ג'"></span>
+                                </div>
+                                <div class="bg-white border border-[#e5dfd3] p-4 rounded-3xl shadow-md text-center space-y-1">
+                                    <span class="text-[10px] text-[#5f756e] font-bold block">משקל נוכחי מעודכן</span>
+                                    <span class="text-base sm:text-xl font-black text-[#22c55e]" x-text="(getLatestWeight(currentClient) || currentClient?.startWeight || 80) + ' ק״ג'"></span>
+                                </div>
+                                <div class="bg-white border border-[#e5dfd3] p-4 rounded-3xl shadow-md text-center space-y-1">
+                                    <span class="text-[10px] text-[#5f756e] font-bold block">יעד משקל מוגדר</span>
+                                    <span class="text-base sm:text-xl font-black text-amber-600" x-text="(currentClient?.targetWeight || 'לפי תוכנית') + (currentClient?.targetWeight ? ' ק״ג' : '')"></span>
+                                </div>
+                                <div class="bg-white border border-[#e5dfd3] p-4 rounded-3xl shadow-md text-center space-y-1">
+                                    <span class="text-[10px] text-[#5f756e] font-bold block">סך שינוי כולל</span>
+                                    <span class="text-base sm:text-xl font-black" :class="getWeightChangeTotal(currentClient) <= 0 ? 'text-emerald-600' : 'text-blue-600'" x-text="getWeightChangeTotal(currentClient) + ' ק״ג'"></span>
+                                </div>
+                            </div>
+
+                            <!-- הוספת מעקב שקילה ומדדים חדש למאמן -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
+                                    <h4 class="text-sm md:text-base font-black text-[#082722] flex items-center gap-2">
+                                        <i data-lucide="scale" class="w-4 h-4 text-[#22c55e]"></i>
+                                        <span>הוספת שקילה ומדדים חדשים למתאמן</span>
+                                    </h4>
+                                    <span class="text-[10px] bg-[#fbf8f2] border border-[#e5dfd3] text-[#5f756e] px-2.5 py-1 rounded-full font-bold">שקילה שבועית ⚖️</span>
+                                </div>
+                                
+                                <form @submit.prevent="addCheckin()" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-[#5f756e]">תאריך:</label>
+                                        <input type="date" x-model="newCheckin.date" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold text-xs focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-[#5f756e]">משקל (ק״ג):</label>
+                                        <input type="number" step="0.1" x-model="newCheckin.weight" required placeholder="75.5" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold text-xs focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-[#5f756e]">היקף מותן (ס״מ):</label>
+                                        <input type="number" step="0.5" x-model="newCheckin.waist" placeholder="82" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold text-xs focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-[#5f756e]">אחוז שומן (%):</label>
+                                        <input type="number" step="0.1" x-model="newCheckin.bodyFat" placeholder="14.5" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold text-xs focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-[#5f756e]">עמידה בתזונה (1-5):</label>
+                                        <select x-model="newCheckin.adherenceNutrition" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold text-xs focus:outline-none focus:border-[#22c55e]">
+                                            <option value="5">5 - מעולה (100%)</option>
+                                            <option value="4">4 - טוב מאוד</option>
+                                            <option value="3">3 - סביר</option>
+                                            <option value="2">2 - חלש</option>
+                                            <option value="1">1 - נפילה</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="block text-[10px] font-bold text-[#5f756e]">עמידה באימונים (1-5):</label>
+                                        <select x-model="newCheckin.adherenceTraining" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold text-xs focus:outline-none focus:border-[#22c55e]">
+                                            <option value="5">5 - כל האימונים</option>
+                                            <option value="4">4 - כמעט הכל</option>
+                                            <option value="3">3 - חצי</option>
+                                            <option value="2">2 - מעט</option>
+                                            <option value="1">1 - ללא אימונים</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-span-2 sm:col-span-3 lg:col-span-5 space-y-1">
+                                        <label class="block text-[10px] font-bold text-[#5f756e]">הערות ודגשים למעקב:</label>
+                                        <input type="text" x-model="newCheckin.notes" placeholder="למשל: ירידה עקבית, הרגיש אנרגטי, הקפיד על חלבון..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-semibold text-xs focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+                                    
+                                    <div class="col-span-2 sm:col-span-3 lg:col-span-1 flex items-end">
+                                        <button type="submit" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-md shadow-[#082722]/15 cursor-pointer">
+                                            <i data-lucide="plus" class="w-4 h-4"></i>
+                                            <span>שמור שקילה</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- היסטוריית שקילות ומדדים מפורטת -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
+                                    <h4 class="text-sm md:text-base font-black text-[#082722] flex items-center gap-2">
+                                        <i data-lucide="history" class="w-4 h-4 text-amber-500"></i>
+                                        <span>יומן שקילות והיסטוריית מדדים</span>
+                                    </h4>
+                                    <span class="text-xs text-[#5f756e] font-bold" x-text="(currentClient?.checkins?.length || 0) + ' שקילות מתועדות'"></span>
+                                </div>
+
+                                <template x-if="!currentClient?.checkins || currentClient.checkins.length === 0">
+                                    <div class="p-10 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
+                                        <i data-lucide="scale" class="w-8 h-8 mx-auto text-[#7a918a]"></i>
+                                        <p class="font-bold text-xs text-[#082722]">טרם נרשמו שקילות עבור המתאמן</p>
+                                        <p class="text-[10px]">הזן שקילה ראשונה בטופס למעלה או בקש מהמתאמן לעדכן באפליקציה!</p>
+                                    </div>
+                                </template>
+
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-right text-xs" x-show="currentClient?.checkins && currentClient.checkins.length > 0">
+                                        <thead>
+                                            <tr class="bg-[#fbf8f2] border-b border-[#e5dfd3] text-[#5f756e] font-black text-[11px]">
+                                                <th class="p-3">תאריך</th>
+                                                <th class="p-3">משקל (ק״ג)</th>
+                                                <th class="p-3">שינוי</th>
+                                                <th class="p-3">היקף מותן</th>
+                                                <th class="p-3">אחוז שומן</th>
+                                                <th class="p-3">עמידה בתזונה</th>
+                                                <th class="p-3">הערות מאמן</th>
+                                                <th class="p-3 text-center">פעולות</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-[#e5dfd3]">
+                                            <template x-for="(ch, cIdx) in (currentClient?.checkins || [])" :key="cIdx">
+                                                <tr class="hover:bg-[#fbf8f2]/60 transition">
+                                                    <td class="p-3 font-bold text-[#082722]" x-text="formatDate(ch.date)"></td>
+                                                    <td class="p-3 font-black text-[#082722]" x-text="ch.weight + ' ק״ג'"></td>
+                                                    <td class="p-3 font-bold">
+                                                        <span :class="getWeightDiffFromPrev(currentClient, cIdx) <= 0 ? 'text-emerald-600' : 'text-rose-500'" 
+                                                              x-text="getWeightDiffFromPrev(currentClient, cIdx) + ' ק״ג'"></span>
+                                                    </td>
+                                                    <td class="p-3 text-[#5f756e]" x-text="ch.waist ? (ch.waist + ' ס״מ') : '-'"></td>
+                                                    <td class="p-3 text-[#5f756e]" x-text="ch.bodyFat ? (ch.bodyFat + '%') : '-'"></td>
+                                                    <td class="p-3">
+                                                        <span class="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px] font-bold" x-text="(ch.adherenceNutrition || 5) + '/5 ⭐'"></span>
+                                                    </td>
+                                                    <td class="p-3 text-[#5f756e] max-w-xs truncate" x-text="ch.notes || '-'"></td>
+                                                    <td class="p-3 text-center">
+                                                        <button type="button" @click="deleteCheckin(cIdx)" class="text-rose-500 hover:text-rose-700 p-1 rounded-lg transition cursor-pointer" title="מחק שקילה">
+                                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- יומן שיקופים שבועיים ומשוב המאמן אילאי -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700">
+                                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-base md:text-lg font-black text-[#082722]">שיקופי תהליך וסופ״ש של המתאמן — <span x-text="currentClient?.name"></span> 📝</h4>
+                                            <p class="text-xs text-[#5f756e]">מעקב אחר סיכומי התהליך שהמתאמן הגיש באפליקציה שלו והזנת משוב</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3.5 py-1.5 rounded-xl text-xs font-bold self-start sm:self-auto" x-text="(currentClient?.reflectionLogs?.length || 0) + ' שיקופים הוגשו'"></span>
+                                </div>
+
+                                <template x-if="!currentClient?.reflectionLogs || currentClient.reflectionLogs.length === 0">
+                                    <div class="p-10 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
+                                        <i data-lucide="file-question" class="w-8 h-8 mx-auto text-[#7a918a]"></i>
+                                        <p class="font-bold text-xs text-[#082722]">טרם הוגשו שיקופים שבועיים ע״י המתאמן</p>
+                                        <p class="text-[10px]">המתאמן ימלא את יומן התהליך באפליקציה ותוכל לתת לו משוב ישיר כאן!</p>
+                                    </div>
+                                </template>
+
+                                <div class="space-y-4">
+                                    <template x-for="ref in (currentClient?.reflectionLogs || [])" :key="ref.id">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 md:p-5 space-y-3.5 shadow-sm" x-data="{ feedbackText: ref.coachFeedback || '' }">
+                                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5dfd3] pb-2.5">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="font-black text-xs md:text-sm text-[#082722]" x-text="(ref.title || 'שיקוף תהליך') + ' • ' + formatDate(ref.date)"></span>
+                                                    <template x-if="ref.mood">
+                                                        <span class="text-[10px] bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-full font-bold" x-text="ref.mood"></span>
+                                                    </template>
+                                                </div>
+                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-3 py-0.5 rounded-full font-bold border self-start sm:self-auto" x-text="ref.reviewed ? 'נבדק ונשלח משוב ✅' : 'ממתין למשוב המאמן ⏳'"></span>
+                                            </div>
+
+                                            <!-- תוכן השיקוף -->
+                                            <div class="bg-white p-3.5 rounded-xl border border-[#e5dfd3] space-y-1">
+                                                <span class="text-[10px] text-[#5f756e] font-bold block">תוכן שנכתב ע״י המתאמן:</span>
+                                                <p class="text-xs font-semibold text-[#082722] whitespace-pre-line leading-relaxed" x-text="ref.text"></p>
+                                            </div>
+
+                                            <!-- טופס כתיבת משוב מאמן -->
+                                            <div class="bg-[#082722] border border-[#133d35] p-4 rounded-2xl space-y-3 text-[#fbf8f2]">
+                                                <div class="flex items-center justify-between">
+                                                    <h5 class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
+                                                        <i data-lucide="crown" class="w-4 h-4"></i>
+                                                        <span>משוב והנחיות המאמן אילאי:</span>
+                                                    </h5>
+                                                    <template x-if="ref.reviewedAt">
+                                                        <span class="text-[9px] text-[#93c7bb]" x-text="'נשמר: ' + formatDate(ref.reviewedAt)"></span>
+                                                    </template>
+                                                </div>
+                                                
+                                                <textarea x-model="feedbackText" placeholder="כתוב כאן משוב אישי, חיזוקים ודגשים למתאמן..." class="w-full bg-[#051c17] border border-[#1b5e50] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#86efac] h-20 resize-none leading-relaxed font-semibold"></textarea>
+                                                
+                                                <div class="flex justify-end">
+                                                    <button type="button" @click="saveCoachFeedback(currentClient.id, ref.id, feedbackText)" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
+                                                        <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                                        <span>שמור ושלח משוב למתאמן 👑</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        x-show="detailSubTab === 'payments'" x-cloak class="space-y-6">
                             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
                                 <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 mb-4">מעקב תשלומים (מסלול 3 חודשים)</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -9118,38 +9335,58 @@
                     setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
                 },
 
+                
+                getClientIntake(client) {
+                    const c = client || this.currentClient || {};
+                    const intake = c.intake || {};
+                    return {
+                        id: c.id || intake.id || '',
+                        name: c.name || intake.name || '',
+                        age: c.age || intake.age || '',
+                        height: c.height || intake.height || '',
+                        startWeight: c.startWeight || c.currentWeight || intake.startWeight || intake.weight || '',
+                        sleepHours: c.sleepHours || intake.sleepHours || '',
+                        activityLevel: c.activityLevel || intake.activityLevel || 'פעילות בינונית (הליכות ואימונים סדירים)',
+                        experience: c.experience || intake.experience || intake.trainingExperience || 'מתאמן כשנתיים בחדר כושר, מכיר את תרגילי הבסיס',
+                        weeklyWorkouts: c.weeklyWorkouts || intake.weeklyWorkouts || '4 פעמים בשבוע (AB)',
+                        trainingLocation: c.trainingLocation || intake.trainingLocation || 'חדר כושר מאובזר',
+                        dietPreference: c.dietPreference || intake.dietPreference || intake.favoriteFoods || 'אוכל הכל, מקפיד על חלבון גבוה',
+                        mealsPerDay: c.mealsPerDay || intake.mealsPerDay || '4 ארוחות',
+                        hatedFoods: c.hatedFoods || intake.hatedFoods || intake.dislikedFoods || intake.allergies || 'חצילים, דגים נאים',
+                        motivation: c.motivation || intake.motivation || intake.motivationReason || 'חיטוב מקסימלי ועלייה במסת שריר ושיפור כוח',
+                        biggestChallenge: c.biggestChallenge || intake.biggestChallenge || intake.pastDiets || 'נשנושים בלילה בסופ״ש והתמדה',
+                        notes: c.notes || c.injuries || intake.notes || intake.injuries || 'פציעה ישנה בכתף ימין - להימנע מלחיצות מאחורי הראש',
+                        goal: c.goal || intake.goal || intake.mainGoal || 'חיטוב, עלייה במסת שריר ושיפור כוח'
+                    };
+                },
+
+
                 openEditIntake(client) {
                     const c = client || this.currentClient || this.clients.find(cl => cl.id === this.selectedClientId);
-                    if (!c) return;
-                    this.editingIntake = {
-                        id: c.id,
-                        name: c.name || '',
-                        age: c.age || '',
-                        height: c.height || '',
-                        sleepHours: c.sleepHours || '',
-                        activityLevel: c.activityLevel || 'פעילות קלה (עמידה ממושכת, הליכה קלה)',
-                        experience: c.experience || '',
-                        weeklyWorkouts: c.weeklyWorkouts || '',
-                        trainingLocation: c.trainingLocation || '',
-                        dietPreference: c.dietPreference || '',
-                        mealsPerDay: c.mealsPerDay || '',
-                        hatedFoods: c.hatedFoods || '',
-                        motivation: c.motivation || '',
-                        biggestChallenge: c.biggestChallenge || '',
-                        notes: c.notes || '',
-                        startWeight: c.startWeight || '',
-                        goal: c.goal || ''
-                    };
+                    if (!c) {
+                        alert("אנא בחר מתאמן לעריכת שאלון הקליטה");
+                        return;
+                    }
+                    this.editingIntake = this.getClientIntake(c);
+                    this.editingIntake.id = c.id;
                     this.openEditIntakeModal = true;
                     setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
                 },
 
                 saveEditedIntake() {
-                    if (!this.editingIntake || !this.editingIntake.id) return;
-                    const client = this.clients.find(c => c.id === this.editingIntake.id);
-                    if (!client) return;
+                    if (!this.editingIntake) return;
+                    const clientId = this.editingIntake.id || this.selectedClientId;
+                    if (!clientId) {
+                        alert("שגיאה: לא נמצא מזהה מתאמן לעדכון.");
+                        return;
+                    }
+                    const client = this.clients.find(c => c.id === clientId);
+                    if (!client) {
+                        alert("שגיאה: המתאמן לא נמצא במערכת.");
+                        return;
+                    }
                     
-                    // Update all intake fields
+                    // Update all root fields
                     client.age = this.editingIntake.age || '';
                     client.height = this.editingIntake.height || '';
                     client.sleepHours = this.editingIntake.sleepHours || '';
@@ -9165,6 +9402,16 @@
                     if (this.editingIntake.goal) client.goal = this.editingIntake.goal;
                     if (this.editingIntake.startWeight) client.startWeight = this.editingIntake.startWeight;
                     if (this.editingIntake.notes) client.notes = this.editingIntake.notes;
+
+                    // Sync into client.intake object
+                    client.intake = {
+                        ...this.editingIntake,
+                        trainingExperience: client.experience,
+                        dislikedFoods: client.hatedFoods,
+                        motivationReason: client.motivation,
+                        mainGoal: client.goal,
+                        injuries: client.notes
+                    };
 
                     if (this.isCloudSynced && this.db) {
                         this.db.collection("clients").doc(client.id).set(client);
