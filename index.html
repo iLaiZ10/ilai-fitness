@@ -85,10 +85,10 @@
                             300: '#fbbf24',
                             400: '#f59e0b',
                             500: '#22004d', // כפתורי פעולה יער
-                            600: '#0b332b',
+                            600: '#310d5e',
                             700: '#06211d',
                             800: '#140029',
-                            900: '#020d0b',
+                            900: '#140029',
                             950: '#f8f6fb'
                         },
                         // Alias purple -> ירוק יער עמוק
@@ -99,10 +99,10 @@
                             300: '#fbbf24',
                             400: '#f59e0b',
                             500: '#22004d',
-                            600: '#0b332b',
+                            600: '#310d5e',
                             700: '#06211d',
                             800: '#140029',
-                            900: '#020d0b',
+                            900: '#140029',
                             950: '#f8f6fb'
                         },
                         // Alias beige -> שמנת
@@ -112,11 +112,11 @@
                             200: '#f5ebd7',
                             300: '#fbbf24',
                             400: '#22004d',
-                            500: '#0b332b',
+                            500: '#310d5e',
                             600: '#06211d',
                             700: '#140029',
-                            800: '#020d0b',
-                            900: '#020d0b',
+                            800: '#140029',
+                            900: '#140029',
                             950: '#f8f6fb'
                         },
                         // Alias emerald -> מנטה ירוקה
@@ -141,10 +141,10 @@
                             300: '#fbbf24',
                             400: '#f59e0b',
                             500: '#22004d',
-                            600: '#0b332b',
+                            600: '#310d5e',
                             700: '#06211d',
                             800: '#140029',
-                            900: '#020d0b',
+                            900: '#140029',
                             950: '#faf8fd'
                         },
                         brand: {
@@ -515,7 +515,7 @@
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <button 
                     @click="activeTab = 'dashboard'; selectedClientId = null"
-                    :class="activeTab === 'dashboard' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#0c332b] hover:text-[#f8f6fb] font-semibold'"
+                    :class="activeTab === 'dashboard' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#310d5e] hover:text-[#f8f6fb] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>לוח בקרה</span>
@@ -523,7 +523,7 @@
                 
                 <button 
                     @click="activeTab = 'clients'; selectedClientId = null"
-                    :class="activeTab === 'clients' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#0c332b] hover:text-[#f8f6fb] font-semibold'"
+                    :class="activeTab === 'clients' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#310d5e] hover:text-[#f8f6fb] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="users" class="w-5 h-5"></i>
                     <span>רשימת מתאמנים</span>
@@ -531,7 +531,7 @@
 
                 <button 
                     @click="activeTab = 'schedule'; selectedClientId = null"
-                    :class="activeTab === 'schedule' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#0c332b] hover:text-[#f8f6fb] font-semibold'"
+                    :class="activeTab === 'schedule' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#310d5e] hover:text-[#f8f6fb] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="calendar-days" class="w-5 h-5"></i>
                     <span>יומן שבועי</span>
@@ -539,7 +539,7 @@
 
                 <button 
                     @click="activeTab = 'finances'; selectedClientId = null"
-                    :class="activeTab === 'finances' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#0c332b] hover:text-[#f8f6fb] font-semibold'"
+                    :class="activeTab === 'finances' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#310d5e] hover:text-[#f8f6fb] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
                     <span>מעקב פיננסי</span>
@@ -547,7 +547,7 @@
 
                 <button 
                     @click="activeTab = 'settings'; selectedClientId = null"
-                    :class="activeTab === 'settings' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#0c332b] hover:text-[#f8f6fb] font-semibold'"
+                    :class="activeTab === 'settings' ? 'bg-[#310d5e] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#140029]/40' : 'text-[#c4b5fd] hover:bg-[#310d5e] hover:text-[#f8f6fb] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="settings" class="w-5 h-5"></i>
                     <span>הגדרות וסנכרון</span>
@@ -593,7 +593,7 @@
         </div>
 
         <!-- אזור התוכן המרכזי -->
-        <main class="flex-1 bg-slate-950 overflow-y-auto flex flex-col pb-20 md:pb-0">
+        <main class="flex-1 bg-[#f8f6fb] overflow-y-auto flex flex-col pb-20 md:pb-0">
             
             <!-- סרגל עליון (Top Header) -->
             <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="h-16 border-b border-[#e4daed] flex items-center justify-between px-4 md:px-8 bg-white/90 backdrop-blur-md sticky top-0 z-40" x-cloak>
@@ -1128,7 +1128,7 @@
                                 
                                 <div class="flex items-center gap-2">
                                     <template x-if="portalScorecardViewDate && portalScorecardViewDate !== getTodayDate()">
-                                        <button type="button" @click="setScorecardViewDate(getTodayDate())" class="bg-[#f8f6fb] hover:bg-[#f0eae1] border border-[#e4daed] text-[#22004d] font-black px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
+                                        <button type="button" @click="setScorecardViewDate(getTodayDate())" class="bg-[#f8f6fb] hover:bg-[#ede4f5] border border-[#e4daed] text-[#22004d] font-black px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
                                             <span>חזור להיום ⚡</span>
                                         </button>
                                     </template>
@@ -1279,7 +1279,7 @@
                                 </div>
 
                                 <!-- מד התקדמות מים -->
-                                <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                <div class="h-2 w-full bg-[#ede4f5] rounded-full overflow-hidden">
                                     <div class="h-full bg-gradient-to-r from-[#fbbf24] to-[#22c55e] transition-all duration-300 rounded-full"
                                          :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></div>
                                 </div>
@@ -1317,7 +1317,7 @@
                                 </div>
 
                                 <!-- מד התקדמות צעדים -->
-                                <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                <div class="h-2 w-full bg-[#ede4f5] rounded-full overflow-hidden">
                                     <div class="h-full bg-gradient-to-r from-amber-400 to-[#22c55e] transition-all duration-300 rounded-full"
                                          :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></div>
                                 </div>
@@ -1419,7 +1419,7 @@
                                         </div>
                                         <span class="text-[11px] font-black text-[#22004d] bg-[#f8f6fb] border border-[#e4daed] px-2 py-0.5 rounded-lg" x-text="getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></span>
                                     </div>
-                                    <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                    <div class="h-2 w-full bg-[#ede4f5] rounded-full overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-[#fbbf24] to-[#22c55e] transition-all duration-300 rounded-full"
                                              :style="'width: ' + getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></div>
                                     </div>
@@ -1623,7 +1623,7 @@
                     <div x-show="portalActiveSubTab === 'nutrition'" x-cloak class="space-y-5">
                         
                         <!-- 1. כרטיס ראשי: יומן קלוריות ומאקרו יומי (המחשבון של אילאי) -->
-                        <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e4daed] rounded-3xl p-5 md:p-6 text-[#22004d] shadow-xl space-y-5 relative overflow-hidden">
+                        <div class="bg-gradient-to-br from-[#faf8fd] via-[#f3eef9] to-[#ede4f5] border-2 border-[#e4daed] rounded-3xl p-5 md:p-6 text-[#22004d] shadow-xl space-y-5 relative overflow-hidden">
                             <!-- Background decorative ambient blur -->
                             <div class="absolute -top-12 -left-12 w-48 h-48 bg-[#fbbf24]/10 rounded-full blur-3xl pointer-events-none"></div>
                             <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-[#38bdf8]/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -1906,7 +1906,7 @@
                                             <div class="relative w-24 h-24 shrink-0">
                                                 <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90 transform">
                                                     <!-- Background ring -->
-                                                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#f0eae1" stroke-width="12"></circle>
+                                                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#ede4f5" stroke-width="12"></circle>
                                                     <!-- Protein sector (Emerald) -->
                                                     <circle cx="50" cy="50" r="38" fill="transparent" stroke="#22c55e" stroke-width="12"
                                                             :stroke-dasharray="(aiAnalyzedMeal.pProtein / 100 * 238.76) + ' 238.76'"
@@ -2963,7 +2963,7 @@
                 <div x-show="selectedClientId && isCoachAuthenticated && activeTab !== 'portal'" x-cloak class="space-y-6">
                     
                     <!-- באנר כותרת עליון יוקרתי - Luxury Cream & Forest Client Card -->
-                    <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e4daed] rounded-3xl p-5 md:p-7 shadow-xl space-y-5 text-[#22004d] relative overflow-hidden">
+                    <div class="bg-gradient-to-br from-[#faf8fd] via-[#f3eef9] to-[#ede4f5] border-2 border-[#e4daed] rounded-3xl p-5 md:p-7 shadow-xl space-y-5 text-[#22004d] relative overflow-hidden">
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">
                             <!-- פרטי מתאמן, אווטאר ותגיות סטטוס -->
                             <div class="flex items-center gap-4">
@@ -3574,7 +3574,7 @@
                         <div x-show="detailSubTab === 'workout'" x-cloak class="space-y-6">
                             
                             <!-- סרגל כלים עליון ובלוק אימונים שבועי -->
-                            <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e4daed] rounded-3xl p-5 md:p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div class="bg-gradient-to-br from-[#faf8fd] via-[#f3eef9] to-[#ede4f5] border-2 border-[#e4daed] rounded-3xl p-5 md:p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div class="flex items-center gap-3">
                                     <div class="p-3 rounded-2xl bg-[#22004d] text-[#fbbf24] shadow-sm">
                                         <i data-lucide="dumbbell" class="w-6 h-6 text-[#fbbf24]"></i>
@@ -3776,7 +3776,7 @@
                                 </template>
 
                                 <template x-if="currentClient?.workoutPlan?.days && currentClient.workoutPlan.days[coachSelectedWorkoutDayIdx]">
-                                    <div class="bg-[#fcf9f2] border-2 border-[#e4daed] rounded-3xl p-5 md:p-6 shadow-sm space-y-5">
+                                    <div class="bg-[#faf8fd] border-2 border-[#e4daed] rounded-3xl p-5 md:p-6 shadow-sm space-y-5">
                                         
                                         <!-- כותרת יום האימון הנבחר וכפתורי ניהול יום -->
                                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#e4daed] pb-4">
@@ -4791,7 +4791,7 @@
                                         <!-- עמודת הגרף עם אנימציית עלייה חלקה -->
                                         <div class="w-full max-w-[38px] bg-[#e4daed]/50 rounded-t-xl overflow-hidden flex items-end h-32 p-0.5">
                                             <div class="w-full rounded-t-lg transition-all duration-700 ease-out relative overflow-hidden shadow-sm"
-                                                 :class="item.value > 0 ? 'bg-gradient-to-t from-[#22004d] via-[#0b332b] to-[#22c55e] shadow-md shadow-[#22c55e]/20' : 'bg-[#dcd5c4]'"
+                                                 :class="item.value > 0 ? 'bg-gradient-to-t from-[#22004d] via-[#310d5e] to-[#fbbf24] shadow-md shadow-amber-500/20' : 'bg-[#e4daed]'"
                                                  :style="'height: ' + getBarHeightPercentage(item.value) + '%;'">
                                                 <!-- קו זוהר בראש העמודה -->
                                                 <template x-if="item.value > 0">
@@ -4844,13 +4844,13 @@
 
                         <!-- יומן תנועות עסק (Ledger) -->
                         <div class="bg-white border border-[#e4daed] rounded-3xl shadow-xl overflow-hidden lg:col-span-2 flex flex-col h-[350px]">
-                            <div class="p-4 md:p-5 border-b border-[#e4daed] bg-[#fcf9f2]">
+                            <div class="p-4 md:p-5 border-b border-[#e4daed] bg-[#faf8fd]">
                                 <h4 class="text-xs md:text-sm font-black text-[#22004d]">יומן תנועות פיננסיות בעסק</h4>
                             </div>
                             <div class="flex-1 overflow-y-auto">
                                 <table class="w-full text-right border-collapse text-xs">
                                     <thead>
-                                        <tr class="bg-[#fcf9f2] border-b border-[#e4daed] text-[#705b8b] font-black">
+                                        <tr class="bg-[#faf8fd] border-b border-[#e4daed] text-[#705b8b] font-black">
                                             <th class="py-2.5 px-4">תאריך</th>
                                             <th class="py-2.5 px-4">תיאור</th>
                                             <th class="py-2.5 px-4 text-center">סוג</th>
@@ -4885,13 +4885,13 @@
 
                     <!-- מעקב תשלומי מתאמנים דינמי -->
                     <div class="bg-white border border-[#e4daed] rounded-3xl shadow-xl overflow-hidden">
-                        <div class="p-4 md:p-5 border-b border-[#e4daed] bg-[#fcf9f2]">
+                        <div class="p-4 md:p-5 border-b border-[#e4daed] bg-[#faf8fd]">
                             <h4 class="text-xs md:text-sm font-black text-[#22004d]">מעקב תשלומי מתאמנים פעילים</h4>
                         </div>
                         <div class="overflow-x-auto w-full">
                             <table class="w-full text-right border-collapse min-w-[650px] text-xs">
                                 <thead>
-                                    <tr class="bg-[#fcf9f2] border-b border-[#e4daed] text-[#705b8b] font-black">
+                                    <tr class="bg-[#faf8fd] border-b border-[#e4daed] text-[#705b8b] font-black">
                                         <th class="py-3 px-6 w-1/4">שם המתאמן</th>
                                         <th class="py-3 px-6">תשלומים חודשיים (לחץ לשינוי סטטוס)</th>
                                         <th class="py-3 px-6 text-center w-24">סה״כ שולם</th>
@@ -5022,7 +5022,7 @@
                                     <i data-lucide="download" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
                                     <span>ייצא קובץ גיבוי</span>
                                 </button>
-                                <label class="bg-[#f8f6fb] border border-[#e4daed] hover:bg-[#f0eae1] text-[#22004d] font-black px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs">
+                                <label class="bg-[#f8f6fb] border border-[#e4daed] hover:bg-[#ede4f5] text-[#22004d] font-black px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs">
                                     <i data-lucide="upload" class="w-3.5 h-3.5 text-emerald-700"></i>
                                     <span>ייבא קובץ גיבוי</span>
                                     <input type="file" @change="importDatabase" class="hidden" accept=".json">
@@ -5331,7 +5331,7 @@
             </div>
 
             <div class="pt-3 border-t border-[#e4daed] flex flex-col sm:flex-row justify-between gap-2 shrink-0">
-                <button @click="copyMonthlySummary()" class="bg-[#f8f6fb] hover:bg-[#f0eae1] border border-[#e4daed] text-[#22004d] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                <button @click="copyMonthlySummary()" class="bg-[#f8f6fb] hover:bg-[#ede4f5] border border-[#e4daed] text-[#22004d] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
                     <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                     <span>העתק סיכום ללוח</span>
                 </button>
@@ -5689,7 +5689,7 @@
                     </div>
 
                     <!-- תוצאת 1RM משוער -->
-                    <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e4daed] rounded-2xl p-4 text-center space-y-1 shadow-inner text-[#22004d]">
+                    <div class="bg-gradient-to-br from-[#faf8fd] via-[#f3eef9] to-[#ede4f5] border-2 border-[#e4daed] rounded-2xl p-4 text-center space-y-1 shadow-inner text-[#22004d]">
                         <span class="text-[10px] text-emerald-800 font-black block uppercase tracking-wider">1RM משוער (מקסימום חזרה אחת) 🎯</span>
                         <div class="text-2xl md:text-3xl font-black text-emerald-700" x-text="calculateOneRm() + ' ק״ג'"></div>
                         <span class="text-[10px] text-[#705b8b]">מחושב לפי מודל Brzycki / Epley</span>
@@ -5707,7 +5707,7 @@
                         <template x-for="p in getOneRmPercentages()" :key="p.percent">
                             <div class="flex items-center justify-between bg-white border border-[#e4daed] p-2.5 rounded-xl text-xs">
                                 <div class="flex items-center gap-2">
-                                    <span class="w-9 text-center font-black text-[#22004d] bg-[#f0eae1] px-1.5 py-0.5 rounded-lg text-[11px]" x-text="p.percent + '%'"></span>
+                                    <span class="w-9 text-center font-black text-[#22004d] bg-[#ede4f5] px-1.5 py-0.5 rounded-lg text-[11px]" x-text="p.percent + '%'"></span>
                                     <div>
                                         <span class="font-bold text-[#22004d] block text-xs" x-text="p.desc"></span>
                                         <span class="text-[10px] text-[#705b8b]" x-text="p.reps"></span>
@@ -6156,7 +6156,7 @@
     <!-- מודל 1: הוספת מתאמן חדש -->
     <div x-show="openAddClientModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
         <div class="bg-white border border-[#e4daed] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openAddClientModal = false">
-            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center bg-[#fcf9f2]">
+            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center bg-[#faf8fd]">
                 <h3 class="text-sm md:text-lg font-black text-[#22004d] flex items-center gap-2">
                     <i data-lucide="user-plus" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                     <span>הוספת מתאמן חדש לליווי</span>
@@ -6219,7 +6219,7 @@
     <!-- מודל 2: עריכת פרופיל מתאמן -->
     <div x-show="openEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
         <div class="bg-white border border-[#e4daed] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openEditModal = false">
-            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center bg-[#fcf9f2]">
+            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center bg-[#faf8fd]">
                 <h3 class="text-sm md:text-lg font-black text-[#22004d] flex items-center gap-2">
                     <i data-lucide="edit-3" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                     <span>עריכת פרטי מתאמן</span>
@@ -6289,7 +6289,7 @@
     <!-- מודל 3: קביעת פגישה ביומן -->
     <div x-show="openAddEventModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
         <div class="bg-white border border-[#e4daed] w-full max-w-md rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openAddEventModal = false">
-            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center bg-[#fcf9f2]">
+            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center bg-[#faf8fd]">
                 <h3 class="text-sm md:text-lg font-black text-[#22004d] flex items-center gap-2">
                     <i data-lucide="calendar-plus" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                     <span>קביעת פגישה ביומן</span>
@@ -6338,7 +6338,7 @@
     <!-- מודל 4: ייבוא שאלון קליטה -->
     <div x-show="openImportIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
         <div class="bg-white border border-[#e4daed] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openImportIntakeModal = false">
-            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center bg-[#fcf9f2]">
+            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center bg-[#faf8fd]">
                 <h3 class="text-sm md:text-lg font-black text-[#22004d] flex items-center gap-2">
                     <i data-lucide="file-text" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                     <span>ייבוא שאלון קליטה מוואטסאפ</span>
@@ -6364,7 +6364,7 @@
     <!-- מודל 5: ספריית מזונות חכמה וחישוב מאקרו אוטומטי -->
     <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm no-print" x-cloak>
         <div class="bg-white border border-[#e4daed] w-full max-w-xl rounded-3xl shadow-2xl flex flex-col mx-2 max-h-[90vh] overflow-hidden" @click.away="openFoodLibraryModal = false">
-            <div class="p-4 md:p-5 border-b border-[#e4daed] flex justify-between items-center bg-[#fcf9f2]">
+            <div class="p-4 md:p-5 border-b border-[#e4daed] flex justify-between items-center bg-[#faf8fd]">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-2xl bg-[#22004d] text-[#fbbf24] flex items-center justify-center">
                         <i data-lucide="sparkles" class="w-4 h-4"></i>
@@ -6450,7 +6450,7 @@
                 </template>
             </div>
 
-            <div class="p-4 border-t border-[#e4daed] flex justify-end gap-2 bg-[#fcf9f2]">
+            <div class="p-4 border-t border-[#e4daed] flex justify-end gap-2 bg-[#faf8fd]">
                 <button type="button" @click="openFoodLibraryModal = false" class="bg-[#f8f6fb] border border-[#e4daed] text-[#705b8b] px-4 py-2 rounded-xl text-xs font-bold">ביטול</button>
                 <button type="button" @click="addSelectedFoodToMeal()" class="bg-[#22004d] hover:bg-[#310d5e] text-[#fbbf24] font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
                     <i data-lucide="plus" class="w-4 h-4"></i>
