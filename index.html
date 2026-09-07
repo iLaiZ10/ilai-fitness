@@ -1327,22 +1327,32 @@
                                 </div>
                             </template>
 
-                            <!-- טיימר מנוחה -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex items-center justify-between shadow-md">
+                            <!-- טיימר מנוחה אינטראקטיבי ומהיר -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-md">
                                 <div class="flex items-center gap-3">
-                                    <div class="p-2.5 rounded-xl bg-amber-50 text-amber-600 border border-amber-200">
-                                        <i data-lucide="timer" class="w-5 h-5"></i>
-                                    </div>
+                                    <button type="button" 
+                                            @click="toggleRestTimer(); setTimeout(() => window.lucide?.createIcons(), 50)"
+                                            :class="isRestTimerRunning ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25 ring-2 ring-amber-400' : 'bg-amber-50 text-amber-600 border border-amber-200 hover:bg-amber-100'"
+                                            class="p-2.5 rounded-xl transition cursor-pointer"
+                                            :title="isRestTimerRunning ? 'השהה טיימר' : 'הפעל טיימר'">
+                                        <i :data-lucide="isRestTimerRunning ? 'pause' : 'timer'" class="w-5 h-5"></i>
+                                    </button>
                                     <div>
-                                        <span class="text-[10px] text-[#5f756e] font-bold block">טיימר מנוחה:</span>
-                                        <span class="text-xl font-black text-[#082722]" x-text="formatRestTimer(restTimerSeconds)"></span>
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="text-[10px] text-[#5f756e] font-bold block">טיימר מנוחה:</span>
+                                            <template x-if="isRestTimerRunning">
+                                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping inline-block"></span>
+                                            </template>
+                                        </div>
+                                        <span class="text-2xl font-black text-[#082722] font-mono tracking-wider" x-text="formatRestTimer(restTimerSeconds)"></span>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-1.5">
-                                    <button type="button" @click="startRestTimer(60)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">60ש׳</button>
-                                    <button type="button" @click="startRestTimer(90)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">90ש׳</button>
-                                    <button type="button" @click="startRestTimer(120)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">120ש׳</button>
-                                    <button type="button" @click="stopRestTimer()" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 p-1.5 rounded-xl cursor-pointer" title="אפס טיימר">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <button type="button" @click="startRestTimer(60); setTimeout(() => window.lucide?.createIcons(), 50)" :class="restTimerTotal === 60 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] hover:bg-[#f3ede0] text-[#082722] border-[#e5dfd3]'" class="border font-black px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer">60ש׳</button>
+                                    <button type="button" @click="startRestTimer(90); setTimeout(() => window.lucide?.createIcons(), 50)" :class="restTimerTotal === 90 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] hover:bg-[#f3ede0] text-[#082722] border-[#e5dfd3]'" class="border font-black px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer">90ש׳</button>
+                                    <button type="button" @click="startRestTimer(120); setTimeout(() => window.lucide?.createIcons(), 50)" :class="restTimerTotal === 120 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] hover:bg-[#f3ede0] text-[#082722] border-[#e5dfd3]'" class="border font-black px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer">120ש׳</button>
+                                    <button type="button" @click="addRestTime(30); setTimeout(() => window.lucide?.createIcons(), 50)" class="bg-[#fbf8f2] hover:bg-emerald-50 text-emerald-700 border border-emerald-200 font-black px-2 py-1.5 rounded-xl text-xs transition cursor-pointer" title="הוסף 30 שניות">+30ש׳</button>
+                                    <button type="button" @click="stopRestTimer(); setTimeout(() => window.lucide?.createIcons(), 50)" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 p-1.5 rounded-xl transition cursor-pointer" title="אפס טיימר">
                                         <i data-lucide="square" class="w-4 h-4"></i>
                                     </button>
                                 </div>
@@ -11525,13 +11535,16 @@ saveWorkoutPlanWithToast() {
 
                 // --- מתודות סטופר וטיימר מנוחה בין סטים ---
                 startRestTimer(seconds) {
-                    if (seconds) {
+                    if (seconds !== undefined && seconds !== null) {
                         this.restTimerTotal = seconds;
                         this.restTimerSeconds = seconds;
                     } else if (this.restTimerSeconds === 0) {
-                        this.restTimerSeconds = this.restTimerTotal;
+                        this.restTimerSeconds = this.restTimerTotal || 60;
                     }
-                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
+                    if (this.restTimerInterval) {
+                        clearInterval(this.restTimerInterval);
+                        this.restTimerInterval = null;
+                    }
                     this.isRestTimerRunning = true;
                     
                     this.restTimerInterval = setInterval(() => {
@@ -11540,32 +11553,65 @@ saveWorkoutPlanWithToast() {
                         } else {
                             this.stopRestTimer();
                             this.playTimerChime();
+                            if (navigator.vibrate) {
+                                try { navigator.vibrate([200, 100, 200]); } catch(e) {}
+                            }
                         }
                     }, 1000);
                 },
 
                 pauseRestTimer() {
-                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
+                    if (this.restTimerInterval) {
+                        clearInterval(this.restTimerInterval);
+                        this.restTimerInterval = null;
+                    }
                     this.isRestTimerRunning = false;
                 },
 
+                toggleRestTimer() {
+                    if (this.isRestTimerRunning) {
+                        this.pauseRestTimer();
+                    } else {
+                        const target = (this.restTimerSeconds > 0) ? this.restTimerSeconds : (this.restTimerTotal || 60);
+                        this.startRestTimer(target);
+                    }
+                },
+
+                addRestTime(secs = 30) {
+                    this.restTimerSeconds = (this.restTimerSeconds || 0) + secs;
+                    this.restTimerTotal = Math.max(this.restTimerTotal || 60, this.restTimerSeconds);
+                    if (!this.isRestTimerRunning) {
+                        this.startRestTimer(this.restTimerSeconds);
+                    }
+                },
+
                 stopRestTimer() {
-                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
+                    if (this.restTimerInterval) {
+                        clearInterval(this.restTimerInterval);
+                        this.restTimerInterval = null;
+                    }
                     this.isRestTimerRunning = false;
                     this.restTimerSeconds = 0;
                 },
 
                 resetRestTimer() {
-                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
+                    if (this.restTimerInterval) {
+                        clearInterval(this.restTimerInterval);
+                        this.restTimerInterval = null;
+                    }
                     this.isRestTimerRunning = false;
-                    this.restTimerSeconds = this.restTimerTotal;
+                    this.restTimerSeconds = this.restTimerTotal || 60;
+                },
+
+                formatRestTimer(totalSeconds) {
+                    const s = Math.max(0, parseInt(totalSeconds) || 0);
+                    const mins = Math.floor(s / 60);
+                    const secs = s % 60;
+                    return String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
                 },
 
                 formatTimerSeconds(totalSeconds) {
-                    const s = parseInt(totalSeconds) || 0;
-                    const mins = Math.floor(s / 60);
-                    const secs = s % 60;
-                    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    return this.formatRestTimer(totalSeconds);
                 },
 
                 playTimerChime() {
