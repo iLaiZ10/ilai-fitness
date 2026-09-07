@@ -3490,6 +3490,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+                                    <button type="button" @click="openExerciseLibraryForDay(0, null)" class="bg-white hover:bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3.5 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="book-open" class="w-4 h-4 text-emerald-600"></i><span>ספריית תרגילים (137)</span></button>
                                     <button type="button" @click="addWorkoutDay()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 transition shadow-md shadow-[#082722]/20 cursor-pointer">
                                         <i data-lucide="plus-circle" class="w-4 h-4 text-[#86efac]"></i>
                                         <span>+ הוסף יום אימון חדש</span>
@@ -3771,6 +3772,7 @@
                                                 <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-600"></i>
                                                 <span>+ הוסף תרגיל נוסף ליום זה</span>
                                             </button>
+                                            <button type="button" @click="openExerciseLibraryForDay(dayIdx, null)" class="w-full sm:w-auto bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold py-3 px-5 rounded-2xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs"><i data-lucide="search" class="w-4 h-4"></i><span>חפש ובחר תרגיל מהספרייה 📚</span></button>
                                         </div>
                                     </div>
                                 </template>
@@ -5101,6 +5103,114 @@
     </div>
 
     <!-- מודל מחשבון משקלי עבודה ו-1RM -->
+    <!-- מודל ספריית תרגילים מורחבת (137+ תרגילים לפי קטגוריות) -->
+    <div x-show="openExerciseLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openExerciseLibraryModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-4xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            
+            <!-- כותרת וסגירה -->
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="book-open" class="w-5 h-5 text-[#86efac]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722] flex items-center gap-2">
+                            <span>ספריית תרגילים מורחבת</span>
+                            <span class="text-xs font-bold bg-[#fbf8f2] border border-[#e5dfd3] px-2.5 py-0.5 rounded-full text-[#5f756e]" x-text="exerciseLibrary.length + ' תרגילים'"></span>
+                        </h3>
+                        <p class="text-xs text-[#5f756e]">סנן לפי קבוצת שריר או חפש תרגיל והוסף ישירות לתוכנית האימונים בקליק</p>
+                    </div>
+                </div>
+                <button @click="openExerciseLibraryModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- חיפוש וסרגל סינון קטגוריות שריר -->
+            <div class="space-y-3 shrink-0">
+                <!-- שדה חיפוש -->
+                <div class="relative">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input type="text" 
+                           x-model="exerciseLibrarySearch" 
+                           placeholder="חפש תרגיל בעברית או באנגלית (למשל: בנץ פרס, סקוואט, מתח, פייס פול, דדליפט...)" 
+                           class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl pr-10 pl-4 py-2.5 text-xs md:text-sm font-bold text-[#082722] focus:outline-none focus:border-[#22c55e] focus:bg-white shadow-xs">
+                </div>
+
+                <!-- לשוניות קבוצות שרירים -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'all'" :class="exerciseLibrarySelectedMuscle === 'all' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        הכל (<span x-text="exerciseLibrary.length"></span>)
+                    </button>
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'chest'" :class="exerciseLibrarySelectedMuscle === 'chest' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        חזה (20)
+                    </button>
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'back'" :class="exerciseLibrarySelectedMuscle === 'back' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        גב (22)
+                    </button>
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'legs'" :class="exerciseLibrarySelectedMuscle === 'legs' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        רגליים (28)
+                    </button>
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'shoulders'" :class="exerciseLibrarySelectedMuscle === 'shoulders' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        כתפיים (19)
+                    </button>
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'arms'" :class="exerciseLibrarySelectedMuscle === 'arms' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        ידיים (23)
+                    </button>
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'core'" :class="exerciseLibrarySelectedMuscle === 'core' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        בטן וליבה (15)
+                    </button>
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'cardio'" :class="exerciseLibrarySelectedMuscle === 'cardio' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        אירובי ו-HIIT (10)
+                    </button>
+                </div>
+            </div>
+
+            <!-- רשימת כרטיסי תרגילים -->
+            <div class="overflow-y-auto pr-1 flex-1 space-y-2.5 text-xs">
+                <template x-if="getFilteredExerciseLibrary().length === 0">
+                    <div class="p-8 text-center text-[#5f756e] bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3]">
+                        לא נמצאו תרגילים התואמים את החיפוש.
+                    </div>
+                </template>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                    <template x-for="ex in getFilteredExerciseLibrary()" :key="ex.name">
+                        <div class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] hover:border-emerald-500/50 p-3 rounded-2xl flex items-center justify-between gap-2 transition shadow-2xs">
+                            <div class="space-y-1 flex-1 min-w-0">
+                                <span class="font-black text-xs text-[#082722] block truncate" x-text="ex.name"></span>
+                                <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
+                                    <span class="bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold" x-text="ex.muscle === 'chest' ? 'חזה' : (ex.muscle === 'back' ? 'גב' : (ex.muscle === 'legs' ? 'רגליים' : (ex.muscle === 'shoulders' ? 'כתפיים' : (ex.muscle === 'arms' ? 'ידיים' : (ex.muscle === 'core' ? 'בטן וליבה' : 'אירובי')))))"></span>
+                                    <span x-text="'מנוחה מומלצת: ' + (ex.rest || '90 שנ\'')"></span>
+                                    <template x-if="ex.video">
+                                        <a :href="ex.video" target="_blank" class="text-red-600 font-bold hover:underline flex items-center gap-0.5">
+                                            <i data-lucide="video" class="w-3 h-3"></i>
+                                            <span>וידאו</span>
+                                        </a>
+                                    </template>
+                                </div>
+                            </div>
+                            <button type="button" 
+                                    @click="selectExerciseFromLibrary(ex)" 
+                                    class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 shrink-0 transition cursor-pointer shadow-xs">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                <span>הוסף</span>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- סגירה -->
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-between items-center shrink-0">
+                <span class="text-xs text-[#5f756e]" x-text="'מוצגים ' + getFilteredExerciseLibrary().length + ' תרגילים'"></span>
+                <button type="button" @click="openExerciseLibraryModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור ספרייה
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div x-show="openOneRmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openOneRmModal = false">
         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
@@ -6371,26 +6481,835 @@
                 db: null,
                 cloudError: null,
 
-                exerciseLibrary: [
-                    { name: "סקווט עם מוט (Barbell Squat)", muscle: "legs", video: "https://www.youtube.com/watch?v=ultWZbUMPL8" },
-                    { name: "דדליפט רומני (Romanian Deadlift)", muscle: "legs", video: "https://www.youtube.com/watch?v=op9kVnSso6Q" },
-                    { name: "לאנג'ים עם משקולות (Dumbbell Lunge)", muscle: "legs", video: "https://www.youtube.com/watch?v=qEwKCR5JCog" },
-                    { name: "לחיצת רגליים במכונה (Leg Press)", muscle: "legs", video: "https://www.youtube.com/watch?v=rT7DgCr-3pg" },
-                    { name: "כפיפת ברך במכונה (Leg Curl)", muscle: "legs", video: "https://www.youtube.com/watch?v=CAwf7n6Luuc" },
-                    { name: "לחיצת חזה עם מוט (Bench Press)", muscle: "chest", video: "https://www.youtube.com/watch?v=rT7DgCr-3pg" },
-                    { name: "לחיצת חזה עם משקולות (Dumbbell Bench Press)", muscle: "chest", video: "https://www.youtube.com/watch?v=qEwKCR5JCog" },
-                    { name: "פרפר במכונה (Pec Deck Fly)", muscle: "chest", video: "https://www.youtube.com/watch?v=CAwf7n6Luuc" },
-                    { name: "שכיבות סמיכה (Push-Up)", muscle: "chest", video: "https://www.youtube.com/watch?v=pvIjsG5Svck" },
-                    { name: "פולי עליון (Lat Pulldown)", muscle: "back", video: "https://www.youtube.com/watch?v=CAwf7n6Luuc" },
-                    { name: "חתירה במכונה/כבל (Cable Row)", muscle: "back", video: "https://www.youtube.com/watch?v=rT7DgCr-3pg" },
-                    { name: "מתח (Pull-Up)", muscle: "back", video: "https://www.youtube.com/watch?v=ultWZbUMPL8" },
-                    { name: "לחיצת כתפיים עם דאמבלים (Dumbbell Shoulder Press)", muscle: "shoulders", video: "https://www.youtube.com/watch?v=qEwKCR5JCog" },
-                    { name: "הרחקת זרועות לצדדים (Lateral Raise)", muscle: "shoulders", video: "https://www.youtube.com/watch?v=ykJmrZ5v0oo" },
-                    { name: "כפיפות מרפקים (Bicep Curl)", muscle: "arms", video: "https://www.youtube.com/watch?v=ykJmrZ5v0oo" },
-                    { name: "פשיטת מרפקים בפולי (Tricep Pushdown)", muscle: "arms", video: "https://www.youtube.com/watch?v=2-LAMcpzODU" },
-                    { name: "פלאנק (Plank)", muscle: "core", video: "https://www.youtube.com/watch?v=pvIjsG5Svck" },
-                    { name: "כפיפות בטן (Crunch)", muscle: "core", video: "https://www.youtube.com/watch?v=pvIjsG5Svck" }
+                exerciseLibrary:                 [
+                          {
+                                    "name": "לחיצת חזה כנגד מוט אולימפי (Barbell Bench Press)",
+                                    "muscle": "chest",
+                                    "rest": "90 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=rT7DgCr-3pg"
+                          },
+                          {
+                                    "name": "לחיצת חזה בשיפוע חיובי כנגד מוט (Incline Barbell Bench Press)",
+                                    "muscle": "chest",
+                                    "rest": "90 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=8iPEnn-ltC8"
+                          },
+                          {
+                                    "name": "לחיצת חזה בשיפוע שלילי כנגד מוט (Decline Barbell Bench Press)",
+                                    "muscle": "chest",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת חזה עם משקולות יד (Dumbbell Bench Press)",
+                                    "muscle": "chest",
+                                    "rest": "75 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=VmB1G1K7v94"
+                          },
+                          {
+                                    "name": "לחיצת חזה בשיפוע חיובי עם דאמבלים (Incline Dumbbell Press)",
+                                    "muscle": "chest",
+                                    "rest": "75 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=8iPEnn-ltC8"
+                          },
+                          {
+                                    "name": "לחיצת חזה בשיפוע שלילי עם דאמבלים (Decline Dumbbell Press)",
+                                    "muscle": "chest",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת חזה במכונת סמית' (Smith Machine Bench Press)",
+                                    "muscle": "chest",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת חזה במכונת ישיבה (Chest Press Machine)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פרפר במשקולות יד על ספסל שטוח (Flat Dumbbell Flyes)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פרפר במשקולות בשיפוע חיובי (Incline Dumbbell Flyes)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פרפר במכונת פק-דק (Pec Deck Fly Machine)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=CAwf7n6Luuc"
+                          },
+                          {
+                                    "name": "פרפר כבלים / קרוסאובר בעמידה (Cable Crossover Fly)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פרפר כבלים מלמטה למעלה - חזה עליון (Low-to-High Cable Fly)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פרפר כבלים מלמעלה למטה - חזה תחתון (High-to-Low Cable Fly)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "מקבילים לחזה בתוספת משקל / משקל גוף (Chest Dips)",
+                                    "muscle": "chest",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "שכיבות סמיכה (Push-Ups)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=pvIjsG5Svck"
+                          },
+                          {
+                                    "name": "שכיבות סמיכה עם רגליים מוגבהות (Decline Push-Ups)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פולאובר במשקולת יד (Dumbbell Pullover)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת דאמבלים צמודים - הקס פרס (Hex Press)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת חזה בכבלים בישיבה (Seated Cable Chest Press)",
+                                    "muscle": "chest",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "מתח באחיזה רחבה (Wide Grip Pull-Ups)",
+                                    "muscle": "back",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "מתח באחיזה הפוכה / צרה (Chin-Ups)",
+                                    "muscle": "back",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "מתח בתוספת משקל (Weighted Pull-Ups)",
+                                    "muscle": "back",
+                                    "rest": "120 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פולי עליון באחיזה רחבה (Wide Grip Lat Pulldown)",
+                                    "muscle": "back",
+                                    "rest": "75 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=CAwf7n6Luuc"
+                          },
+                          {
+                                    "name": "פולי עליון באחיזה צרה / V-Bar (Close Grip Lat Pulldown)",
+                                    "muscle": "back",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פולי עליון באחיזה הפוכה (Underhand Lat Pulldown)",
+                                    "muscle": "back",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה כנגד מוט בכיפוף גו (Barbell Bent-Over Row)",
+                                    "muscle": "back",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה במוט באחיזה הפוכה - ינדרל (Pendlay / Yates Row)",
+                                    "muscle": "back",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה במשקולת יד בודדת על ספסל (Single-Arm Dumbbell Row)",
+                                    "muscle": "back",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה בכבלים בישיבה - פולי תחתון (Seated Cable Row)",
+                                    "muscle": "back",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה במכונת T-Bar עם תמיכת חזה (Chest-Supported T-Bar Row)",
+                                    "muscle": "back",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה במוט T-Bar חופשי (T-Bar Row)",
+                                    "muscle": "back",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה במכונה בישיבה (Seated Machine Row)",
+                                    "muscle": "back",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פולאובר בכבל בעמידה - זרועות ישרות (Straight-Arm Cable Pulldown)",
+                                    "muscle": "back",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "משיכת פייס פול בכבל (Face Pull with Rope)",
+                                    "muscle": "back",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "דדליפט קלאסי כנגד מוט (Conventional Barbell Deadlift)",
+                                    "muscle": "back",
+                                    "rest": "120 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "דדליפט סומו כנגד מוט (Sumo Deadlift)",
+                                    "muscle": "back",
+                                    "rest": "120 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "שראגס כנגד מוט לטרפזים (Barbell Shrugs)",
+                                    "muscle": "back",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "שראגס במשקולות יד (Dumbbell Shrugs)",
+                                    "muscle": "back",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פשיטת גב בכיסא רומי / היפר-אקסטנשן (Hyperextensions)",
+                                    "muscle": "back",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "גוד מורנינג כנגד מוט (Barbell Good Mornings)",
+                                    "muscle": "back",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירת מדוז בדאמבל / לאנדמיין (Meadows Row)",
+                                    "muscle": "back",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "סקוואט אחורי כנגד מוט (Barbell Back Squat)",
+                                    "muscle": "legs",
+                                    "rest": "120 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=ultWZbUMPL8"
+                          },
+                          {
+                                    "name": "סקוואט קדמי כנגד מוט (Barbell Front Squat)",
+                                    "muscle": "legs",
+                                    "rest": "120 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "גובלט סקוואט עם משקולת יד (Goblet Squat)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "האק סקוואט במכונה (Hack Squat Machine)",
+                                    "muscle": "legs",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת רגליים במכונה 45 מעלות (Leg Press 45°)",
+                                    "muscle": "legs",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "סקוואט בולגרי עם דאמבלים (Bulgarian Split Squat)",
+                                    "muscle": "legs",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לאנג'ים בהליכה עם דאמבלים (Walking Dumbbell Lunges)",
+                                    "muscle": "legs",
+                                    "rest": "75 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=qEwKCR5JCog"
+                          },
+                          {
+                                    "name": "לאנג'ים לאחור במקום (Reverse Lunges)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פשיטת ברכיים במכונה לארבע ראשי (Leg Extension Machine)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "סקוואט סיסי במכונה / חופשי (Sissy Squat)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "דדליפט רומני כנגד מוט (Barbell Romanian Deadlift - RDL)",
+                                    "muscle": "legs",
+                                    "rest": "90 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=op9kVnSso6Q"
+                          },
+                          {
+                                    "name": "דדליפט רומני עם דאמבלים (Dumbbell Romanian Deadlift)",
+                                    "muscle": "legs",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "דדליפט רומני על רגל אחת (Single-Leg RDL)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "דדליפט ברכיים ישרות (Stiff-Leg Deadlift)",
+                                    "muscle": "legs",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת ברכיים בשכיבה במכונה (Lying Leg Curl)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": "https://www.youtube.com/watch?v=CAwf7n6Luuc"
+                          },
+                          {
+                                    "name": "כפיפת ברכיים בישיבה במכונה (Seated Leg Curl)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת ברך בעמידה רגל בודדת (Standing Single Leg Curl)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "נורדיק האמסטרינג קורל (Nordic Hamstring Curl)",
+                                    "muscle": "legs",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "היפ ת'ראסט כנגד מוט (Barbell Hip Thrust)",
+                                    "muscle": "legs",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "היפ ת'ראסט במכונה / בסמית' (Machine Hip Thrust)",
+                                    "muscle": "legs",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "גשר ישבן עם משקולת (Glute Bridge with Dumbbell)",
+                                    "muscle": "legs",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרחקת ירכיים במכונה - אבדוקטור (Hip Abduction Machine)",
+                                    "muscle": "legs",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "קירוב ירכיים במכונה - אדוקטור (Hip Adduction Machine)",
+                                    "muscle": "legs",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרמת עקבים בעמידה לתאומים (Standing Calf Raise)",
+                                    "muscle": "legs",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרמת עקבים בישיבה לתאומים (Seated Calf Raise)",
+                                    "muscle": "legs",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרמת עקבים בלג פרס לתאומים (Leg Press Calf Raise)",
+                                    "muscle": "legs",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "סקוואט במכונת סמית' (Smith Machine Squat)",
+                                    "muscle": "legs",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "קיק-בק ישבן בכבל (Cable Glute Kickback)",
+                                    "muscle": "legs",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת כתפיים במוט בעמידה - אוברהד פרס (Overhead Press - OHP)",
+                                    "muscle": "shoulders",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת כתפיים במוט בישיבה (Seated Barbell Overhead Press)",
+                                    "muscle": "shoulders",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת כתפיים בישיבה עם משקולות יד (Seated Dumbbell Shoulder Press)",
+                                    "muscle": "shoulders",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת כתפיים בעמידה עם משקולות (Standing Dumbbell Shoulder Press)",
+                                    "muscle": "shoulders",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת ארנולד עם משקולות יד (Arnold Press)",
+                                    "muscle": "shoulders",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת כתפיים במכונה בישיבה (Machine Shoulder Press)",
+                                    "muscle": "shoulders",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת כתפיים במכונת סמית' (Smith Machine Shoulder Press)",
+                                    "muscle": "shoulders",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרחקת זרועות לצדדים עם דאמבלים (Dumbbell Lateral Raise)",
+                                    "muscle": "shoulders",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרחקת זרועות לצדדים בכבל (Cable Lateral Raise)",
+                                    "muscle": "shoulders",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרחקת זרועות לצדדים בשכיבה על הצד (Incline Dumbbell Lateral Raise)",
+                                    "muscle": "shoulders",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרחקת זרועות במכונה ייעודית (Machine Lateral Raise)",
+                                    "muscle": "shoulders",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הנפת משקולות לפנים - כתף קדמית (Dumbbell Front Raise)",
+                                    "muscle": "shoulders",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הנפת מוט / פלטה לפנים (Barbell / Plate Front Raise)",
+                                    "muscle": "shoulders",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרחקת זרועות בהטיית גו - כתף אחורית (Bent-Over Rear Delt Fly)",
+                                    "muscle": "shoulders",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פרפר הפוך במכונת פק-דק לכתף אחורית (Reverse Pec Deck Fly)",
+                                    "muscle": "shoulders",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרחקת כבלים מוצלבים לכתף אחורית (Cable Cross Rear Delt Fly)",
+                                    "muscle": "shoulders",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה אנכית במוט לכתפיים (Barbell Upright Row)",
+                                    "muscle": "shoulders",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה אנכית בכבל עם חבל (Cable Upright Row)",
+                                    "muscle": "shoulders",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת לאנדמיין ביד אחת לכתף (Landmine Shoulder Press)",
+                                    "muscle": "shoulders",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת מרפקים בעמידה כנגד מוט W (EZ-Bar Bicep Curl)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת מרפקים בעמידה כנגד מוט אולימפי ישר (Barbell Bicep Curl)",
+                                    "muscle": "arms",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת מרפקים עם משקולות יד בעמידה (Standing Dumbbell Curl)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת מרפקים בשיפוע חיובי על ספסל (Incline Dumbbell Curl)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת מרפקים פטישים עם דאמבלים (Dumbbell Hammer Curl)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת מרפקים פטישים בכבל עם חבל (Cable Rope Hammer Curl)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פריצ'ר קורל / כפיפת מרפקים בסקוט (Preacher Curl EZ-Bar)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פריצ'ר קורל במשקולת יד בודדת (Single-Arm Dumbbell Preacher Curl)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת מרפקים בריכוז בישיבה (Concentration Curl)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת מרפקים בכבל עליון מוצלב (High Cable Bicep Curl)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "ספיידר קורל על ספסל בשיפוע (Spider Curl)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פשיטת מרפקים כנגד כבל עליון עם חבל (Tricep Rope Pushdown)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פשיטת מרפקים כנגד כבל עם מוט V או ישר (Straight/V-Bar Tricep Pushdown)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצה צרפתית בשכיבה כנגד מוט W - סקאל קראשר (Skull Crushers EZ-Bar)",
+                                    "muscle": "arms",
+                                    "rest": "75 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פשיטת מרפקים מעבר לראש עם משקולת יד (Overhead Dumbbell Extension)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פשיטת מרפקים מעבר לראש בכבל עם חבל (Overhead Cable Tricep Extension)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "לחיצת חזה באחיזה צרה ליד אחורית (Close-Grip Bench Press)",
+                                    "muscle": "arms",
+                                    "rest": "90 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "מקבילים ליד אחורית במתקן / ספסל (Tricep Dips)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "קיק-בק ליד אחורית בכבל (Single-Arm Cable Tricep Kickback)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פשיטת מרפקים ביד אחת בכבל הפוך (Single-Arm Reverse Cable Pushdown)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפת כף היד במוט לאמות (Barbell Wrist Curl)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פשיטת כף היד במוט לאמות (Barbell Reverse Wrist Curl)",
+                                    "muscle": "arms",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "תלייה סטטית על מתח לאחיזה (Dead Hang)",
+                                    "muscle": "arms",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפות בטן על מזרן (Standard Crunches)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרמות רגליים בתלייה על מתח (Hanging Leg Raises)",
+                                    "muscle": "core",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרמות ברכיים לחזה במקבילים (Captain's Chair Knee Raise)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "גלגל בטן (Ab Wheel Rollout)",
+                                    "muscle": "core",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פלאנק סטטי על האמות (Forearm Plank)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פלאנק צדי (Side Plank)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "כפיפות בטן בכבל בישיבה על הברכיים (Cable Rope Crunch)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "סיבובי גו רוסיים עם משקולת / פלטה (Russian Twists)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "אופניים לבטן / קראנץ' אלכסונים (Bicycle Crunches)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הרמות רגליים בשכיבה על ספסל (Lying Leg Raises)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "מורטין קליימברס (Mountain Climbers)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "דד באג (Dead Bug)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "בירד דוג (Bird Dog)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "פלאטר קיקס (Flutter Kicks)",
+                                    "muscle": "core",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "ואקום בטני (Stomach Vacuum)",
+                                    "muscle": "core",
+                                    "rest": "30 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "ריצה בהליכון (Treadmill Running)",
+                                    "muscle": "cardio",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "הליכה בשיפוע גבוה בהליכון (Incline Treadmill Walking)",
+                                    "muscle": "cardio",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "מכשיר מדרגות (Stairmaster)",
+                                    "muscle": "cardio",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "אופני כושר / ספינינג (Stationary Bike)",
+                                    "muscle": "cardio",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "חתירה במכשיר אירובי (Rowing Machine Concept2)",
+                                    "muscle": "cardio",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "אופני אוויר - אסולט בייק (Assault AirBike)",
+                                    "muscle": "cardio",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "קפיצה בחבל (Jump Rope)",
+                                    "muscle": "cardio",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "ספרינטים / אינטרוולים (HIIT Sprints)",
+                                    "muscle": "cardio",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "ברפיז (Burpees)",
+                                    "muscle": "cardio",
+                                    "rest": "45 שנ'",
+                                    "video": ""
+                          },
+                          {
+                                    "name": "אימון שק אגרוף (Heavy Bag Boxing)",
+                                    "muscle": "cardio",
+                                    "rest": "60 שנ'",
+                                    "video": ""
+                          }
                 ],
+                openExerciseLibraryModal: false,
+                exerciseLibrarySearch: '',
+                exerciseLibrarySelectedMuscle: 'all',
+                targetDayIdxForExerciseAdd: 0,
+                targetExIdxForExerciseSelect: null,
                 
                 get currentClient() {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
@@ -7620,7 +8539,61 @@
                     }
                 },
 
-                ensureExerciseSetsDetail(ex) {
+                
+                openExerciseLibraryForDay(dayIdx, exIdx = null) {
+                    this.targetDayIdxForExerciseAdd = dayIdx;
+                    this.targetExIdxForExerciseSelect = exIdx;
+                    this.exerciseLibrarySearch = '';
+                    this.exerciseLibrarySelectedMuscle = 'all';
+                    this.openExerciseLibraryModal = true;
+                    setTimeout(() => window.lucide?.createIcons(), 50);
+                },
+
+                selectExerciseFromLibrary(ex) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client || !client.workoutPlan?.days?.[this.targetDayIdxForExerciseAdd]) return;
+                    const day = client.workoutPlan.days[this.targetDayIdxForExerciseAdd];
+                    
+                    if (this.targetExIdxForExerciseSelect !== null && day.exercises[this.targetExIdxForExerciseSelect]) {
+                        const targetEx = day.exercises[this.targetExIdxForExerciseSelect];
+                        targetEx.name = ex.name;
+                        if (ex.rest) targetEx.rest = ex.rest;
+                        if (ex.video) targetEx.video = ex.video;
+                        this.ensureExerciseSetsDetail(targetEx);
+                    } else {
+                        const newEx = {
+                            name: ex.name,
+                            sets: 3,
+                            reps: '10',
+                            rest: ex.rest || '90 שנ\'',
+                            notes: '',
+                            video: ex.video || '',
+                            setsDetail: [
+                                { setNum: 1, reps: '12', weight: '', type: 'work' },
+                                { setNum: 2, reps: '10', weight: '', type: 'work' },
+                                { setNum: 3, reps: '8', weight: '', type: 'work' }
+                            ]
+                        };
+                        day.exercises.push(newEx);
+                    }
+
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    this.openExerciseLibraryModal = false;
+                },
+
+                getFilteredExerciseLibrary() {
+                    const q = (this.exerciseLibrarySearch || '').trim().toLowerCase();
+                    const m = this.exerciseLibrarySelectedMuscle;
+                    return this.exerciseLibrary.filter(ex => {
+                        const matchMuscle = (m === 'all' || ex.muscle === m);
+                        const matchQuery = (!q || (ex.name || '').toLowerCase().includes(q) || (ex.muscle || '').toLowerCase().includes(q));
+                        return matchMuscle && matchQuery;
+                    });
+                },
+ensureExerciseSetsDetail(ex) {
                     if (!ex) return;
                     if (!Array.isArray(ex.setsDetail)) {
                         ex.setsDetail = [];
