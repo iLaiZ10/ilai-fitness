@@ -20,138 +20,50 @@
                         display: ['Plus Jakarta Sans', 'Assistant', 'sans-serif']
                     },
                     colors: {
-                        // ערכת נושא פרימיום: שמנת שיבולת שועל, ירוק יער עמוק ומנטה זוהרת
-                        slate: {
-                            50: '#ffffff',
-                            100: '#334155',
-                            150: '#1f053d',
-                            200: '#1f053d', // כותרות כהות בירוק יער עמוק
-                            250: '#143831',
-                            300: '#233d36', // טקסט תוכן אלגנטי
-                            350: '#3d5c54',
-                            355: '#3d5c54',
-                            400: '#705b8b', // טקסט משני רך
-                            500: '#8ba19b',
-                            550: '#705b8b',
-                            600: '#cbd5cf',
-                            700: '#e4daed',
-                            800: '#e4daed', // מסגרות שמנת עדינות
-                            850: '#f5f0e4', // שדות רקע פנימיים בשמנת
-                            900: '#ffffff', // כרטיסים לבנים נקיים
-                            950: '#faf7fc'  // רקע דף שמנת חם (Oatmeal Cream)
-                        },
-                        // ירוק יער עמוק ויוקרתי (Forest Teal Obsidian)
-                        forest: {
-                            50: '#f2f8f6',
-                            100: '#deeeea',
-                            200: '#c0dfd7',
+                        // ערכת מותג רשמית: סגול מלכותי עמוק, זהב יוקרתי, לוונדר ושמנת
+                        royal: {
+                            50: '#faf7fc',
+                            100: '#f3eef9',
+                            200: '#e4daed',
                             300: '#c4b5fd',
-                            400: '#5fa799',
-                            500: '#3d8c7e',
-                            600: '#2b7064',
-                            700: '#1e554d',
-                            800: '#2d0959',
-                            900: '#1f053d', // צבע יער עמוק ראשי
-                            950: '#100021'
+                            400: '#8a70a8',
+                            500: '#5a3582',
+                            600: '#3e1a66',
+                            700: '#310d5e',
+                            800: '#26044f',
+                            900: '#22004d', // סגול מלכותי עמוק ראשי
+                            950: '#140029'  // סגול אובסידיאן כהה
                         },
-                        // ירוק מנטה זוהר (Electric Sage / Mint)
-                        mint: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#facc15', // מנטה זוהרת
-                            400: '#fbbf24',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                            950: '#052e16'
+                        gold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24', // זהב ראשי בוהק
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f'
                         },
-                        // גווני שמנת חמה ובז' (Oatmeal & Cream)
-                        cream: {
-                            50: '#fdfbf7',
-                            100: '#faf7fc',
-                            200: '#f5efe0',
-                            300: '#ebdcc5',
-                            400: '#d6be99',
-                            500: '#b48a4c'
-                        },
-                        // Alias sky -> ירוק יער עמוק ומנטה
-                        sky: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#facc15',
-                            400: '#fbbf24',
-                            500: '#1f053d', // כפתורי פעולה יער
-                            600: '#0b332b',
-                            700: '#06211d',
-                            800: '#100021',
-                            900: '#020d0b',
-                            950: '#faf7fc'
-                        },
-                        // Alias purple -> ירוק יער עמוק
-                        purple: {
-                            50: '#f2f8f6',
-                            100: '#deeeea',
-                            200: '#c0dfd7',
-                            300: '#facc15',
-                            400: '#fbbf24',
-                            500: '#1f053d',
-                            600: '#0b332b',
-                            700: '#06211d',
-                            800: '#100021',
-                            900: '#020d0b',
-                            950: '#faf7fc'
-                        },
-                        // Alias beige -> שמנת
-                        beige: {
-                            50: '#fdfbf7',
-                            100: '#faf7fc',
-                            200: '#f5ebd7',
-                            300: '#facc15',
-                            400: '#1f053d',
-                            500: '#0b332b',
-                            600: '#06211d',
-                            700: '#100021',
-                            800: '#020d0b',
-                            900: '#020d0b',
-                            950: '#faf7fc'
-                        },
-                        // Alias emerald -> מנטה ירוקה
-                        emerald: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#facc15',
-                            400: '#fbbf24',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                            950: '#052e16'
-                        },
-                        // Alias amber -> נגיעות זהב ושמנת
-                        amber: {
-                            50: '#fdfbf7',
-                            100: '#faf7fc',
-                            200: '#f5ebd7',
-                            300: '#facc15',
-                            400: '#fbbf24',
-                            500: '#1f053d',
-                            600: '#0b332b',
-                            700: '#06211d',
-                            800: '#100021',
-                            900: '#020d0b',
-                            950: '#fdfbf7'
+                        lavender: {
+                            50: '#faf8fd',
+                            100: '#f5f0fb',
+                            200: '#e4daed',
+                            300: '#c4b5fd',
+                            400: '#8a75a4',
+                            500: '#705b8b', // טקסט משני רך ויוקרתי
+                            600: '#5a4870',
+                            700: '#463757',
+                            800: '#332740',
+                            900: '#22004d'
                         },
                         brand: {
-                            forest: '#1f053d',
-                            mint: '#facc15',
-                            cream: '#faf7fc',
-                            white: '#ffffff'
+                            purple: '#22004d',
+                            gold: '#fbbf24',
+                            cream: '#f8f6fb',
+                            border: '#e4daed',
+                            card: '#ffffff'
                         }
                     }
                 }
@@ -1169,7 +1081,7 @@
                                             <span class="text-[10px] text-[#705b8b] block font-bold">3. שתיית מים:</span>
                                             <span class="text-xs font-black text-[#1f053d]" x-text="(!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? ((portalClient?.dailyWater || 0) + ' / ' + (portalClient?.waterTarget || 3000) + ' מ״ל') : ((getScorecardForDate(portalClient, portalScorecardViewDate)?.water || portalClient?.waterTarget || 3000) + ' מ״ל')"></span>
                                         </div>
-                                        <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'bg-emerald-100 text-amber-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
+                                        <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
                                             <span x-text="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailyWater || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.water || 0)) >= (portalClient?.waterTarget || 3000) ? 'הושג! 💧' : 'בתהליך ⏳'"></span>
                                         </span>
                                     </div>
@@ -1179,7 +1091,7 @@
                                             <span class="text-[10px] text-[#705b8b] block font-bold">4. צעדים:</span>
                                             <span class="text-xs font-black text-[#1f053d]" x-text="(!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? ((portalClient?.dailySteps || 0) + ' / ' + (portalClient?.stepsTarget || 10000)) : ((getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || portalClient?.stepsTarget || 10000) + ' צעדים')"></span>
                                         </div>
-                                        <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'bg-emerald-100 text-amber-800' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
+                                        <span :class="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-100 text-amber-800'" class="text-[10px] px-2 py-0.5 rounded-full font-black">
                                             <span x-text="((!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()) ? (portalClient?.dailySteps || 0) : (getScorecardForDate(portalClient, portalScorecardViewDate)?.steps || 0)) >= (portalClient?.stepsTarget || 10000) ? 'הושג! 🚶' : 'בתהליך ⏳'"></span>
                                         </span>
                                     </div>
@@ -1550,7 +1462,7 @@
                                     <div class="text-xs text-[#705b8b]">
                                         <span>סיימת את כל התרגילים? לחץ לסגירת האימון ונעילת יום מוצלח 👑</span>
                                     </div>
-                                    <button type="button" @click="finishLiveWorkout(portalClient, dayIdx)" class="w-full sm:w-auto bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-[#1f053d] hover:from-amber-600 hover:to-amber-700 text-white font-black px-6 py-3 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 transition shadow-xl shadow-amber-500/25 cursor-pointer">
+                                    <button type="button" @click="finishLiveWorkout(portalClient, dayIdx)" class="w-full sm:w-auto bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-[#22004d] hover:from-amber-500 hover:to-amber-700 font-black px-6 py-3 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 transition shadow-xl shadow-amber-500/25 cursor-pointer">
                                         <i data-lucide="trophy" class="w-4 h-4"></i>
                                         <span>סיים אימון וסגור יום בהצלחה 🏆</span>
                                     </button>
@@ -2183,7 +2095,7 @@
                                                         <span class="text-[10px] bg-white border border-[#e4daed] px-2 py-0.5 rounded-lg font-bold text-[#1f053d]" x-text="ref.moodLabel"></span>
                                                     </template>
                                                 </div>
-                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-amber-800 border-amber-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" x-text="ref.reviewed ? 'נבדק ע״י אילאי ✅' : 'ממתין למשוב אילאי ⏳'"></span>
+                                                <span :class="ref.reviewed ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'" class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" x-text="ref.reviewed ? 'נבדק ע״י אילאי ✅' : 'ממתין למשוב אילאי ⏳'"></span>
                                             </div>
 
                                             <div class="text-xs font-medium text-[#1f053d] whitespace-pre-line bg-white p-3.5 rounded-xl border border-[#e4daed] leading-relaxed" x-text="ref.text"></div>
@@ -2372,42 +2284,42 @@
                 <!-- 1. טאב לוח בקרה -->
                 <div x-show="activeTab === 'dashboard' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
+                        <div class="bg-white border border-[#e4daed] rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-md">
                             <div>
-                                <span class="text-slate-400 text-[10px] md:text-xs font-bold block mb-1">פעילים בליווי</span>
-                                <span class="text-xl md:text-3xl font-black text-white" x-text="getActiveClientsCount()"></span>
+                                <span class="text-[#705b8b] text-[10px] md:text-xs font-bold block mb-1">פעילים בליווי</span>
+                                <span class="text-xl md:text-3xl font-black text-[#22004d]" x-text="getActiveClientsCount()"></span>
                             </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-500/10 border border-amber-400/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-50 border border-amber-200 text-amber-600 rounded-xl shadow-xs flex items-center justify-center">
                                 <i data-lucide="users" class="w-5 h-5"></i>
                             </div>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
+                        <div class="bg-white border border-[#e4daed] rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-md">
                             <div>
-                                <span class="text-slate-400 text-[10px] md:text-xs font-bold block mb-1">הכנסה חודשית</span>
-                                <span class="text-xl md:text-3xl font-black text-white" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
+                                <span class="text-[#705b8b] text-[10px] md:text-xs font-bold block mb-1">הכנסה חודשית</span>
+                                <span class="text-xl md:text-3xl font-black text-[#22004d]" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
                             </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-500/10 border border-amber-400/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-50 border border-amber-200 text-amber-600 rounded-xl shadow-xs flex items-center justify-center">
                                 <i data-lucide="wallet" class="w-5 h-5"></i>
                             </div>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
+                        <div class="bg-white border border-[#e4daed] rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-md">
                             <div>
-                                <span class="text-slate-400 text-[10px] md:text-xs font-bold block mb-1">פגישות שבוצעו</span>
-                                <span class="text-xl md:text-3xl font-black text-white" x-text="getCompletedPersonalSessions() + ' / ' + getActiveClientsCount()"></span>
+                                <span class="text-[#705b8b] text-[10px] md:text-xs font-bold block mb-1">פגישות שבוצעו</span>
+                                <span class="text-xl md:text-3xl font-black text-[#22004d]" x-text="getCompletedPersonalSessions() + ' / ' + getActiveClientsCount()"></span>
                             </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-sky-50 border border-sky-200 text-sky-600 rounded-xl shadow-xs flex items-center justify-center">
                                 <i data-lucide="dumbbell" class="w-5 h-5"></i>
                             </div>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
+                        <div class="bg-white border border-[#e4daed] rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-md">
                             <div>
-                                <span class="text-slate-400 text-[10px] md:text-xs font-bold block mb-1">בנפילה / קושי</span>
-                                <span class="text-xl md:text-3xl font-black text-red-400" x-text="getNeedsAttentionCount()"></span>
+                                <span class="text-[#705b8b] text-[10px] md:text-xs font-bold block mb-1">בנפילה / קושי</span>
+                                <span class="text-xl md:text-3xl font-black text-red-600" x-text="getNeedsAttentionCount()"></span>
                             </div>
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-red-50 border border-red-200 text-red-600 rounded-xl shadow-xs flex items-center justify-center">
                                 <i data-lucide="alert-circle" class="w-5 h-5"></i>
                             </div>
                         </div>
@@ -2415,9 +2327,9 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- מתאמנים הדורשים יחס מיוחד -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[350px] md:h-[400px]">
-                            <div class="p-4 md:p-6 border-b border-slate-800 flex justify-between items-center">
-                                <h3 class="font-black text-sm md:text-base text-slate-200 flex items-center gap-2">
+                        <div class="bg-white border border-[#e4daed] rounded-2xl shadow-md flex flex-col h-[350px] md:h-[400px]">
+                            <div class="p-4 md:p-6 border-b border-[#e4daed] flex justify-between items-center">
+                                <h3 class="font-black text-sm md:text-base text-[#22004d] flex items-center gap-2">
                                     <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
                                     <span>צריכים יחס מיוחד (נפילה/קושי)</span>
                                 </h3>
@@ -2425,21 +2337,21 @@
                             </div>
                             <div class="flex-1 p-4 md:p-6 overflow-y-auto space-y-4">
                                 <template x-for="client in getAttentionClients()" :key="client.id">
-                                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-slate-700 transition">
+                                    <div class="bg-[#faf8fd] border border-[#e4daed] rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-amber-300 transition">
                                         <div class="space-y-1">
-                                            <button @click="selectClient(client.id)" class="text-xs md:text-sm font-bold text-slate-200 hover:text-emerald-400 text-right block" x-text="client.name"></button>
+                                            <button @click="selectClient(client.id)" class="text-xs md:text-sm font-black text-[#22004d] hover:text-amber-600 text-right block" x-text="client.name"></button>
                                             <span class="text-[10px] text-red-400 bg-red-950/40 px-1.5 py-0.5 rounded border border-red-900/40 block truncate max-w-[180px] md:max-w-xs" x-text="getLastNote(client) || 'סומן ללא פירוט'"></span>
                                         </div>
                                         <div class="flex items-center gap-1.5">
-                                            <button @click="selectClient(client.id)" class="text-[10px] md:text-xs text-slate-400 px-2 py-1 rounded bg-slate-900 border border-slate-800">כרטיס</button>
-                                            <a :href="getWhatsAppLink(client, 'attention')" target="_blank" class="bg-amber-600 text-white p-1.5 rounded">
+                                            <button @click="selectClient(client.id)" class="text-[10px] md:text-xs text-[#22004d] px-2.5 py-1 rounded-lg bg-white border border-[#e4daed] font-bold hover:bg-[#faf8fd]">כרטיס</button>
+                                            <a :href="getWhatsAppLink(client, 'attention')" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white p-1.5 rounded-lg shadow-xs">
                                                 <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                                             </a>
                                         </div>
                                     </div>
                                 </template>
                                 <template x-if="getAttentionClients().length === 0">
-                                    <div class="h-full flex flex-col items-center justify-center text-slate-500 italic text-xs">
+                                    <div class="h-full flex flex-col items-center justify-center text-[#705b8b] italic text-xs">
                                         <i data-lucide="check-circle" class="w-8 h-8 text-amber-600/30 mb-2"></i>
                                         <span>כל המתאמנים במסלול תקין!</span>
                                     </div>
@@ -2448,30 +2360,30 @@
                         </div>
 
                         <!-- משימות ליווי להיום -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[350px] md:h-[400px]">
-                            <div class="p-4 md:p-6 border-b border-slate-800">
-                                <h3 class="font-black text-sm md:text-base text-slate-200 flex items-center gap-2">
+                        <div class="bg-white border border-[#e4daed] rounded-2xl shadow-md flex flex-col h-[350px] md:h-[400px]">
+                            <div class="p-4 md:p-6 border-b border-[#e4daed]">
+                                <h3 class="font-black text-sm md:text-base text-[#22004d] flex items-center gap-2">
                                     <i data-lucide="calendar" class="w-5 h-5 text-emerald-400"></i>
                                     <span>משימות ופגישות קרובות</span>
                                 </h3>
                             </div>
                             <div class="flex-1 p-4 md:p-6 overflow-y-auto space-y-4">
                                 <template x-for="task in getUpcomingTasks()" :key="task.id">
-                                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-slate-700 transition">
+                                    <div class="bg-[#faf8fd] border border-[#e4daed] rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-amber-300 transition">
                                         <div class="space-y-1">
-                                            <button @click="selectClient(task.id)" class="text-xs md:text-sm font-bold text-slate-200 hover:text-emerald-400 text-right block" x-text="task.name"></button>
+                                            <button @click="selectClient(task.id)" class="text-xs md:text-sm font-black text-[#22004d] hover:text-amber-600 text-right block" x-text="task.name"></button>
                                             <span class="text-[10px] block max-w-[180px] md:max-w-xs truncate" :class="task.type === 'zoom' ? 'text-blue-400' : 'text-amber-400'" x-text="task.desc"></span>
                                         </div>
                                         <div class="flex items-center gap-1.5">
                                             <template x-if="task.type === 'zoom'">
                                                 <button @click="markPersonalSessionDone(task.id)" class="bg-blue-600/20 text-blue-400 border border-blue-900 text-[10px] px-2 py-1 rounded">בוצע</button>
                                             </template>
-                                            <button @click="selectClient(task.id)" class="text-[10px] text-slate-400 px-2 py-1 rounded bg-slate-900 border border-slate-800">לכרטיס</button>
+                                            <button @click="selectClient(task.id)" class="text-[10px] text-[#22004d] px-2.5 py-1 rounded-lg bg-white border border-[#e4daed] font-bold hover:bg-[#faf8fd]">לכרטיס</button>
                                         </div>
                                     </div>
                                 </template>
                                 <template x-if="getUpcomingTasks().length === 0">
-                                    <div class="h-full flex flex-col items-center justify-center text-slate-500 italic text-xs">
+                                    <div class="h-full flex flex-col items-center justify-center text-[#705b8b] italic text-xs">
                                         <i data-lucide="coffee" class="w-8 h-8 text-amber-600/30 mb-2"></i>
                                         <span>אין משימות להיום.</span>
                                     </div>
@@ -2604,7 +2516,7 @@
 
                                             <!-- שקילה שבועית -->
                                             <td class="py-3.5 px-3 text-center">
-                                                <span :class="isClientCheckedInThisWeek(client) ? 'bg-emerald-100 text-amber-800 border-amber-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-flex items-center gap-1">
+                                                <span :class="isClientCheckedInThisWeek(client) ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-flex items-center gap-1">
                                                     <template x-if="isClientCheckedInThisWeek(client)">
                                                         <i data-lucide="check-circle-2" class="w-3 h-3 text-amber-700"></i>
                                                     </template>
@@ -2645,7 +2557,7 @@
 
                                             <!-- תשלום חודשי -->
                                             <td class="py-3.5 px-3 text-center">
-                                                <span :class="isCurrentMonthPaid(client) ? 'bg-emerald-100 text-amber-800 border-amber-300' : 'bg-rose-100 text-rose-800 border-rose-300'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-block" x-text="isCurrentMonthPaid(client) ? 'שולם 🟢' : 'ממתין 🟡'"></span>
+                                                <span :class="isCurrentMonthPaid(client) ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-block" x-text="isCurrentMonthPaid(client) ? 'שולם 🟢' : 'ממתין 🟡'"></span>
                                             </td>
 
                                             <!-- פעולות -->
@@ -2678,7 +2590,7 @@
                                             <button @click="selectClient(client.id)" class="font-extrabold text-[#1f053d] text-xs text-right block" x-text="client.name"></button>
                                             <span class="text-[10px] text-[#705b8b]" x-text="client.goal || 'ללא מטרה מוגדרת'"></span>
                                         </div>
-                                        <span :class="isCurrentMonthPaid(client) ? 'bg-emerald-100 text-amber-800' : 'bg-rose-100 text-rose-800'" class="text-[9px] font-black px-2 py-0.5 rounded-full" x-text="isCurrentMonthPaid(client) ? 'שולם 🟢' : 'ממתין 🟡'"></span>
+                                        <span :class="isCurrentMonthPaid(client) ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-100 text-rose-800'" class="text-[9px] font-black px-2 py-0.5 rounded-full" x-text="isCurrentMonthPaid(client) ? 'שולם 🟢' : 'ממתין 🟡'"></span>
                                     </div>
 
                                     <div class="grid grid-cols-2 gap-2 text-[10px]">
@@ -2716,20 +2628,20 @@
                 <!-- 2. טאב רשימת מתאמנים -->
                 <div x-show="activeTab === 'clients' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <!-- חיפוש ופילטרים -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col gap-4 shadow-xl">
+                    <div class="bg-white border border-[#e4daed] rounded-2xl p-4 md:p-6 flex flex-col gap-4 shadow-md">
                         <div class="flex flex-col md:flex-row gap-4 justify-between items-center w-full">
                             <div class="relative w-full md:w-96">
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
                                     <i data-lucide="search" class="w-5 h-5"></i>
                                 </span>
-                                <input type="text" x-model="searchQuery" placeholder="חיפוש מתאמן..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pr-10 pl-4 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-sm">
+                                <input type="text" x-model="searchQuery" placeholder="חיפוש מתאמן..." class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl pr-10 pl-4 py-2 text-[#22004d] font-bold focus:outline-none focus:border-amber-400 text-sm">
                             </div>
 
                             <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none w-full md:w-auto">
-                                <button @click="statusFilter = 'all'" :class="statusFilter === 'all' ? 'bg-amber-600 text-white' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">הכל</button>
-                                <button @click="statusFilter = 'active'" :class="statusFilter === 'active' ? 'bg-amber-600 text-white' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">פעילים</button>
-                                <button @click="statusFilter = 'paused'" :class="statusFilter === 'paused' ? 'bg-amber-600 text-white' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">מושהים</button>
-                                <button @click="statusFilter = 'completed'" :class="statusFilter === 'completed' ? 'bg-amber-600 text-white' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">סיימו</button>
+                                <button @click="statusFilter = 'all'" :class="statusFilter === 'all' ? 'bg-[#22004d] text-[#fbbf24] font-black shadow-md' : 'bg-[#faf8fd] text-[#705b8b] hover:text-[#22004d] border border-[#e4daed] font-bold'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">הכל</button>
+                                <button @click="statusFilter = 'active'" :class="statusFilter === 'active' ? 'bg-[#22004d] text-[#fbbf24] font-black shadow-md' : 'bg-[#faf8fd] text-[#705b8b] hover:text-[#22004d] border border-[#e4daed] font-bold'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">פעילים</button>
+                                <button @click="statusFilter = 'paused'" :class="statusFilter === 'paused' ? 'bg-[#22004d] text-[#fbbf24] font-black shadow-md' : 'bg-[#faf8fd] text-[#705b8b] hover:text-[#22004d] border border-[#e4daed] font-bold'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">מושהים</button>
+                                <button @click="statusFilter = 'completed'" :class="statusFilter === 'completed' ? 'bg-[#22004d] text-[#fbbf24] font-black shadow-md' : 'bg-[#faf8fd] text-[#705b8b] hover:text-[#22004d] border border-[#e4daed] font-bold'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">סיימו</button>
                             </div>
                         </div>
 
@@ -2757,10 +2669,10 @@
                     </div>
 
                     <!-- טבלת מתאמנים - Desktop -->
-                    <div class="hidden md:block bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+                    <div class="hidden md:block bg-white border border-[#e4daed] rounded-2xl shadow-md overflow-hidden">
                         <table class="w-full text-right border-collapse">
                             <thead>
-                                <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 text-xs font-black">
+                                <tr class="bg-[#faf8fd] border-b border-[#e4daed] text-[#705b8b] text-xs font-black">
                                     <th class="py-4 px-6">שם המתאמן</th>
                                     <th class="py-4 px-6">טלפון</th>
                                     <th class="py-4 px-6 text-center">התחלה</th>
@@ -2770,33 +2682,33 @@
                                     <th class="py-4 px-6 text-left">פעולות</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-800/50">
+                            <tbody class="divide-y divide-[#e4daed]/60">
                                 <template x-for="client in filteredClients()" :key="client.id">
-                                    <tr class="hover:bg-slate-800/30 transition">
+                                    <tr class="hover:bg-[#faf8fd]/80 transition">
                                         <td class="py-4 px-6">
                                             <div class="flex items-center gap-3">
-                                                <button @click="selectClient(client.id)" class="text-sm font-bold text-slate-200 hover:text-emerald-400 text-right" x-text="client.name"></button>
+                                                <button @click="selectClient(client.id)" class="text-sm font-black text-[#22004d] hover:text-amber-600 text-right" x-text="client.name"></button>
                                                 <template x-if="client.needsAttention">
                                                     <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
                                                 </template>
                                             </div>
-                                            <span class="text-xs text-slate-500 block truncate max-w-xs mt-0.5" x-text="client.goal || 'ללא מטרה מוגדרת'"></span>
+                                            <span class="text-xs text-[#705b8b] block truncate max-w-xs mt-0.5 font-medium" x-text="client.goal || 'ללא מטרה מוגדרת'"></span>
                                         </td>
-                                        <td class="py-4 px-6 text-slate-300 text-sm" x-text="client.phone"></td>
+                                        <td class="py-4 px-6 text-slate-600 text-sm font-medium" x-text="client.phone"></td>
                                         <td class="py-4 px-6 text-center text-slate-400 text-xs" x-text="formatDate(client.startDate)"></td>
                                         <td class="py-4 px-6 text-center">
-                                            <span :class="isCurrentMonthPaid(client) ? 'bg-emerald-950/60 text-emerald-400 border-emerald-800' : 'bg-amber-950/60 text-amber-400 border-amber-800'" class="text-xs px-2.5 py-1 rounded-full font-bold border inline-block" x-text="isCurrentMonthPaid(client) ? 'שולם' : 'ממתין'"></span>
+                                            <span :class="isCurrentMonthPaid(client) ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'" class="text-xs px-2.5 py-1 rounded-full font-bold border inline-block" x-text="isCurrentMonthPaid(client) ? 'שולם' : 'ממתין'"></span>
                                         </td>
                                         <td class="py-4 px-6 text-center">
                                             <span :class="getPersonalSessionClass(client.personalSessionStatus)" class="text-xs px-2.5 py-1 rounded-full font-bold border inline-block" x-text="getPersonalSessionLabel(client.personalSessionStatus)"></span>
                                         </td>
                                         <td class="py-4 px-6 text-center">
-                                            <span :class="client.status === 'active' ? 'bg-amber-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-400'" class="text-xs px-2 py-0.5 rounded border inline-block" x-text="client.status === 'active' ? 'פעיל' : 'מושהה'"></span>
+                                            <span :class="client.status === 'active' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-[#705b8b] border-[#e4daed]'" class="text-xs px-2 py-0.5 rounded border inline-block" x-text="client.status === 'active' ? 'פעיל' : 'מושהה'"></span>
                                         </td>
                                         <td class="py-4 px-6 text-left">
                                             <div class="flex items-center justify-end gap-2">
-                                                <button @click="selectClient(client.id)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700">ניהול</button>
-                                                <button @click="deleteClient(client.id)" class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-slate-800"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                                <button @click="selectClient(client.id)" class="text-xs bg-white hover:bg-[#faf8fd] text-[#22004d] px-3 py-1.5 rounded-lg border border-[#e4daed] font-bold transition shadow-xs">ניהול</button>
+                                                <button @click="deleteClient(client.id)" class="text-[#705b8b] hover:text-red-500 p-1.5 rounded-lg hover:bg-red-50 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -2808,28 +2720,28 @@
                     <!-- כרטיסי מתאמנים - Mobile -->
                     <div class="block md:hidden space-y-4">
                         <template x-for="client in filteredClients()" :key="client.id">
-                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-md">
+                            <div class="bg-white border border-[#e4daed] rounded-2xl p-4 space-y-3 shadow-md">
                                 <div class="flex justify-between items-start">
                                     <div>
-                                        <button @click="selectClient(client.id)" class="font-bold text-slate-200 hover:text-emerald-400 text-sm text-right block" x-text="client.name"></button>
+                                        <button @click="selectClient(client.id)" class="font-black text-[#22004d] hover:text-amber-600 text-sm text-right block" x-text="client.name"></button>
                                         <span class="text-[10px] text-slate-500 block mt-0.5" x-text="client.goal || 'ללא מטרה מוגדרת'"></span>
                                     </div>
                                     <div class="flex items-center gap-1.5">
                                         <template x-if="client.needsAttention">
                                             <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                                         </template>
-                                        <span :class="client.status === 'active' ? 'bg-amber-500/10 text-emerald-400 border-amber-400/20' : 'bg-slate-500/10 text-slate-400 border-slate-500/20'" class="text-[9px] px-1.5 py-0.5 rounded border font-semibold" x-text="client.status === 'active' ? 'פעיל' : 'מושהה'"></span>
+                                        <span :class="client.status === 'active' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-[#705b8b] border-[#e4daed]'" class="text-[9px] px-1.5 py-0.5 rounded border font-semibold" x-text="client.status === 'active' ? 'פעיל' : 'מושהה'"></span>
                                     </div>
                                 </div>
                                 
-                                <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-300 pt-2 border-t border-slate-800/60">
+                                <div class="grid grid-cols-2 gap-2 text-[11px] text-[#705b8b] pt-2 border-t border-[#e4daed]">
                                     <div>
                                         <span class="text-[9px] text-slate-500 block">טלפון:</span>
                                         <span x-text="client.phone"></span>
                                     </div>
                                     <div>
                                         <span class="text-[9px] text-slate-500 block">תשלום חודש:</span>
-                                        <span :class="isCurrentMonthPaid(client) ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'" x-text="isCurrentMonthPaid(client) ? 'שולם' : 'ממתין'"></span>
+                                        <span :class="isCurrentMonthPaid(client) ? 'text-emerald-600 font-bold' : 'text-amber-600 font-bold'" x-text="isCurrentMonthPaid(client) ? 'שולם' : 'ממתין'"></span>
                                     </div>
                                 </div>
 
@@ -2850,13 +2762,13 @@
 
                 <!-- 3. טאב יומן שבועי -->
                 <div x-show="activeTab === 'schedule' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
+                    <div class="bg-white border border-[#e4daed] rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-md">
                         <div class="flex items-center gap-4 justify-between w-full md:w-auto">
-                            <h3 class="text-sm md:text-xl font-bold text-slate-200">יומן אימונים ושיחות</h3>
-                            <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
-                                <button @click="weekOffset--" class="p-2 hover:bg-slate-800 text-slate-400"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
-                                <span class="px-3 py-1.5 text-[10px] md:text-xs font-bold text-slate-200" x-text="getWeekRangeLabel()"></span>
-                                <button @click="weekOffset++" class="p-2 hover:bg-slate-800 text-slate-400"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
+                            <h3 class="text-sm md:text-xl font-bold text-[#22004d]">יומן אימונים ושיחות</h3>
+                            <div class="flex items-center bg-[#faf8fd] border border-[#e4daed] rounded-xl overflow-hidden shadow-xs">
+                                <button @click="weekOffset--" class="p-2 hover:bg-slate-800 text-[#22004d] cursor-pointer"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+                                <span class="px-3 py-1.5 text-[10px] md:text-xs font-bold text-[#22004d] font-black" x-text="getWeekRangeLabel()"></span>
+                                <button @click="weekOffset++" class="p-2 hover:bg-slate-800 text-[#22004d] cursor-pointer"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
                             </div>
                         </div>
                         <button @click="openAddEventModal = true" class="w-full md:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs md:text-sm flex items-center justify-center gap-1.5 shadow-lg">
@@ -2867,19 +2779,19 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
                         <template x-for="day in getCurrentWeekDays()" :key="day.date">
-                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col min-h-[140px] md:min-h-[300px] shadow-xl">
-                                <div class="border-b border-slate-800 pb-2 mb-3 flex justify-between items-center">
-                                    <span class="font-black text-slate-200 text-xs md:text-sm" x-text="day.name"></span>
+                            <div class="bg-white border border-[#e4daed] rounded-2xl p-4 flex flex-col min-h-[140px] md:min-h-[300px] shadow-md">
+                                <div class="border-b border-[#e4daed] pb-2 mb-3 flex justify-between items-center">
+                                    <span class="font-black text-[#22004d] text-xs md:text-sm" x-text="day.name"></span>
                                     <span class="text-[10px] text-slate-500 font-bold" x-text="day.formatted"></span>
                                 </div>
                                 
                                 <div class="flex-1 space-y-2 overflow-y-auto max-h-[300px]">
                                     <template x-for="event in getEventsForDate(day.date)" :key="event.id">
-                                        <div :class="event.status === 'completed' ? 'border-emerald-800 bg-emerald-950/20' : (event.status === 'cancelled' ? 'border-red-950 bg-red-950/10 opacity-60' : 'border-slate-800 bg-slate-950')"
+                                        <div :class="event.status === 'completed' ? 'border-emerald-800 bg-emerald-950/20' : (event.status === 'cancelled' ? 'border-red-950 bg-red-950/10 opacity-60' : 'border-[#e4daed] bg-[#faf8fd]')"
                                              class="border rounded-xl p-2.5 text-[10px] md:text-xs space-y-2 relative group hover:border-slate-700 transition">
                                             <div class="flex justify-between items-start">
-                                                <span class="font-bold text-slate-200" x-text="event.clientName"></span>
-                                                <span class="text-[9px] text-slate-400 font-semibold" x-text="event.time"></span>
+                                                <span class="font-bold text-[#22004d]" x-text="event.clientName"></span>
+                                                <span class="text-[9px] text-[#705b8b] font-bold" x-text="event.time"></span>
                                             </div>
                                             <div class="flex items-center gap-1">
                                                 <span :class="event.type === 'zoom' ? 'bg-blue-950/40 text-blue-400 border-blue-900/50' : 'bg-amber-950/40 text-amber-400 border-amber-900/50'" class="px-1 py-0.5 rounded text-[8px] border" x-text="event.type === 'zoom' ? 'זום' : '1:1'"></span>
@@ -2892,7 +2804,7 @@
                                         </div>
                                     </template>
                                     <template x-if="getEventsForDate(day.date).length === 0">
-                                        <div class="flex-1 flex items-center justify-center text-slate-600 italic text-[10px] py-4">אין פגישות</div>
+                                        <div class="flex-1 flex items-center justify-center text-[#705b8b] italic text-[10px] py-4">אין פגישות</div>
                                     </template>
                                 </div>
                             </div>
@@ -2921,13 +2833,13 @@
                                 <div class="space-y-1.5">
                                     <div class="flex items-center gap-2.5 flex-wrap">
                                         <h3 class="text-xl md:text-3xl font-black text-[#1f053d] tracking-tight" x-text="currentClient?.name"></h3>
-                                        <span class="text-[10px] bg-emerald-100 text-amber-800 border border-amber-300 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 shadow-sm">
+                                        <span class="text-[10px] bg-emerald-50 text-emerald-800 border-emerald-200 border border-amber-300 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 shadow-sm">
                                             <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
                                             <span>VIP ליווי אישי</span>
                                         </span>
                                         <button type="button"
                                                 @click="toggleClientAttention(currentClient.id)" 
-                                                :class="currentClient?.needsAttention ? 'bg-rose-100 text-rose-800 border-rose-300' : 'bg-white text-[#705b8b] border-[#e4daed] hover:border-[#1f053d]'"
+                                                :class="currentClient?.needsAttention ? 'bg-rose-50 text-rose-800 border-rose-200' : 'bg-white text-[#705b8b] border-[#e4daed] hover:border-[#1f053d]'"
                                                 class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 transition cursor-pointer shadow-sm">
                                             <i data-lucide="alert-triangle" class="w-3 h-3" :class="currentClient?.needsAttention ? 'text-rose-600' : 'text-slate-400'"></i>
                                             <span x-text="currentClient?.needsAttention ? '⚠️ דורש מעקב מוגבר!' : 'סמן לקושי / מעקב'"></span>
@@ -3088,7 +3000,7 @@
                                                 <i data-lucide="pie-chart" class="w-4 h-4 text-amber-600"></i>
                                                 <span>יעדי מאקרו ותזונה מוגדרים:</span>
                                             </span>
-                                            <span class="text-[11px] font-black bg-emerald-100 text-amber-800 border border-amber-300 px-2.5 py-0.5 rounded-full" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' קק״ל / יום'"></span>
+                                            <span class="text-[11px] font-black bg-emerald-50 text-emerald-800 border-emerald-200 border border-amber-300 px-2.5 py-0.5 rounded-full" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' קק״ל / יום'"></span>
                                         </div>
                                         
                                         <div class="grid grid-cols-3 gap-2 text-center text-xs">
@@ -3124,7 +3036,7 @@
                                             <i data-lucide="activity" class="w-4 h-4 text-amber-600"></i>
                                             <span>מעקב יומי חי של היום</span>
                                         </h4>
-                                        <span class="text-[10px] bg-emerald-100 text-amber-800 px-2.5 py-0.5 rounded-full font-black border border-amber-300 flex items-center gap-1">
+                                        <span class="text-[10px] bg-emerald-50 text-emerald-800 border-emerald-200 px-2.5 py-0.5 rounded-full font-black border border-amber-300 flex items-center gap-1">
                                             <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                                             <span>מסונכרן לענן ⚡</span>
                                         </span>
@@ -3408,7 +3320,7 @@
                                         <template x-for="sc in getClientScorecardsList(currentClient)" :key="sc.id || sc.date">
                                             <div class="bg-[#faf7fc] border border-[#e4daed] hover:border-[#facc15] p-3.5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition">
                                                 <div class="flex items-center gap-3">
-                                                    <div :class="(sc.score >= 85) ? 'bg-emerald-100 text-amber-800 border-amber-300' : (sc.score >= 65 ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-rose-100 text-rose-800 border-rose-300')" 
+                                                    <div :class="(sc.score >= 85) ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : (sc.score >= 65 ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-rose-50 text-rose-800 border-rose-200')" 
                                                          class="w-12 h-12 rounded-2xl border font-black text-sm flex items-center justify-center shrink-0 shadow-sm" 
                                                          x-text="(sc.score || 0) + '%'">
                                                     </div>
@@ -3473,7 +3385,7 @@
                                                             <span class="text-[10px] bg-white border border-[#e4daed] px-2 py-0.5 rounded-full font-bold" x-text="ref.mood"></span>
                                                         </template>
                                                     </div>
-                                                    <span :class="ref.reviewed ? 'bg-emerald-100 text-amber-800 border-amber-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-3 py-0.5 rounded-full font-bold border self-start sm:self-auto" x-text="ref.reviewed ? 'נבדק ונשלח משוב ✅' : 'ממתין למשוב המאמן ⏳'"></span>
+                                                    <span :class="ref.reviewed ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'" class="text-[10px] px-3 py-0.5 rounded-full font-bold border self-start sm:self-auto" x-text="ref.reviewed ? 'נבדק ונשלח משוב ✅' : 'ממתין למשוב המאמן ⏳'"></span>
                                                 </div>
 
                                                 <!-- תוכן השיקוף של המתאמן -->
@@ -4000,12 +3912,12 @@
 
 <!-- טאב 4: מחולל תפריטי תזונה -->
                         <div x-show="detailSubTab === 'mealplan'" x-cloak class="space-y-6">
-                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
+                            <div class="bg-white border border-[#e4daed] rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-md">
                                 <div class="flex flex-col gap-2 w-full md:w-auto text-xs">
-                                    <h4 class="font-bold text-slate-200">מחולל תפריט תזונה מפורט</h4>
+                                    <h4 class="font-bold text-[#22004d]">מחולל תפריט תזונה מפורט</h4>
                                     <div class="flex items-center gap-1.5 mt-1">
-                                        <span class="text-slate-400 text-[10px]">טען תבנית תפריט:</span>
-                                        <select @change="applyMealPlanTemplateToClient($event.target.value)" class="bg-slate-950 border border-slate-800 rounded-lg p-1 text-[10px] text-slate-300 focus:outline-none">
+                                        <span class="text-[#705b8b] text-xs font-bold">טען תבנית תפריט:</span>
+                                        <select @change="applyMealPlanTemplateToClient($event.target.value)" class="bg-[#faf8fd] border border-[#e4daed] rounded-lg p-1.5 text-xs text-[#22004d] font-bold focus:outline-none">
                                             <option value="">-- בחר תבנית --</option>
                                             <template x-for="temp in mealPlanTemplates" :key="temp.name">
                                                 <option :value="temp.name" x-text="temp.name"></option>
@@ -4014,11 +3926,11 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                                    <button @click="saveCurrentMealPlanAsTemplate()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                                    <button @click="saveCurrentMealPlanAsTemplate()" class="flex-1 md:flex-none justify-center bg-white hover:bg-[#faf8fd] border border-[#e4daed] text-[#22004d] px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="save" class="w-3.5 h-3.5"></i>
                                         <span>שמור תבנית</span>
                                     </button>
-                                    <button @click="addMeal()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-slate-200 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                                    <button @click="addMeal()" class="flex-1 md:flex-none justify-center bg-white hover:bg-[#faf8fd] border border-[#e4daed] text-[#22004d] px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                         <span>הוסף ארוחה</span>
                                     </button>
@@ -4082,21 +3994,21 @@
 
                             <!-- השוואת יעדים -->
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
-                                    <span class="text-[9px] text-slate-500 block">קלוריות</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'calories') + ' / ' + (currentClient?.macroCalculated?.targetCalories || 0)"></span>
+                                <div class="bg-[#faf8fd] border border-[#e4daed] rounded-2xl p-3 text-center">
+                                    <span class="text-[10px] text-[#705b8b] font-bold block">קלוריות</span>
+                                    <span class="text-sm font-black text-[#22004d]" x-text="getMealPlanSum(currentClient, 'calories') + ' / ' + (currentClient?.macroCalculated?.targetCalories || 0)"></span>
                                 </div>
-                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
-                                    <span class="text-[9px] text-slate-500 block">חלבון</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + 'ג\''"></span>
+                                <div class="bg-[#faf8fd] border border-[#e4daed] rounded-2xl p-3 text-center">
+                                    <span class="text-[10px] text-[#705b8b] font-bold block">חלבון</span>
+                                    <span class="text-sm font-black text-[#22004d]" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + 'ג\''"></span>
                                 </div>
-                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
-                                    <span class="text-[9px] text-slate-500 block">פחמימה</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + 'ג\''"></span>
+                                <div class="bg-[#faf8fd] border border-[#e4daed] rounded-2xl p-3 text-center">
+                                    <span class="text-[10px] text-[#705b8b] font-bold block">פחמימה</span>
+                                    <span class="text-sm font-black text-[#22004d]" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + 'ג\''"></span>
                                 </div>
-                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
-                                    <span class="text-[9px] text-slate-500 block">שומן</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + 'ג\''"></span>
+                                <div class="bg-[#faf8fd] border border-[#e4daed] rounded-2xl p-3 text-center">
+                                    <span class="text-[10px] text-[#705b8b] font-bold block">שומן</span>
+                                    <span class="text-sm font-black text-[#22004d]" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + 'ג\''"></span>
                                 </div>
                             </div>
 
@@ -4179,7 +4091,7 @@
                                         <div>
                                             <h3 class="text-base md:text-lg font-black text-[#1f053d] flex items-center gap-2">
                                                 <span>יומן תזונה, מאקרו ותמונות יומי</span>
-                                                <span class="text-[10px] bg-emerald-100 text-amber-800 font-bold px-2.5 py-0.5 rounded-full" x-text="currentClient?.name"></span>
+                                                <span class="text-[10px] bg-emerald-50 text-emerald-800 border-emerald-200 font-bold px-2.5 py-0.5 rounded-full" x-text="currentClient?.name"></span>
                                             </h3>
                                             <p class="text-xs text-[#705b8b]">מעקב מובנה לפי ימים ו-4 ארוחות יומיות (בוקר, צהריים, ערב, ביניים)</p>
                                         </div>
@@ -4306,7 +4218,7 @@
 
                                                 <!-- אם אין פריטים בארוחה זו -->
                                                 <template x-if="getCoachFoodLogsByMeal(currentClient, mealInfo.type).length === 0">
-                                                    <div class="py-4 text-center text-slate-400 text-xs italic">
+                                                    <div class="py-4 text-center text-[#705b8b] text-xs italic">
                                                         לא נרשמו פריטים בארוחה זו בתאריך הנבחר
                                                     </div>
                                                 </template>
@@ -4604,7 +4516,7 @@
                                                         <span class="text-[10px] bg-white border border-[#e4daed] px-2 py-0.5 rounded-full font-bold" x-text="ref.mood"></span>
                                                     </template>
                                                 </div>
-                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-amber-800 border-amber-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-3 py-0.5 rounded-full font-bold border self-start sm:self-auto" x-text="ref.reviewed ? 'נבדק ונשלח משוב ✅' : 'ממתין למשוב המאמן ⏳'"></span>
+                                                <span :class="ref.reviewed ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'" class="text-[10px] px-3 py-0.5 rounded-full font-bold border self-start sm:self-auto" x-text="ref.reviewed ? 'נבדק ונשלח משוב ✅' : 'ממתין למשוב המאמן ⏳'"></span>
                                             </div>
 
                                             <!-- תוכן השיקוף -->
@@ -4650,13 +4562,13 @@
                                             <div class="flex justify-between items-start">
                                                 <div>
                                                     <span class="text-[9px] text-slate-400 font-bold block" x-text="'חודש מס׳ ' + payment.month"></span>
-                                                    <span class="text-xl font-black text-white mt-1 block">250 ₪</span>
+                                                    <span class="text-xl font-black text-[#22004d] mt-1 block">250 ₪</span>
                                                 </div>
-                                                <span :class="payment.status === 'paid' ? 'bg-emerald-950 text-emerald-400' : 'bg-amber-950 text-amber-400'" class="text-[9px] px-2 py-0.5 rounded-full font-bold border" x-text="payment.status === 'paid' ? 'שולם' : 'ממתין'"></span>
+                                                <span :class="payment.status === 'paid' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'" class="text-[9px] px-2 py-0.5 rounded-full font-bold border" x-text="payment.status === 'paid' ? 'שולם' : 'ממתין'"></span>
                                             </div>
                                             <div class="mt-3 flex items-center justify-between border-t border-slate-800/40 pt-2.5">
                                                 <span class="text-[10px] text-slate-500" x-text="'תאריך יעד: ' + getPaymentDueDate(currentClient?.startDate, payment.month)"></span>
-                                                <button @click="togglePaymentStatus(pIdx)" :class="payment.status === 'paid' ? 'bg-slate-900 text-slate-450' : 'bg-amber-500 text-slate-950'" class="text-[10px] font-bold px-2 py-1 rounded-lg border border-slate-800 transition" x-text="payment.status === 'paid' ? 'סמן כממתין' : 'סמן כשולם'"></button>
+                                                <button @click="togglePaymentStatus(pIdx)" :class="payment.status === 'paid' ? 'bg-white text-[#705b8b] hover:text-[#22004d] border-[#e4daed]' : 'bg-[#22004d] text-[#fbbf24] font-black border-[#3b166e] shadow-sm'" class="text-[10px] font-bold px-3 py-1.5 rounded-xl border transition cursor-pointer" x-text="payment.status === 'paid' ? 'סמן כממתין' : 'סמן כשולם'"></button>
                                             </div>
                                         </div>
                                     </template>
@@ -4805,7 +4717,7 @@
                                                 <td class="py-2.5 px-4 text-[#705b8b]" x-text="formatDate(tx.date)"></td>
                                                 <td class="py-2.5 px-4 text-[#1f053d] font-black" x-text="tx.description"></td>
                                                 <td class="py-2.5 px-4 text-center">
-                                                    <span :class="tx.type === 'income' ? 'bg-emerald-100 text-amber-800 border-amber-300' : 'bg-rose-100 text-rose-800 border-rose-300'" class="text-[9px] px-2.5 py-0.5 rounded-full border font-bold" x-text="tx.type === 'income' ? 'הכנסה' : 'הוצאה'"></span>
+                                                    <span :class="tx.type === 'income' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'" class="text-[9px] px-2.5 py-0.5 rounded-full border font-bold" x-text="tx.type === 'income' ? 'הכנסה' : 'הוצאה'"></span>
                                                 </td>
                                                 <td :class="tx.type === 'income' ? 'text-amber-700 font-black' : 'text-rose-600 font-black'" class="py-2.5 px-4 text-center text-xs" x-text="(tx.type === 'income' ? '+' : '-') + tx.amount + ' ₪'"></td>
                                                 <td class="py-2.5 px-4 text-left">
@@ -4851,7 +4763,7 @@
                                                     <template x-for="(pay, pIdx) in client.payments" :key="pIdx">
                                                         <button 
                                                             @click="toggleClientPaymentStatus(client.id, pIdx)" 
-                                                            :class="pay.status === 'paid' ? 'bg-emerald-100 text-amber-800 border-amber-300' : 'bg-amber-100 text-amber-800 border-amber-300'" 
+                                                            :class="pay.status === 'paid' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'" 
                                                             class="text-[9px] px-2.5 py-0.5 rounded-full font-bold border transition cursor-pointer select-none"
                                                             x-text="'ח׳ ' + pay.month + ': ' + pay.amount + ' ₪'">
                                                         </button>
@@ -4884,7 +4796,7 @@
                                     </div>
                                 </div>
                                 <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border"
-                                      :class="geminiApiKey ? 'bg-emerald-100 text-amber-800 border-amber-300' : 'bg-slate-100 text-slate-700 border-slate-300'"
+                                      :class="geminiApiKey ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-300'"
                                       x-text="geminiApiKey ? 'חיבור AI פעיל 🟢' : 'מאגר מקומי בלבד ⚪'"></span>
                             </div>
                             
@@ -5002,7 +4914,7 @@
     </datalist>
 
     <!-- מודל עריכת / הוספת דיווח יומי למאמן בלבד -->
-    <div x-show="openCoachScorecardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openCoachScorecardModal = false">
+    <div x-show="openCoachScorecardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openCoachScorecardModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5106,7 +5018,7 @@
     </div>
 
     <!-- מודל סיכום וחגיגת סיום אימון -->
-    <div x-show="openWorkoutFinishModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md no-print" x-cloak @click.self="openWorkoutFinishModal = false">
+    <div x-show="openWorkoutFinishModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-md no-print" x-cloak @click.self="openWorkoutFinishModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 animate-scale-up text-center mx-2">
             <div class="w-16 h-16 rounded-3xl bg-[#1f053d] text-[#facc15] flex items-center justify-center mx-auto text-3xl shadow-xl shadow-[#1f053d]/20 border border-[#3b166e]">
                 🏆
@@ -5172,7 +5084,7 @@
     </div>
 
     <!-- מודל היכל תגי הצלחה והישגים -->
-    <div x-show="openBadgesModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBadgesModal = false">
+    <div x-show="openBadgesModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openBadgesModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5200,7 +5112,7 @@
                                 <div class="flex items-center gap-1.5">
                                     <h4 class="font-black text-xs text-[#1f053d]" x-text="badge.title"></h4>
                                     <template x-if="badge.unlocked">
-                                        <span class="bg-emerald-100 text-amber-800 text-[9px] px-1.5 py-0.2 rounded font-bold">הושג! ✅</span>
+                                        <span class="bg-emerald-50 text-emerald-800 border-emerald-200 text-[9px] px-1.5 py-0.2 rounded font-bold">הושג! ✅</span>
                                     </template>
                                     <template x-if="!badge.unlocked">
                                         <span class="bg-slate-200 text-slate-600 text-[9px] px-1.5 py-0.2 rounded font-bold">נעול 🔒</span>
@@ -5222,7 +5134,7 @@
     </div>
 
     <!-- מודל תצוגת תמונת ארוחה מוגדלת (Photo Lightbox) -->
-    <div x-show="previewMealPhotoModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md no-print" x-cloak @click.self="previewMealPhotoModal = false">
+    <div x-show="previewMealPhotoModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#22004d]/70 backdrop-blur-md no-print" x-cloak @click.self="previewMealPhotoModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-4 md:p-5 max-w-2xl w-full shadow-2xl space-y-4 animate-scale-up flex flex-col text-[#1f053d] max-h-[95vh]">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
@@ -5247,7 +5159,7 @@
     </div>
 
     <!-- מודל מחולל סיכום חודשי אישי לוואטסאפ -->
-    <div x-show="openMonthlySummaryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openMonthlySummaryModal = false">
+    <div x-show="openMonthlySummaryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openMonthlySummaryModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5286,7 +5198,7 @@
 
     <!-- מודל מחשבון משקלי עבודה ו-1RM -->
     <!-- מודל סגירת בלוק ופתיחת בלוק אימונים חדש (Block Archive Modal) -->
-    <div x-show="openBlockArchiveModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBlockArchiveModal = false">
+    <div x-show="openBlockArchiveModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openBlockArchiveModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-scale-up mx-2">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3">
                 <div class="flex items-center gap-2.5">
@@ -5339,7 +5251,7 @@
     </div>
 
     <!-- מודל היסטוריית בלוקים קודמים (Block History Modal) -->
-    <div x-show="openBlockHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBlockHistoryModal = false">
+    <div x-show="openBlockHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openBlockHistoryModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-2xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[85vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
@@ -5403,7 +5315,7 @@
     </div>
 
     <!-- מודל ספריית מזונות ישראלית מורחבת (Israeli Food Library Modal) -->
-    <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openFoodLibraryModal = false">
+    <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openFoodLibraryModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-4xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3.5 shrink-0">
@@ -5491,7 +5403,7 @@
     </div>
 
     <!-- מודל ספריית תרגילים מורחבת (137+ תרגילים לפי קטגוריות) -->
-    <div x-show="openExerciseLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openExerciseLibraryModal = false">
+    <div x-show="openExerciseLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openExerciseLibraryModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-4xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             
             <!-- כותרת וסגירה -->
@@ -5598,7 +5510,7 @@
         </div>
     </div>
 
-    <div x-show="openOneRmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openOneRmModal = false">
+    <div x-show="openOneRmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openOneRmModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5670,7 +5582,7 @@
     </div>
 
     <!-- מודל הוספה מהירה של קלוריות ומאקרו (Quick Add Calorie Modal) -->
-    <div x-show="openQuickAddCalorieModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openQuickAddCalorieModal = false">
+    <div x-show="openQuickAddCalorieModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openQuickAddCalorieModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-md w-full shadow-2xl space-y-4 animate-scale-up mx-2 text-[#1f053d]">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3">
                 <div class="flex items-center gap-2.5">
@@ -5735,7 +5647,7 @@
     </div>
 
     <!-- מודל חיפוש מזונות ישיר במאגר (המחשבון של אילאי) -->
-    <div x-show="openFoodSearchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openFoodSearchModal = false">
+    <div x-show="openFoodSearchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openFoodSearchModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl space-y-4 animate-scale-up mx-2 text-[#1f053d]">
             <!-- כותרת המודל -->
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3 shrink-0">
@@ -5909,7 +5821,7 @@
     </div>
 
     <!-- מודל 0: שליחת שאלון קליטה מורחב למתאמן חדש -->
-    <div x-show="openSendIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openSendIntakeModal = false">
+    <div x-show="openSendIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openSendIntakeModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3.5">
                 <div class="flex items-center gap-3">
@@ -5967,7 +5879,7 @@
     </div>
 
     <!-- מודל עריכת ומילוי שאלון קליטה למתאמן קיים -->
-    <div x-show="openEditIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openEditIntakeModal = false">
+    <div x-show="openEditIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#22004d]/60 backdrop-blur-sm no-print" x-cloak @click.self="openEditIntakeModal = false">
         <div class="bg-white border border-[#e4daed] rounded-3xl p-5 md:p-6 max-w-2xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#e4daed] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
