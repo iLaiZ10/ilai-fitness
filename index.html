@@ -164,7 +164,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ILAICO">
-    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <!-- Canvas Confetti CDN (עבור שיאי כוח וצ'ק ליסט יומי) -->
@@ -370,15 +369,15 @@
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">חלבון</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetProtein + ' גרם'"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetProtein + 'ג\''"></span>
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">פחמימה</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetCarbs + ' גרם'"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetCarbs + 'ג\''"></span>
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">שומן</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetFat + ' גרם'"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetFat + 'ג\''"></span>
                                     </div>
                                 </div>
                             </template>
@@ -489,9 +488,9 @@
                             <span class="font-bold text-emerald-800">סה"כ ערכים בתפריט:</span>
                             <div class="flex gap-6 text-gray-800">
                                 <span>קלוריות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'calories')"></strong> קק"ל</span>
-                                <span>חלבון: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'protein') + ' גרם'"></strong></span>
-                                <span>פחמימות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'carbs') + ' גרם'"></strong></span>
-                                <span>שומנים: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'fat') + ' גרם'"></strong></span>
+                                <span>חלבון: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'protein') + ' ג\''"></strong></span>
+                                <span>פחמימות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'carbs') + ' ג\''"></strong></span>
+                                <span>שומנים: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'fat') + ' ג\''"></strong></span>
                             </div>
                         </div>
                     </div>
@@ -506,15 +505,15 @@
         <!-- סרגל צד (Sidebar) - Desktop -->
         <aside x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="hidden md:flex w-64 bg-[#082722] border-l border-[#133d35] flex-col shrink-0 text-[#fbf8f2]" x-cloak>
             <!-- לוגו מותג -->
-            <div class="p-5 border-b border-[#133d35] flex flex-col items-center justify-center">
-                <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-14 w-auto object-contain drop-shadow-sm">
-                <span class="text-[10px] text-[#93c7bb] font-bold tracking-widest mt-2">מערכת ניהול מתאמנים</span>
+            <div class="p-6 border-b border-[#133d35] flex flex-col items-center justify-center">
+                <span class="text-2xl font-black tracking-wider text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></span>
+                <span class="text-[11px] text-[#93c7bb] font-semibold tracking-widest mt-1">מערכת ניהול מתאמנים</span>
             </div>
 
             <!-- ניווט טאבים -->
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <button 
-                    @click="activeTab = 'dashboard'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'dashboard'; selectedClientId = null"
                     :class="activeTab === 'dashboard' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
@@ -522,7 +521,7 @@
                 </button>
                 
                 <button 
-                    @click="activeTab = 'clients'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'clients'; selectedClientId = null"
                     :class="activeTab === 'clients' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="users" class="w-5 h-5"></i>
@@ -530,7 +529,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'schedule'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'schedule'; selectedClientId = null"
                     :class="activeTab === 'schedule' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="calendar-days" class="w-5 h-5"></i>
@@ -538,7 +537,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'finances'; selectedClientId = null"
                     :class="activeTab === 'finances' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
@@ -546,7 +545,7 @@
                 </button>
 
                 <button 
-                    @click="activeTab = 'settings'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                    @click="activeTab = 'settings'; selectedClientId = null"
                     :class="activeTab === 'settings' ? 'bg-[#13443a] text-[#86efac] font-black border-r-4 border-[#86efac] shadow-lg shadow-[#041714]/40' : 'text-[#93c7bb] hover:bg-[#0c332b] hover:text-[#fbf8f2] font-semibold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="settings" class="w-5 h-5"></i>
@@ -570,19 +569,19 @@
 
         <!-- סרגל ניווט תחתון לנייד (Mobile Bottom Nav) -->
         <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#082722]/95 backdrop-blur-md border-t border-[#133d35] flex items-center justify-around z-50 shadow-2xl text-[#93c7bb]" x-cloak>
-            <button @click="activeTab = 'dashboard'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'dashboard' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">לוח בקרה</span>
             </button>
-            <button @click="activeTab = 'clients'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'clients' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'clients'; selectedClientId = null" :class="activeTab === 'clients' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="users" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">מתאמנים</span>
             </button>
-            <button @click="activeTab = 'schedule'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'schedule' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'schedule'; selectedClientId = null" :class="activeTab === 'schedule' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="calendar-days" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">יומן</span>
             </button>
-            <button @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" :class="activeTab === 'finances' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'text-[#86efac] font-black' : 'text-[#93c7bb]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="credit-card" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">פיננסים</span>
             </button>
@@ -642,9 +641,12 @@
                         <div class="absolute -left-10 -bottom-10 w-36 h-36 bg-[#86efac]/10 rounded-full blur-2xl pointer-events-none"></div>
                         <div class="absolute -right-10 -top-10 w-36 h-36 bg-[#4ade80]/10 rounded-full blur-2xl pointer-events-none"></div>
 
-                        <div class="space-y-3">
-                            <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-16 w-auto mx-auto object-contain drop-shadow-md">
-                            <h3 class="text-sm font-bold text-[#fbf8f2]">כניסת מאמן בלבד 🔒</h3>
+                        <div class="space-y-2">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-[#051c17] border border-[#174e43] text-[#86efac] flex items-center justify-center text-xl font-bold shadow-inner">
+                                <i data-lucide="lock" class="w-6 h-6"></i>
+                            </div>
+                            <h2 class="text-2xl font-black text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></h2>
+                            <h3 class="text-base font-bold text-[#fbf8f2]">כניסת מאמן בלבד 🔒</h3>
                             <p class="text-xs text-[#93c7bb]">הזן קוד גישה אישי לפתיחת מערכת ה-CRM</p>
                         </div>
 
@@ -685,7 +687,7 @@
                 <!-- 0. טאב שאלון קליטה דיגיטלי ללקוח -->
                 <div x-show="activeTab === 'intake'" x-cloak class="max-w-xl mx-auto py-6 md:py-12 space-y-6">
                     <div class="text-center space-y-2">
-                        <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-14 w-auto mx-auto object-contain mb-1">
+                        <span class="text-2xl font-black tracking-wider text-emerald-500">IlaiCo</span>
                         <h2 class="text-xl md:text-2xl font-black text-white">שאלון קליטה דיגיטלי למתאמן</h2>
                         <p class="text-xs text-slate-400">מאמן ראשי: אילאי. מלא את הפרטים הבאים כדי להתחיל את הליווי שלך בצורה הטובה ביותר.</p>
                     </div>
@@ -918,8 +920,8 @@
                         
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                             <div class="space-y-1">
-                                <div class="flex items-center gap-3">
-                                    <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-10 md:h-12 w-auto object-contain">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl md:text-3xl font-black tracking-wider text-[#fbf8f2]">Ilai<span class="text-[#86efac]">Co</span></span>
                                     <span class="text-[10px] bg-[#13443a] text-[#86efac] font-bold px-2.5 py-0.5 rounded-full border border-[#1b5e50]">ליווי פרימיום</span>
                                 </div>
                                 <h2 class="text-xl md:text-2xl font-black text-white" x-text="'היי ' + (portalClient?.name || 'מתאמן') + '! 👋'"></h2>
@@ -1240,8 +1242,8 @@
                             <div @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-gradient-to-br from-[#082722] to-[#123830] border border-[#174e43] rounded-3xl p-4 md:p-5 text-[#fbf8f2] shadow-xl hover:shadow-2xl transition cursor-pointer flex items-center justify-between group">
                                 <div class="space-y-1">
                                     <span class="text-[10px] text-[#86efac] font-black uppercase tracking-wider block">תוכנית אימונים חיה 🏋️‍♂️</span>
-                                    <h4 class="text-sm md:text-base font-black text-white group-hover:text-[#86efac] transition">תוכנית אימונים 🏋️‍♂️</h4>
-                                    <p class="text-[11px] text-[#93c7bb]">צפייה בתוכנית השבועית, תרגילים, סטים ומשקלי יעד</p>
+                                    <h4 class="text-sm md:text-base font-black text-white group-hover:text-[#86efac] transition">התחל אימון בחדר כושר</h4>
+                                    <p class="text-[11px] text-[#93c7bb]">רישום משקלים, טיימר מנוחה, חישוב פלטות ו-PRs</p>
                                 </div>
                                 <div class="p-3 rounded-2xl bg-[#13443a] text-[#86efac] group-hover:scale-110 transition shadow-md">
                                     <i data-lucide="arrow-left" class="w-5 h-5"></i>
@@ -1265,25 +1267,27 @@
                     <!-- תוכן לשונית 2: אימונים אינטראקטיביים (Gym Mode 2.0) -->
                     <div x-show="portalActiveSubTab === 'workouts'" x-cloak class="space-y-4">
                         
-                        <!-- באנר בלוק אימונים שבועי (מידע על הבלוק ושבוע נוכחי) -->
+                        <!-- באנר בלוק אימונים שבועי ושם האימון המומלץ להיום -->
                         <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days.length > 0">
                             <div class="bg-[#082722] border border-[#174e43] rounded-3xl p-4 md:p-5 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative overflow-hidden">
                                 <div class="flex items-center gap-3 relative z-10">
                                     <div class="p-2.5 rounded-2xl bg-[#86efac]/20 text-[#86efac] border border-[#86efac]/30 shrink-0">
-                                        <i data-lucide="dumbbell" class="w-5 h-5 text-[#86efac]"></i>
+                                        <i data-lucide="zap" class="w-5 h-5 text-[#86efac]"></i>
                                     </div>
                                     <div>
                                         <div class="flex items-center gap-2 flex-wrap">
-                                            <span class="text-[10px] bg-[#86efac] text-[#082722] font-black px-2.5 py-0.5 rounded-full" x-text="getHebrewDayOfWeek()"></span>
-                                            <span class="text-xs text-[#86efac] font-bold" x-text="(portalClient.workoutPlan.blockName || 'בלוק אימונים') + ' • ' + (portalClient.workoutPlan.currentWeek || 'שבוע 1')"></span>
+                                            <span class="text-[10px] bg-[#86efac] text-[#082722] font-black px-2 py-0.5 rounded-full" x-text="getHebrewDayOfWeek()"></span>
+                                            <span class="text-[11px] text-[#86efac] font-bold" x-text="(portalClient.workoutPlan.blockName || 'בלוק היכרות והסתגלות') + ' • ' + (portalClient.workoutPlan.currentWeek || 'שבוע 1')"></span>
                                         </div>
-                                        <h3 class="text-sm md:text-base font-black text-white mt-1" x-text="portalClient.workoutPlan.days[portalSelectedWorkoutDayIdx]?.name || 'תוכנית אימונים'"></h3>
+                                        <h3 class="text-sm md:text-base font-black text-white mt-0.5" x-text="portalClient.workoutPlan.days[getTodayRecommendedWorkoutIndex(portalClient)]?.name || 'אימון יומי'"></h3>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-2 bg-[#13443a] border border-[#1f5c50] px-3.5 py-2 rounded-2xl text-xs font-bold text-[#86efac] shrink-0">
-                                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                    <span x-text="(portalClient.workoutPlan.days.length) + ' ימי אימון בתוכנית'"></span>
-                                </div>
+                                <button type="button" 
+                                        @click="portalSelectedWorkoutDayIdx = getTodayRecommendedWorkoutIndex(portalClient); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                                        class="bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black px-4 py-2.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md shadow-[#86efac]/20 transition cursor-pointer shrink-0 relative z-10">
+                                    <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                                    <span>🚀 התחל אימון זה</span>
+                                </button>
                             </div>
                         </template>
 
@@ -1305,54 +1309,61 @@
                             </div>
                         </template>
 
-                        <!-- סרגל התקדמות ביצוע וטיימר מנוחה חכם -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <!-- סרגל סטים שהושלמו -->
-                            <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days[portalSelectedWorkoutDayIdx]">
-                                <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 shadow-md flex flex-col justify-between gap-2">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                            <span class="text-xs font-black text-[#082722]">סטים שבוצעו:</span>
-                                            <span class="text-xs font-black text-[#22c55e]" x-text="getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).completed + ' / ' + getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).total"></span>
-                                        </div>
-                                        <span class="text-[11px] font-black text-[#082722] bg-[#fbf8f2] border border-[#e5dfd3] px-2 py-0.5 rounded-lg" x-text="getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></span>
+                        <!-- סרגל התקדמות ביצוע אימון חי -->
+                        <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days[portalSelectedWorkoutDayIdx]">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-xl space-y-2.5">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span class="text-xs font-black text-[#082722]">סטים שהושלמו באימון זה:</span>
+                                        <span class="text-xs font-black text-[#22c55e]" x-text="getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).completed + ' / ' + getWorkoutCompletedSetsCount(portalSelectedWorkoutDayIdx).total + ' סטים 🏋️‍♂️'"></span>
                                     </div>
-                                    <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
-                                        <div class="h-full bg-gradient-to-r from-[#86efac] to-[#22c55e] transition-all duration-300 rounded-full"
-                                             :style="'width: ' + getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></div>
-                                    </div>
+                                    <span class="text-xs font-black text-[#082722] bg-[#fbf8f2] border border-[#e5dfd3] px-2.5 py-1 rounded-xl" x-text="getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '% הושלם'"></span>
                                 </div>
-                            </template>
+                                <div class="h-2.5 w-full bg-[#f0eae1] rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-[#86efac] to-[#22c55e] transition-all duration-300 rounded-full"
+                                         :style="'width: ' + getWorkoutCompletionPercent(portalSelectedWorkoutDayIdx) + '%'"></div>
+                                </div>
+                            </div>
+                        </template>
 
-                            <!-- טיימר מנוחה אינטראקטיבי ומהיר -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-md">
+                        <!-- טיימר מנוחה חכם + מחשבון פלטות למוט -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- טיימר מנוחה -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex items-center justify-between shadow-md">
                                 <div class="flex items-center gap-3">
-                                    <button type="button" 
-                                            @click="toggleRestTimer(); setTimeout(() => window.lucide?.createIcons(), 50)"
-                                            :class="isRestTimerRunning ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25 ring-2 ring-amber-400' : 'bg-amber-50 text-amber-600 border border-amber-200 hover:bg-amber-100'"
-                                            class="p-2.5 rounded-xl transition cursor-pointer"
-                                            :title="isRestTimerRunning ? 'השהה טיימר' : 'הפעל טיימר'">
-                                        <i :data-lucide="isRestTimerRunning ? 'pause' : 'timer'" class="w-5 h-5"></i>
-                                    </button>
+                                    <div class="p-2.5 rounded-xl bg-amber-50 text-amber-600 border border-amber-200">
+                                        <i data-lucide="timer" class="w-5 h-5"></i>
+                                    </div>
                                     <div>
-                                        <div class="flex items-center gap-1.5">
-                                            <span class="text-[10px] text-[#5f756e] font-bold block">טיימר מנוחה:</span>
-                                            <template x-if="isRestTimerRunning">
-                                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping inline-block"></span>
-                                            </template>
-                                        </div>
-                                        <span class="text-2xl font-black text-[#082722] font-mono tracking-wider" x-text="formatRestTimer(restTimerSeconds)"></span>
+                                        <span class="text-[10px] text-[#5f756e] font-bold block">טיימר מנוחה בין סטים:</span>
+                                        <span class="text-xl font-black text-[#082722]" x-text="formatRestTimer(restTimerSeconds)"></span>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <button type="button" @click="startRestTimer(60); setTimeout(() => window.lucide?.createIcons(), 50)" :class="restTimerTotal === 60 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] hover:bg-[#f3ede0] text-[#082722] border-[#e5dfd3]'" class="border font-black px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer">60ש׳</button>
-                                    <button type="button" @click="startRestTimer(90); setTimeout(() => window.lucide?.createIcons(), 50)" :class="restTimerTotal === 90 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] hover:bg-[#f3ede0] text-[#082722] border-[#e5dfd3]'" class="border font-black px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer">90ש׳</button>
-                                    <button type="button" @click="startRestTimer(120); setTimeout(() => window.lucide?.createIcons(), 50)" :class="restTimerTotal === 120 && isRestTimerRunning ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] hover:bg-[#f3ede0] text-[#082722] border-[#e5dfd3]'" class="border font-black px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer">120ש׳</button>
-                                    <button type="button" @click="addRestTime(30); setTimeout(() => window.lucide?.createIcons(), 50)" class="bg-[#fbf8f2] hover:bg-emerald-50 text-emerald-700 border border-emerald-200 font-black px-2 py-1.5 rounded-xl text-xs transition cursor-pointer" title="הוסף 30 שניות">+30ש׳</button>
-                                    <button type="button" @click="stopRestTimer(); setTimeout(() => window.lucide?.createIcons(), 50)" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 p-1.5 rounded-xl transition cursor-pointer" title="אפס טיימר">
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" @click="startRestTimer(60)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">60ש׳</button>
+                                    <button type="button" @click="startRestTimer(90)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">90ש׳</button>
+                                    <button type="button" @click="startRestTimer(120)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">120ש׳</button>
+                                    <button type="button" @click="stopRestTimer()" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 p-1.5 rounded-xl cursor-pointer" title="אפס טיימר">
                                         <i data-lucide="square" class="w-4 h-4"></i>
                                     </button>
+                                </div>
+                            </div>
+
+                            <!-- מחשבון פלטות למוט -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex items-center justify-between shadow-md">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
+                                        <i data-lucide="disc" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-[#5f756e] font-bold block">מחשבון פלטות למוט:</span>
+                                        <span class="text-xs font-black text-[#082722]">חישוב פלטות לכל צד</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" step="2.5" placeholder="משקל" x-model="plateCalcWeight" class="w-20 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1 text-xs font-bold text-center text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                                    <button type="button" @click="openPlateCalcModal = true" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer">חשב</button>
                                 </div>
                             </div>
                         </div>
@@ -1566,7 +1577,7 @@
                                             </template>
                                             <span x-text="day.label"></span>
                                             <template x-if="getConsumedCaloriesForDate(portalClient, day.date) > 0">
-                                                <span class="text-[9px] font-black opacity-80" x-text="getConsumedCaloriesForDate(portalClient, day.date) + ' קק״ל'"></span>
+                                                <span class="text-[9px] font-black opacity-80" x-text="getConsumedCaloriesForDate(portalClient, day.date) + ' קל\''"></span>
                                             </template>
                                         </button>
                                     </template>
@@ -1602,7 +1613,7 @@
                                 <!-- יעד קלורי -->
                                 <div class="text-center sm:text-right space-y-0.5">
                                     <span class="text-[10px] text-[#93c7bb] font-bold block">יעד יומי שהוגדר</span>
-                                    <div class="text-xl md:text-2xl font-black text-white" x-text="(portalClient?.macroCalculated?.targetCalories || 2000) + ' קק״ל'"></div>
+                                    <div class="text-xl md:text-2xl font-black text-white" x-text="(portalClient?.macroCalculated?.targetCalories || 2000) + ' קל\''"></div>
                                     <span class="text-[9px] text-[#5f756e]">לפי תוכנית המאמן</span>
                                 </div>
 
@@ -1616,7 +1627,7 @@
                                 <!-- סך שנאכל עד כה -->
                                 <div class="text-center sm:text-left space-y-0.5">
                                     <span class="text-[10px] text-[#93c7bb] font-bold block" x-text="(!portalNutritionViewDate || portalNutritionViewDate === getTodayDate()) ? 'נאכל היום עד כה' : 'נאכל בתאריך זה'"></span>
-                                    <div class="text-xl md:text-2xl font-black text-white" x-text="getTodayConsumedCalories(portalClient) + ' קק״ל'"></div>
+                                    <div class="text-xl md:text-2xl font-black text-white" x-text="getTodayConsumedCalories(portalClient) + ' קל\''"></div>
                                     <span class="text-[9px] text-[#86efac]" x-text="Math.round((getTodayConsumedCalories(portalClient) / (portalClient?.macroCalculated?.targetCalories || 2000)) * 100) + '% מהיעד'"></span>
                                 </div>
                             </div>
@@ -1874,14 +1885,14 @@
                                                 <div class="bg-white border border-[#e5dfd3] p-3 rounded-xl space-y-1.5 shadow-sm text-xs">
                                                     <div class="flex items-center justify-between font-bold text-[#082722]">
                                                         <span x-text="item.name"></span>
-                                                        <span class="text-[#22c55e] font-black" x-text="item.cal + ' קק״ל'"></span>
+                                                        <span class="text-[#22c55e] font-black" x-text="item.cal + ' קל\''"></span>
                                                     </div>
                                                     <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
-                                                        <span x-text="'ח: ' + item.pro + ' גרם'"></span>
+                                                        <span x-text="'ח: ' + item.pro + 'ג\''"></span>
                                                         <span>•</span>
-                                                        <span x-text="'פ: ' + item.carb + ' גרם'"></span>
+                                                        <span x-text="'פ: ' + item.carb + 'ג\''"></span>
                                                         <span>•</span>
-                                                        <span x-text="'ש: ' + item.fat + ' גרם'"></span>
+                                                        <span x-text="'ש: ' + item.fat + 'ג\''"></span>
                                                     </div>
                                                     <template x-if="item.swap">
                                                         <div class="bg-emerald-50/70 border border-emerald-200/60 p-2 rounded-lg text-[10px] text-emerald-900 mt-1">
@@ -1921,13 +1932,13 @@
                                         <div class="flex items-center gap-3">
                                             <!-- סיכום קלוריות ומאקרו לארוחה -->
                                             <div class="text-[11px] font-black text-[#082722] bg-[#fbf8f2] px-2.5 py-1 rounded-xl border border-[#e5dfd3]">
-                                                <span class="text-emerald-600" x-text="getMealTypeSummary(portalClient, mCategory.type).calories + ' קק״ל'"></span>
+                                                <span class="text-emerald-600" x-text="getMealTypeSummary(portalClient, mCategory.type).calories + ' קל\''"></span>
                                                 <span class="text-slate-400 mx-1">|</span>
-                                                <span class="text-slate-600" x-text="'ח: ' + getMealTypeSummary(portalClient, mCategory.type).protein + ' גרם'"></span>
+                                                <span class="text-slate-600" x-text="'ח: ' + getMealTypeSummary(portalClient, mCategory.type).protein + 'ג\''"></span>
                                                 <span class="text-slate-400 mx-1">•</span>
-                                                <span class="text-slate-600" x-text="'פ: ' + getMealTypeSummary(portalClient, mCategory.type).carbs + ' גרם'"></span>
+                                                <span class="text-slate-600" x-text="'פ: ' + getMealTypeSummary(portalClient, mCategory.type).carbs + 'ג\''"></span>
                                                 <span class="text-slate-400 mx-1">•</span>
-                                                <span class="text-slate-600" x-text="'ש: ' + getMealTypeSummary(portalClient, mCategory.type).fat + ' גרם'"></span>
+                                                <span class="text-slate-600" x-text="'ש: ' + getMealTypeSummary(portalClient, mCategory.type).fat + 'ג\''"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -1956,7 +1967,7 @@
 
                                                 <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 border-[#e5dfd3]/60 pt-2 sm:pt-0">
                                                     <div class="text-xs font-bold">
-                                                        <span class="text-emerald-700 font-black" x-text="log.calories + ' קק״ל'"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="log.calories + ' קל\''"></span>
                                                         <span class="text-[10px] text-[#5f756e] mr-1.5" x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
                                                     </div>
                                                     <button type="button" @click="deletePortalFoodLog(log.id)" class="text-red-500 hover:text-white hover:bg-red-600 bg-red-50 border border-red-200/80 px-2 py-1 rounded-xl transition cursor-pointer flex items-center gap-1 text-[11px] font-bold shadow-xs shrink-0" title="הסר פריט זה שהוזן בטעות">
@@ -2328,7 +2339,7 @@
                 </div>
 
                 <!-- 1. טאב לוח בקרה -->
-                <div x-show="activeTab === 'dashboard' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'dashboard' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
@@ -2672,7 +2683,7 @@
                 </div>
 
                 <!-- 2. טאב רשימת מתאמנים -->
-                <div x-show="activeTab === 'clients' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'clients' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <!-- חיפוש ופילטרים -->
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col gap-4 shadow-xl">
                         <div class="flex flex-col md:flex-row gap-4 justify-between items-center w-full">
@@ -2807,7 +2818,7 @@
                 </div>
 
                 <!-- 3. טאב יומן שבועי -->
-                <div x-show="activeTab === 'schedule' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'schedule' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
                         <div class="flex items-center gap-4 justify-between w-full md:w-auto">
                             <h3 class="text-sm md:text-xl font-bold text-slate-200">יומן אימונים ושיחות</h3>
@@ -2859,7 +2870,7 @@
                 </div>
 
                 <!-- 4. כרטיס מתאמן מפורט -->
-                <div x-show="selectedClientId && activeTab !== 'portal'" x-cloak class="space-y-6">
+                <div x-show="selectedClientId && isCoachAuthenticated && activeTab !== 'portal'" x-cloak class="space-y-6">
                     
                     <!-- באנר כותרת עליון יוקרתי - Luxury Cream & Forest Client Card -->
                     <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e5dfd3] rounded-3xl p-5 md:p-7 shadow-xl space-y-5 text-[#082722] relative overflow-hidden">
@@ -3578,7 +3589,7 @@
                                         <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-1.5 text-center">
                                             <span class="font-extrabold text-[11px] text-[#082722] block truncate" x-text="pr.name"></span>
                                             <span class="text-base font-black text-[#082722] block" x-text="pr.weight > 0 ? (pr.weight + ' ק״ג') : '-'"></span>
-                                            <span class="text-[9px] text-[#5f756e] block" x-text="pr.weight > 0 ? ('× ' + pr.reps + ' חזרות') : 'טרם נרשם'"></span>
+                                            <span class="text-[9px] text-[#5f756e] block" x-text="pr.weight > 0 ? ('× ' + pr.reps + ' חז\'') : 'טרם נרשם'"></span>
                                         </div>
                                     </template>
                                 </div>
@@ -3712,10 +3723,9 @@
                                                 <div x-init="ensureExerciseSetsDetail(ex)" class="bg-white border rounded-2xl p-4 md:p-5 shadow-xs space-y-4"
                                                      :class="ex.isSuperset ? 'border-2 border-amber-300 bg-amber-50/10' : 'border-[#e5dfd3]'">
                                                     
-                                                    <!-- שורה 1: שם תרגיל, קבוצת שריר, מנוחה, סופר-סט, וידאו ומחיקה -->
-                                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-center">
-                                                        <!-- שם תרגיל -->
-                                                        <div class="md:col-span-4 flex items-center gap-2">
+                                                    <!-- שורה 1: שם תרגיל, מנוחה, סופר-סט, וידאו ומחיקה -->
+                                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                                                        <div class="md:col-span-5 flex items-center gap-2">
                                                             <span class="w-7 h-7 rounded-lg bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] font-black text-xs flex items-center justify-center shrink-0" x-text="exIdx + 1"></span>
                                                             <div class="relative flex-1">
                                                                 <input type="text" 
@@ -3727,28 +3737,10 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- בחירת / זיהוי קבוצת שריר -->
-                                                        <div class="md:col-span-2">
-                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2 py-1.5">
-                                                                <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
-                                                                <select x-model="ex.muscle" 
-                                                                        @change="saveData()" 
-                                                                        class="w-full bg-transparent text-xs font-black text-[#082722] focus:outline-none cursor-pointer">
-                                                                    <option value="chest">חזה</option>
-                                                                    <option value="back">גב</option>
-                                                                    <option value="legs">רגליים</option>
-                                                                    <option value="shoulders">כתפיים</option>
-                                                                    <option value="arms">ידיים</option>
-                                                                    <option value="abs">בטן/ליבה</option>
-                                                                    <option value="other">אחר / כללי</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- מנוחה מומלצת -->
-                                                        <div class="md:col-span-2">
-                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2 py-1.5">
+                                                        <div class="md:col-span-3 flex items-center gap-2">
+                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1.5 w-full">
                                                                 <i data-lucide="timer" class="w-3.5 h-3.5 text-amber-600 shrink-0"></i>
+                                                                <span class="text-[10px] text-[#5f756e] font-bold shrink-0">מנוחה:</span>
                                                                 <input type="text" 
                                                                        x-model="ex.rest" 
                                                                        @input="saveData()" 
@@ -3757,8 +3749,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- סופר-סט, וידאו ומחיקה -->
-                                                        <div class="md:col-span-4 flex items-center justify-end gap-1.5 flex-wrap">
+                                                        <div class="md:col-span-4 flex items-center justify-end gap-2 flex-wrap">
                                                             <button type="button" 
                                                                     @click="toggleExerciseSuperset(coachSelectedWorkoutDayIdx, exIdx)" 
                                                                     :class="ex.isSuperset ? 'bg-amber-100 text-amber-900 border-amber-300 shadow-xs' : 'bg-[#fbf8f2] hover:bg-slate-100 text-slate-600 border-[#e5dfd3]'"
@@ -3768,7 +3759,7 @@
                                                                 <span x-text="ex.isSuperset ? '⚡ סופר-סט' : 'סופר-סט'"></span>
                                                             </button>
 
-                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2 py-1.5 flex-1 min-w-[100px]">
+                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1.5 flex-1 min-w-[120px]">
                                                                 <i data-lucide="video" class="w-3.5 h-3.5 text-red-500 shrink-0"></i>
                                                                 <input type="url" 
                                                                        x-model="ex.video" 
@@ -4046,15 +4037,15 @@
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">חלבון</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + ' גרם'"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + 'ג\''"></span>
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">פחמימה</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + ' גרם'"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + 'ג\''"></span>
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">שומן</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + ' גרם'"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + 'ג\''"></span>
                                 </div>
                             </div>
 
@@ -4177,7 +4168,7 @@
                                                     </template>
                                                     <span x-text="day.label"></span>
                                                     <template x-if="getCoachDayTotals(currentClient, day.date).calories > 0">
-                                                        <span class="text-[9px] font-black opacity-80" x-text="getCoachDayTotals(currentClient, day.date).calories + ' קק״ל'"></span>
+                                                        <span class="text-[9px] font-black opacity-80" x-text="getCoachDayTotals(currentClient, day.date).calories + ' קל\''"></span>
                                                     </template>
                                                 </button>
                                             </template>
@@ -4217,21 +4208,21 @@
                                             <!-- חלבון -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">חלבון</span>
-                                                <div class="text-base md:text-lg font-black text-[#86efac]" x-text="getCoachDayTotals(currentClient).protein + ' / ' + (currentClient?.macroCalculated?.targetProtein || 160) + ' גרם'"></div>
+                                                <div class="text-base md:text-lg font-black text-[#86efac]" x-text="getCoachDayTotals(currentClient).protein + ' / ' + (currentClient?.macroCalculated?.targetProtein || 160) + 'ג\''"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם חלבון</span>
                                             </div>
 
                                             <!-- פחמימה -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">פחמימות</span>
-                                                <div class="text-base md:text-lg font-black text-[#38bdf8]" x-text="getCoachDayTotals(currentClient).carbs + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 220) + ' גרם'"></div>
+                                                <div class="text-base md:text-lg font-black text-[#38bdf8]" x-text="getCoachDayTotals(currentClient).carbs + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 220) + 'ג\''"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם פחמימה</span>
                                             </div>
 
                                             <!-- שומן -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">שומנים</span>
-                                                <div class="text-base md:text-lg font-black text-[#fbbf24]" x-text="getCoachDayTotals(currentClient).fat + ' / ' + (currentClient?.macroCalculated?.targetFat || 65) + ' גרם'"></div>
+                                                <div class="text-base md:text-lg font-black text-[#fbbf24]" x-text="getCoachDayTotals(currentClient).fat + ' / ' + (currentClient?.macroCalculated?.targetFat || 65) + 'ג\''"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם שומן</span>
                                             </div>
                                         </div>
@@ -4252,13 +4243,13 @@
                                                     </div>
                                                     <!-- סיכום ארוחה -->
                                                     <div class="text-[10px] font-bold text-[#082722] bg-white px-2 py-0.5 rounded-lg border border-[#e5dfd3]">
-                                                        <span class="text-emerald-700 font-black" x-text="getCoachMealSummary(currentClient, mealInfo.type).calories + ' קק״ל'"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="getCoachMealSummary(currentClient, mealInfo.type).calories + ' קל\''"></span>
                                                         <span class="text-slate-400 mx-1">|</span>
-                                                        <span x-text="'ח: ' + getCoachMealSummary(currentClient, mealInfo.type).protein + ' גרם'"></span>
+                                                        <span x-text="'ח: ' + getCoachMealSummary(currentClient, mealInfo.type).protein + 'ג\''"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'פ: ' + getCoachMealSummary(currentClient, mealInfo.type).carbs + ' גרם'"></span>
+                                                        <span x-text="'פ: ' + getCoachMealSummary(currentClient, mealInfo.type).carbs + 'ג\''"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'ש: ' + getCoachMealSummary(currentClient, mealInfo.type).fat + ' גרם'"></span>
+                                                        <span x-text="'ש: ' + getCoachMealSummary(currentClient, mealInfo.type).fat + 'ג\''"></span>
                                                     </div>
                                                 </div>
 
@@ -4291,7 +4282,7 @@
                                                                         <div class="text-[10px] text-[#5f756e] flex items-center gap-1.5 flex-wrap">
                                                                             <span x-text="log.time || ''"></span>
                                                                             <template x-if="log.calories">
-                                                                                <span class="font-black text-emerald-700" x-text="'• ' + log.calories + ' קק״ל'"></span>
+                                                                                <span class="font-black text-emerald-700" x-text="'• ' + log.calories + ' קל\''"></span>
                                                                             </template>
                                                                             <template x-if="log.protein">
                                                                                 <span x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
@@ -4341,13 +4332,13 @@
                                                         <span class="text-[10px] bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold text-[#5f756e]" x-text="dayData.count + ' פריטים'"></span>
                                                     </div>
                                                     <div class="text-xs font-bold text-[#082722] bg-white px-2.5 py-1 rounded-xl border border-[#e5dfd3]">
-                                                        <span class="text-emerald-700 font-black" x-text="Math.round(dayData.calories) + ' קק״ל'"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="Math.round(dayData.calories) + ' קל\''"></span>
                                                         <span class="text-slate-400 mx-1">|</span>
-                                                        <span x-text="'ח: ' + Math.round(dayData.protein) + ' גרם'"></span>
+                                                        <span x-text="'ח: ' + Math.round(dayData.protein) + 'ג\''"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'פ: ' + Math.round(dayData.carbs) + ' גרם'"></span>
+                                                        <span x-text="'פ: ' + Math.round(dayData.carbs) + 'ג\''"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'ש: ' + Math.round(dayData.fat) + ' גרם'"></span>
+                                                        <span x-text="'ש: ' + Math.round(dayData.fat) + 'ג\''"></span>
                                                     </div>
                                                 </div>
 
@@ -4370,8 +4361,8 @@
                                                             <p class="text-xs font-bold text-[#082722] whitespace-pre-line" x-text="log.description || 'ללא פירוט'"></p>
                                                             
                                                             <div class="text-[10px] text-[#5f756e] font-semibold">
-                                                                <span class="text-emerald-700 font-bold" x-text="log.calories ? (log.calories + ' קק״ל') : ''"></span>
-                                                                <span x-text="log.protein ? (' • ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + ' גרם') : ''"></span>
+                                                                <span class="text-emerald-700 font-bold" x-text="log.calories ? (log.calories + ' קל\'') : ''"></span>
+                                                                <span x-text="log.protein ? (' • ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\'') : ''"></span>
                                                             </div>
                                                         </div>
                                                     </template>
@@ -4625,7 +4616,7 @@
                 </div>
 
                 <!-- 5. טאב מעקב פיננסי -->
-                <div x-show="activeTab === 'finances' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'finances' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     
                     <!-- סיכום פיננסי מעורב -->
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -4806,7 +4797,7 @@
                                             <td class="py-2.5 px-6">
                                                 <!-- רשימת תגים דינמית חלקה -->
                                                 <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none whitespace-nowrap py-1">
-                                                    <template x-for="(pay, pIdx) in (client.payments || [])" :key="pIdx">
+                                                    <template x-for="(pay, pIdx) in client.payments" :key="pIdx">
                                                         <button 
                                                             @click="toggleClientPaymentStatus(client.id, pIdx)" 
                                                             :class="pay.status === 'paid' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" 
@@ -4826,7 +4817,7 @@
                 </div>
 
                 <!-- 6. טאב הגדרות וסנכרון ענן -->
-                <div x-show="activeTab === 'settings' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="activeTab === 'settings' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
                         <!-- חיבור Gemini AI למחשבון התזונה וצילום צלחות -->
@@ -5526,7 +5517,7 @@
                                 <span class="font-black text-xs text-[#082722] block truncate" x-text="ex.name"></span>
                                 <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
                                     <span class="bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold" x-text="ex.muscle === 'chest' ? 'חזה' : (ex.muscle === 'back' ? 'גב' : (ex.muscle === 'legs' ? 'רגליים' : (ex.muscle === 'shoulders' ? 'כתפיים' : (ex.muscle === 'arms' ? 'ידיים' : (ex.muscle === 'core' ? 'בטן וליבה' : 'אירובי')))))"></span>
-                                    <span x-text="'מנוחה מומלצת: ' + (ex.rest || '90 שניות')"></span>
+                                    <span x-text="'מנוחה מומלצת: ' + (ex.rest || '90 שנ\'')"></span>
                                     <template x-if="ex.video">
                                         <a :href="ex.video" target="_blank" class="text-red-600 font-bold hover:underline flex items-center gap-0.5">
                                             <i data-lucide="video" class="w-3 h-3"></i>
@@ -5621,6 +5612,114 @@
 
             <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
                 <button type="button" @click="openOneRmModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור מחשבון
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל מחשבון פלטות למוט אולימפי (Barbell Plate Calculator) -->
+    <div x-show="openPlateCalculatorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openPlateCalculatorModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="disc" class="w-5 h-5 text-[#86efac]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">מחשבון פלטות למוט 🏋️‍♂️</h3>
+                        <p class="text-xs text-[#5f756e]">חישוב פלטות מדויק לכל צד של המוט האולימפי</p>
+                    </div>
+                </div>
+                <button @click="openPlateCalculatorModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-4 text-xs">
+                <!-- הגדרות משקל יעד ומשקל מוט -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל כולל להרמה (ק״ג):</label>
+                            <div class="flex items-center gap-1">
+                                <button type="button" @click="plateTargetWeight = Math.max(plateBarWeight, (parseFloat(plateTargetWeight) || 0) - 2.5)" class="w-8 h-8 rounded-xl bg-white border border-[#e5dfd3] text-[#082722] font-black hover:bg-slate-100 cursor-pointer">-</button>
+                                <input type="number" step="0.5" x-model.number="plateTargetWeight" placeholder="80" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-2 py-1.5 text-sm font-black text-[#082722] text-center focus:outline-none focus:border-[#22c55e]">
+                                <button type="button" @click="plateTargetWeight = (parseFloat(plateTargetWeight) || 0) + 2.5" class="w-8 h-8 rounded-xl bg-white border border-[#e5dfd3] text-[#082722] font-black hover:bg-slate-100 cursor-pointer">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל המוט (ק״ג):</label>
+                            <select x-model.number="plateBarWeight" class="w-full bg-white border border-[#e5dfd3] rounded-xl px-3 py-2 text-xs font-bold text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                                <option :value="20">20 ק״ג (מוט אולימפי גברים סטנדרטי)</option>
+                                <option :value="15">15 ק״ג (מוט אולימפי נשים)</option>
+                                <option :value="10">10 ק״ג (מוט טכניקה / קל)</option>
+                                <option :value="8">8 ק״ג (מוט W / EZ Bar)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- כפתורי קיצור מהירים למשקלים פופולריים -->
+                    <div class="flex items-center gap-1.5 flex-wrap pt-1">
+                        <span class="text-[10px] text-[#5f756e] font-bold">משקלים נפוצים:</span>
+                        <template x-for="tw in [40, 60, 80, 100, 120, 140, 160]" :key="tw">
+                            <button type="button" @click="plateTargetWeight = tw" :class="plateTargetWeight === tw ? 'bg-[#082722] text-[#86efac]' : 'bg-white text-[#082722]'" class="border border-[#e5dfd3] px-2 py-0.5 rounded-lg text-[10px] font-black transition cursor-pointer" x-text="tw + 'kg'"></button>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- תוצאת חישוב לכל צד -->
+                <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e5dfd3] rounded-2xl p-4 text-center space-y-2 text-[#082722]">
+                    <span class="text-[10px] text-emerald-800 font-black block uppercase tracking-wider">משקל שיש להעמיס על כל צד 🏋️‍♂️</span>
+                    <div class="text-3xl font-black text-emerald-700" x-text="calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג'"></div>
+                    <span class="text-[10px] text-[#5f756e]" x-text="'מוט (' + plateBarWeight + ' ק״ג) + 2 צדדים × ' + calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג = ' + plateTargetWeight + ' ק״ג סה״כ'"></span>
+                </div>
+
+                <!-- פירוט הפלטות שיש להרכיב על כל צד -->
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3">
+                    <h4 class="font-black text-[#082722] text-xs border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
+                        <span>פלטות להרכבה על כל צד (מימין ומשמאל):</span>
+                        <span class="text-[10px] text-[#5f756e]">מבפנים החוצה ➔</span>
+                    </h4>
+
+                    <template x-if="calculatePlates(plateTargetWeight, plateBarWeight).plates.length === 0">
+                        <div class="text-center py-4 text-[#5f756e] text-xs italic">
+                            מוט ריק בלבד (אין צורך בהוספת פלטות)
+                        </div>
+                    </template>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                        <template x-for="p in calculatePlates(plateTargetWeight, plateBarWeight).plates" :key="p.plate">
+                            <div class="bg-white border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between shadow-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-8 h-8 rounded-xl font-black text-xs flex items-center justify-center border"
+                                          :class="{
+                                              'bg-red-500 text-white border-red-600': p.plate === 25,
+                                              'bg-blue-600 text-white border-blue-700': p.plate === 20,
+                                              'bg-amber-400 text-slate-900 border-amber-500': p.plate === 15,
+                                              'bg-emerald-600 text-white border-emerald-700': p.plate === 10,
+                                              'bg-slate-100 text-slate-800 border-slate-300': p.plate === 5,
+                                              'bg-slate-800 text-white border-slate-950': p.plate === 2.5,
+                                              'bg-slate-300 text-slate-900 border-slate-400': p.plate === 1.25
+                                          }"
+                                          x-text="p.plate"></span>
+                                    <span class="font-bold text-xs text-[#082722]" x-text="p.plate + ' ק״ג'"></span>
+                                </div>
+                                <span class="bg-[#082722] text-[#86efac] px-2.5 py-1 rounded-xl text-xs font-black" x-text="'× ' + p.count"></span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <template x-if="calculatePlates(plateTargetWeight, plateBarWeight).remainder > 0">
+                        <div class="p-2.5 bg-amber-50 border border-amber-300 text-amber-900 rounded-xl text-[10px] font-bold">
+                            ⚠️ שארית של <span x-text="calculatePlates(plateTargetWeight, plateBarWeight).remainder"></span> ק״ג לא ניתנת להרכבה מדויקת עם פלטות סטנדרטיות (מינימום 1.25 ק״ג לצד).
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
+                <button type="button" @click="openPlateCalculatorModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
                     סגור מחשבון
                 </button>
             </div>
@@ -5770,11 +5869,11 @@
                                         <span class="text-emerald-700 font-extrabold text-[11px] shrink-0" x-text="food.calPer100 + ' קל׳/100ג׳'"></span>
                                     </div>
                                     <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
-                                        <span x-text="'ח: ' + food.proPer100 + ' גרם'"></span>
+                                        <span x-text="'ח: ' + food.proPer100 + 'ג\''"></span>
                                         <span>•</span>
-                                        <span x-text="'פ: ' + food.carbPer100 + ' גרם'"></span>
+                                        <span x-text="'פ: ' + food.carbPer100 + 'ג\''"></span>
                                         <span>•</span>
-                                        <span x-text="'ש: ' + food.fatPer100 + ' גרם'"></span>
+                                        <span x-text="'ש: ' + food.fatPer100 + 'ג\''"></span>
                                     </div>
                                 </div>
                             </template>
@@ -6308,8 +6407,8 @@
                                 <span class="text-[9px] text-[#5f756e]" x-text="'ערכים ל-' + (item.unit === 'גרם' || item.unit === 'מ&quot;ל' ? '100 ' + item.unit : '1 ' + item.unit)"></span>
                             </div>
                             <div class="text-left text-[10px]">
-                                <span class="font-bold text-emerald-700 block" x-text="item.cal + ' קק״ל'"></span>
-                                <span class="text-emerald-800 font-bold" x-text="'ח: ' + item.pro + ' גרם'"></span>
+                                <span class="font-bold text-emerald-700 block" x-text="item.cal + ' קל''"></span>
+                                <span class="text-emerald-800 font-bold" x-text="'ח: ' + item.pro + 'ג''"></span>
                             </div>
                         </button>
                     </template>
@@ -6334,15 +6433,15 @@
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">חלבון</span>
-                                <span class="text-sm font-black text-emerald-700" x-text="calculateSelectedFoodMacros().protein + ' גרם'"></span>
+                                <span class="text-sm font-black text-emerald-700" x-text="calculateSelectedFoodMacros().protein + 'ג''"></span>
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">פחמימה</span>
-                                <span class="text-sm font-black text-sky-700" x-text="calculateSelectedFoodMacros().carbs + ' גרם'"></span>
+                                <span class="text-sm font-black text-sky-700" x-text="calculateSelectedFoodMacros().carbs + 'ג''"></span>
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">שומן</span>
-                                <span class="text-sm font-black text-amber-700" x-text="calculateSelectedFoodMacros().fat + ' גרם'"></span>
+                                <span class="text-sm font-black text-amber-700" x-text="calculateSelectedFoodMacros().fat + 'ג''"></span>
                             </div>
                         </div>
                     </div>
@@ -6559,7 +6658,7 @@
                 targetMealIndex: null,
 
                 // אימות ונעילת מאמן (קוד 1236)
-                isCoachAuthenticated: true,
+                isCoachAuthenticated: false,
                 coachPinInput: '',
                 coachPinError: false,
 
@@ -6569,7 +6668,9 @@
                 portalSelectedWorkoutDayIdx: 0,
                 portalScorecardViewDate: '',
                 openScorecardHistoryModal: false,
-                
+                openPlateCalculatorModal: false,
+                plateTargetWeight: 80,
+                plateBarWeight: 20,
                 portalNewCheckin: { weight: '', waist: '', adherenceNutrition: 10, adherenceTraining: 10, notes: '' },
                 portalTodayJournal: '',
                 portalCheckinSuccess: false,
@@ -6700,7 +6801,6 @@
                     hatedFoods: '', notes: '', motivation: '', biggestChallenge: '' 
                 },
                 intakeStep: 1,
-                intakeStorySlide: 0,
                 intakeSuccess: false,
                 pdfUploading: false,
                 pdfBlobUrlCache: null,
@@ -9475,7 +9575,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             name: ex.name,
                             sets: 3,
                             reps: '10',
-                            rest: ex.rest || '90 שניות',
+                            rest: ex.rest || '90 שנ\'',
                             notes: '',
                             video: ex.video || '',
                             setsDetail: [
@@ -9517,10 +9617,6 @@ saveWorkoutPlanWithToast() {
                 },
                 ensureExerciseSetsDetail(ex) {
                     if (!ex) return;
-                    if (!ex.muscle) {
-                        if (ex.name && ex.name.trim()) ex.muscle = this.detectExerciseMuscle(ex.name);
-                        else ex.muscle = 'chest';
-                    }
                     if (!Array.isArray(ex.setsDetail)) {
                         ex.setsDetail = [];
                     }
@@ -9597,7 +9693,7 @@ saveWorkoutPlanWithToast() {
                                     name: '',
                                     sets: 3,
                                     reps: '10',
-                                    rest: '90 שניות',
+                                    rest: '90 שנ\'',
                                     notes: '',
                                     video: '',
                                     setsDetail: [
@@ -9647,10 +9743,9 @@ saveWorkoutPlanWithToast() {
                     if (client && client.workoutPlan?.days?.[dayIdx]) {
                         const newEx = {
                             name: '',
-                            muscle: 'chest',
                             sets: 3,
                             reps: '10',
-                            rest: '90 שניות',
+                            rest: '90 שנ\'',
                             notes: '',
                             video: '',
                             setsDetail: [
@@ -9678,89 +9773,15 @@ saveWorkoutPlanWithToast() {
                     }
                 },
 
-                detectExerciseMuscle(name) {
-                    if (!name) return 'chest';
-                    const n = name.trim().toLowerCase();
-                    
-                    // Chest / חזה
-                    if (n.includes('חזה') || n.includes('בנץ') || n.includes('פרפר') || n.includes('מקבילים') || 
-                        n.includes('דחיקה') || n.includes('chest') || n.includes('bench') || n.includes('fly') || 
-                        n.includes('incline') || n.includes('decline') || n.includes('pushup') || n.includes('שכיבות סמיכה') ||
-                        n.includes('קרוסאובר') || n.includes('crossover') || n.includes('pec')) {
-                        return 'chest';
-                    }
-                    
-                    // Back / גב
-                    if (n.includes('גב') || n.includes('מתח') || n.includes('חתירה') || n.includes('פולי') || 
-                        n.includes('דדליפט') || n.includes('מסור') || n.includes('טי באר') || n.includes('t-bar') ||
-                        n.includes('pull') || n.includes('row') || n.includes('lat') || n.includes('deadlift') || 
-                        n.includes('chinups') || n.includes('chin-up') || n.includes('shrug') || n.includes('שראגס') ||
-                        n.includes('פול אובר') || n.includes('pullover') || n.includes('back') || n.includes('היפר אקסטנשן') ||
-                        n.includes('גוד מורנינג') || n.includes('good morning')) {
-                        return 'back';
-                    }
-                    
-                    // Legs / רגליים
-                    if (n.includes('סקוואט') || n.includes('רגליים') || n.includes('ארבע ראשי') || n.includes('תאומים') || 
-                        n.includes('לאנג') || n.includes('פשיטת ברכיים') || n.includes('כפיפת ברכיים') || n.includes('leg') || 
-                        n.includes('squat') || n.includes('lunge') || n.includes('calf') || n.includes('calves') || 
-                        n.includes('היפ תראסט') || n.includes('hip thrust') || n.includes('גלוטס') || n.includes('glute') || 
-                        n.includes('האק סקוואט') || n.includes('hack') || n.includes('פרס רגליים') || n.includes('לג פרס') || 
-                        n.includes('האמסטרינג') || n.includes('hamstring') || n.includes('בולגרי') || n.includes('bulgarian') ||
-                        n.includes('מקרבים') || n.includes('מרחיקים') || n.includes('adductor') || n.includes('abductor') ||
-                        n.includes('סומו') || n.includes('רומני') || n.includes('rdl') || n.includes('stiff')) {
-                        return 'legs';
-                    }
-                    
-                    // Shoulders / כתפיים
-                    if (n.includes('כתפיים') || n.includes('כתף') || n.includes('הרחקה לצדדים') || n.includes('הרחקת כתפיים') || 
-                        n.includes('לחיצת כתפיים') || n.includes('פרס') || n.includes('shoulder') || n.includes('press') || 
-                        n.includes('deltoid') || n.includes('delt') || n.includes('פייס פול') || n.includes('face pull') || 
-                        n.includes('מילטרי') || n.includes('military') || n.includes('אוברהד') || n.includes('overhead') || 
-                        n.includes('arnold') || n.includes('ארנולד') || n.includes('הרחקה אופקית') || n.includes('פרונט רייז') || 
-                        n.includes('lateral') || n.includes('סייד רייז')) {
-                        return 'shoulders';
-                    }
-                    
-                    // Arms / ידיים
-                    if (n.includes('יד') || n.includes('מרפקים') || n.includes('יד קדמית') || n.includes('יד אחורית') || 
-                        n.includes('פשיטת מרפקים') || n.includes('כפיפת מרפקים') || n.includes('טרייספס') || n.includes('בייספס') || 
-                        n.includes('bicep') || n.includes('tricep') || n.includes('curl') || n.includes('פטישים') || 
-                        n.includes('hammer') || n.includes('צרפתית') || n.includes('skull') || n.includes('קיקבק') || 
-                        n.includes('kickback') || n.includes('פריצ\'ר') || n.includes('preacher') || n.includes('ריכוז') || 
-                        n.includes('concentration') || n.includes('דיפס') || n.includes('dips') || n.includes('אמות') || 
-                        n.includes('forearm') || n.includes('wrist')) {
-                        return 'arms';
-                    }
-                    
-                    // Abs / בטן
-                    if (n.includes('בטן') || n.includes('ליבה') || n.includes('abs') || n.includes('core') || 
-                        n.includes('פלאנק') || n.includes('plank') || n.includes('כפיפות בטן') || n.includes('crunch') || 
-                        n.includes('רוסי') || n.includes('russian twist') || n.includes('הרמת רגליים') || n.includes('leg raise') || 
-                        n.includes('גלגל בטן') || n.includes('ab wheel') || n.includes('ואקום') || n.includes('vacuum') || 
-                        n.includes('הולו') || n.includes('hollow')) {
-                        return 'abs';
-                    }
-                    
-                    return 'chest';
-                },
-
                 onExerciseNameChange(dayIdx, exIdx) {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (!client || !client.workoutPlan?.days?.[dayIdx]?.exercises?.[exIdx]) return;
                     const ex = client.workoutPlan.days[dayIdx].exercises[exIdx];
                     this.ensureExerciseSetsDetail(ex);
-                    
-                    if (ex.name && ex.name.trim()) {
-                        const q = ex.name.trim().toLowerCase();
-                        const found = this.exerciseLibrary.find(l => l.name.toLowerCase() === q || l.name.toLowerCase().includes(q) || q.includes(l.name.toLowerCase()));
-                        if (found) {
-                            if (found.muscle) ex.muscle = found.muscle;
-                            if (!ex.video && found.video) ex.video = found.video;
-                            if (!ex.rest && found.rest) ex.rest = found.rest;
-                        } else {
-                            ex.muscle = this.detectExerciseMuscle(ex.name);
-                        }
+                    const found = this.exerciseLibrary.find(l => l.name === ex.name);
+                    if (found) {
+                        if (!ex.video && found.video) ex.video = found.video;
+                        if (!ex.rest) ex.rest = '90 שנ\'';
                     }
                     this.saveData();
                 },
@@ -9771,25 +9792,14 @@ saveWorkoutPlanWithToast() {
                     if (!c || !c.workoutPlan || !c.workoutPlan.days) return volume;
                     c.workoutPlan.days.forEach(d => {
                         (d.exercises || []).forEach(e => {
+                            const n = (e.name || '').toLowerCase();
                             const s = (e.setsDetail && e.setsDetail.length > 0) ? e.setsDetail.length : (parseInt(e.sets) || 3);
-                            let m = e.muscle;
-                            if (!m || m === 'other') {
-                                if (e.name) {
-                                    const q = e.name.trim().toLowerCase();
-                                    const found = this.exerciseLibrary?.find(l => l.name.toLowerCase() === q || l.name.toLowerCase().includes(q));
-                                    if (found && found.muscle) m = found.muscle;
-                                    else m = this.detectExerciseMuscle(e.name);
-                                } else {
-                                    m = 'chest';
-                                }
-                            }
-                            
-                            if (m === 'chest' || m === 'חזה') volume['חזה'] += s;
-                            else if (m === 'back' || m === 'גב') volume['גב'] += s;
-                            else if (m === 'legs' || m === 'רגליים') volume['רגליים'] += s;
-                            else if (m === 'shoulders' || m === 'כתפיים') volume['כתפיים'] += s;
-                            else if (m === 'arms' || m === 'ידיים') volume['ידיים'] += s;
-                            else if (m === 'abs' || m === 'core' || m === 'בטן' || m === 'בטן/ליבה') volume['בטן/ליבה'] += s;
+                            if (n.includes('חזה') || n.includes('בנץ') || n.includes('פרפר') || n.includes('מקבילים') || n.includes('chest') || n.includes('bench')) volume['חזה'] += s;
+                            else if (n.includes('גב') || n.includes('מתח') || n.includes('חתירה') || n.includes('פולי') || n.includes('דדליפט') || n.includes('back') || n.includes('pull')) volume['גב'] += s;
+                            else if (n.includes('סקוואט') || n.includes('רגליים') || n.includes('ארבע ראשי') || n.includes('תאומים') || n.includes('לאנג') || n.includes('פשיטת') || n.includes('כפיפת ברכיים') || n.includes('squat') || n.includes('leg')) volume['רגליים'] += s;
+                            else if (n.includes('כתפיים') || n.includes('הרחקה') || n.includes('לחיצת כתפיים') || n.includes('פרס') || n.includes('shoulder') || n.includes('press')) volume['כתפיים'] += s;
+                            else if (n.includes('יד') || n.includes('מרפקים') || n.includes('יד קדמית') || n.includes('יד אחורית') || n.includes('פשיטת מרפקים') || n.includes('טרייספס') || n.includes('בייספס') || n.includes('bicep') || n.includes('tricep')) volume['ידיים'] += s;
+                            else volume['בטן/ליבה'] += s;
                         });
                     });
                     return volume;
@@ -10032,7 +10042,23 @@ saveWorkoutPlanWithToast() {
                     this.playVictorySound();
                 },
 
-                
+                calculatePlates(targetWeight, barWeight = 20) {
+                    const target = parseFloat(targetWeight) || 0;
+                    const bar = parseFloat(barWeight) || 20;
+                    if (target <= bar) return { perSideWeight: 0, plates: [], remainder: 0 };
+                    const perSideWeight = (target - bar) / 2;
+                    let remaining = perSideWeight;
+                    const availablePlates = [25, 20, 15, 10, 5, 2.5, 1.25];
+                    const plates = [];
+                    availablePlates.forEach(p => {
+                        const count = Math.floor(remaining / p);
+                        if (count > 0) {
+                            plates.push({ plate: p, count: count });
+                            remaining = Math.round((remaining - (count * p)) * 100) / 100;
+                        }
+                    });
+                    return { perSideWeight, plates, remainder: remaining };
+                },
 
                 getWorkoutCompletionPercent(dayIdx) {
                     const client = this.portalClient || this.currentClient;
@@ -11534,16 +11560,13 @@ saveWorkoutPlanWithToast() {
 
                 // --- מתודות סטופר וטיימר מנוחה בין סטים ---
                 startRestTimer(seconds) {
-                    if (seconds !== undefined && seconds !== null) {
+                    if (seconds) {
                         this.restTimerTotal = seconds;
                         this.restTimerSeconds = seconds;
                     } else if (this.restTimerSeconds === 0) {
-                        this.restTimerSeconds = this.restTimerTotal || 60;
+                        this.restTimerSeconds = this.restTimerTotal;
                     }
-                    if (this.restTimerInterval) {
-                        clearInterval(this.restTimerInterval);
-                        this.restTimerInterval = null;
-                    }
+                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
                     this.isRestTimerRunning = true;
                     
                     this.restTimerInterval = setInterval(() => {
@@ -11552,65 +11575,32 @@ saveWorkoutPlanWithToast() {
                         } else {
                             this.stopRestTimer();
                             this.playTimerChime();
-                            if (navigator.vibrate) {
-                                try { navigator.vibrate([200, 100, 200]); } catch(e) {}
-                            }
                         }
                     }, 1000);
                 },
 
                 pauseRestTimer() {
-                    if (this.restTimerInterval) {
-                        clearInterval(this.restTimerInterval);
-                        this.restTimerInterval = null;
-                    }
+                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
                     this.isRestTimerRunning = false;
                 },
 
-                toggleRestTimer() {
-                    if (this.isRestTimerRunning) {
-                        this.pauseRestTimer();
-                    } else {
-                        const target = (this.restTimerSeconds > 0) ? this.restTimerSeconds : (this.restTimerTotal || 60);
-                        this.startRestTimer(target);
-                    }
-                },
-
-                addRestTime(secs = 30) {
-                    this.restTimerSeconds = (this.restTimerSeconds || 0) + secs;
-                    this.restTimerTotal = Math.max(this.restTimerTotal || 60, this.restTimerSeconds);
-                    if (!this.isRestTimerRunning) {
-                        this.startRestTimer(this.restTimerSeconds);
-                    }
-                },
-
                 stopRestTimer() {
-                    if (this.restTimerInterval) {
-                        clearInterval(this.restTimerInterval);
-                        this.restTimerInterval = null;
-                    }
+                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
                     this.isRestTimerRunning = false;
                     this.restTimerSeconds = 0;
                 },
 
                 resetRestTimer() {
-                    if (this.restTimerInterval) {
-                        clearInterval(this.restTimerInterval);
-                        this.restTimerInterval = null;
-                    }
+                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
                     this.isRestTimerRunning = false;
-                    this.restTimerSeconds = this.restTimerTotal || 60;
-                },
-
-                formatRestTimer(totalSeconds) {
-                    const s = Math.max(0, parseInt(totalSeconds) || 0);
-                    const mins = Math.floor(s / 60);
-                    const secs = s % 60;
-                    return String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+                    this.restTimerSeconds = this.restTimerTotal;
                 },
 
                 formatTimerSeconds(totalSeconds) {
-                    return this.formatRestTimer(totalSeconds);
+                    const s = parseInt(totalSeconds) || 0;
+                    const mins = Math.floor(s / 60);
+                    const secs = s % 60;
+                    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
                 },
 
                 playTimerChime() {
@@ -13005,118 +12995,6 @@ saveWorkoutPlanWithToast() {
                         });
                     }
                     this.playVictorySound();
-                },
-
-                
-                // --- שיטות ניהול מתאמן חסרות והשלמות מערכת ---
-                openEditClient(client) {
-                    this.openEditClientModal(client || this.currentClient);
-                },
-
-                sendPortalLinkWhatsApp(client) {
-                    const c = client || this.currentClient;
-                    if (!c) return;
-                    const url = window.location.origin + window.location.pathname + '?client=' + c.id;
-                    const text = encodeURIComponent(`היי ${c.name}! 💪\nהנה הקישור הישיר לאפליקציית הליווי האישית שלך:\n${url}\n\nבהצלחה! אילאי 👑`);
-                    const phone = (c.phone || '').replace(/[^0-9]/g, '').replace(/^0/, '972');
-                    window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
-                },
-
-                copyPortalLink(client) {
-                    const c = client || this.currentClient;
-                    if (!c) return;
-                    const url = window.location.origin + window.location.pathname + '?client=' + c.id;
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText(url).then(() => {
-                            alert("הקישור לאפליקציה הועתק ללוח בהצלחה! 📋");
-                        });
-                    } else {
-                        prompt("העתק את הקישור:", url);
-                    }
-                },
-
-                updateClientDriveUrl(clientId, url) {
-                    const client = this.clients.find(c => c.id === clientId);
-                    if (client) {
-                        client.googleDriveUrl = url;
-                        if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
-                        }
-                        this.saveData();
-                    }
-                },
-
-                updateClientSheetsUrl(clientId, url) {
-                    const client = this.clients.find(c => c.id === clientId);
-                    if (client) {
-                        client.googleSheetsUrl = url;
-                        if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
-                        }
-                        this.saveData();
-                    }
-                },
-
-                sendWhatsAppReminder(type, client) {
-                    const c = client || this.currentClient;
-                    if (!c) return;
-                    let msg = '';
-                    if (type === 'שקילה') {
-                        msg = `היי ${c.name}! 💪\nתזכורת ידידותית לשקילה השבועית שלך באפליקציה. מחכה לעדכון שלך! 🔥`;
-                    } else if (type === 'שיחה') {
-                        msg = `היי ${c.name}! 📞\nתזכורת לשיחת המעקב והשיקוף שלנו היום. נדבר בקרוב! 👑`;
-                    } else if (type === 'זום') {
-                        msg = `היי ${c.name}! 💻\nתזכורת לפגישת הזום שלנו. מחכה לך! 💪`;
-                    } else {
-                        msg = `היי ${c.name}! כאן אילאי. מה שלומך היום? 💪`;
-                    }
-                    const phone = (c.phone || '').replace(/[^0-9]/g, '').replace(/^0/, '972');
-                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-                },
-
-                getLatestWeight(client) {
-                    if (!client) return '-';
-                    if (client.checkins && client.checkins.length > 0) {
-                        const valid = client.checkins.filter(c => c && c.weight).sort((a, b) => new Date(b.date) - new Date(a.date));
-                        if (valid.length > 0) return valid[0].weight;
-                    }
-                    return client.currentWeight || client.startWeight || '-';
-                },
-
-                getWeightChangeTotal(client) {
-                    if (!client) return '0.0';
-                    const start = parseFloat(client.startWeight);
-                    const curr = parseFloat(this.getLatestWeight(client));
-                    if (!isNaN(start) && !isNaN(curr)) {
-                        const diff = curr - start;
-                        return (diff > 0 ? '+' : '') + diff.toFixed(1);
-                    }
-                    return '0.0';
-                },
-
-                getWeightDiffFromPrev(client, index) {
-                    if (!client || !client.checkins || !client.checkins[index]) return '0.0';
-                    const curr = parseFloat(client.checkins[index].weight);
-                    const prev = client.checkins[index + 1] ? parseFloat(client.checkins[index + 1].weight) : parseFloat(client.startWeight);
-                    if (!isNaN(curr) && !isNaN(prev)) {
-                        const diff = curr - prev;
-                        return (diff > 0 ? '+' : '') + diff.toFixed(1);
-                    }
-                    return '0.0';
-                },
-
-                resumeRestTimer() {
-                    if (this.isRestTimerRunning) return;
-                    this.isRestTimerRunning = true;
-                    if (this.restTimerInterval) clearInterval(this.restTimerInterval);
-                    this.restTimerInterval = setInterval(() => {
-                        if (this.restTimerSeconds > 0) {
-                            this.restTimerSeconds--;
-                        } else {
-                            this.pauseRestTimer();
-                            this.playRestTimerBeep();
-                        }
-                    }, 1000);
                 },
 
                 playVictorySound() {
