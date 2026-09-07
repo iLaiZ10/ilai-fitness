@@ -369,15 +369,15 @@
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">חלבון</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetProtein + 'ג\''"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetProtein + ' גרם'"></span>
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">פחמימה</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetCarbs + 'ג\''"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetCarbs + ' גרם'"></span>
                                     </div>
                                     <div class="bg-white p-1.5 rounded border border-emerald-100">
                                         <span class="text-[9px] text-gray-500 block">שומן</span>
-                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetFat + 'ג\''"></span>
+                                        <span class="font-black text-emerald-700 text-xs" x-text="printClient.macroCalculated.targetFat + ' גרם'"></span>
                                     </div>
                                 </div>
                             </template>
@@ -488,9 +488,9 @@
                             <span class="font-bold text-emerald-800">סה"כ ערכים בתפריט:</span>
                             <div class="flex gap-6 text-gray-800">
                                 <span>קלוריות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'calories')"></strong> קק"ל</span>
-                                <span>חלבון: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'protein') + ' ג\''"></strong></span>
-                                <span>פחמימות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'carbs') + ' ג\''"></strong></span>
-                                <span>שומנים: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'fat') + ' ג\''"></strong></span>
+                                <span>חלבון: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'protein') + ' גרם'"></strong></span>
+                                <span>פחמימות: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'carbs') + ' גרם'"></strong></span>
+                                <span>שומנים: <strong class="text-emerald-700" x-text="getMealPlanSum(printClient, 'fat') + ' גרם'"></strong></span>
                             </div>
                         </div>
                     </div>
@@ -1327,44 +1327,32 @@
                             </div>
                         </template>
 
-                        <!-- טיימר מנוחה חכם + מחשבון פלטות למוט -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <!-- טיימר מנוחה -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex items-center justify-between shadow-md">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2.5 rounded-xl bg-amber-50 text-amber-600 border border-amber-200">
-                                        <i data-lucide="timer" class="w-5 h-5"></i>
-                                    </div>
-                                    <div>
-                                        <span class="text-[10px] text-[#5f756e] font-bold block">טיימר מנוחה בין סטים:</span>
-                                        <span class="text-xl font-black text-[#082722]" x-text="formatRestTimer(restTimerSeconds)"></span>
-                                    </div>
+                        <!-- טיימר מנוחה חכם בין סטים -->
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2.5 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <i data-lucide="timer" class="w-6 h-6"></i>
                                 </div>
-                                <div class="flex items-center gap-1.5">
-                                    <button type="button" @click="startRestTimer(60)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">60ש׳</button>
-                                    <button type="button" @click="startRestTimer(90)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">90ש׳</button>
-                                    <button type="button" @click="startRestTimer(120)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-2.5 py-1.5 rounded-xl text-xs cursor-pointer">120ש׳</button>
-                                    <button type="button" @click="stopRestTimer()" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 p-1.5 rounded-xl cursor-pointer" title="אפס טיימר">
-                                        <i data-lucide="square" class="w-4 h-4"></i>
-                                    </button>
+                                <div>
+                                    <span class="text-[10px] text-[#5f756e] font-bold block">טיימר מנוחה בין סטים:</span>
+                                    <div class="flex items-baseline gap-2">
+                                        <span class="text-2xl font-black text-[#082722]" x-text="formatTimerSeconds(restTimerSeconds)"></span>
+                                        <template x-if="isRestTimerRunning">
+                                            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 animate-pulse">סופר לאחור...</span>
+                                        </template>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- מחשבון פלטות למוט -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 flex items-center justify-between shadow-md">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
-                                        <i data-lucide="disc" class="w-5 h-5"></i>
-                                    </div>
-                                    <div>
-                                        <span class="text-[10px] text-[#5f756e] font-bold block">מחשבון פלטות למוט:</span>
-                                        <span class="text-xs font-black text-[#082722]">חישוב פלטות לכל צד</span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <input type="number" step="2.5" placeholder="משקל" x-model="plateCalcWeight" class="w-20 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1 text-xs font-bold text-center text-[#082722] focus:outline-none focus:border-[#22c55e]">
-                                    <button type="button" @click="openPlateCalcModal = true" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer">חשב</button>
-                                </div>
+                            
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <button type="button" @click="startRestTimer(60)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-3 py-2 rounded-xl text-xs transition cursor-pointer">60ש׳</button>
+                                <button type="button" @click="startRestTimer(90)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-3 py-2 rounded-xl text-xs transition cursor-pointer">90ש׳</button>
+                                <button type="button" @click="startRestTimer(120)" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-3 py-2 rounded-xl text-xs transition cursor-pointer">120ש׳</button>
+                                <button type="button" @click="addRestTime(30)" class="bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 font-bold px-2.5 py-2 rounded-xl text-xs transition cursor-pointer" title="הוסף 30 שניות">+30ש׳</button>
+                                <button type="button" @click="toggleRestTimer()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow-sm" x-text="isRestTimerRunning ? 'השהה ⏸' : 'המשך ▶'"></button>
+                                <button type="button" @click="stopRestTimer()" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 p-2 rounded-xl transition cursor-pointer" title="אפס טיימר">
+                                    <i data-lucide="square" class="w-4 h-4"></i>
+                                </button>
                             </div>
                         </div>
 
@@ -1577,7 +1565,7 @@
                                             </template>
                                             <span x-text="day.label"></span>
                                             <template x-if="getConsumedCaloriesForDate(portalClient, day.date) > 0">
-                                                <span class="text-[9px] font-black opacity-80" x-text="getConsumedCaloriesForDate(portalClient, day.date) + ' קל\''"></span>
+                                                <span class="text-[9px] font-black opacity-80" x-text="getConsumedCaloriesForDate(portalClient, day.date) + ' קק״ל'"></span>
                                             </template>
                                         </button>
                                     </template>
@@ -1613,7 +1601,7 @@
                                 <!-- יעד קלורי -->
                                 <div class="text-center sm:text-right space-y-0.5">
                                     <span class="text-[10px] text-[#93c7bb] font-bold block">יעד יומי שהוגדר</span>
-                                    <div class="text-xl md:text-2xl font-black text-white" x-text="(portalClient?.macroCalculated?.targetCalories || 2000) + ' קל\''"></div>
+                                    <div class="text-xl md:text-2xl font-black text-white" x-text="(portalClient?.macroCalculated?.targetCalories || 2000) + ' קק״ל'"></div>
                                     <span class="text-[9px] text-[#5f756e]">לפי תוכנית המאמן</span>
                                 </div>
 
@@ -1627,7 +1615,7 @@
                                 <!-- סך שנאכל עד כה -->
                                 <div class="text-center sm:text-left space-y-0.5">
                                     <span class="text-[10px] text-[#93c7bb] font-bold block" x-text="(!portalNutritionViewDate || portalNutritionViewDate === getTodayDate()) ? 'נאכל היום עד כה' : 'נאכל בתאריך זה'"></span>
-                                    <div class="text-xl md:text-2xl font-black text-white" x-text="getTodayConsumedCalories(portalClient) + ' קל\''"></div>
+                                    <div class="text-xl md:text-2xl font-black text-white" x-text="getTodayConsumedCalories(portalClient) + ' קק״ל'"></div>
                                     <span class="text-[9px] text-[#86efac]" x-text="Math.round((getTodayConsumedCalories(portalClient) / (portalClient?.macroCalculated?.targetCalories || 2000)) * 100) + '% מהיעד'"></span>
                                 </div>
                             </div>
@@ -1885,14 +1873,14 @@
                                                 <div class="bg-white border border-[#e5dfd3] p-3 rounded-xl space-y-1.5 shadow-sm text-xs">
                                                     <div class="flex items-center justify-between font-bold text-[#082722]">
                                                         <span x-text="item.name"></span>
-                                                        <span class="text-[#22c55e] font-black" x-text="item.cal + ' קל\''"></span>
+                                                        <span class="text-[#22c55e] font-black" x-text="item.cal + ' קק״ל'"></span>
                                                     </div>
                                                     <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
-                                                        <span x-text="'ח: ' + item.pro + 'ג\''"></span>
+                                                        <span x-text="'ח: ' + item.pro + ' גרם'"></span>
                                                         <span>•</span>
-                                                        <span x-text="'פ: ' + item.carb + 'ג\''"></span>
+                                                        <span x-text="'פ: ' + item.carb + ' גרם'"></span>
                                                         <span>•</span>
-                                                        <span x-text="'ש: ' + item.fat + 'ג\''"></span>
+                                                        <span x-text="'ש: ' + item.fat + ' גרם'"></span>
                                                     </div>
                                                     <template x-if="item.swap">
                                                         <div class="bg-emerald-50/70 border border-emerald-200/60 p-2 rounded-lg text-[10px] text-emerald-900 mt-1">
@@ -1932,13 +1920,13 @@
                                         <div class="flex items-center gap-3">
                                             <!-- סיכום קלוריות ומאקרו לארוחה -->
                                             <div class="text-[11px] font-black text-[#082722] bg-[#fbf8f2] px-2.5 py-1 rounded-xl border border-[#e5dfd3]">
-                                                <span class="text-emerald-600" x-text="getMealTypeSummary(portalClient, mCategory.type).calories + ' קל\''"></span>
+                                                <span class="text-emerald-600" x-text="getMealTypeSummary(portalClient, mCategory.type).calories + ' קק״ל'"></span>
                                                 <span class="text-slate-400 mx-1">|</span>
-                                                <span class="text-slate-600" x-text="'ח: ' + getMealTypeSummary(portalClient, mCategory.type).protein + 'ג\''"></span>
+                                                <span class="text-slate-600" x-text="'ח: ' + getMealTypeSummary(portalClient, mCategory.type).protein + ' גרם'"></span>
                                                 <span class="text-slate-400 mx-1">•</span>
-                                                <span class="text-slate-600" x-text="'פ: ' + getMealTypeSummary(portalClient, mCategory.type).carbs + 'ג\''"></span>
+                                                <span class="text-slate-600" x-text="'פ: ' + getMealTypeSummary(portalClient, mCategory.type).carbs + ' גרם'"></span>
                                                 <span class="text-slate-400 mx-1">•</span>
-                                                <span class="text-slate-600" x-text="'ש: ' + getMealTypeSummary(portalClient, mCategory.type).fat + 'ג\''"></span>
+                                                <span class="text-slate-600" x-text="'ש: ' + getMealTypeSummary(portalClient, mCategory.type).fat + ' גרם'"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -1967,8 +1955,8 @@
 
                                                 <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 border-[#e5dfd3]/60 pt-2 sm:pt-0">
                                                     <div class="text-xs font-bold">
-                                                        <span class="text-emerald-700 font-black" x-text="log.calories + ' קל\''"></span>
-                                                        <span class="text-[10px] text-[#5f756e] mr-1.5" x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="log.calories + ' קק״ל'"></span>
+                                                        <span class="text-[10px] text-[#5f756e] mr-1.5" x-text="'(ח: ' + log.protein + ' גרם • פ: ' + log.carbs + ' גרם • ש: ' + log.fat + ' גרם)'"></span>
                                                     </div>
                                                     <button type="button" @click="deletePortalFoodLog(log.id)" class="text-red-500 hover:text-white hover:bg-red-600 bg-red-50 border border-red-200/80 px-2 py-1 rounded-xl transition cursor-pointer flex items-center gap-1 text-[11px] font-bold shadow-xs shrink-0" title="הסר פריט זה שהוזן בטעות">
                                                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -3589,7 +3577,7 @@
                                         <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl space-y-1.5 text-center">
                                             <span class="font-extrabold text-[11px] text-[#082722] block truncate" x-text="pr.name"></span>
                                             <span class="text-base font-black text-[#082722] block" x-text="pr.weight > 0 ? (pr.weight + ' ק״ג') : '-'"></span>
-                                            <span class="text-[9px] text-[#5f756e] block" x-text="pr.weight > 0 ? ('× ' + pr.reps + ' חז\'') : 'טרם נרשם'"></span>
+                                            <span class="text-[9px] text-[#5f756e] block" x-text="pr.weight > 0 ? ('× ' + pr.reps + ' חזרות') : 'טרם נרשם'"></span>
                                         </div>
                                     </template>
                                 </div>
@@ -4037,15 +4025,15 @@
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">חלבון</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + 'ג\''"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + ' גרם'"></span>
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">פחמימה</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + 'ג\''"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + ' גרם'"></span>
                                 </div>
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">שומן</span>
-                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + 'ג\''"></span>
+                                    <span class="text-sm font-black text-emerald-400" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + ' גרם'"></span>
                                 </div>
                             </div>
 
@@ -4168,7 +4156,7 @@
                                                     </template>
                                                     <span x-text="day.label"></span>
                                                     <template x-if="getCoachDayTotals(currentClient, day.date).calories > 0">
-                                                        <span class="text-[9px] font-black opacity-80" x-text="getCoachDayTotals(currentClient, day.date).calories + ' קל\''"></span>
+                                                        <span class="text-[9px] font-black opacity-80" x-text="getCoachDayTotals(currentClient, day.date).calories + ' קק״ל'"></span>
                                                     </template>
                                                 </button>
                                             </template>
@@ -4208,21 +4196,21 @@
                                             <!-- חלבון -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">חלבון</span>
-                                                <div class="text-base md:text-lg font-black text-[#86efac]" x-text="getCoachDayTotals(currentClient).protein + ' / ' + (currentClient?.macroCalculated?.targetProtein || 160) + 'ג\''"></div>
+                                                <div class="text-base md:text-lg font-black text-[#86efac]" x-text="getCoachDayTotals(currentClient).protein + ' / ' + (currentClient?.macroCalculated?.targetProtein || 160) + ' גרם'"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם חלבון</span>
                                             </div>
 
                                             <!-- פחמימה -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">פחמימות</span>
-                                                <div class="text-base md:text-lg font-black text-[#38bdf8]" x-text="getCoachDayTotals(currentClient).carbs + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 220) + 'ג\''"></div>
+                                                <div class="text-base md:text-lg font-black text-[#38bdf8]" x-text="getCoachDayTotals(currentClient).carbs + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 220) + ' גרם'"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם פחמימה</span>
                                             </div>
 
                                             <!-- שומן -->
                                             <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
                                                 <span class="text-[10px] text-[#93c7bb] font-bold block">שומנים</span>
-                                                <div class="text-base md:text-lg font-black text-[#fbbf24]" x-text="getCoachDayTotals(currentClient).fat + ' / ' + (currentClient?.macroCalculated?.targetFat || 65) + 'ג\''"></div>
+                                                <div class="text-base md:text-lg font-black text-[#fbbf24]" x-text="getCoachDayTotals(currentClient).fat + ' / ' + (currentClient?.macroCalculated?.targetFat || 65) + ' גרם'"></div>
                                                 <span class="text-[9px] text-[#5f756e]">גרם שומן</span>
                                             </div>
                                         </div>
@@ -4243,13 +4231,13 @@
                                                     </div>
                                                     <!-- סיכום ארוחה -->
                                                     <div class="text-[10px] font-bold text-[#082722] bg-white px-2 py-0.5 rounded-lg border border-[#e5dfd3]">
-                                                        <span class="text-emerald-700 font-black" x-text="getCoachMealSummary(currentClient, mealInfo.type).calories + ' קל\''"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="getCoachMealSummary(currentClient, mealInfo.type).calories + ' קק״ל'"></span>
                                                         <span class="text-slate-400 mx-1">|</span>
-                                                        <span x-text="'ח: ' + getCoachMealSummary(currentClient, mealInfo.type).protein + 'ג\''"></span>
+                                                        <span x-text="'ח: ' + getCoachMealSummary(currentClient, mealInfo.type).protein + ' גרם'"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'פ: ' + getCoachMealSummary(currentClient, mealInfo.type).carbs + 'ג\''"></span>
+                                                        <span x-text="'פ: ' + getCoachMealSummary(currentClient, mealInfo.type).carbs + ' גרם'"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'ש: ' + getCoachMealSummary(currentClient, mealInfo.type).fat + 'ג\''"></span>
+                                                        <span x-text="'ש: ' + getCoachMealSummary(currentClient, mealInfo.type).fat + ' גרם'"></span>
                                                     </div>
                                                 </div>
 
@@ -4282,10 +4270,10 @@
                                                                         <div class="text-[10px] text-[#5f756e] flex items-center gap-1.5 flex-wrap">
                                                                             <span x-text="log.time || ''"></span>
                                                                             <template x-if="log.calories">
-                                                                                <span class="font-black text-emerald-700" x-text="'• ' + log.calories + ' קל\''"></span>
+                                                                                <span class="font-black text-emerald-700" x-text="'• ' + log.calories + ' קק״ל'"></span>
                                                                             </template>
                                                                             <template x-if="log.protein">
-                                                                                <span x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
+                                                                                <span x-text="'(ח: ' + log.protein + ' גרם • פ: ' + log.carbs + ' גרם • ש: ' + log.fat + ' גרם)'"></span>
                                                                             </template>
                                                                         </div>
                                                                     </div>
@@ -4332,13 +4320,13 @@
                                                         <span class="text-[10px] bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold text-[#5f756e]" x-text="dayData.count + ' פריטים'"></span>
                                                     </div>
                                                     <div class="text-xs font-bold text-[#082722] bg-white px-2.5 py-1 rounded-xl border border-[#e5dfd3]">
-                                                        <span class="text-emerald-700 font-black" x-text="Math.round(dayData.calories) + ' קל\''"></span>
+                                                        <span class="text-emerald-700 font-black" x-text="Math.round(dayData.calories) + ' קק״ל'"></span>
                                                         <span class="text-slate-400 mx-1">|</span>
-                                                        <span x-text="'ח: ' + Math.round(dayData.protein) + 'ג\''"></span>
+                                                        <span x-text="'ח: ' + Math.round(dayData.protein) + ' גרם'"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'פ: ' + Math.round(dayData.carbs) + 'ג\''"></span>
+                                                        <span x-text="'פ: ' + Math.round(dayData.carbs) + ' גרם'"></span>
                                                         <span class="text-slate-400 mx-0.5">•</span>
-                                                        <span x-text="'ש: ' + Math.round(dayData.fat) + 'ג\''"></span>
+                                                        <span x-text="'ש: ' + Math.round(dayData.fat) + ' גרם'"></span>
                                                     </div>
                                                 </div>
 
@@ -4361,8 +4349,8 @@
                                                             <p class="text-xs font-bold text-[#082722] whitespace-pre-line" x-text="log.description || 'ללא פירוט'"></p>
                                                             
                                                             <div class="text-[10px] text-[#5f756e] font-semibold">
-                                                                <span class="text-emerald-700 font-bold" x-text="log.calories ? (log.calories + ' קל\'') : ''"></span>
-                                                                <span x-text="log.protein ? (' • ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\'') : ''"></span>
+                                                                <span class="text-emerald-700 font-bold" x-text="log.calories ? (log.calories + ' קק״ל') : ''"></span>
+                                                                <span x-text="log.protein ? (' • ח: ' + log.protein + ' גרם • פ: ' + log.carbs + ' גרם • ש: ' + log.fat + ' גרם') : ''"></span>
                                                             </div>
                                                         </div>
                                                     </template>
@@ -5856,7 +5844,7 @@
                                 <span class="font-black text-xs text-[#082722] block truncate" x-text="ex.name"></span>
                                 <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
                                     <span class="bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold" x-text="ex.muscle === 'chest' ? 'חזה' : (ex.muscle === 'back' ? 'גב' : (ex.muscle === 'legs' ? 'רגליים' : (ex.muscle === 'shoulders' ? 'כתפיים' : (ex.muscle === 'arms' ? 'ידיים' : (ex.muscle === 'core' ? 'בטן וליבה' : 'אירובי')))))"></span>
-                                    <span x-text="'מנוחה מומלצת: ' + (ex.rest || '90 שנ\'')"></span>
+                                    <span x-text="'מנוחה מומלצת: ' + (ex.rest || '90 שניות')"></span>
                                     <template x-if="ex.video">
                                         <a :href="ex.video" target="_blank" class="text-red-600 font-bold hover:underline flex items-center gap-0.5">
                                             <i data-lucide="video" class="w-3 h-3"></i>
@@ -6208,11 +6196,11 @@
                                         <span class="text-emerald-700 font-extrabold text-[11px] shrink-0" x-text="food.calPer100 + ' קל׳/100ג׳'"></span>
                                     </div>
                                     <div class="flex items-center gap-2 text-[10px] text-[#5f756e]">
-                                        <span x-text="'ח: ' + food.proPer100 + 'ג\''"></span>
+                                        <span x-text="'ח: ' + food.proPer100 + ' גרם'"></span>
                                         <span>•</span>
-                                        <span x-text="'פ: ' + food.carbPer100 + 'ג\''"></span>
+                                        <span x-text="'פ: ' + food.carbPer100 + ' גרם'"></span>
                                         <span>•</span>
-                                        <span x-text="'ש: ' + food.fatPer100 + 'ג\''"></span>
+                                        <span x-text="'ש: ' + food.fatPer100 + ' גרם'"></span>
                                     </div>
                                 </div>
                             </template>
@@ -6746,8 +6734,8 @@
                                 <span class="text-[9px] text-[#5f756e]" x-text="'ערכים ל-' + (item.unit === 'גרם' || item.unit === 'מ&quot;ל' ? '100 ' + item.unit : '1 ' + item.unit)"></span>
                             </div>
                             <div class="text-left text-[10px]">
-                                <span class="font-bold text-emerald-700 block" x-text="item.cal + ' קל''"></span>
-                                <span class="text-emerald-800 font-bold" x-text="'ח: ' + item.pro + 'ג''"></span>
+                                <span class="font-bold text-emerald-700 block" x-text="item.cal + ' קק״ל'"></span>
+                                <span class="text-emerald-800 font-bold" x-text="'ח: ' + item.pro + ' גרם'"></span>
                             </div>
                         </button>
                     </template>
@@ -6772,15 +6760,15 @@
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">חלבון</span>
-                                <span class="text-sm font-black text-emerald-700" x-text="calculateSelectedFoodMacros().protein + 'ג''"></span>
+                                <span class="text-sm font-black text-emerald-700" x-text="calculateSelectedFoodMacros().protein + ' גרם'"></span>
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">פחמימה</span>
-                                <span class="text-sm font-black text-sky-700" x-text="calculateSelectedFoodMacros().carbs + 'ג''"></span>
+                                <span class="text-sm font-black text-sky-700" x-text="calculateSelectedFoodMacros().carbs + ' גרם'"></span>
                             </div>
                             <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
                                 <span class="text-[9px] text-[#5f756e] font-bold block">שומן</span>
-                                <span class="text-sm font-black text-amber-700" x-text="calculateSelectedFoodMacros().fat + 'ג''"></span>
+                                <span class="text-sm font-black text-amber-700" x-text="calculateSelectedFoodMacros().fat + ' גרם'"></span>
                             </div>
                         </div>
                     </div>
@@ -6972,6 +6960,8 @@
                 restTimerSeconds: 60,
                 restTimerTotal: 60,
                 restTimerInterval: null,
+                plateCalcWeight: 80,
+                openPlateCalcModal: false,
                 isRestTimerRunning: false,
 
                 // מחשבון 1RM ומשקלי עבודה
@@ -8763,7 +8753,7 @@
                         this.db.collection("clients").get().then(snapshot => {
                             if (snapshot.empty && this.clients.length > 0) {
                                 this.clients.forEach(c => {
-                                    this.db.collection("clients").doc(c.id).set(c);
+                                    if (c && c.id) { this.db.collection("clients").doc(c.id).set(c); }
                                 });
                                 this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents });
                                 this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates });
@@ -8839,7 +8829,7 @@
                                     if (parsed.clients && parsed.clients.length > 0) {
                                         console.log("Migrating local database to empty cloud...");
                                         parsed.clients.forEach(c => {
-                                            this.db.collection("clients").doc(c.id).set(c);
+                                            if (c && c.id) { this.db.collection("clients").doc(c.id).set(c); }
                                         });
                                         if (parsed.scheduleEvents && parsed.scheduleEvents.length > 0) {
                                             this.db.collection("config").doc("schedule").set({ events: parsed.scheduleEvents });
@@ -8849,7 +8839,7 @@
                                         }
                                         if (parsed.transactions && parsed.transactions.length > 0) {
                                             parsed.transactions.forEach(t => {
-                                                this.db.collection("transactions").doc(t.id).set(t);
+                                                if (t && t.id) { this.db.collection("transactions").doc(t.id).set(t); }
                                             });
                                         }
                                         return;
@@ -8911,7 +8901,7 @@
                 saveData() {
                     if (this.isCloudSynced && this.db) {
                         if (this.currentClient) {
-                            this.db.collection("clients").doc(this.currentClient.id).set(this.currentClient);
+                            if (this.currentClient && this.currentClient.id) { this.db.collection("clients").doc(this.currentClient.id).set(this.currentClient); }
                         }
                         this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents });
                         this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates });
@@ -9028,7 +9018,7 @@
                     client.personalSessionDate = this.newEvent.date;
                     
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.openAddEventModal = false;
@@ -9043,7 +9033,7 @@
                         if (client && client.personalSessionDate === event.date) {
                             client.personalSessionStatus = newStatus;
                             if (this.isCloudSynced && this.db) {
-                                this.db.collection("clients").doc(client.id).set(client);
+                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                             }
                         }
                         this.saveData();
@@ -9059,7 +9049,7 @@
                                 client.personalSessionStatus = 'pending';
                                 client.personalSessionDate = '';
                                 if (this.isCloudSynced && this.db) {
-                                    this.db.collection("clients").doc(client.id).set(client);
+                                    if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                                 }
                             }
                         }
@@ -9131,7 +9121,7 @@
                         status: 'pending'
                     });
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.showSaveToast("נוסף חודש חיוב " + nextMonth + " ל-" + client.name + " (" + amount + " ₪)!");
@@ -9313,7 +9303,7 @@
                     this.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("transactions").doc(tx.id).set(tx);
+                        if (tx && tx.id) { this.db.collection("transactions").doc(tx.id).set(tx); }
                     }
                     this.saveData();
 
@@ -9616,7 +9606,7 @@
                         
                         this.clients[idx] = { ...this.clients[idx], ...this.editingClient };
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(this.editingClient.id).set(this.clients[idx]);
+                            if (this.editingClient && this.editingClient.id) this.db.collection("clients").doc(this.editingClient.id).set(this.clients[idx]);
                         }
                         this.saveData();
                         this.openEditModal = false;
@@ -9657,7 +9647,7 @@
                             }).then(url => {
                                 client.mealPlanPdfUrl = url;
                                 if (this.db) {
-                                    this.db.collection("clients").doc(client.id).set(client);
+                                    if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                                 }
                                 this.saveData();
                                 this.pdfUploading = false;
@@ -9757,7 +9747,7 @@
                         if (client) {
                             client.mealPlanPdfUrl = '';
                             if (this.isCloudSynced && this.db) {
-                                this.db.collection("clients").doc(client.id).set(client);
+                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                             }
                             this.saveData();
                             alert("תפריט ה-PDF הוסר בהצלחה.");
@@ -9773,7 +9763,7 @@
                         url = this.getCleanPdfUrl(url);
                         client.mealPlanPdfUrl = url;
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -9865,7 +9855,7 @@
                     client.mealPlan.meals[this.targetMealIndex].items.push(newItem);
                     
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.openFoodLibraryModal = false;
@@ -9923,7 +9913,7 @@
                     client.needsAttention = false;
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.portalCheckinSuccess = true;
@@ -9942,7 +9932,7 @@
                     const entry = `[${dateStr}] ${this.portalTodayJournal}`;
                     client.notes = (client.notes ? client.notes + '\n\n' : '') + entry;
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.portalJournalSaved = true;
@@ -9981,7 +9971,7 @@
                         client.checkins.push(checkinObj);
                         client.checkins.sort((a, b) => new Date(a.date) - new Date(b.date));
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         this.resetNewCheckinForm();
@@ -9994,7 +9984,7 @@
                         if (client) {
                             client.checkins.splice(index, 1);
                             if (this.isCloudSynced && this.db) {
-                                this.db.collection("clients").doc(client.id).set(client);
+                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                             }
                             this.saveData();
                         }
@@ -10013,7 +10003,7 @@
                         ex.supersetGroup = ex.supersetGroup || 'A';
                     }
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                 },
@@ -10053,7 +10043,7 @@
                     }
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.openBlockArchiveModal = false;
@@ -10070,7 +10060,7 @@
                         client.workoutPlan.notes = archivedBlock.notes || '';
                         client.workoutPlan.days = JSON.parse(JSON.stringify(archivedBlock.days || []));
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         this.openBlockHistoryModal = false;
@@ -10108,7 +10098,7 @@
                     });
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.openFoodLibraryModal = false;
@@ -10161,7 +10151,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     }
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.openExerciseLibraryModal = false;
@@ -10211,7 +10201,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         client.googleDriveUrl = url;
                         client.googleDriveFolderUrl = url;
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10222,7 +10212,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (client) {
                         client.googleSheetsUrl = url;
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10276,7 +10266,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (client) {
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         this.workoutSavedToast = true;
@@ -10325,7 +10315,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         });
                         ex.sets = ex.setsDetail.length;
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10341,7 +10331,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             ex.setsDetail.forEach((s, i) => { s.setNum = i + 1; });
                             ex.sets = ex.setsDetail.length;
                             if (this.isCloudSynced && this.db) {
-                                this.db.collection("clients").doc(client.id).set(client);
+                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                             }
                             this.saveData();
                         }
@@ -10374,7 +10364,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             ]
                         });
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10386,7 +10376,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         if (client && client.workoutPlan?.days) {
                             client.workoutPlan.days.splice(dayIdx, 1);
                             if (this.isCloudSynced && this.db) {
-                                this.db.collection("clients").doc(client.id).set(client);
+                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                             }
                             this.saveData();
                         }
@@ -10401,7 +10391,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         cloned.name = (cloned.name || 'אימון') + ' (שכפול)';
                         client.workoutPlan.days.splice(dayIdx + 1, 0, cloned);
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10425,7 +10415,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         };
                         client.workoutPlan.days[dayIdx].exercises.push(newEx);
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10436,7 +10426,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (client && client.workoutPlan?.days?.[dayIdx]?.exercises) {
                         client.workoutPlan.days[dayIdx].exercises.splice(exIdx, 1);
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10624,7 +10614,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             });
                         }
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         return true;
@@ -10690,7 +10680,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     this.autoSaveDailyScorecard(true);
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(c.id).set(c);
+                        if (c && c.id) { this.db.collection("clients").doc(c.id).set(c); }
                     }
                     this.saveData();
 
@@ -10885,7 +10875,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (confirm(`האם לטעון את תבנית האימון "${templateName}"? פעולה זו תדרוס את תוכנית האימונים הנוכחית של המתאמן.`)) {
                         client.workoutPlan = JSON.parse(JSON.stringify(template.workoutPlan));
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         alert("התבנית נטענה בהצלחה!");
@@ -10930,7 +10920,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (confirm(`האם לטעון את תבנית התפריט "${templateName}"? פעולה זו תדרוס את תוכנית התזונה הנוכחית של המתאמן.`)) {
                         client.mealPlan = JSON.parse(JSON.stringify(template.mealPlan));
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         alert("תבנית התפריט נטענה בהצלחה!");
@@ -10944,7 +10934,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (client && client.payments[index]) {
                         client.payments[index].status = client.payments[index].status === 'paid' ? 'pending' : 'paid';
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10955,7 +10945,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (client && client.payments[index]) {
                         client.payments[index].status = client.payments[index].status === 'paid' ? 'pending' : 'paid';
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -10978,7 +10968,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         const event = this.scheduleEvents.find(e => e.clientId === clientId && e.status === 'scheduled');
                         if (event) event.status = 'completed';
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         alert("פגישת המתאמן סומנה כבוצעה בהצלחה! 💪");
@@ -11019,7 +11009,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         ]
                     });
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
@@ -11031,7 +11021,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         if (client && client.mealPlan?.meals) {
                             client.mealPlan.meals.splice(mIdx, 1);
                             if (this.isCloudSynced && this.db) {
-                                this.db.collection("clients").doc(client.id).set(client);
+                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                             }
                             this.saveData();
                         }
@@ -11051,7 +11041,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             fat: 0
                         });
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -11062,7 +11052,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (client && client.mealPlan?.meals?.[mIdx]?.items) {
                         client.mealPlan.meals[mIdx].items.splice(iIdx, 1);
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -11368,7 +11358,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     }
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
 
@@ -11412,7 +11402,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     client.foodLogs.unshift(logObj);
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
 
@@ -12044,7 +12034,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     client.foodLogs.unshift(logObj);
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
 
@@ -12178,7 +12168,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     };
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.openEditIntakeModal = false;
@@ -12195,7 +12185,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     client.lastTrackedDate = this.getTodayDate();
                     this.portalDailyWater = client.dailyWater;
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.autoSaveDailyScorecard(false);
@@ -12207,7 +12197,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     client.dailyWater = 0;
                     this.portalDailyWater = 0;
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.autoSaveDailyScorecard(false);
@@ -12221,7 +12211,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     client.lastTrackedDate = this.getTodayDate();
                     this.portalDailySteps = client.dailySteps;
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.autoSaveDailyScorecard(false);
@@ -12263,6 +12253,47 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (this.restTimerInterval) clearInterval(this.restTimerInterval);
                     this.isRestTimerRunning = false;
                     this.restTimerSeconds = this.restTimerTotal;
+                },
+
+                
+                // --- פונקציות טיימר מנוחה ---
+                formatRestTimer(seconds) {
+                    return this.formatTimerSeconds(seconds);
+                },
+
+                pauseRestTimer() {
+                    if (this.restTimerInterval) {
+                        clearInterval(this.restTimerInterval);
+                        this.restTimerInterval = null;
+                        this.isRestTimerRunning = false;
+                    }
+                },
+
+                resumeRestTimer() {
+                    if (this.restTimerSeconds > 0 && !this.isRestTimerRunning) {
+                        this.isRestTimerRunning = true;
+                        this.restTimerInterval = setInterval(() => {
+                            if (this.restTimerSeconds > 0) {
+                                this.restTimerSeconds--;
+                            } else {
+                                this.stopRestTimer();
+                                this.playTimerAlarm();
+                            }
+                        }, 1000);
+                    }
+                },
+
+                toggleRestTimer() {
+                    if (this.isRestTimerRunning) {
+                        this.pauseRestTimer();
+                    } else {
+                        this.resumeRestTimer();
+                    }
+                },
+
+                addRestTime(seconds = 30) {
+                    this.restTimerSeconds += seconds;
+                    this.restTimerTotal += seconds;
                 },
 
                 formatTimerSeconds(totalSeconds) {
@@ -12741,7 +12772,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     
                     client.foodLogs.unshift(logObj);
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     
@@ -12758,7 +12789,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (confirm("האם להסיר פריט זה מיומן התזונה?")) {
                         client.foodLogs = client.foodLogs.filter(l => l.id !== logId);
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
@@ -12797,7 +12828,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     client.reflectionLogs.unshift(refObj);
                     client.needsAttention = true; // Alerts coach on dashboard
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     
@@ -12816,7 +12847,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         ref.reviewed = true;
                         ref.reviewedAt = this.getTodayDate();
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                         alert("משוב המאמן נשמר ונשלח למתאמן בהצלחה! 👑");
@@ -13347,7 +13378,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     }
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
 
@@ -13458,7 +13489,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     client.dailyScorecards.sort((a, b) => new Date(b.date) - new Date(a.date));
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.openCoachScorecardModal = false;
@@ -13473,7 +13504,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             client.dailyScorecards = client.dailyScorecards.filter(s => s && s.date !== dateStr);
                         }
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                         this.saveData();
                     }
@@ -13537,7 +13568,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         client.streakDays = this.getClientStreak(client);
 
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(client.id).set(client);
+                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                         }
                     } else if (!client.lastTrackedDate) {
                         client.lastTrackedDate = todayStr;
@@ -13650,7 +13681,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     });
 
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(client.id).set(client);
+                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
                     }
                     this.saveData();
                     this.openPrModal = false;
