@@ -1636,7 +1636,7 @@
                     <div x-show="portalActiveSubTab === 'nutrition'" x-cloak class="space-y-5">
                         
                         <!-- 1. כרטיס ראשי: יומן קלוריות ומאקרו יומי (המחשבון של אילאי) -->
-                        <div class="bg-gradient-to-br from-[#082722] to-[#041512] border border-[#133d35] rounded-3xl p-5 md:p-6 text-white shadow-2xl space-y-5 relative overflow-hidden">
+                        <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e5dfd3] rounded-3xl p-5 md:p-6 text-[#082722] shadow-xl space-y-5 relative overflow-hidden">
                             <!-- Background decorative ambient blur -->
                             <div class="absolute -top-12 -left-12 w-48 h-48 bg-[#86efac]/10 rounded-full blur-3xl pointer-events-none"></div>
                             <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-[#38bdf8]/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -1656,7 +1656,7 @@
                                 </div>
                                 
                                 <div class="flex items-center gap-2 self-end sm:self-auto">
-                                    <button type="button" @click="openFoodSearchModal = true" class="bg-white/10 hover:bg-white/20 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition border border-white/15 cursor-pointer">
+                                    <button type="button" @click="openFoodSearchModal = true" class="bg-white hover:bg-[#fbf8f2] text-[#082722] font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition border border-[#e5dfd3] shadow-xs cursor-pointer">
                                         <i data-lucide="search" class="w-3.5 h-3.5 text-[#86efac]"></i>
                                         <span>🔍 חיפוש במאגר</span>
                                     </button>
@@ -1668,12 +1668,12 @@
                             </div>
 
                             <!-- סרגל מעבר תאריכים ליומן תזונה (היום, אתמול, שלשום, ובחירת תאריך) -->
-                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#133d35]/80 pb-3 pt-1 relative z-10 text-[11px] font-bold">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#e5dfd3] pb-3 pt-1 relative z-10 text-[11px] font-bold">
                                 <div class="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none shrink-0">
                                     <template x-for="day in getPastDatesList(7)" :key="day.date">
                                         <button type="button" 
                                                 @click="setNutritionViewDate(day.date)"
-                                                :class="(portalNutritionViewDate === day.date || (!portalNutritionViewDate && day.isToday)) ? 'bg-[#86efac] text-[#082722] font-black border-[#86efac] shadow-sm' : 'bg-white/10 text-[#93c7bb] hover:text-white hover:bg-white/20 border-white/10'"
+                                                :class="(portalNutritionViewDate === day.date || (!portalNutritionViewDate && day.isToday)) ? 'bg-[#082722] text-[#86efac] font-black border-[#082722] shadow-sm' : 'bg-white text-[#5f756e] hover:text-[#082722] hover:bg-[#fbf8f2] border-[#e5dfd3]'"
                                                 class="px-3 py-1.5 rounded-xl border shrink-0 transition flex items-center gap-1.5 cursor-pointer">
                                             <template x-if="getConsumedCaloriesForDate(portalClient, day.date) > 0">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e]"></span>
@@ -1740,13 +1740,13 @@
                                 <!-- חלבון -->
                                 <div class="space-y-1.5">
                                     <div class="flex justify-between items-center text-xs">
-                                        <span class="font-extrabold text-[#86efac] flex items-center gap-1.5">
-                                            <span class="w-2.5 h-2.5 rounded-full bg-[#86efac]"></span>
+                                        <span class="font-extrabold text-emerald-800 flex items-center gap-1.5">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                                             <span>חלבון</span>
                                         </span>
-                                        <span class="font-black text-white" x-text="getTodayConsumedProtein(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetProtein || 160) + ' גרם'"></span>
+                                        <span class="font-black text-[#082722]" x-text="getTodayConsumedProtein(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetProtein || 160) + ' גרם'"></span>
                                     </div>
-                                    <div class="w-full bg-[#051c17] rounded-full h-3 overflow-hidden p-0.5 border border-[#174e43]">
+                                    <div class="w-full bg-[#ede8df] rounded-full h-3 overflow-hidden p-0.5 border border-[#e5dfd3]">
                                         <div class="bg-gradient-to-r from-[#22c55e] to-[#86efac] h-full rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, Math.round((getTodayConsumedProtein(portalClient) / (portalClient?.macroCalculated?.targetProtein || 160)) * 100)) + '%'"></div>
                                     </div>
                                 </div>
@@ -1754,13 +1754,13 @@
                                 <!-- פחמימות -->
                                 <div class="space-y-1.5">
                                     <div class="flex justify-between items-center text-xs">
-                                        <span class="font-extrabold text-[#38bdf8] flex items-center gap-1.5">
-                                            <span class="w-2.5 h-2.5 rounded-full bg-[#38bdf8]"></span>
+                                        <span class="font-extrabold text-sky-800 flex items-center gap-1.5">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
                                             <span>פחמימות</span>
                                         </span>
-                                        <span class="font-black text-white" x-text="getTodayConsumedCarbs(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetCarbs || 220) + ' גרם'"></span>
+                                        <span class="font-black text-[#082722]" x-text="getTodayConsumedCarbs(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetCarbs || 220) + ' גרם'"></span>
                                     </div>
-                                    <div class="w-full bg-[#051c17] rounded-full h-3 overflow-hidden p-0.5 border border-[#174e43]">
+                                    <div class="w-full bg-[#ede8df] rounded-full h-3 overflow-hidden p-0.5 border border-[#e5dfd3]">
                                         <div class="bg-gradient-to-r from-[#0284c7] to-[#38bdf8] h-full rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, Math.round((getTodayConsumedCarbs(portalClient) / (portalClient?.macroCalculated?.targetCarbs || 220)) * 100)) + '%'"></div>
                                     </div>
                                 </div>
@@ -1768,13 +1768,13 @@
                                 <!-- שומנים -->
                                 <div class="space-y-1.5">
                                     <div class="flex justify-between items-center text-xs">
-                                        <span class="font-extrabold text-[#fbbf24] flex items-center gap-1.5">
-                                            <span class="w-2.5 h-2.5 rounded-full bg-[#fbbf24]"></span>
+                                        <span class="font-extrabold text-amber-800 flex items-center gap-1.5">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                                             <span>שומנים</span>
                                         </span>
-                                        <span class="font-black text-white" x-text="getTodayConsumedFat(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetFat || 65) + ' גרם'"></span>
+                                        <span class="font-black text-[#082722]" x-text="getTodayConsumedFat(portalClient) + ' / ' + (portalClient?.macroCalculated?.targetFat || 65) + ' גרם'"></span>
                                     </div>
-                                    <div class="w-full bg-[#051c17] rounded-full h-3 overflow-hidden p-0.5 border border-[#174e43]">
+                                    <div class="w-full bg-[#ede8df] rounded-full h-3 overflow-hidden p-0.5 border border-[#e5dfd3]">
                                         <div class="bg-gradient-to-r from-[#d97706] to-[#fbbf24] h-full rounded-full transition-all duration-700" :style="'width: ' + Math.min(100, Math.round((getTodayConsumedFat(portalClient) / (portalClient?.macroCalculated?.targetFat || 65)) * 100)) + '%'"></div>
                                     </div>
                                 </div>
@@ -2087,18 +2087,18 @@
 
                         <!-- 4. תפריט PDF אישי מהמאמן אילאי (אם צורף) -->
                         <template x-if="portalClient?.mealPlanPdfUrl">
-                            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 shadow-xl space-y-3">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">
-                                        <i data-lucide="file-text" class="w-4 h-4 text-sky-400"></i>
-                                        <h4 class="text-xs md:text-sm font-bold text-white">תפריט התזונה המלא שלך (PDF)</h4>
+                                        <i data-lucide="file-text" class="w-4 h-4 text-emerald-700"></i>
+                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">תפריט התזונה המלא שלך (PDF)</h4>
                                     </div>
-                                    <a :href="portalClient.mealPlanPdfUrl" target="_blank" class="bg-slate-950 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 hover:bg-slate-800 transition">
+                                    <a :href="portalClient.mealPlanPdfUrl" target="_blank" class="bg-white border border-[#e5dfd3] hover:bg-[#fbf8f2] text-[#082722] px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 shadow-xs transition">
                                         <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                                         <span>פתח במסך מלא</span>
                                     </a>
                                 </div>
-                                <div class="h-96 w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-950">
+                                <div class="h-96 w-full rounded-2xl overflow-hidden border border-[#e5dfd3] bg-[#fbf8f2]">
                                     <iframe :src="getCleanPdfUrl(portalClient.mealPlanPdfUrl)" class="w-full h-full border-0" type="application/pdf"></iframe>
                                 </div>
                             </div>
@@ -2975,53 +2975,50 @@
                 <!-- 4. כרטיס מתאמן מפורט -->
                 <div x-show="selectedClientId && isCoachAuthenticated && activeTab !== 'portal'" x-cloak class="space-y-6">
                     
-                    <!-- באנר כותרת עליון יוקרתי - Dark Forest Luxury Client Card -->
-                    <div class="bg-[#082722] border border-[#133d35] rounded-3xl p-5 md:p-7 shadow-2xl shadow-[#082722]/25 space-y-5 text-[#fbf8f2] relative overflow-hidden">
-                        <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-[#86efac]/10 rounded-full blur-3xl pointer-events-none"></div>
-                        <div class="absolute -right-12 -top-12 w-48 h-48 bg-[#4ade80]/10 rounded-full blur-2xl pointer-events-none"></div>
-                        
+                    <!-- באנר כותרת עליון יוקרתי - Luxury Cream & Forest Client Card -->
+                    <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e5dfd3] rounded-3xl p-5 md:p-7 shadow-xl space-y-5 text-[#082722] relative overflow-hidden">
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">
                             <!-- פרטי מתאמן, אווטאר ותגיות סטטוס -->
                             <div class="flex items-center gap-4">
                                 <button @click="selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                        class="bg-[#051c17] hover:bg-[#0c332b] border border-[#174e43] text-[#86efac] p-3 rounded-2xl transition cursor-pointer shadow-md shadow-black/20 shrink-0" 
+                                        class="bg-white hover:bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] p-3 rounded-2xl transition cursor-pointer shadow-sm shrink-0" 
                                         title="חזור לרשימת כל המתאמנים">
                                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                                 </button>
                                 
-                                <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-[#86efac] to-[#22c55e] text-[#082722] font-black text-xl md:text-2xl flex items-center justify-center shadow-lg shadow-[#86efac]/20 shrink-0 border-2 border-white/20">
+                                <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-[#082722] text-[#86efac] font-black text-xl md:text-2xl flex items-center justify-center shadow-md shrink-0 border-2 border-white">
                                     <span x-text="(currentClient?.name || 'מתאמן').slice(0, 2)"></span>
                                 </div>
                                 
                                 <div class="space-y-1.5">
                                     <div class="flex items-center gap-2.5 flex-wrap">
-                                        <h3 class="text-xl md:text-3xl font-black text-white tracking-tight" x-text="currentClient?.name"></h3>
-                                        <span class="text-[10px] bg-[#86efac]/15 text-[#86efac] border border-[#86efac]/30 px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-[#86efac] animate-pulse"></span>
-                                            <span>ליווי VIP פעיל</span>
+                                        <h3 class="text-xl md:text-3xl font-black text-[#082722] tracking-tight" x-text="currentClient?.name"></h3>
+                                        <span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 shadow-sm">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                                            <span>VIP ליווי אישי</span>
                                         </span>
                                         <button type="button"
                                                 @click="toggleClientAttention(currentClient.id)" 
-                                                :class="currentClient?.needsAttention ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'bg-white/5 text-slate-400 border-white/10 hover:border-white/20'"
-                                                class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 transition cursor-pointer">
-                                            <i data-lucide="alert-triangle" class="w-3 h-3" :class="currentClient?.needsAttention ? 'text-rose-400' : 'text-slate-400'"></i>
+                                                :class="currentClient?.needsAttention ? 'bg-rose-100 text-rose-800 border-rose-300' : 'bg-white text-[#5f756e] border-[#e5dfd3] hover:border-[#082722]'"
+                                                class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 transition cursor-pointer shadow-sm">
+                                            <i data-lucide="alert-triangle" class="w-3 h-3" :class="currentClient?.needsAttention ? 'text-rose-600' : 'text-slate-400'"></i>
                                             <span x-text="currentClient?.needsAttention ? '⚠️ דורש מעקב מוגבר!' : 'סמן לקושי / מעקב'"></span>
                                         </button>
                                     </div>
                                     
-                                    <div class="flex items-center gap-3 text-xs text-[#93c7bb] font-semibold flex-wrap">
+                                    <div class="flex items-center gap-3 text-xs text-[#5f756e] font-bold flex-wrap">
                                         <span class="flex items-center gap-1">
-                                            <i data-lucide="phone" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                            <i data-lucide="phone" class="w-3.5 h-3.5 text-[#22c55e]"></i>
                                             <span x-text="currentClient?.phone || 'לא הוגדר טלפון'"></span>
                                         </span>
                                         <span class="opacity-40">•</span>
                                         <span class="flex items-center gap-1">
-                                            <i data-lucide="calendar" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5 text-[#22c55e]"></i>
                                             <span x-text="'התחלה: ' + formatDate(currentClient?.startDate)"></span>
                                         </span>
                                         <span class="opacity-40">•</span>
                                         <span class="flex items-center gap-1">
-                                            <i data-lucide="target" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                            <i data-lucide="target" class="w-3.5 h-3.5 text-[#22c55e]"></i>
                                             <span x-text="'מטרה: ' + (currentClient?.goal || 'חיטוב וירידה באחוזי שומן')"></span>
                                         </span>
                                     </div>
@@ -3032,28 +3029,28 @@
                             <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                                 <button type="button" 
                                         @click="openMonthlySummary(currentClient)" 
-                                        class="flex-1 sm:flex-none justify-center bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] px-4 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-2 transition shadow-lg shadow-[#86efac]/20 cursor-pointer">
+                                        class="flex-1 sm:flex-none justify-center bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] px-4 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-2 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
                                     <i data-lucide="sparkles" class="w-4 h-4"></i>
                                     <span>✨ סיכום וואטסאפ</span>
                                 </button>
                                 
                                 <button type="button" 
                                         @click="activeTab = 'portal'; portalClientId = currentClient.id; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                        class="flex-1 sm:flex-none justify-center bg-[#051c17] hover:bg-[#0c332b] text-[#86efac] px-4 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-2 transition border border-[#174e43] shadow-md shadow-black/20 cursor-pointer">
+                                        class="flex-1 sm:flex-none justify-center bg-[#082722] hover:bg-[#0f3830] text-[#86efac] px-4 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-2 transition border border-[#174e43] shadow-md shadow-[#082722]/15 cursor-pointer">
                                     <i data-lucide="smartphone" class="w-4 h-4"></i>
                                     <span>👁️ אפליקציית מתאמן</span>
                                 </button>
 
                                 <button type="button" 
                                         @click="openEditClient(currentClient)" 
-                                        class="bg-[#051c17] hover:bg-[#0c332b] text-slate-300 hover:text-white p-2.5 rounded-2xl transition border border-[#174e43] cursor-pointer" 
+                                        class="bg-white hover:bg-slate-50 text-[#082722] p-2.5 rounded-2xl transition border border-[#e5dfd3] shadow-sm cursor-pointer" 
                                         title="ערוך פרטי מתאמן">
                                     <i data-lucide="edit-3" class="w-4 h-4"></i>
                                 </button>
 
                                 <button type="button" 
                                         @click="deleteClient(currentClient.id)" 
-                                        class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 p-2.5 rounded-2xl transition border border-rose-500/20 cursor-pointer" 
+                                        class="bg-rose-50 hover:bg-rose-100 text-rose-600 p-2.5 rounded-2xl transition border border-rose-200 shadow-sm cursor-pointer" 
                                         title="מחק מתאמן">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                 </button>
@@ -3061,22 +3058,22 @@
                         </div>
 
                         <!-- שורת מדדי ביצועים מהירים עליונה (Hero Quick Stats) -->
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-[#133d35]">
-                            <div class="bg-[#051c17]/60 border border-[#174e43]/60 rounded-2xl p-3 text-center space-y-1">
-                                <span class="text-[10px] text-[#93c7bb] font-bold block">🔥 רצף ימים פעיל</span>
-                                <span class="text-base md:text-lg font-black text-[#86efac]" x-text="(getClientStreak(currentClient) || 0) + ' ימים ברצף'"></span>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-[#e5dfd3]">
+                            <div class="bg-white/90 border border-[#e5dfd3] rounded-2xl p-3 text-center space-y-1 shadow-sm">
+                                <span class="text-[10px] text-[#5f756e] font-bold block">🔥 רצף ימים פעיל</span>
+                                <span class="text-base md:text-lg font-black text-[#15803d]" x-text="(getClientStreak(currentClient) || 0) + ' ימים ברצף'"></span>
                             </div>
-                            <div class="bg-[#051c17]/60 border border-[#174e43]/60 rounded-2xl p-3 text-center space-y-1">
-                                <span class="text-[10px] text-[#93c7bb] font-bold block">🏆 ציון עמידה ממוצע</span>
-                                <span class="text-base md:text-lg font-black text-amber-300" x-text="(getAverageScore(currentClient) || 0) + '%'"></span>
+                            <div class="bg-white/90 border border-[#e5dfd3] rounded-2xl p-3 text-center space-y-1 shadow-sm">
+                                <span class="text-[10px] text-[#5f756e] font-bold block">🏆 ציון עמידה ממוצע</span>
+                                <span class="text-base md:text-lg font-black text-amber-600" x-text="(getAverageScore(currentClient) || 0) + '%'"></span>
                             </div>
-                            <div class="bg-[#051c17]/60 border border-[#174e43]/60 rounded-2xl p-3 text-center space-y-1">
-                                <span class="text-[10px] text-[#93c7bb] font-bold block">🥗 יעד קלוריות יומי</span>
-                                <span class="text-base md:text-lg font-black text-white" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' kcal'"></span>
+                            <div class="bg-white/90 border border-[#e5dfd3] rounded-2xl p-3 text-center space-y-1 shadow-sm">
+                                <span class="text-[10px] text-[#5f756e] font-bold block">🥗 יעד קלוריות יומי</span>
+                                <span class="text-base md:text-lg font-black text-[#082722]" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' kcal'"></span>
                             </div>
-                            <div class="bg-[#051c17]/60 border border-[#174e43]/60 rounded-2xl p-3 text-center space-y-1">
-                                <span class="text-[10px] text-[#93c7bb] font-bold block">⚖️ משקל נוכחי / יעד</span>
-                                <span class="text-base md:text-lg font-black text-white" x-text="(currentClient?.currentWeight || currentClient?.startWeight || 80) + ' ק״ג' + (currentClient?.targetWeight ? (' / ' + currentClient?.targetWeight + ' ק״ג') : '')"></span>
+                            <div class="bg-white/90 border border-[#e5dfd3] rounded-2xl p-3 text-center space-y-1 shadow-sm">
+                                <span class="text-[10px] text-[#5f756e] font-bold block">⚖️ משקל נוכחי / יעד</span>
+                                <span class="text-base md:text-lg font-black text-[#082722]" x-text="(currentClient?.currentWeight || currentClient?.startWeight || 80) + ' ק״ג' + (currentClient?.targetWeight ? (' / ' + currentClient?.targetWeight + ' ק״ג') : '')"></span>
                             </div>
                         </div>
                     </div>
@@ -3156,28 +3153,28 @@
                                         </div>
                                     </div>
 
-                                    <!-- יעדי תזונה ומקרו מחושבים למתאמן -->
-                                    <div class="bg-[#082722] border border-[#133d35] rounded-2xl p-4 text-[#fbf8f2] space-y-3 shadow-md">
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
-                                                <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i>
+                                    <!-- יעדי תזונה ומקרו מחושבים למתאמן - Luxury Cream Card -->
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 text-[#082722] space-y-3 shadow-sm">
+                                        <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
+                                            <span class="text-xs font-black text-[#082722] flex items-center gap-1.5">
+                                                <i data-lucide="pie-chart" class="w-4 h-4 text-[#22c55e]"></i>
                                                 <span>יעדי מאקרו ותזונה מוגדרים:</span>
                                             </span>
-                                            <span class="text-[10px] text-[#93c7bb] font-bold" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' קק״ל / יום'"></span>
+                                            <span class="text-[11px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' קק״ל / יום'"></span>
                                         </div>
                                         
                                         <div class="grid grid-cols-3 gap-2 text-center text-xs">
-                                            <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43]">
-                                                <span class="text-[9px] text-[#93c7bb] block font-bold">חלבון</span>
-                                                <span class="text-sm font-black text-[#86efac]" x-text="(currentClient?.targetProtein || currentClient?.macroCalculated?.targetProtein || 160) + 'g'"></span>
+                                            <div class="bg-white p-2.5 rounded-xl border border-[#e5dfd3] shadow-sm space-y-0.5">
+                                                <span class="text-[9px] text-[#5f756e] block font-bold">חלבון</span>
+                                                <span class="text-sm font-black text-emerald-600" x-text="(currentClient?.targetProtein || currentClient?.macroCalculated?.targetProtein || 160) + 'g'"></span>
                                             </div>
-                                            <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43]">
-                                                <span class="text-[9px] text-[#93c7bb] block font-bold">פחמימות</span>
-                                                <span class="text-sm font-black text-amber-300" x-text="(currentClient?.targetCarbs || currentClient?.macroCalculated?.targetCarbs || 220) + 'g'"></span>
+                                            <div class="bg-white p-2.5 rounded-xl border border-[#e5dfd3] shadow-sm space-y-0.5">
+                                                <span class="text-[9px] text-[#5f756e] block font-bold">פחמימות</span>
+                                                <span class="text-sm font-black text-amber-600" x-text="(currentClient?.targetCarbs || currentClient?.macroCalculated?.targetCarbs || 220) + 'g'"></span>
                                             </div>
-                                            <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43]">
-                                                <span class="text-[9px] text-[#93c7bb] block font-bold">שומן</span>
-                                                <span class="text-sm font-black text-rose-300" x-text="(currentClient?.targetFat || currentClient?.macroCalculated?.targetFat || 65) + 'g'"></span>
+                                            <div class="bg-white p-2.5 rounded-xl border border-[#e5dfd3] shadow-sm space-y-0.5">
+                                                <span class="text-[9px] text-[#5f756e] block font-bold">שומן</span>
+                                                <span class="text-sm font-black text-rose-500" x-text="(currentClient?.targetFat || currentClient?.macroCalculated?.targetFat || 65) + 'g'"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -3558,9 +3555,9 @@
                                                 </div>
 
                                                 <!-- טופס כתיבת משוב מאמן אילאי -->
-                                                <div class="bg-[#082722] border border-[#133d35] p-4 rounded-2xl space-y-3 text-[#fbf8f2]">
+                                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3 text-[#082722]">
                                                     <div class="flex items-center justify-between">
-                                                        <h5 class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
+                                                        <h5 class="text-xs font-black text-[#082722] flex items-center gap-1.5">
                                                             <i data-lucide="crown" class="w-4 h-4"></i>
                                                             <span>משוב והנחיות המאמן אילאי:</span>
                                                         </h5>
@@ -3569,7 +3566,7 @@
                                                         </template>
                                                     </div>
                                                     
-                                                    <textarea x-model="feedbackText" placeholder="כתוב כאן משוב אישי, חיזוקים ודגשים למתאמן..." class="w-full bg-[#051c17] border border-[#1b5e50] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#86efac] h-20 resize-none leading-relaxed font-semibold"></textarea>
+                                                    <textarea x-model="feedbackText" placeholder="כתוב כאן משוב אישי, חיזוקים ודגשים למתאמן..." class="w-full bg-white border border-[#e5dfd3] rounded-xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#22c55e] h-20 resize-none leading-relaxed font-semibold"></textarea>
                                                     
                                                     <div class="flex justify-end">
                                                         <button type="button" @click="saveCoachFeedback(currentClient.id, ref.id, feedbackText)" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
@@ -3899,34 +3896,34 @@
                             </div>
 
                             <!-- ניהול קובץ PDF לתפריט -->
-                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl space-y-4">
-                                <h4 class="text-xs md:text-sm font-bold text-slate-200 flex items-center gap-2 border-b border-slate-800 pb-2">
-                                    <i data-lucide="file-text" class="w-4 h-4 text-emerald-500"></i>
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <h4 class="text-xs md:text-sm font-black text-[#082722] flex items-center gap-2 border-b border-[#e5dfd3] pb-3">
+                                    <i data-lucide="file-text" class="w-4 h-4 text-emerald-700"></i>
                                     <span>תפריט תזונה בפורמט PDF</span>
                                 </h4>
                                 
                                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                     <div class="space-y-1">
-                                        <p class="text-xs text-slate-350">הדבק קישור לקובץ PDF (למשל מ-Google Drive) כדי להציג את תפריט התזונה העדכני של המתאמן.</p>
+                                        <p class="text-xs text-[#5f756e]">הדבק קישור לקובץ PDF (למשל מ-Google Drive) כדי להציג את תפריט התזונה העדכני של המתאמן.</p>
                                         <template x-if="currentClient?.mealPlanPdfUrl">
-                                            <div class="text-[10px] text-emerald-450 font-bold flex items-center gap-1">
+                                            <div class="text-[10px] text-emerald-800 font-bold flex items-center gap-1">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                                 <span>קישור לתפריט PDF מצורף ומסונכרן</span>
                                             </div>
                                         </template>
                                         <template x-if="!currentClient?.mealPlanPdfUrl">
-                                            <div class="text-[10px] text-slate-500 italic">טרם צורף קישור לתפריט PDF</div>
+                                            <div class="text-[10px] text-[#5f756e] italic">טרם צורף קישור לתפריט PDF</div>
                                         </template>
                                     </div>
 
                                     <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
                                         <template x-if="currentClient?.mealPlanPdfUrl">
                                             <div class="flex items-center gap-2 w-full sm:w-auto">
-                                                <a :href="currentClient.mealPlanPdfUrl" target="_blank" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:bg-slate-900 text-slate-200 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition">
+                                                <a :href="currentClient.mealPlanPdfUrl" target="_blank" class="flex-1 sm:flex-none justify-center bg-white hover:bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs">
                                                     <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                                                     <span>פתח במסך מלא</span>
                                                 </a>
-                                                <button @click="deleteMealPlanPdf()" class="flex-1 sm:flex-none justify-center bg-slate-950 border border-slate-800 hover:border-red-900 text-red-450 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+                                                <button @click="deleteMealPlanPdf()" class="flex-1 sm:flex-none justify-center bg-white border border-rose-200 hover:bg-rose-50 text-rose-600 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                                     <span>הסר קישור</span>
                                                 </button>
@@ -3934,8 +3931,8 @@
                                         </template>
                                         
                                         <div class="flex items-center gap-2 w-full sm:w-auto" x-show="!currentClient?.mealPlanPdfUrl">
-                                            <button @click="setMealPlanPdfLink()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg cursor-pointer">
-                                                <i data-lucide="link" class="w-4 h-4"></i>
+                                            <button @click="setMealPlanPdfLink()" class="w-full sm:w-auto bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg cursor-pointer">
+                                                <i data-lucide="link" class="w-4 h-4 text-[#86efac]"></i>
                                                 <span>הדבק קישור לתפריט PDF</span>
                                             </button>
                                         </div>
@@ -3944,7 +3941,7 @@
 
                                 <!-- תצוגה מובנית של ה-PDF ישירות באתר -->
                                 <template x-if="currentClient?.mealPlanPdfUrl">
-                                    <div class="mt-4 border border-slate-800 rounded-xl overflow-hidden h-[600px] w-full bg-slate-950 shadow-inner relative">
+                                    <div class="mt-4 border border-[#e5dfd3] rounded-2xl overflow-hidden h-[600px] w-full bg-[#fbf8f2] shadow-inner relative">
                                         <iframe :src="getCleanPdfUrl(currentClient.mealPlanPdfUrl)" class="w-full h-full border-0" type="application/pdf"></iframe>
                                     </div>
                                 </template>
@@ -3973,17 +3970,17 @@
                             <!-- רשימת הארוחות -->
                             <div class="space-y-6">
                                 <template x-for="(meal, mIdx) in (currentClient?.mealPlan?.meals || [])" :key="mIdx">
-                                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
-                                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                                            <input type="text" x-model="meal.name" @input="saveData()" class="bg-slate-950 border border-slate-800 text-slate-200 px-2 py-1 rounded-lg text-xs focus:outline-none w-52 font-bold">
-                                            <button @click="deleteMeal(mIdx)" class="text-red-400 hover:text-red-300 text-[10px] flex items-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i><span>מחק ארוחה</span></button>
+                                    <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 shadow-xl space-y-3">
+                                        <div class="flex justify-between items-center border-b border-[#e5dfd3] pb-2.5">
+                                            <input type="text" x-model="meal.name" @input="saveData()" class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3 py-1.5 rounded-xl text-xs focus:outline-none focus:border-[#22c55e] w-52 font-black">
+                                            <button @click="deleteMeal(mIdx)" class="text-rose-600 hover:text-rose-700 text-xs font-bold flex items-center gap-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i><span>מחק ארוחה</span></button>
                                         </div>
 
                                         <div class="overflow-x-auto w-full">
                                             <table class="w-full text-right border-collapse min-w-[600px] text-xs">
                                                 <thead>
-                                                    <tr class="text-slate-400 font-bold">
-                                                        <th class="py-2 px-1 w-1/3">מאכל</th>
+                                                    <tr class="text-[#5f756e] font-bold border-b border-[#e5dfd3]">
+                                                        <th class="py-2 px-2 w-1/3">מאכל</th>
                                                         <th class="py-2 px-1 text-center w-24">כמות</th>
                                                         <th class="py-2 px-1 text-center w-16">קלוריות</th>
                                                         <th class="py-2 px-1 text-center w-16">חלבון</th>
@@ -3994,27 +3991,27 @@
                                                 </thead>
                                                 <tbody>
                                                     <template x-for="(item, iIdx) in meal.items" :key="iIdx">
-                                                        <tr class="border-b border-slate-800/40">
-                                                            <td class="py-1 px-1">
-                                                                <input type="text" x-model="item.food" @input="saveData()" placeholder="חזה עוף" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-slate-200 focus:outline-none text-xs font-semibold">
+                                                        <tr class="border-b border-[#e5dfd3]/50">
+                                                            <td class="py-1.5 px-2">
+                                                                <input type="text" x-model="item.food" @input="saveData()" placeholder="חזה עוף" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-lg px-2.5 py-1.5 text-[#082722] focus:outline-none focus:border-[#22c55e] text-xs font-bold">
                                                             </td>
-                                                            <td class="py-1 px-1">
-                                                                <input type="text" x-model="item.quantity" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                            <td class="py-1.5 px-1">
+                                                                <input type="text" x-model="item.quantity" @input="saveData()" class="w-full text-center bg-[#fbf8f2] border border-[#e5dfd3] rounded-lg py-1.5 text-[#082722] focus:outline-none focus:border-[#22c55e]">
                                                             </td>
-                                                            <td class="py-1 px-1">
-                                                                <input type="number" x-model.number="item.calories" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                            <td class="py-1.5 px-1">
+                                                                <input type="number" x-model.number="item.calories" @input="saveData()" class="w-full text-center bg-[#fbf8f2] border border-[#e5dfd3] rounded-lg py-1.5 text-emerald-700 font-bold focus:outline-none focus:border-[#22c55e]">
                                                             </td>
-                                                            <td class="py-1 px-1">
-                                                                <input type="number" x-model.number="item.protein" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                            <td class="py-1.5 px-1">
+                                                                <input type="number" x-model.number="item.protein" @input="saveData()" class="w-full text-center bg-[#fbf8f2] border border-[#e5dfd3] rounded-lg py-1.5 text-emerald-700 font-bold focus:outline-none focus:border-[#22c55e]">
                                                             </td>
-                                                            <td class="py-1 px-1">
-                                                                <input type="number" x-model.number="item.carbs" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                            <td class="py-1.5 px-1">
+                                                                <input type="number" x-model.number="item.carbs" @input="saveData()" class="w-full text-center bg-[#fbf8f2] border border-[#e5dfd3] rounded-lg py-1.5 text-sky-700 font-bold focus:outline-none focus:border-[#22c55e]">
                                                             </td>
-                                                            <td class="py-1 px-1">
-                                                                <input type="number" x-model.number="item.fat" @input="saveData()" class="w-full text-center bg-slate-950 border border-slate-800 rounded-lg py-1.5 text-slate-200 focus:outline-none">
+                                                            <td class="py-1.5 px-1">
+                                                                <input type="number" x-model.number="item.fat" @input="saveData()" class="w-full text-center bg-[#fbf8f2] border border-[#e5dfd3] rounded-lg py-1.5 text-amber-700 font-bold focus:outline-none focus:border-[#22c55e]">
                                                             </td>
-                                                            <td class="py-1 px-1 text-left">
-                                                                <button @click="deleteMealItem(mIdx, iIdx)" class="text-slate-500 hover:text-red-400 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                                                            <td class="py-1.5 px-1 text-left">
+                                                                <button @click="deleteMealItem(mIdx, iIdx)" class="text-[#5f756e] hover:text-rose-600 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                                                             </td>
                                                         </tr>
                                                     </template>
@@ -4023,12 +4020,12 @@
                                         </div>
                                         
                                         <div class="flex items-center gap-2 mt-2">
-                                            <button @click="openFoodModal(mIdx)" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow-sm">
-                                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+                                            <button @click="openFoodModal(mIdx)" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition shadow-xs">
+                                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
                                                 <span>בחר מספרית מזונות (חישוב אוטומטי)</span>
                                             </button>
 
-                                            <button @click="addMealItem(mIdx)" class="text-emerald-400 hover:text-emerald-300 text-[10px] font-bold flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-slate-800 transition">
+                                            <button @click="addMealItem(mIdx)" class="text-emerald-700 hover:text-emerald-800 text-xs font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-emerald-50 transition">
                                                 <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
                                                 <span>הוסף ידנית</span>
                                             </button>
@@ -4484,9 +4481,9 @@
                                             </div>
 
                                             <!-- טופס כתיבת משוב מאמן -->
-                                            <div class="bg-[#082722] border border-[#133d35] p-4 rounded-2xl space-y-3 text-[#fbf8f2]">
+                                            <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-3 text-[#082722]">
                                                 <div class="flex items-center justify-between">
-                                                    <h5 class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
+                                                    <h5 class="text-xs font-black text-[#082722] flex items-center gap-1.5">
                                                         <i data-lucide="crown" class="w-4 h-4"></i>
                                                         <span>משוב והנחיות המאמן אילאי:</span>
                                                     </h5>
@@ -4495,7 +4492,7 @@
                                                     </template>
                                                 </div>
                                                 
-                                                <textarea x-model="feedbackText" placeholder="כתוב כאן משוב אישי, חיזוקים ודגשים למתאמן..." class="w-full bg-[#051c17] border border-[#1b5e50] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#86efac] h-20 resize-none leading-relaxed font-semibold"></textarea>
+                                                <textarea x-model="feedbackText" placeholder="כתוב כאן משוב אישי, חיזוקים ודגשים למתאמן..." class="w-full bg-white border border-[#e5dfd3] rounded-xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#22c55e] h-20 resize-none leading-relaxed font-semibold"></textarea>
                                                 
                                                 <div class="flex justify-end">
                                                     <button type="button" @click="saveCoachFeedback(currentClient.id, ref.id, feedbackText)" class="bg-[#86efac] hover:bg-[#4ade80] text-[#082722] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-[#86efac]/20 cursor-pointer">
@@ -4511,7 +4508,7 @@
                         </div>
 
 
-                        x-show="detailSubTab === 'payments'" x-cloak class="space-y-6">
+                        <div x-show="detailSubTab === 'payments'" x-cloak class="space-y-6">
                             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
                                 <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 mb-4">מעקב תשלומים (מסלול 3 חודשים)</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -4541,29 +4538,29 @@
                     
                     <!-- סיכום פיננסי מעורב -->
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
-                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">הכנסה חודשית צפויה</span>
-                            <span class="text-sm md:text-xl font-black text-white" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl">
+                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">הכנסה חודשית צפויה</span>
+                            <span class="text-base md:text-xl font-black text-[#082722]" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
-                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">סה״כ הכנסות שנגבו</span>
-                            <span class="text-sm md:text-xl font-black text-emerald-450" x-text="getTotalRevenueCollected() + ' ₪'"></span>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl">
+                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">סה״כ הכנסות שנגבו</span>
+                            <span class="text-base md:text-xl font-black text-emerald-700" x-text="getTotalRevenueCollected() + ' ₪'"></span>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
-                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">סה״כ הוצאות תפעול</span>
-                            <span class="text-sm md:text-xl font-black text-red-400" x-text="getTotalExpenses() + ' ₪'"></span>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl">
+                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">סה״כ הוצאות תפעול</span>
+                            <span class="text-base md:text-xl font-black text-rose-600" x-text="getTotalExpenses() + ' ₪'"></span>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
-                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">רווח נקי לעסק</span>
-                            <span :class="getNetProfit() >= 0 ? 'text-emerald-400' : 'text-red-400'" class="text-sm md:text-xl font-black" x-text="getNetProfit() + ' ₪'"></span>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl">
+                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">רווח נקי לעסק</span>
+                            <span :class="getNetProfit() >= 0 ? 'text-emerald-700' : 'text-rose-600'" class="text-base md:text-xl font-black" x-text="getNetProfit() + ' ₪'"></span>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl col-span-2 md:col-span-1">
-                            <span class="text-slate-400 text-[10px] md:text-xs font-semibold block mb-1">חובות לקוחות פעילים</span>
-                            <span class="text-sm md:text-xl font-black text-amber-400" x-text="getPendingRevenueAmount() + ' ₪'"></span>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 shadow-xl col-span-2 md:col-span-1">
+                            <span class="text-[#5f756e] text-[10px] md:text-xs font-bold block mb-1">חובות לקוחות פעילים</span>
+                            <span class="text-base md:text-xl font-black text-amber-700" x-text="getPendingRevenueAmount() + ' ₪'"></span>
                         </div>
                     </div>
 
@@ -4625,43 +4622,43 @@
                     <!-- ניהול הוצאות והכנסות חיצוניות -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!-- הזנת תנועה פיננסית -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 lg:col-span-1">
-                            <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2">הוספת תנועה פיננסית חדשה</h4>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4 lg:col-span-1">
+                            <h4 class="text-xs md:text-sm font-black text-[#082722] border-b border-[#e5dfd3] pb-3">הוספת תנועה פיננסית חדשה 💰</h4>
                             <form @submit.prevent="addTransaction()" class="space-y-3 text-xs">
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">סוג תנועה</label>
-                                    <select x-model="newTransaction.type" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סוג תנועה</label>
+                                    <select x-model="newTransaction.type" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                                         <option value="expense">הוצאת עסק (-)</option>
                                         <option value="income">הכנסה חיצונית (+)</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">סכום (₪)</label>
-                                    <input type="number" x-model="newTransaction.amount" required placeholder="500" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סכום (₪)</label>
+                                    <input type="number" x-model="newTransaction.amount" required placeholder="500" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-black focus:outline-none focus:border-[#22c55e]">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">תיאור תנועה</label>
-                                    <input type="text" x-model="newTransaction.description" required placeholder="למשל: שכירות סטודיו, רכישת ציוד..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תיאור תנועה</label>
+                                    <input type="text" x-model="newTransaction.description" required placeholder="למשל: שכירות סטודיו, רכישת ציוד..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-medium focus:outline-none focus:border-[#22c55e]">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">תאריך</label>
-                                    <input type="date" x-model="newTransaction.date" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תאריך</label>
+                                    <input type="date" x-model="newTransaction.date" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                                 </div>
-                                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-xl transition mt-2">
+                                <button type="submit" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-2.5 rounded-xl transition shadow-md mt-2 cursor-pointer">
                                     <span>רשום תנועה</span>
                                 </button>
                             </form>
                         </div>
 
                         <!-- יומן תנועות עסק (Ledger) -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden lg:col-span-2 flex flex-col h-[350px]">
-                            <div class="p-4 border-b border-slate-800">
-                                <h4 class="text-xs md:text-sm font-bold text-slate-200">יומן תנועות פיננסיות בעסק</h4>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl shadow-xl overflow-hidden lg:col-span-2 flex flex-col h-[350px]">
+                            <div class="p-4 md:p-5 border-b border-[#e5dfd3] bg-[#fcf9f2]">
+                                <h4 class="text-xs md:text-sm font-black text-[#082722]">יומן תנועות פיננסיות בעסק</h4>
                             </div>
                             <div class="flex-1 overflow-y-auto">
                                 <table class="w-full text-right border-collapse text-xs">
                                     <thead>
-                                        <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 font-bold">
+                                        <tr class="bg-[#fcf9f2] border-b border-[#e5dfd3] text-[#5f756e] font-black">
                                             <th class="py-2.5 px-4">תאריך</th>
                                             <th class="py-2.5 px-4">תיאור</th>
                                             <th class="py-2.5 px-4 text-center">סוג</th>
@@ -4669,23 +4666,23 @@
                                             <th class="py-2.5 px-4 text-left">מחיקה</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-slate-800/40">
+                                    <tbody class="divide-y divide-[#e5dfd3]/50">
                                         <template x-for="tx in transactions" :key="tx.id">
-                                            <tr class="hover:bg-slate-800/20 transition">
-                                                <td class="py-2.5 px-4 text-slate-350" x-text="formatDate(tx.date)"></td>
-                                                <td class="py-2.5 px-4 text-slate-200 font-semibold" x-text="tx.description"></td>
+                                            <tr class="hover:bg-[#fbf8f2] transition">
+                                                <td class="py-2.5 px-4 text-[#5f756e]" x-text="formatDate(tx.date)"></td>
+                                                <td class="py-2.5 px-4 text-[#082722] font-black" x-text="tx.description"></td>
                                                 <td class="py-2.5 px-4 text-center">
-                                                    <span :class="tx.type === 'income' ? 'bg-emerald-950/80 text-emerald-400 border-emerald-900/60' : 'bg-red-950/80 text-red-400 border-red-900/60'" class="text-[9px] px-2 py-0.5 rounded-full border" x-text="tx.type === 'income' ? 'הכנסה' : 'הוצאה'"></span>
+                                                    <span :class="tx.type === 'income' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-rose-100 text-rose-800 border-rose-300'" class="text-[9px] px-2.5 py-0.5 rounded-full border font-bold" x-text="tx.type === 'income' ? 'הכנסה' : 'הוצאה'"></span>
                                                 </td>
-                                                <td :class="tx.type === 'income' ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold'" class="py-2.5 px-4 text-center text-xs" x-text="(tx.type === 'income' ? '+' : '-') + tx.amount + ' ₪'"></td>
+                                                <td :class="tx.type === 'income' ? 'text-emerald-700 font-black' : 'text-rose-600 font-black'" class="py-2.5 px-4 text-center text-xs" x-text="(tx.type === 'income' ? '+' : '-') + tx.amount + ' ₪'"></td>
                                                 <td class="py-2.5 px-4 text-left">
-                                                    <button @click="deleteTransaction(tx.id)" class="text-slate-500 hover:text-red-450 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                                                    <button @click="deleteTransaction(tx.id)" class="text-[#5f756e] hover:text-rose-600 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                                                 </td>
                                             </tr>
                                         </template>
                                         <template x-if="transactions.length === 0">
                                             <tr>
-                                                <td colspan="5" class="py-8 text-center text-slate-550 italic">טרם נרשמו תנועות פיננסיות השנה.</td>
+                                                <td colspan="5" class="py-8 text-center text-[#5f756e] italic">טרם נרשמו תנועות פיננסיות השנה.</td>
                                             </tr>
                                         </template>
                                     </tbody>
@@ -4695,25 +4692,25 @@
                     </div>
 
                     <!-- מעקב תשלומי מתאמנים דינמי -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-                        <div class="p-4 border-b border-slate-800">
-                            <h4 class="text-xs md:text-sm font-bold text-slate-200">מעקב תשלומי מתאמנים פעילים</h4>
+                    <div class="bg-white border border-[#e5dfd3] rounded-3xl shadow-xl overflow-hidden">
+                        <div class="p-4 md:p-5 border-b border-[#e5dfd3] bg-[#fcf9f2]">
+                            <h4 class="text-xs md:text-sm font-black text-[#082722]">מעקב תשלומי מתאמנים פעילים</h4>
                         </div>
                         <div class="overflow-x-auto w-full">
                             <table class="w-full text-right border-collapse min-w-[650px] text-xs">
                                 <thead>
-                                    <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 font-black">
+                                    <tr class="bg-[#fcf9f2] border-b border-[#e5dfd3] text-[#5f756e] font-black">
                                         <th class="py-3 px-6 w-1/4">שם המתאמן</th>
                                         <th class="py-3 px-6">תשלומים חודשיים (לחץ לשינוי סטטוס)</th>
                                         <th class="py-3 px-6 text-center w-24">סה״כ שולם</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-800/50">
+                                <tbody class="divide-y divide-[#e5dfd3]/50">
                                     <template x-for="client in clients" :key="client.id">
-                                        <tr class="hover:bg-slate-800/30 transition">
+                                        <tr class="hover:bg-[#fbf8f2] transition">
                                             <td class="py-2.5 px-6">
-                                                <button @click="selectClient(client.id)" class="text-xs font-bold text-slate-200 hover:text-emerald-400 transition" x-text="client.name"></button>
-                                                <span class="text-[9px] text-slate-500 block" x-text="'מנוי: ' + (client.pricePerMonth || 250) + ' ₪ לחודש'"></span >
+                                                <button @click="selectClient(client.id)" class="text-xs font-black text-[#082722] hover:text-emerald-700 transition" x-text="client.name"></button>
+                                                <span class="text-[9px] text-[#5f756e] block" x-text="'מנוי: ' + (client.pricePerMonth || 250) + ' ₪ לחודש'"></span>
                                             </td>
                                             <td class="py-2.5 px-6">
                                                 <!-- רשימת תגים דינמית חלקה -->
@@ -4721,14 +4718,14 @@
                                                     <template x-for="(pay, pIdx) in client.payments" :key="pIdx">
                                                         <button 
                                                             @click="toggleClientPaymentStatus(client.id, pIdx)" 
-                                                            :class="pay.status === 'paid' ? 'bg-emerald-950 text-emerald-400 border-emerald-800' : 'bg-amber-950 text-amber-400 border-amber-800'" 
+                                                            :class="pay.status === 'paid' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" 
                                                             class="text-[9px] px-2.5 py-0.5 rounded-full font-bold border transition cursor-pointer select-none"
                                                             x-text="'ח׳ ' + pay.month + ': ' + pay.amount + ' ₪'">
                                                         </button>
                                                     </template>
                                                 </div>
                                             </td>
-                                            <td class="py-2.5 px-6 text-center text-slate-200 font-bold text-xs" x-text="getClientPaidSum(client) + ' ₪'"></td>
+                                            <td class="py-2.5 px-6 text-center text-[#082722] font-black text-xs" x-text="getClientPaidSum(client) + ' ₪'"></td>
                                         </tr>
                                     </template>
                                 </tbody>
@@ -4742,99 +4739,99 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
                         <!-- חיבור Gemini AI למחשבון התזונה וצילום צלחות -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 md:col-span-2">
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4 md:col-span-2">
+                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
                                 <div class="flex items-center gap-2.5">
                                     <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
                                         <i data-lucide="sparkles" class="w-5 h-5 text-[#86efac]"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-xs md:text-sm font-bold text-slate-200">חיבור Gemini AI למחשבון התזונה וצילום צלחות 🧠📸</h4>
-                                        <p class="text-[10px] text-slate-400">הזן מפתח API של Google Gemini לקבלת זיהוי חופשי של כל מאכל, דיבור וצילום צלחת</p>
+                                        <h4 class="text-xs md:text-sm font-black text-[#082722]">חיבור Gemini AI למחשבון התזונה וצילום צלחות 🧠📸</h4>
+                                        <p class="text-[10px] text-[#5f756e]">הזן מפתח API של Google Gemini לקבלת זיהוי חופשי של כל מאכל, דיבור וצילום צלחת</p>
                                     </div>
                                 </div>
                                 <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border"
-                                      :class="geminiApiKey ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800' : 'bg-slate-800 text-slate-400 border-slate-700'"
+                                      :class="geminiApiKey ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-slate-100 text-slate-700 border-slate-300'"
                                       x-text="geminiApiKey ? 'חיבור AI פעיל 🟢' : 'מאגר מקומי בלבד ⚪'"></span>
                             </div>
                             
                             <div class="space-y-2 text-xs">
-                                <label class="block text-[10px] font-bold text-slate-400">Google Gemini API Key:</label>
+                                <label class="block text-[10px] font-bold text-[#5f756e]">Google Gemini API Key:</label>
                                 <div class="flex items-center gap-2">
-                                    <input type="password" x-model="geminiApiKeyInput" placeholder="הדבק כאן את המפתח (AIzaSy...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-[#86efac] font-mono focus:outline-none focus:border-emerald-500">
-                                    <button type="button" @click="saveGeminiApiKey()" class="bg-[#22c55e] hover:bg-[#16a34a] text-slate-950 font-black px-5 py-2.5 rounded-xl text-xs whitespace-nowrap transition cursor-pointer">
+                                    <input type="password" x-model="geminiApiKeyInput" placeholder="הדבק כאן את המפתח (AIzaSy...)" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2.5 text-xs text-[#082722] font-mono focus:outline-none focus:border-[#22c55e]">
+                                    <button type="button" @click="saveGeminiApiKey()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-5 py-2.5 rounded-xl text-xs whitespace-nowrap transition cursor-pointer shadow-md">
                                         שמור מפתח ✨
                                     </button>
                                     <template x-if="geminiApiKey">
-                                        <button type="button" @click="removeGeminiApiKey()" class="bg-slate-950 border border-slate-800 hover:border-red-900 text-red-400 font-bold px-3 py-2.5 rounded-xl text-xs transition cursor-pointer" title="מחק מפתח">
+                                        <button type="button" @click="removeGeminiApiKey()" class="bg-rose-50 border border-rose-200 hover:bg-rose-100 text-rose-700 font-bold px-3 py-2.5 rounded-xl text-xs transition cursor-pointer" title="מחק מפתח">
                                             הסר
                                         </button>
                                     </template>
                                 </div>
-                                <div class="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-                                    <span>ניתן להפיק מפתח חינמי בתוך דקה מ- <a href="https://aistudio.google.com" target="_blank" class="text-emerald-400 underline font-bold">Google AI Studio</a>. המפתח נשמר בבטחה במערכת.</span>
+                                <div class="flex items-center justify-between text-[10px] text-[#5f756e] pt-1">
+                                    <span>ניתן להפיק מפתח חינמי בתוך דקה מ- <a href="https://aistudio.google.com" target="_blank" class="text-emerald-700 underline font-bold">Google AI Studio</a>. המפתח נשמר בבטחה במערכת.</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- חיבור לסנכרון ענן (Firebase) -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 md:col-span-2">
-                            <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2">חיבור לסנכרון ענן (Firebase)</h4>
-                            <p class="text-[11px] text-slate-400">הזן את מפתחות הפרויקט שלך מתוך Firebase כדי לאפשר סנכרון דו-כיווני אוטומטי בזמן אמת בין המחשב לטלפון הנייד.</p>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4 md:col-span-2">
+                            <h4 class="text-xs md:text-sm font-black text-[#082722] border-b border-[#e5dfd3] pb-3">חיבור לסנכרון ענן (Firebase) ☁️</h4>
+                            <p class="text-[11px] text-[#5f756e]">הזן את מפתחות הפרויקט שלך מתוך Firebase כדי לאפשר סנכרון דו-כיווני אוטומטי בזמן אמת בין המחשב לטלפון הנייד.</p>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-500 mb-1">API Key</label>
-                                    <input type="text" x-model="firebaseInput.apiKey" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-250 focus:outline-none focus:border-emerald-500">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">API Key</label>
+                                    <input type="text" x-model="firebaseInput.apiKey" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-[#082722] font-mono focus:outline-none focus:border-[#22c55e]">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-500 mb-1">Auth Domain</label>
-                                    <input type="text" x-model="firebaseInput.authDomain" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-250 focus:outline-none focus:border-emerald-500">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">Auth Domain</label>
+                                    <input type="text" x-model="firebaseInput.authDomain" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-[#082722] font-mono focus:outline-none focus:border-[#22c55e]">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-500 mb-1">Project ID</label>
-                                    <input type="text" x-model="firebaseInput.projectId" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-250 focus:outline-none focus:border-emerald-500">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">Project ID</label>
+                                    <input type="text" x-model="firebaseInput.projectId" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-[#082722] font-mono focus:outline-none focus:border-[#22c55e]">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-500 mb-1">Storage Bucket</label>
-                                    <input type="text" x-model="firebaseInput.storageBucket" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-250 focus:outline-none focus:border-emerald-500">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">Storage Bucket</label>
+                                    <input type="text" x-model="firebaseInput.storageBucket" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-[#082722] font-mono focus:outline-none focus:border-[#22c55e]">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-500 mb-1">Messaging Sender ID</label>
-                                    <input type="text" x-model="firebaseInput.messagingSenderId" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-250 focus:outline-none focus:border-emerald-500">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">Messaging Sender ID</label>
+                                    <input type="text" x-model="firebaseInput.messagingSenderId" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-[#082722] font-mono focus:outline-none focus:border-[#22c55e]">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-slate-500 mb-1">App ID</label>
-                                    <input type="text" x-model="firebaseInput.appId" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-250 focus:outline-none focus:border-emerald-500">
+                                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">App ID</label>
+                                    <input type="text" x-model="firebaseInput.appId" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-2 text-[#082722] font-mono focus:outline-none focus:border-[#22c55e]">
                                 </div>
                             </div>
                             
                             <div class="flex flex-wrap items-center gap-3 pt-2 text-xs">
-                                <button @click="saveFirebaseConfig()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl transition">
-                                    <span>חבר וסנכרן לענן</span>
+                                <button @click="saveFirebaseConfig()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-5 py-2.5 rounded-xl shadow-md transition cursor-pointer">
+                                    <span>חבר וסנכרן לענן ☁️</span>
                                 </button>
-                                <button @click="clearFirebaseConfig()" x-show="isCloudSynced" class="bg-slate-950 border border-slate-800 text-red-400 font-bold px-4 py-2.5 rounded-xl transition">
+                                <button @click="clearFirebaseConfig()" x-show="isCloudSynced" class="bg-[#fbf8f2] border border-rose-200 text-rose-700 font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">
                                     <span>נתק חיבור ענן</span>
                                 </button>
-                                <span x-show="isCloudSynced" class="text-emerald-450 font-bold flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-550 animate-ping"></span>
+                                <span x-show="isCloudSynced" class="text-emerald-700 font-black flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                                     <span>מחובר לענן - סנכרון פעיל בזמן אמת</span>
                                 </span>
                             </div>
                         </div>
 
                         <!-- ייצוא גיבוי מקומי -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-                            <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2">גיבוי ידני מקומי</h4>
-                            <p class="text-[11px] text-slate-400">אפשרות להוריד גיבוי מקומי למכשיר שלך או להעלות גיבוי קודם.</p>
+                        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                            <h4 class="text-xs md:text-sm font-black text-[#082722] border-b border-[#e5dfd3] pb-3">גיבוי ידני מקומי 💾</h4>
+                            <p class="text-xs text-[#5f756e]">אפשרות להוריד גיבוי מקומי למכשיר שלך או להעלות גיבוי קודם.</p>
                             
                             <div class="flex items-center gap-3 text-xs">
-                                <button @click="exportDatabase()" class="bg-slate-950 border border-slate-800 text-slate-355 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
-                                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                                <button @click="exportDatabase()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                                    <i data-lucide="download" class="w-3.5 h-3.5 text-[#86efac]"></i>
                                     <span>ייצא קובץ גיבוי</span>
                                 </button>
-                                <label class="bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-300 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
-                                    <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                <label class="bg-[#fbf8f2] border border-[#e5dfd3] hover:bg-[#f0eae1] text-[#082722] font-black px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs">
+                                    <i data-lucide="upload" class="w-3.5 h-3.5 text-emerald-700"></i>
                                     <span>ייבא קובץ גיבוי</span>
                                     <input type="file" @change="importDatabase" class="hidden" accept=".json">
                                 </label>
@@ -4842,13 +4839,13 @@
                         </div>
 
                         <!-- אתחול מערכת -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-                            <h4 class="text-xs md:text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 text-red-400">אזור סכנה</h4>
-                            <p class="text-[11px] text-slate-400">ביצוע פעולה זו ימחק את כל המידע והיומן לצמיתות מהמכשיר הנוכחי.</p>
+                        <div class="bg-white border border-rose-200 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                            <h4 class="text-xs md:text-sm font-black text-rose-700 border-b border-rose-200 pb-3">אזור סכנה ⚠️</h4>
+                            <p class="text-xs text-[#5f756e]">ביצוע פעולה זו ימחק את כל המידע והיומן לצמיתות מהמכשיר הנוכחי.</p>
                             
                             <div class="pt-1">
-                                <button @click="resetDatabase()" class="bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-400 font-bold px-3.5 py-2 rounded-xl text-xs transition">
-                                    <span>אתחל את כל המערכת</span>
+                                <button @click="resetDatabase()" class="bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer">
+                                    <span>אתחל את כל המערכת 🗑️</span>
                                 </button>
                             </div>
                         </div>
@@ -5068,23 +5065,23 @@
 
     <!-- מודל תצוגת תמונת ארוחה מוגדלת (Photo Lightbox) -->
     <div x-show="previewMealPhotoModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md no-print" x-cloak @click.self="previewMealPhotoModal = false">
-        <div class="bg-[#082722] border-2 border-[#22c55e]/60 rounded-3xl p-4 md:p-5 max-w-2xl w-full shadow-2xl space-y-4 animate-scale-up flex flex-col text-white max-h-[95vh]">
-            <div class="flex items-center justify-between border-b border-[#133d35] pb-3 shrink-0">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 max-w-2xl w-full shadow-2xl space-y-4 animate-scale-up flex flex-col text-[#082722] max-h-[95vh]">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <div class="p-2 rounded-xl bg-emerald-500/20 text-[#86efac]">
+                    <div class="p-2 rounded-2xl bg-[#082722] text-[#86efac]">
                         <i data-lucide="camera" class="w-4 h-4"></i>
                     </div>
-                    <h3 class="text-xs sm:text-sm font-black text-[#86efac]" x-text="previewMealPhotoTitle || 'תמונת ארוחה 📸'"></h3>
+                    <h3 class="text-xs sm:text-sm font-black text-[#082722]" x-text="previewMealPhotoTitle || 'תמונת ארוחה 📸'"></h3>
                 </div>
-                <button @click="previewMealPhotoModal = false" class="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer">
+                <button @click="previewMealPhotoModal = false" class="text-[#5f756e] hover:text-[#082722] p-1 rounded-lg cursor-pointer">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="flex-1 overflow-hidden flex items-center justify-center rounded-2xl bg-black/40 border border-[#133d35]">
+            <div class="flex-1 overflow-hidden flex items-center justify-center rounded-2xl bg-[#fbf8f2] border border-[#e5dfd3]">
                 <img :src="previewMealPhotoUrl" class="max-h-[65vh] w-auto object-contain rounded-xl" alt="תמונת ארוחה מוגדלת" />
             </div>
             <div class="pt-2 flex justify-end shrink-0">
-                <button type="button" @click="previewMealPhotoModal = false" class="bg-gradient-to-r from-[#86efac] to-[#4ade80] text-[#082722] font-black px-6 py-2 rounded-xl text-xs transition cursor-pointer">
+                <button type="button" @click="previewMealPhotoModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition cursor-pointer shadow-md">
                     סגור
                 </button>
             </div>
@@ -5162,10 +5159,10 @@
                     </div>
 
                     <!-- תוצאת 1RM משוער -->
-                    <div class="bg-[#082722] border border-[#133d35] rounded-2xl p-4 text-center space-y-1 shadow-inner text-[#fbf8f2]">
-                        <span class="text-[10px] text-[#86efac] font-bold block uppercase tracking-wider">1RM משוער (מקסימום חזרה אחת)</span>
-                        <div class="text-2xl md:text-3xl font-black text-white" x-text="calculateOneRm() + ' ק״ג'"></div>
-                        <span class="text-[9px] text-[#93c7bb]">מחושב לפי מודל Brzycki / Epley</span>
+                    <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e5dfd3] rounded-2xl p-4 text-center space-y-1 shadow-inner text-[#082722]">
+                        <span class="text-[10px] text-emerald-800 font-black block uppercase tracking-wider">1RM משוער (מקסימום חזרה אחת) 🎯</span>
+                        <div class="text-2xl md:text-3xl font-black text-emerald-700" x-text="calculateOneRm() + ' ק״ג'"></div>
+                        <span class="text-[10px] text-[#5f756e]">מחושב לפי מודל Brzycki / Epley</span>
                     </div>
                 </div>
 
@@ -5252,10 +5249,10 @@
                 </div>
 
                 <!-- תוצאת חישוב לכל צד -->
-                <div class="bg-[#082722] border border-[#133d35] rounded-2xl p-4 text-center space-y-2 text-[#fbf8f2]">
-                    <span class="text-[10px] text-[#86efac] font-bold block uppercase tracking-wider">משקל שיש להעמיס על כל צד</span>
-                    <div class="text-3xl font-black text-white" x-text="calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג'"></div>
-                    <span class="text-[10px] text-[#93c7bb]" x-text="'מוט (' + plateBarWeight + ' ק״ג) + 2 צדדים × ' + calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג = ' + plateTargetWeight + ' ק״ג סה״כ'"></span>
+                <div class="bg-gradient-to-br from-[#fcf9f2] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#e5dfd3] rounded-2xl p-4 text-center space-y-2 text-[#082722]">
+                    <span class="text-[10px] text-emerald-800 font-black block uppercase tracking-wider">משקל שיש להעמיס על כל צד 🏋️‍♂️</span>
+                    <div class="text-3xl font-black text-emerald-700" x-text="calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג'"></div>
+                    <span class="text-[10px] text-[#5f756e]" x-text="'מוט (' + plateBarWeight + ' ק״ג) + 2 צדדים × ' + calculatePlates(plateTargetWeight, plateBarWeight).perSideWeight + ' ק״ג = ' + plateTargetWeight + ' ק״ג סה״כ'"></span>
                 </div>
 
                 <!-- פירוט הפלטות שיש להרכיב על כל צד -->
@@ -5736,62 +5733,62 @@
 
     <!-- מודל 1: הוספת מתאמן חדש -->
     <div x-show="openAddClientModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col mx-4" @click.away="openAddClientModal = false">
-            <div class="p-4 md:p-6 border-b border-slate-800 flex justify-between items-center">
-                <h3 class="text-sm md:text-lg font-bold text-slate-200 flex items-center gap-2">
-                    <i data-lucide="user-plus" class="w-4 h-4 md:w-5 md:h-5 text-emerald-500"></i>
+        <div class="bg-white border border-[#e5dfd3] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openAddClientModal = false">
+            <div class="p-4 md:p-6 border-b border-[#e5dfd3] flex justify-between items-center bg-[#fcf9f2]">
+                <h3 class="text-sm md:text-lg font-black text-[#082722] flex items-center gap-2">
+                    <i data-lucide="user-plus" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                     <span>הוספת מתאמן חדש לליווי</span>
                 </h3>
-                <button @click="openAddClientModal = false" class="text-slate-500 hover:text-white"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
+                <button @click="openAddClientModal = false" class="text-[#5f756e] hover:text-[#082722]"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
             </div>
             
             <form @submit.prevent="addClient()" class="p-4 md:p-6 space-y-4 text-xs md:text-sm">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-1">שם מלא</label>
-                    <input type="text" x-model="newClient.name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">שם מלא *</label>
+                    <input type="text" x-model="newClient.name" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                 </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">מספר טלפון</label>
-                        <input type="tel" x-model="newClient.phone" required placeholder="0501234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מספר טלפון *</label>
+                        <input type="tel" x-model="newClient.phone" required placeholder="0501234567" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">אימייל (אופציונלי)</label>
-                        <input type="email" x-model="newClient.email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">אימייל (אופציונלי)</label>
+                        <input type="email" x-model="newClient.email" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">תאריך התחלה</label>
-                        <input type="date" x-model="newClient.startDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תאריך התחלה *</label>
+                        <input type="date" x-model="newClient.startDate" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">משקל התחלתי (ק"ג)</label>
-                        <input type="number" step="0.1" x-model="newClient.startWeight" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">משקל התחלתי (ק"ג)</label>
+                        <input type="number" step="0.1" x-model="newClient.startWeight" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-1">מטרה עיקרית</label>
-                    <input type="text" x-model="newClient.goal" placeholder="חיטוב, מסה, כוח..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מטרה עיקרית</label>
+                    <input type="text" x-model="newClient.goal" placeholder="חיטוב, מסה, כוח..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">מחיר חודשי (₪)</label>
-                        <input type="number" x-model="newClient.pricePerMonth" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מחיר חודשי (₪) *</label>
+                        <input type="number" x-model="newClient.pricePerMonth" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">חודשי ליווי (תשלומים)</label>
-                        <input type="number" x-model="newClient.paymentMonths" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">חודשי ליווי (תשלומים) *</label>
+                        <input type="number" x-model="newClient.paymentMonths" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                 </div>
 
-                <div class="pt-4 border-t border-slate-800 flex justify-end gap-2 text-xs">
-                    <button type="button" @click="openAddClientModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 px-4 py-2 rounded-xl font-bold">ביטול</button>
-                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-5 py-2 rounded-xl">שמור והוסף</button>
+                <div class="pt-4 border-t border-[#e5dfd3] flex justify-end gap-2 text-xs">
+                    <button type="button" @click="openAddClientModal = false" class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#5f756e] hover:text-[#082722] px-4 py-2 rounded-xl font-bold">ביטול</button>
+                    <button type="submit" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl shadow-md transition">שמור והוסף מתאמן 🚀</button>
                 </div>
             </form>
         </div>
@@ -5799,40 +5796,40 @@
 
     <!-- מודל 2: עריכת פרופיל מתאמן -->
     <div x-show="openEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col mx-4" @click.away="openEditModal = false">
-            <div class="p-4 md:p-6 border-b border-slate-800 flex justify-between items-center">
-                <h3 class="text-sm md:text-lg font-bold text-slate-200 flex items-center gap-2">
-                    <i data-lucide="edit-3" class="w-4 h-4 md:w-5 md:h-5 text-emerald-500"></i>
+        <div class="bg-white border border-[#e5dfd3] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openEditModal = false">
+            <div class="p-4 md:p-6 border-b border-[#e5dfd3] flex justify-between items-center bg-[#fcf9f2]">
+                <h3 class="text-sm md:text-lg font-black text-[#082722] flex items-center gap-2">
+                    <i data-lucide="edit-3" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                     <span>עריכת פרטי מתאמן</span>
                 </h3>
-                <button @click="openEditModal = false" class="text-slate-500 hover:text-white"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
+                <button @click="openEditModal = false" class="text-[#5f756e] hover:text-[#082722]"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
             </div>
             
             <form @submit.prevent="updateClient()" class="p-4 md:p-6 space-y-4 text-xs md:text-sm">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-1">שם מלא</label>
-                    <input type="text" x-model="editingClient.name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">שם מלא *</label>
+                    <input type="text" x-model="editingClient.name" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                 </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">מספר טלפון</label>
-                        <input type="tel" x-model="editingClient.phone" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מספר טלפון *</label>
+                        <input type="tel" x-model="editingClient.phone" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">אימייל</label>
-                        <input type="email" x-model="editingClient.email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">אימייל</label>
+                        <input type="email" x-model="editingClient.email" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">תאריך התחלה</label>
-                        <input type="date" x-model="editingClient.startDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תאריך התחלה *</label>
+                        <input type="date" x-model="editingClient.startDate" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">סטטוס ליווי</label>
-                        <select x-model="editingClient.status" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סטטוס ליווי</label>
+                        <select x-model="editingClient.status" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                             <option value="active">פעיל</option>
                             <option value="paused">מושהה</option>
                             <option value="completed">סיים</option>
@@ -5841,26 +5838,26 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-1">מטרה עיקרית</label>
-                    <input type="text" x-model="editingClient.goal" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מטרה עיקרית</label>
+                    <input type="text" x-model="editingClient.goal" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">מחיר חודשי (₪)</label>
-                        <input type="number" x-model="editingClient.pricePerMonth" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">מחיר חודשי (₪) *</label>
+                        <input type="number" x-model="editingClient.pricePerMonth" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">חודשי ליווי (תשלומים)</label>
-                        <input type="number" x-model="editingClient.paymentMonths" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">חודשי ליווי (תשלומים) *</label>
+                        <input type="number" x-model="editingClient.paymentMonths" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                 </div>
 
-                <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs">
-                    <button type="button" @click="openEditModal = false; deleteClient(editingClient.id)" class="bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-400 font-bold px-4 py-2 rounded-xl transition">מחק מתאמן</button>
+                <div class="pt-4 border-t border-[#e5dfd3] flex justify-between items-center text-xs">
+                    <button type="button" @click="openEditModal = false; deleteClient(editingClient.id)" class="bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold px-4 py-2 rounded-xl transition">מחק מתאמן</button>
                     <div class="flex gap-2">
-                        <button type="button" @click="openEditModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 px-4 py-2 rounded-xl font-bold">ביטול</button>
-                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-5 py-2 rounded-xl">שמור שינויים</button>
+                        <button type="button" @click="openEditModal = false" class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#5f756e] hover:text-[#082722] px-4 py-2 rounded-xl font-bold">ביטול</button>
+                        <button type="submit" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-5 py-2 rounded-xl shadow-md transition">שמור שינויים ✨</button>
                     </div>
                 </div>
             </form>
@@ -5869,19 +5866,19 @@
 
     <!-- מודל 3: קביעת פגישה ביומן -->
     <div x-show="openAddEventModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl flex flex-col mx-4" @click.away="openAddEventModal = false">
-            <div class="p-4 md:p-6 border-b border-slate-800 flex justify-between items-center">
-                <h3 class="text-sm md:text-lg font-bold text-slate-200 flex items-center gap-2">
-                    <i data-lucide="calendar-plus" class="w-4 h-4 md:w-5 md:h-5 text-emerald-500"></i>
+        <div class="bg-white border border-[#e5dfd3] w-full max-w-md rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openAddEventModal = false">
+            <div class="p-4 md:p-6 border-b border-[#e5dfd3] flex justify-between items-center bg-[#fcf9f2]">
+                <h3 class="text-sm md:text-lg font-black text-[#082722] flex items-center gap-2">
+                    <i data-lucide="calendar-plus" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                     <span>קביעת פגישה ביומן</span>
                 </h3>
-                <button @click="openAddEventModal = false" class="text-slate-500 hover:text-white"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
+                <button @click="openAddEventModal = false" class="text-[#5f756e] hover:text-[#082722]"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
             </div>
             
             <form @submit.prevent="addScheduleEvent()" class="p-4 md:p-6 space-y-4 text-xs md:text-sm">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-1">בחר מתאמן</label>
-                    <select x-model="newEvent.clientId" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">בחר מתאמן *</label>
+                    <select x-model="newEvent.clientId" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                         <option value="">-- בחר לקוח --</option>
                         <template x-for="client in clients" :key="client.id">
                             <option :value="client.id" x-text="client.name"></option>
@@ -5890,8 +5887,8 @@
                 </div>
                 
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 mb-1">סוג פגישה</label>
-                    <select x-model="newEvent.type" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                    <label class="block text-[10px] font-bold text-[#5f756e] mb-1">סוג פגישה *</label>
+                    <select x-model="newEvent.type" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                         <option value="zoom">שיחת זום שבועית</option>
                         <option value="session">אימון אישי 1:1 פיזי</option>
                     </select>
@@ -5899,18 +5896,18 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">תאריך</label>
-                        <input type="date" x-model="newEvent.date" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">תאריך *</label>
+                        <input type="date" x-model="newEvent.date" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 mb-1">שעה</label>
-                        <input type="time" x-model="newEvent.time" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none">
+                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">שעה *</label>
+                        <input type="time" x-model="newEvent.time" required class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
                     </div>
                 </div>
 
-                <div class="pt-4 border-t border-slate-800 flex justify-end gap-2 text-xs">
-                    <button type="button" @click="openAddEventModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 px-4 py-2 rounded-xl font-bold">ביטול</button>
-                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-5 py-2 rounded-xl">קבע פגישה</button>
+                <div class="pt-4 border-t border-[#e5dfd3] flex justify-end gap-2 text-xs">
+                    <button type="button" @click="openAddEventModal = false" class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#5f756e] hover:text-[#082722] px-4 py-2 rounded-xl font-bold">ביטול</button>
+                    <button type="submit" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-5 py-2 rounded-xl shadow-md transition">קבע פגישה 📅</button>
                 </div>
             </form>
         </div>
@@ -5918,25 +5915,25 @@
 
     <!-- מודל 4: ייבוא שאלון קליטה -->
     <div x-show="openImportIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print" x-cloak>
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl flex flex-col mx-4" @click.away="openImportIntakeModal = false">
-            <div class="p-4 md:p-6 border-b border-slate-800 flex justify-between items-center">
-                <h3 class="text-sm md:text-lg font-bold text-slate-200 flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-4 h-4 md:w-5 md:h-5 text-emerald-500"></i>
+        <div class="bg-white border border-[#e5dfd3] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openImportIntakeModal = false">
+            <div class="p-4 md:p-6 border-b border-[#e5dfd3] flex justify-between items-center bg-[#fcf9f2]">
+                <h3 class="text-sm md:text-lg font-black text-[#082722] flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-4 h-4 md:w-5 md:h-5 text-emerald-600"></i>
                     <span>ייבוא שאלון קליטה מוואטסאפ</span>
                 </h3>
-                <button @click="openImportIntakeModal = false" class="text-slate-500 hover:text-white"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
+                <button @click="openImportIntakeModal = false" class="text-[#5f756e] hover:text-[#082722]"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
             </div>
             
             <div class="p-4 md:p-6 space-y-4 text-xs md:text-sm">
-                <p class="text-[11px] text-slate-400">הדבק את הודעת התשובה שקיבלת מהלקוח בוואטסאפ בשלמותה. המערכת תסרוק ותיצור עבורו כרטיס חדש!</p>
+                <p class="text-xs text-[#5f756e]">הדבק את הודעת התשובה שקיבלת מהלקוח בוואטסאפ בשלמותה. המערכת תסרוק ותיצור עבורו כרטיס חדש!</p>
                 <textarea 
                     x-model="intakePasteText" 
                     placeholder="הדבק את ההודעה המלאה כאן..."
-                    class="w-full h-52 bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none text-xs resize-none"></textarea>
+                    class="w-full h-52 bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 text-[#082722] focus:outline-none focus:border-[#22c55e] text-xs resize-none font-medium leading-relaxed"></textarea>
                 
-                <div class="pt-4 border-t border-slate-800 flex justify-end gap-2 text-xs">
-                    <button type="button" @click="openImportIntakeModal = false" class="bg-slate-950 border border-slate-800 text-slate-300 px-4 py-2 rounded-xl font-bold">ביטול</button>
-                    <button type="button" @click="parseAndCreateClientFromIntake()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-5 py-2 rounded-xl">ייבא וצור</button>
+                <div class="pt-4 border-t border-[#e5dfd3] flex justify-end gap-2 text-xs">
+                    <button type="button" @click="openImportIntakeModal = false" class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#5f756e] hover:text-[#082722] px-4 py-2 rounded-xl font-bold">ביטול</button>
+                    <button type="button" @click="parseAndCreateClientFromIntake()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl shadow-md transition">ייבא וצור כרטיס ✨</button>
                 </div>
             </div>
         </div>
@@ -5944,18 +5941,18 @@
 
     <!-- מודל 5: ספריית מזונות חכמה וחישוב מאקרו אוטומטי -->
     <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm no-print" x-cloak>
-        <div class="bg-slate-900 border border-sky-500/30 w-full max-w-xl rounded-3xl shadow-2xl flex flex-col mx-2 max-h-[90vh] overflow-hidden" @click.away="openFoodLibraryModal = false">
-            <div class="p-4 md:p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+        <div class="bg-white border border-[#e5dfd3] w-full max-w-xl rounded-3xl shadow-2xl flex flex-col mx-2 max-h-[90vh] overflow-hidden" @click.away="openFoodLibraryModal = false">
+            <div class="p-4 md:p-5 border-b border-[#e5dfd3] flex justify-between items-center bg-[#fcf9f2]">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-500/20 to-purple-500/20 border border-sky-400/40 flex items-center justify-center text-sky-400">
+                    <div class="w-9 h-9 rounded-2xl bg-[#082722] text-[#86efac] flex items-center justify-center">
                         <i data-lucide="sparkles" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm md:text-base font-bold text-white">ספריית מזונות ישראלית חכמה</h3>
-                        <p class="text-[10px] text-slate-400">בחר מאכל והזן כמות — המאקרו יחושב אוטומטית</p>
+                        <h3 class="text-sm md:text-base font-black text-[#082722]">ספריית מזונות ישראלית חכמה</h3>
+                        <p class="text-[10px] text-[#5f756e]">בחר מאכל והזן כמות — המאקרו יחושב אוטומטית</p>
                     </div>
                 </div>
-                <button @click="openFoodLibraryModal = false" class="text-slate-500 hover:text-white p-1 rounded-lg">
+                <button @click="openFoodLibraryModal = false" class="text-[#5f756e] hover:text-[#082722] p-1 rounded-lg">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -5964,18 +5961,18 @@
                 <!-- שורת חיפוש וסינון -->
                 <div class="space-y-2">
                     <div class="relative">
-                        <input type="text" x-model="foodSearchQuery" placeholder="חפש מאכל (למשל: חזה עוף, אורז, יוגורט PRO...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 pr-9 pl-3 text-xs text-slate-100 focus:outline-none focus:border-sky-400">
-                        <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute right-3 top-2.5"></i>
+                        <input type="text" x-model="foodSearchQuery" placeholder="חפש מאכל (למשל: חזה עוף, אורז, יוגורט PRO...)" class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl py-2 pr-9 pl-3 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
+                        <i data-lucide="search" class="w-4 h-4 text-[#5f756e] absolute right-3 top-2.5"></i>
                     </div>
 
                     <!-- טאבים לקטגוריות -->
                     <div class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px]">
-                        <button @click="foodCategoryFilter = 'all'" :class="foodCategoryFilter === 'all' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">הכל</button>
-                        <button @click="foodCategoryFilter = 'protein'" :class="foodCategoryFilter === 'protein' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍗 חלבון</button>
-                        <button @click="foodCategoryFilter = 'carb'" :class="foodCategoryFilter === 'carb' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍚 פחמימה</button>
-                        <button @click="foodCategoryFilter = 'dairy'" :class="foodCategoryFilter === 'dairy' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥛 חלב וגבינות</button>
-                        <button @click="foodCategoryFilter = 'fat'" :class="foodCategoryFilter === 'fat' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥑 שומן בריא</button>
-                        <button @click="foodCategoryFilter = 'fruit'" :class="foodCategoryFilter === 'fruit' ? 'bg-gradient-to-r from-sky-500 to-purple-600 text-white font-bold shadow-md shadow-sky-500/20' : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍎 פירות</button>
+                        <button @click="foodCategoryFilter = 'all'" :class="foodCategoryFilter === 'all' ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">הכל</button>
+                        <button @click="foodCategoryFilter = 'protein'" :class="foodCategoryFilter === 'protein' ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍗 חלבון</button>
+                        <button @click="foodCategoryFilter = 'carb'" :class="foodCategoryFilter === 'carb' ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍚 פחמימה</button>
+                        <button @click="foodCategoryFilter = 'dairy'" :class="foodCategoryFilter === 'dairy' ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥛 חלב וגבינות</button>
+                        <button @click="foodCategoryFilter = 'fat'" :class="foodCategoryFilter === 'fat' ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥑 שומן בריא</button>
+                        <button @click="foodCategoryFilter = 'fruit'" :class="foodCategoryFilter === 'fruit' ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍎 פירות</button>
                     </div>
                 </div>
 
@@ -5983,15 +5980,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
                     <template x-for="item in getFilteredFoodDatabase()" :key="item.name">
                         <button @click="selectFoodItem(item)" 
-                                :class="selectedFoodItem?.name === item.name ? 'border-sky-400 bg-sky-500/10 shadow-md shadow-sky-500/10' : 'border-slate-800/80 bg-slate-950 hover:border-slate-700'"
+                                :class="selectedFoodItem?.name === item.name ? 'border-emerald-500 bg-emerald-50 shadow-sm' : 'border-[#e5dfd3] bg-[#fbf8f2] hover:border-emerald-400'"
                                 class="p-2.5 rounded-xl border text-right transition flex items-center justify-between">
                             <div>
-                                <span class="text-xs font-bold text-white block" x-text="item.name"></span>
-                                <span class="text-[9px] text-slate-400" x-text="'ערכים ל-' + (item.unit === 'גרם' || item.unit === 'מ&quot;ל' ? '100 ' + item.unit : '1 ' + item.unit)"></span>
+                                <span class="text-xs font-bold text-[#082722] block" x-text="item.name"></span>
+                                <span class="text-[9px] text-[#5f756e]" x-text="'ערכים ל-' + (item.unit === 'גרם' || item.unit === 'מ&quot;ל' ? '100 ' + item.unit : '1 ' + item.unit)"></span>
                             </div>
                             <div class="text-left text-[10px]">
-                                <span class="font-bold text-sky-400 block" x-text="item.cal + ' קל\''"></span>
-                                <span class="text-purple-300" x-text="'ח: ' + item.pro + 'ג\''"></span>
+                                <span class="font-bold text-emerald-700 block" x-text="item.cal + ' קל''"></span>
+                                <span class="text-emerald-800 font-bold" x-text="'ח: ' + item.pro + 'ג''"></span>
                             </div>
                         </button>
                     </template>
@@ -5999,41 +5996,41 @@
 
                 <!-- הגדרת כמות ותצוגת חישוב חי -->
                 <template x-if="selectedFoodItem">
-                    <div class="bg-slate-950 border border-sky-500/30 p-3.5 rounded-2xl space-y-3">
+                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3.5 rounded-2xl space-y-3">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-sky-300" x-text="'נבחר: ' + selectedFoodItem.name"></span>
+                            <span class="text-xs font-black text-[#082722]" x-text="'נבחר: ' + selectedFoodItem.name"></span>
                             <div class="flex items-center gap-2">
-                                <label class="text-[10px] text-slate-400 font-bold">כמות (<span x-text="selectedFoodItem.unit"></span>):</label>
-                                <input type="number" step="any" x-model="foodCustomAmount" class="w-20 bg-slate-900 border border-slate-800 rounded-lg py-1 px-2 text-center text-xs text-sky-300 font-bold focus:outline-none focus:border-sky-400">
+                                <label class="text-[10px] text-[#5f756e] font-bold">כמות (<span x-text="selectedFoodItem.unit"></span>):</label>
+                                <input type="number" step="any" x-model="foodCustomAmount" class="w-20 bg-white border border-[#e5dfd3] rounded-lg py-1 px-2 text-center text-xs text-[#082722] font-black focus:outline-none focus:border-[#22c55e]">
                             </div>
                         </div>
 
                         <!-- כרטיסי מאקרו מחושבים -->
                         <div class="grid grid-cols-4 gap-2 text-center text-xs">
-                            <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
-                                <span class="text-[9px] text-slate-400 block">קלוריות</span>
-                                <span class="text-sm font-black text-sky-400" x-text="calculateSelectedFoodMacros().calories"></span>
+                            <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
+                                <span class="text-[9px] text-[#5f756e] font-bold block">קלוריות</span>
+                                <span class="text-sm font-black text-emerald-700" x-text="calculateSelectedFoodMacros().calories"></span>
                             </div>
-                            <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
-                                <span class="text-[9px] text-slate-400 block">חלבון</span>
-                                <span class="text-sm font-black text-purple-300" x-text="calculateSelectedFoodMacros().protein + 'ג\''"></span>
+                            <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
+                                <span class="text-[9px] text-[#5f756e] font-bold block">חלבון</span>
+                                <span class="text-sm font-black text-emerald-700" x-text="calculateSelectedFoodMacros().protein + 'ג''"></span>
                             </div>
-                            <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
-                                <span class="text-[9px] text-slate-400 block">פחמימה</span>
-                                <span class="text-sm font-black text-sky-300" x-text="calculateSelectedFoodMacros().carbs + 'ג\''"></span>
+                            <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
+                                <span class="text-[9px] text-[#5f756e] font-bold block">פחמימה</span>
+                                <span class="text-sm font-black text-sky-700" x-text="calculateSelectedFoodMacros().carbs + 'ג''"></span>
                             </div>
-                            <div class="bg-slate-900 p-2 rounded-xl border border-slate-800">
-                                <span class="text-[9px] text-slate-400 block">שומן</span>
-                                <span class="text-sm font-black text-beige-300" x-text="calculateSelectedFoodMacros().fat + 'ג\''"></span>
+                            <div class="bg-white p-2 rounded-xl border border-[#e5dfd3]">
+                                <span class="text-[9px] text-[#5f756e] font-bold block">שומן</span>
+                                <span class="text-sm font-black text-amber-700" x-text="calculateSelectedFoodMacros().fat + 'ג''"></span>
                             </div>
                         </div>
                     </div>
                 </template>
             </div>
 
-            <div class="p-4 border-t border-slate-800 flex justify-end gap-2 bg-slate-950/50">
-                <button type="button" @click="openFoodLibraryModal = false" class="bg-slate-900 border border-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold">ביטול</button>
-                <button type="button" @click="addSelectedFoodToMeal()" class="bg-gradient-to-r from-sky-500 to-purple-600 hover:from-sky-400 hover:to-purple-500 text-white font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-xl shadow-sky-500/25 transition">
+            <div class="p-4 border-t border-[#e5dfd3] flex justify-end gap-2 bg-[#fcf9f2]">
+                <button type="button" @click="openFoodLibraryModal = false" class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#5f756e] px-4 py-2 rounded-xl text-xs font-bold">ביטול</button>
+                <button type="button" @click="addSelectedFoodToMeal()" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     <span>הוסף לתפריט</span>
                 </button>
