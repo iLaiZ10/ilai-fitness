@@ -1383,7 +1383,15 @@
                                                 <div class="flex items-center gap-2.5">
                                                     <span class="w-7 h-7 rounded-xl bg-[#082722] text-[#86efac] font-black text-xs flex items-center justify-center shadow-xs" x-text="exIdx + 1"></span>
                                                     <div>
-                                                        <h4 class="text-xs md:text-sm font-black text-[#082722]" x-text="ex.name"></h4>
+                                                        <div class="flex items-center gap-2">
+                                                            <h4 class="text-xs md:text-sm font-black text-[#082722]" x-text="ex.name"></h4>
+                                                            <template x-if="ex.isSuperset">
+                                                                <span class="text-[10px] font-black bg-amber-50 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                                    <i data-lucide="zap" class="w-3 h-3 fill-current text-amber-500"></i>
+                                                                    <span>⚡ סופר-סט</span>
+                                                                </span>
+                                                            </template>
+                                                        </div>
                                                         <div class="flex items-center gap-2 text-[10px] text-[#5f756e] mt-0.5">
                                                             <template x-if="ex.rest">
                                                                 <span class="flex items-center gap-1 font-semibold">
@@ -3506,11 +3514,33 @@
                                 </div>
                             </div>
 
-                            <!-- הגדרת פרטי הבלוק והשבוע הנוכחי (Block & Week Header) -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-4 md:p-5 shadow-sm">
+                            <!-- הגדרת פרטי הבלוק, מחזורי אימון וארכיון (Block Lifecycle) -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-sm space-y-4">
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="p-2 rounded-xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="layers" class="w-4 h-4 text-[#86efac]"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-xs md:text-sm font-black text-[#082722]">ניהול מחזור בלוק אימונים (Training Block Lifecycle) 🎯</h4>
+                                            <p class="text-[10px] text-[#5f756e]">הגדר שם בלוק ושבוע נוכחי, או סגור בלוק והעבר לארכיון לצפייה בהתקדמות</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+                                        <button type="button" @click="openBlockArchiveModal = true; newBlockNameInput = 'בלוק ' + ((currentClient.workoutPlan?.archivedBlocks?.length || 0) + 2) + ': כוח והיפרטרופיה';" class="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
+                                            <i data-lucide="archive" class="w-3.5 h-3.5"></i>
+                                            <span>סגור בלוק והתחל חדש 🚀</span>
+                                        </button>
+                                        <button type="button" @click="openBlockHistoryModal = true;" class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] text-[#082722] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+                                            <i data-lucide="history" class="w-3.5 h-3.5 text-amber-600"></i>
+                                            <span x-text="'היסטוריית בלוקים (' + (currentClient.workoutPlan?.archivedBlocks?.length || 0) + ')'"></span>
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center">
                                     <div>
-                                        <label class="block text-[11px] font-bold text-[#5f756e] mb-1">שם הבלוק הנוכחי:</label>
+                                        <label class="block text-[11px] font-bold text-[#5f756e] mb-1">שם הבלוק הפעיל:</label>
                                         <input type="text" 
                                                x-model="currentClient.workoutPlan.blockName" 
                                                @input="saveData()" 
@@ -3518,7 +3548,7 @@
                                                class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-xs font-black text-[#082722] focus:outline-none focus:border-[#22c55e]">
                                     </div>
                                     <div>
-                                        <label class="block text-[11px] font-bold text-[#5f756e] mb-1">שבוע בבלוק:</label>
+                                        <label class="block text-[11px] font-bold text-[#5f756e] mb-1">שבוע נוכחי בבלוק:</label>
                                         <input type="text" 
                                                x-model="currentClient.workoutPlan.currentWeek" 
                                                @input="saveData()" 
@@ -3672,6 +3702,14 @@
                                                                        placeholder="קישור וידאו (אופציונלי)" 
                                                                        class="w-full bg-transparent text-[11px] font-medium text-[#082722] focus:outline-none text-left">
                                                             </div>
+                                                            <button type="button" 
+                                                                    @click="toggleExerciseSuperset(dayIdx, exIdx)" 
+                                                                    :class="ex.isSuperset ? 'bg-amber-100 text-amber-900 border-amber-300 shadow-xs' : 'bg-white hover:bg-[#fbf8f2] text-slate-500 border-[#e5dfd3]'"
+                                                                    class="px-2.5 py-1.5 rounded-xl border text-[11px] font-black flex items-center gap-1 transition cursor-pointer shrink-0"
+                                                                    title="חבר כסופר-סט עם התרגיל הבא">
+                                                                <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500" :class="ex.isSuperset ? 'fill-current' : ''"></i>
+                                                                <span x-text="ex.isSuperset ? '⚡ סופר-סט מופעל' : 'סופר-סט'"></span>
+                                                            </button>
                                                             <button type="button" @click="deleteExercise(dayIdx, exIdx)" class="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition cursor-pointer shrink-0" title="מחק תרגיל">
                                                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                                                             </button>
@@ -4838,6 +4876,11 @@
             <option :value="ex.name"></option>
         </template>
     </datalist>
+    <datalist id="food-library-list">
+        <template x-for="f in foodLibrary" :key="f.name">
+            <option :value="f.name"></option>
+        </template>
+    </datalist>
 
     <!-- מודל עריכת / הוספת דיווח יומי למאמן בלבד -->
     <div x-show="openCoachScorecardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openCoachScorecardModal = false">
@@ -5103,6 +5146,211 @@
     </div>
 
     <!-- מודל מחשבון משקלי עבודה ו-1RM -->
+    <!-- מודל סגירת בלוק ופתיחת בלוק אימונים חדש (Block Archive Modal) -->
+    <div x-show="openBlockArchiveModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBlockArchiveModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-scale-up mx-2">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2.5 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <i data-lucide="archive" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">סגירת בלוק ופתיחת בלוק חדש 🚀</h3>
+                        <p class="text-xs text-[#5f756e]">שמירת הבלוק הנוכחי בארכיון ופתיחת שלב אימונים חדש</p>
+                    </div>
+                </div>
+                <button @click="openBlockArchiveModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3.5 text-xs">
+                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3.5 rounded-2xl space-y-1 text-[#082722]">
+                    <span class="font-bold text-[11px] text-[#5f756e]">הבלוק שייסגר ויישמר בארכיון:</span>
+                    <span class="font-black text-sm block" x-text="currentClient?.workoutPlan?.blockName || 'בלוק נוכחי'"></span>
+                    <span class="text-[10px] text-emerald-700 font-bold block" x-text="'מכיל ' + (currentClient?.workoutPlan?.days?.length || 0) + ' ימי אימון'"></span>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-[#082722] mb-1">שם הבלוק החדש:</label>
+                    <input type="text" 
+                           x-model="newBlockNameInput" 
+                           placeholder="למשל: בלוק 2 - היפרטרופיה וכוח (4 שבועות)" 
+                           class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-3 py-2 text-xs font-black text-[#082722] focus:outline-none focus:border-[#22c55e]">
+                </div>
+
+                <div class="bg-white border border-[#e5dfd3] p-3 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <span class="font-black text-[#082722] block">העתק ימי אימון ותרגילים לבלוק החדש?</span>
+                        <span class="text-[10px] text-[#5f756e]">שומר על התרגילים ומאפשר עדכון משקלים/חזרות בקלות</span>
+                    </div>
+                    <input type="checkbox" x-model="newBlockCloneExercises" class="w-5 h-5 accent-[#22c55e] cursor-pointer">
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex items-center justify-end gap-2">
+                <button type="button" @click="openBlockArchiveModal = false" class="bg-white hover:bg-slate-100 border border-[#e5dfd3] text-[#082722] font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">
+                    ביטול
+                </button>
+                <button type="button" @click="archiveCurrentBlock()" class="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-black px-5 py-2 rounded-xl text-xs transition shadow-md shadow-emerald-600/20 cursor-pointer">
+                    אשר ופתח בלוק חדש 👑
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל היסטוריית בלוקים קודמים (Block History Modal) -->
+    <div x-show="openBlockHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBlockHistoryModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-2xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2.5 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200">
+                        <i data-lucide="history" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722]">היסטוריית בלוקי אימונים קודמים 📜</h3>
+                        <p class="text-xs text-[#5f756e]">ארכיון בלוקים שהמתאמן השלים בעבר</p>
+                    </div>
+                </div>
+                <button @click="openBlockHistoryModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-3 text-xs">
+                <template x-if="!currentClient?.workoutPlan?.archivedBlocks || currentClient.workoutPlan.archivedBlocks.length === 0">
+                    <div class="p-8 text-center text-[#5f756e] bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] italic">
+                        טרם נסגרו בלוקים קודמים בארכיון עבור מתאמן זה.
+                    </div>
+                </template>
+
+                <template x-for="blk in (currentClient?.workoutPlan?.archivedBlocks || [])" :key="blk.id">
+                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2 flex-wrap gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-black text-sm text-[#082722]" x-text="blk.blockName"></span>
+                                <span class="text-[10px] bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold text-[#5f756e]" x-text="'נסגר ב: ' + formatDate(blk.archivedDate)"></span>
+                            </div>
+                            <button type="button" @click="restoreArchivedBlock(blk)" class="bg-white hover:bg-slate-50 border border-[#e5dfd3] text-[#082722] font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer shadow-xs">
+                                <i data-lucide="rotate-ccw" class="w-3 h-3 text-sky-600"></i>
+                                <span>שחזר בלוק זה</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-[11px]">
+                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl">
+                                <span class="text-[10px] text-[#5f756e] block">ימי אימון בבלוק:</span>
+                                <span class="font-black text-[#082722]" x-text="(blk.days ? blk.days.length : 0) + ' ימים'"></span>
+                            </div>
+                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl">
+                                <span class="text-[10px] text-[#5f756e] block">שבוע סיום:</span>
+                                <span class="font-black text-[#082722]" x-text="blk.currentWeek || 'הושלם'"></span>
+                            </div>
+                            <div class="bg-white border border-[#e5dfd3] p-2 rounded-xl">
+                                <span class="text-[10px] text-[#5f756e] block">נפח אימונים מצטבר:</span>
+                                <span class="font-black text-emerald-700" x-text="(blk.totalVolumeCompleted ? blk.totalVolumeCompleted.toLocaleString() : 0) + ' ק״ג'"></span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-end shrink-0">
+                <button type="button" @click="openBlockHistoryModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור היסטוריה
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל ספריית מזונות ישראלית מורחבת (Israeli Food Library Modal) -->
+    <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openFoodLibraryModal = false">
+        <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-4xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
+            
+            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-3.5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                        <i data-lucide="utensils" class="w-5 h-5 text-[#86efac]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-[#082722] flex items-center gap-2">
+                            <span>ספריית מזונות ישראלית 🥗</span>
+                            <span class="text-xs font-bold bg-[#fbf8f2] border border-[#e5dfd3] px-2.5 py-0.5 rounded-full text-[#5f756e]" x-text="foodLibrary.length + ' פריטים'"></span>
+                        </h3>
+                        <p class="text-xs text-[#5f756e]">בחר מוצר מהמאגר הישראלי והוסף ישירות לתפריט עם קלוריות ומאקרו אוטומטיים</p>
+                    </div>
+                </div>
+                <button @click="openFoodLibraryModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 shrink-0">
+                <div class="relative">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input type="text" 
+                           x-model="foodLibrarySearch" 
+                           placeholder="חפש מוצר (למשל: קוטג' 5%, יוגורט PRO, חזה עוף, טחינה גולמית, שיבולת שועל, פיתה קלה...)" 
+                           class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl pr-10 pl-4 py-2.5 text-xs md:text-sm font-bold text-[#082722] focus:outline-none focus:border-[#22c55e] focus:bg-white shadow-xs">
+                </div>
+
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                    <button type="button" @click="foodLibraryCategory = 'all'" :class="foodLibraryCategory === 'all' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        הכל (<span x-text="foodLibrary.length"></span>)
+                    </button>
+                    <button type="button" @click="foodLibraryCategory = 'protein'" :class="foodLibraryCategory === 'protein' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        חלבונים 🍗
+                    </button>
+                    <button type="button" @click="foodLibraryCategory = 'carb'" :class="foodLibraryCategory === 'carb' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        פחמימות 🍚
+                    </button>
+                    <button type="button" @click="foodLibraryCategory = 'fat'" :class="foodLibraryCategory === 'fat' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        שומנים בריאים 🥑
+                    </button>
+                    <button type="button" @click="foodLibraryCategory = 'veg'" :class="foodLibraryCategory === 'veg' ? 'bg-[#082722] text-[#86efac] border-[#082722]' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                        ירקות ומשקאות 🥗
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-y-auto pr-1 flex-1 space-y-2.5 text-xs">
+                <template x-if="getFilteredFoodLibrary().length === 0">
+                    <div class="p-8 text-center text-[#5f756e] bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3]">
+                        לא נמצאו פריטי מזון התואמים את החיפוש.
+                    </div>
+                </template>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                    <template x-for="f in getFilteredFoodLibrary()" :key="f.name">
+                        <div class="bg-[#fbf8f2] hover:bg-[#f3ede0] border border-[#e5dfd3] hover:border-emerald-500/50 p-3 rounded-2xl flex items-center justify-between gap-2 transition shadow-2xs">
+                            <div class="space-y-1 flex-1 min-w-0">
+                                <span class="font-black text-xs text-[#082722] block truncate" x-text="f.name"></span>
+                                <div class="flex items-center gap-2 text-[10px] text-[#5f756e] flex-wrap">
+                                    <span class="bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold text-[#082722]" x-text="f.portion"></span>
+                                    <span class="font-bold text-emerald-700" x-text="f.calories + ' קלוריות'"></span>
+                                    <span x-text="'ח: ' + f.protein + 'g | פ: ' + f.carbs + 'g | ש: ' + f.fat + 'g'"></span>
+                                </div>
+                            </div>
+                            <button type="button" 
+                                    @click="selectFoodFromLibrary(f)" 
+                                    class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 shrink-0 transition cursor-pointer shadow-xs">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                <span>הוסף</span>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#e5dfd3] flex justify-between items-center shrink-0">
+                <span class="text-xs text-[#5f756e]" x-text="'מוצגים ' + getFilteredFoodLibrary().length + ' פריטים'"></span>
+                <button type="button" @click="openFoodLibraryModal = false" class="bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black px-6 py-2 rounded-xl text-xs transition border border-[#174e43] cursor-pointer">
+                    סגור ספרייה
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- מודל ספריית תרגילים מורחבת (137+ תרגילים לפי קטגוריות) -->
     <div x-show="openExerciseLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openExerciseLibraryModal = false">
         <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 max-w-4xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
@@ -7305,6 +7553,557 @@
                                     "video": ""
                           }
                 ],
+                foodLibrary:                 [
+                          {
+                                    "name": "חזה עוף צלוי / אפוי",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 165,
+                                    "protein": 31,
+                                    "carbs": 0,
+                                    "fat": 3.6
+                          },
+                          {
+                                    "name": "פילה סלמון בתנור",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 206,
+                                    "protein": 22,
+                                    "carbs": 0,
+                                    "fat": 13
+                          },
+                          {
+                                    "name": "טונה במי מלח (פילטונה)",
+                                    "category": "protein",
+                                    "portion": "קופסה אחת מסוננת (112 גרם)",
+                                    "calories": 120,
+                                    "protein": 28,
+                                    "carbs": 0,
+                                    "fat": 1
+                          },
+                          {
+                                    "name": "טונה בשמן מסוננת",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 190,
+                                    "protein": 26,
+                                    "carbs": 0,
+                                    "fat": 9
+                          },
+                          {
+                                    "name": "גבינת קוטג' 5% (תנובה / שטראוס)",
+                                    "category": "protein",
+                                    "portion": "גביע אחד (250 גרם)",
+                                    "calories": 235,
+                                    "protein": 27.5,
+                                    "carbs": 5,
+                                    "fat": 12.5
+                          },
+                          {
+                                    "name": "גבינת קוטג' 5% (כף גדושה)",
+                                    "category": "protein",
+                                    "portion": "כף אחת (35 גרם)",
+                                    "calories": 33,
+                                    "protein": 3.8,
+                                    "carbs": 0.7,
+                                    "fat": 1.7
+                          },
+                          {
+                                    "name": "גבינת קוטג' 1% / 3%",
+                                    "category": "protein",
+                                    "portion": "גביע אחד (250 גרם)",
+                                    "calories": 175,
+                                    "protein": 28,
+                                    "carbs": 5,
+                                    "fat": 2.5
+                          },
+                          {
+                                    "name": "גבינה לבנה 5% תנובה / טרה",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 90,
+                                    "protein": 10,
+                                    "carbs": 4,
+                                    "fat": 5
+                          },
+                          {
+                                    "name": "גבינה צפתית 5% מעודנת",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 115,
+                                    "protein": 16,
+                                    "carbs": 1,
+                                    "fat": 5
+                          },
+                          {
+                                    "name": "יוגורט דנונה PRO 20g חלבון",
+                                    "category": "protein",
+                                    "portion": "גביע אחד (200 גרם)",
+                                    "calories": 140,
+                                    "protein": 20,
+                                    "carbs": 7,
+                                    "fat": 3
+                          },
+                          {
+                                    "name": "יוגורט מולר סימפלי פרו 25g",
+                                    "category": "protein",
+                                    "portion": "בקבוק 300 מ\"ל",
+                                    "calories": 160,
+                                    "protein": 25,
+                                    "carbs": 9,
+                                    "fat": 2
+                          },
+                          {
+                                    "name": "יוגורט תנובה GO 20g חלבון",
+                                    "category": "protein",
+                                    "portion": "גביע אחד (200 גרם)",
+                                    "calories": 135,
+                                    "protein": 20,
+                                    "carbs": 6,
+                                    "fat": 3
+                          },
+                          {
+                                    "name": "סקופ אבקת חלבון מי גבינה Whey",
+                                    "category": "protein",
+                                    "portion": "סקופ אחד (30 גרם)",
+                                    "calories": 120,
+                                    "protein": 24,
+                                    "carbs": 2,
+                                    "fat": 1.5
+                          },
+                          {
+                                    "name": "חטיף חלבון פרו (Allin / PRO)",
+                                    "category": "protein",
+                                    "portion": "חטיף אחד (60 גרם)",
+                                    "calories": 210,
+                                    "protein": 20,
+                                    "carbs": 18,
+                                    "fat": 7
+                          },
+                          {
+                                    "name": "ביצה שלמה גודל L",
+                                    "category": "protein",
+                                    "portion": "יחידה אחת (55 גרם)",
+                                    "calories": 75,
+                                    "protein": 6.5,
+                                    "carbs": 0.5,
+                                    "fat": 5.5
+                          },
+                          {
+                                    "name": "חלבון ביצה בלבד (ללא חלמון)",
+                                    "category": "protein",
+                                    "portion": "יחידה אחת (33 גרם)",
+                                    "calories": 17,
+                                    "protein": 3.6,
+                                    "carbs": 0.2,
+                                    "fat": 0.1
+                          },
+                          {
+                                    "name": "טופו טבעי (תנובה / הרדוף)",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 125,
+                                    "protein": 13.5,
+                                    "carbs": 2,
+                                    "fat": 7.5
+                          },
+                          {
+                                    "name": "בשר בקר טחון רזה (מס' 5 / כתף)",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 190,
+                                    "protein": 26,
+                                    "carbs": 0,
+                                    "fat": 9.5
+                          },
+                          {
+                                    "name": "סינטה בקר צלויה",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 175,
+                                    "protein": 28,
+                                    "carbs": 0,
+                                    "fat": 7
+                          },
+                          {
+                                    "name": "פסטרמה דלת שומן 1-2%",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 90,
+                                    "protein": 17,
+                                    "carbs": 2,
+                                    "fat": 1.5
+                          },
+                          {
+                                    "name": "שוקי עוף / כרעיים ללא עור",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 170,
+                                    "protein": 24,
+                                    "carbs": 0,
+                                    "fat": 8
+                          },
+                          {
+                                    "name": "פילה אמנון / דניס בתנור",
+                                    "category": "protein",
+                                    "portion": "100 גרם",
+                                    "calories": 120,
+                                    "protein": 21,
+                                    "carbs": 0,
+                                    "fat": 3.5
+                          },
+                          {
+                                    "name": "שיבולת שועל דקה (קוואקר)",
+                                    "category": "carb",
+                                    "portion": "50 גרם (חצי כוס)",
+                                    "calories": 190,
+                                    "protein": 6.5,
+                                    "carbs": 33,
+                                    "fat": 3.5
+                          },
+                          {
+                                    "name": "אורז לבן / יסמין מבושל",
+                                    "category": "carb",
+                                    "portion": "100 גרם (כ-4 כפות)",
+                                    "calories": 130,
+                                    "protein": 2.7,
+                                    "carbs": 28,
+                                    "fat": 0.3
+                          },
+                          {
+                                    "name": "אורז בסמטי מבושל",
+                                    "category": "carb",
+                                    "portion": "100 גרם",
+                                    "calories": 120,
+                                    "protein": 3,
+                                    "carbs": 26,
+                                    "fat": 0.4
+                          },
+                          {
+                                    "name": "בטטה אפויה בתנור",
+                                    "category": "carb",
+                                    "portion": "100 גרם",
+                                    "calories": 90,
+                                    "protein": 2,
+                                    "carbs": 21,
+                                    "fat": 0.2
+                          },
+                          {
+                                    "name": "תפוח אדמה אפוי / מבושל",
+                                    "category": "carb",
+                                    "portion": "100 גרם",
+                                    "calories": 87,
+                                    "protein": 2,
+                                    "carbs": 20,
+                                    "fat": 0.1
+                          },
+                          {
+                                    "name": "פתיתים מבושלים (אסם)",
+                                    "category": "carb",
+                                    "portion": "100 גרם",
+                                    "calories": 140,
+                                    "protein": 4.5,
+                                    "carbs": 29,
+                                    "fat": 0.8
+                          },
+                          {
+                                    "name": "פסטה מחיטת דורום מבושלת",
+                                    "category": "carb",
+                                    "portion": "100 גרם",
+                                    "calories": 155,
+                                    "protein": 5.5,
+                                    "carbs": 31,
+                                    "fat": 0.9
+                          },
+                          {
+                                    "name": "פסטה מחיטה מלאה מבושלת",
+                                    "category": "carb",
+                                    "portion": "100 גרם",
+                                    "calories": 140,
+                                    "protein": 6,
+                                    "carbs": 28,
+                                    "fat": 1.2
+                          },
+                          {
+                                    "name": "קינואה מבושלת",
+                                    "category": "carb",
+                                    "portion": "100 גרם",
+                                    "calories": 120,
+                                    "protein": 4.4,
+                                    "carbs": 21,
+                                    "fat": 1.9
+                          },
+                          {
+                                    "name": "כוסמת מבושלת",
+                                    "category": "carb",
+                                    "portion": "100 גרם",
+                                    "calories": 110,
+                                    "protein": 4,
+                                    "carbs": 23,
+                                    "fat": 0.8
+                          },
+                          {
+                                    "name": "פריכיות אורז רגילות",
+                                    "category": "carb",
+                                    "portion": "יחידה אחת (10 גרם)",
+                                    "calories": 38,
+                                    "protein": 0.8,
+                                    "carbs": 8.2,
+                                    "fat": 0.3
+                          },
+                          {
+                                    "name": "פריכיות כוסמין / אורז דקות",
+                                    "category": "carb",
+                                    "portion": "יחידה אחת (7 גרם)",
+                                    "calories": 25,
+                                    "protein": 0.6,
+                                    "carbs": 5.5,
+                                    "fat": 0.2
+                          },
+                          {
+                                    "name": "לחם מלא (אנג'ל / ברמן)",
+                                    "category": "carb",
+                                    "portion": "פרוסה אחת (35 גרם)",
+                                    "calories": 75,
+                                    "protein": 3.5,
+                                    "carbs": 13,
+                                    "fat": 1
+                          },
+                          {
+                                    "name": "לחם קל (פרוס)",
+                                    "category": "carb",
+                                    "portion": "פרוסה אחת (20 גרם)",
+                                    "calories": 38,
+                                    "protein": 2.2,
+                                    "carbs": 6.5,
+                                    "fat": 0.4
+                          },
+                          {
+                                    "name": "פיתה קלה (אנג'ל / ברמן)",
+                                    "category": "carb",
+                                    "portion": "יחידה אחת (60 גרם)",
+                                    "calories": 120,
+                                    "protein": 6,
+                                    "carbs": 22,
+                                    "fat": 0.8
+                          },
+                          {
+                                    "name": "פיתה רגילה מאפייה",
+                                    "category": "carb",
+                                    "portion": "יחידה אחת (100 גרם)",
+                                    "calories": 260,
+                                    "protein": 9,
+                                    "carbs": 53,
+                                    "fat": 1.2
+                          },
+                          {
+                                    "name": "טורטייה מקמח מלא",
+                                    "category": "carb",
+                                    "portion": "יחידה אחת (40 גרם)",
+                                    "calories": 115,
+                                    "protein": 3.5,
+                                    "carbs": 20,
+                                    "fat": 2.5
+                          },
+                          {
+                                    "name": "בננה בינונית",
+                                    "category": "carb",
+                                    "portion": "יחידה אחת (120 גרם)",
+                                    "calories": 105,
+                                    "protein": 1.3,
+                                    "carbs": 27,
+                                    "fat": 0.3
+                          },
+                          {
+                                    "name": "תפוח עץ בינוני",
+                                    "category": "carb",
+                                    "portion": "יחידה אחת (150 גרם)",
+                                    "calories": 80,
+                                    "protein": 0.4,
+                                    "carbs": 21,
+                                    "fat": 0.3
+                          },
+                          {
+                                    "name": "תמר מג'דול מובחר",
+                                    "category": "carb",
+                                    "portion": "יחידה אחת (20 גרם)",
+                                    "calories": 55,
+                                    "protein": 0.4,
+                                    "carbs": 14,
+                                    "fat": 0.1
+                          },
+                          {
+                                    "name": "טחינה גולמית משומשום מלא (הר ברכה / אל ארז)",
+                                    "category": "fat",
+                                    "portion": "כף אחת (15 גרם)",
+                                    "calories": 100,
+                                    "protein": 3.5,
+                                    "carbs": 1.5,
+                                    "fat": 8.5
+                          },
+                          {
+                                    "name": "טחינה מוכנה עם מים ולימון",
+                                    "category": "fat",
+                                    "portion": "כף אחת (20 גרם)",
+                                    "calories": 60,
+                                    "protein": 2,
+                                    "carbs": 1.5,
+                                    "fat": 5
+                          },
+                          {
+                                    "name": "שמן זית כתית מעולה",
+                                    "category": "fat",
+                                    "portion": "כף אחת (10 מ\"ל)",
+                                    "calories": 88,
+                                    "protein": 0,
+                                    "carbs": 0,
+                                    "fat": 10
+                          },
+                          {
+                                    "name": "אבוקדו בשל (חצי אבוקדו)",
+                                    "category": "fat",
+                                    "portion": "100 גרם",
+                                    "calories": 160,
+                                    "protein": 2,
+                                    "carbs": 8.5,
+                                    "fat": 14.5
+                          },
+                          {
+                                    "name": "חמאת בוטנים טבעית 100%",
+                                    "category": "fat",
+                                    "portion": "כף אחת (15 גרם)",
+                                    "calories": 95,
+                                    "protein": 4,
+                                    "carbs": 3,
+                                    "fat": 8
+                          },
+                          {
+                                    "name": "שקדים טבעיים לא קלויים",
+                                    "category": "fat",
+                                    "portion": "20 גרם (כ-15 יחידות)",
+                                    "calories": 120,
+                                    "protein": 4.5,
+                                    "carbs": 4,
+                                    "fat": 10.5
+                          },
+                          {
+                                    "name": "אגוזי מלך טבעיים",
+                                    "category": "fat",
+                                    "portion": "20 גרם (כ-7 חצאים)",
+                                    "calories": 135,
+                                    "protein": 3,
+                                    "carbs": 2.5,
+                                    "fat": 13
+                          },
+                          {
+                                    "name": "זיתים ירוקים / שחורים",
+                                    "category": "fat",
+                                    "portion": "10 יחידות (30 גרם)",
+                                    "calories": 45,
+                                    "protein": 0.3,
+                                    "carbs": 1.5,
+                                    "fat": 4.5
+                          },
+                          {
+                                    "name": "מלפפון טרי עם קליפה",
+                                    "category": "veg",
+                                    "portion": "100 גרם",
+                                    "calories": 15,
+                                    "protein": 0.7,
+                                    "carbs": 3.6,
+                                    "fat": 0.1
+                          },
+                          {
+                                    "name": "עגבנייה טרייה",
+                                    "category": "veg",
+                                    "portion": "100 גרם",
+                                    "calories": 18,
+                                    "protein": 0.9,
+                                    "carbs": 3.9,
+                                    "fat": 0.2
+                          },
+                          {
+                                    "name": "פלפל אדום (גמבה)",
+                                    "category": "veg",
+                                    "portion": "100 גרם",
+                                    "calories": 30,
+                                    "protein": 1,
+                                    "carbs": 6,
+                                    "fat": 0.3
+                          },
+                          {
+                                    "name": "עלי חסה ורוקט",
+                                    "category": "veg",
+                                    "portion": "100 גרם",
+                                    "calories": 15,
+                                    "protein": 1.4,
+                                    "carbs": 2.8,
+                                    "fat": 0.2
+                          },
+                          {
+                                    "name": "גזר טרי",
+                                    "category": "veg",
+                                    "portion": "100 גרם",
+                                    "calories": 41,
+                                    "protein": 0.9,
+                                    "carbs": 9.6,
+                                    "fat": 0.2
+                          },
+                          {
+                                    "name": "ברוקולי מבושל / מאודה",
+                                    "category": "veg",
+                                    "portion": "100 גרם",
+                                    "calories": 35,
+                                    "protein": 2.4,
+                                    "carbs": 7,
+                                    "fat": 0.4
+                          },
+                          {
+                                    "name": "כרובית אפויה / מבושלת",
+                                    "category": "veg",
+                                    "portion": "100 גרם",
+                                    "calories": 25,
+                                    "protein": 1.9,
+                                    "carbs": 5,
+                                    "fat": 0.3
+                          },
+                          {
+                                    "name": "חלב סויה לייט ללא סוכר",
+                                    "category": "veg",
+                                    "portion": "100 מ\"ל",
+                                    "calories": 30,
+                                    "protein": 3.2,
+                                    "carbs": 1.2,
+                                    "fat": 1.5
+                          },
+                          {
+                                    "name": "חלב שקדים ללא סוכר",
+                                    "category": "veg",
+                                    "portion": "100 מ\"ל",
+                                    "calories": 14,
+                                    "protein": 0.5,
+                                    "carbs": 0.3,
+                                    "fat": 1.2
+                          },
+                          {
+                                    "name": "חלב פרה 1% / 3%",
+                                    "category": "veg",
+                                    "portion": "100 מ\"ל",
+                                    "calories": 45,
+                                    "protein": 3.3,
+                                    "carbs": 4.8,
+                                    "fat": 1.5
+                          }
+                ],
+                openFoodLibraryModal: false,
+                foodLibrarySearch: '',
+                foodLibraryCategory: 'all',
+                targetMealIdxForFoodAdd: 0,
+                openBlockArchiveModal: false,
+                openBlockHistoryModal: false,
+                newBlockNameInput: '',
+                newBlockCloneExercises: true,
+                selectedArchivedBlockToView: null,
                 openExerciseLibraryModal: false,
                 exerciseLibrarySearch: '',
                 exerciseLibrarySelectedMuscle: 'all',
@@ -8540,7 +9339,128 @@
                 },
 
                 
-                openExerciseLibraryForDay(dayIdx, exIdx = null) {
+                
+                // --- לוגיקת סופר-סטים (Supersets) ---
+                toggleExerciseSuperset(dayIdx, exIdx) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client || !client.workoutPlan?.days?.[dayIdx]?.exercises?.[exIdx]) return;
+                    const ex = client.workoutPlan.days[dayIdx].exercises[exIdx];
+                    ex.isSuperset = !ex.isSuperset;
+                    if (ex.isSuperset) {
+                        ex.supersetGroup = ex.supersetGroup || 'A';
+                    }
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                },
+
+                // --- לוגיקת ניהול בלוקים וארכיון (Block Lifecycle) ---
+                archiveCurrentBlock() {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client || !client.workoutPlan) return;
+                    
+                    const newName = (this.newBlockNameInput || '').trim() || 'בלוק חדש';
+                    if (!client.workoutPlan.archivedBlocks) client.workoutPlan.archivedBlocks = [];
+
+                    // Calculate total workouts and volume completed during this block
+                    const logs = this.getClientWorkoutLogs(client);
+                    let blockVolume = 0;
+                    let blockWorkouts = logs.length;
+                    logs.forEach(l => { blockVolume += (l.totalVolume || 0); });
+
+                    client.workoutPlan.archivedBlocks.unshift({
+                        id: 'blk_' + Date.now(),
+                        blockName: client.workoutPlan.blockName || 'בלוק שהושלם',
+                        currentWeek: client.workoutPlan.currentWeek || 'הושלם',
+                        notes: client.workoutPlan.notes || '',
+                        archivedDate: this.getTodayDate(),
+                        totalVolumeCompleted: blockVolume,
+                        totalWorkoutsCompleted: blockWorkouts,
+                        days: JSON.parse(JSON.stringify(client.workoutPlan.days || []))
+                    });
+
+                    client.workoutPlan.blockName = newName;
+                    client.workoutPlan.currentWeek = 'שבוע 1 מתוך 4';
+                    client.workoutPlan.notes = '';
+
+                    if (!this.newBlockCloneExercises) {
+                        client.workoutPlan.days = [];
+                        this.addWorkoutDay();
+                    }
+
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    this.openBlockArchiveModal = false;
+                    this.newBlockNameInput = '';
+                    alert('בלוק האימונים הועבר לארכיון בהצלחה ובלוק חדש נפתח! 🚀');
+                },
+
+                restoreArchivedBlock(archivedBlock) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client || !archivedBlock) return;
+                    if (confirm(`האם לשחזר את ${archivedBlock.blockName}? פעולה זו תחליף את הבלוק הפעיל.`)) {
+                        client.workoutPlan.blockName = archivedBlock.blockName;
+                        client.workoutPlan.currentWeek = archivedBlock.currentWeek || 'שבוע 1';
+                        client.workoutPlan.notes = archivedBlock.notes || '';
+                        client.workoutPlan.days = JSON.parse(JSON.stringify(archivedBlock.days || []));
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("clients").doc(client.id).set(client);
+                        }
+                        this.saveData();
+                        this.openBlockHistoryModal = false;
+                        alert('הבלוק שוחזר בהצלחה! 👑');
+                    }
+                },
+
+                // --- לוגיקת מאגר מזונות ישראלי (Israeli Food Library) ---
+                openFoodLibraryForMeal(mealIdx) {
+                    this.targetMealIdxForFoodAdd = mealIdx;
+                    this.foodLibrarySearch = '';
+                    this.foodLibraryCategory = 'all';
+                    this.openFoodLibraryModal = true;
+                    setTimeout(() => window.lucide?.createIcons(), 50);
+                },
+
+                selectFoodFromLibrary(foodItem) {
+                    const client = this.clients.find(c => c.id === this.selectedClientId);
+                    if (!client) return;
+                    if (!client.mealPlan) client.mealPlan = { meals: [] };
+                    if (!client.mealPlan.meals[this.targetMealIdxForFoodAdd]) {
+                        client.mealPlan.meals[this.targetMealIdxForFoodAdd] = { name: 'ארוחה חדשה', items: [] };
+                    }
+                    if (!client.mealPlan.meals[this.targetMealIdxForFoodAdd].items) {
+                        client.mealPlan.meals[this.targetMealIdxForFoodAdd].items = [];
+                    }
+
+                    client.mealPlan.meals[this.targetMealIdxForFoodAdd].items.push({
+                        food: foodItem.name,
+                        quantity: foodItem.portion,
+                        calories: foodItem.calories,
+                        protein: foodItem.protein,
+                        carbs: foodItem.carbs,
+                        fat: foodItem.fat
+                    });
+
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("clients").doc(client.id).set(client);
+                    }
+                    this.saveData();
+                    this.openFoodLibraryModal = false;
+                },
+
+                getFilteredFoodLibrary() {
+                    const q = (this.foodLibrarySearch || '').trim().toLowerCase();
+                    const cat = this.foodLibraryCategory;
+                    return this.foodLibrary.filter(f => {
+                        const matchCat = (cat === 'all' || f.category === cat);
+                        const matchQuery = (!q || (f.name || '').toLowerCase().includes(q));
+                        return matchCat && matchQuery;
+                    });
+                },
+openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     this.targetDayIdxForExerciseAdd = dayIdx;
                     this.targetExIdxForExerciseSelect = exIdx;
                     this.exerciseLibrarySearch = '';
