@@ -5071,20 +5071,195 @@
                 </div>
 
 
-                <!-- 6. טאב הגדרות וסנכרון ענן -->
-                <div x-show="activeTab === 'settings' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- 6. טאב הגדרות וסנכרון ענן 2.0 (Executive Settings & Cloud Suite) -->
+                <div x-show="activeTab === 'settings' && !selectedClientId && isCoachAuthenticated" x-cloak class="space-y-6 animate-fade-in text-[#1a0730]">
+                    
+                    <!-- כותרת ראשית של הגדרות -->
+                    <div class="bg-gradient-to-r from-[#1a0730] via-[#2d0c4f] to-[#1a0730] border border-[#381061] rounded-3xl p-5 md:p-7 shadow-2xl text-white relative overflow-hidden">
+                        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-[#fbbf24]/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute right-10 -top-10 w-48 h-48 bg-[#d8b4fe]/10 rounded-full blur-2xl pointer-events-none"></div>
                         
-                        <!-- חיבור Gemini AI למחשבון התזונה וצילום צלחות -->
-                        <div class="bg-white border border-[#e6dcef] rounded-3xl p-5 md:p-6 shadow-xl space-y-4 md:col-span-2">
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <span class="bg-[#fbbf24]/20 text-[#fbbf24] border border-[#fbbf24]/30 text-[10px] md:text-xs font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+                                        <i data-lucide="settings" class="w-3 h-3 text-[#fbbf24]"></i>
+                                        <span>Settings & Cloud Hub</span>
+                                    </span>
+                                    <span class="text-xs text-[#d8b4fe] font-medium" x-text="'גרסת מערכת 2.5 • סנכרון רב-ערוצי'"></span>
+                                </div>
+                                <h2 class="text-xl md:text-2xl font-black text-white tracking-tight">הגדרות מערכת, סנכרון ענן ואבטחה</h2>
+                                <p class="text-xs md:text-sm text-[#d8b4fe] mt-0.5">ניהול סנכרון דו-כיווני בזמן אמת ב-Firebase, חיבור ל-AI, הגדרות אבטחה וגיבויים</p>
+                            </div>
+
+                            <!-- תגית סטטוס ענן חיה -->
+                            <div class="flex items-center gap-2 bg-[#130024] border border-[#381061] p-2.5 rounded-2xl shrink-0">
+                                <div class="w-3 h-3 rounded-full" :class="isCloudSynced ? 'bg-emerald-400 animate-ping' : 'bg-slate-400'"></div>
+                                <div>
+                                    <span class="text-[11px] font-black block" :class="isCloudSynced ? 'text-emerald-400' : 'text-slate-300'" x-text="isCloudSynced ? 'מחובר לענן ב-Firebase' : 'מצב מקומי (Offline)'"></span>
+                                    <span class="text-[9px] text-[#d8b4fe]" x-text="isCloudSynced ? 'סנכרון מתאמנים ונתונים פעיל' : 'הנתונים נשמרים במכשיר זה'"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        
+                        <!-- 1. כרטיס סנכרון ענן Firebase בזמן אמת -->
+                        <div class="bg-white border border-[#e6dcef] rounded-3xl p-5 md:p-6 shadow-xl space-y-5 lg:col-span-2 relative overflow-hidden" x-data="{ showKeysDetails: false }">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e6dcef] pb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-3 rounded-2xl bg-[#1a0730] text-[#fbbf24] shadow-md shadow-[#1a0730]/15">
+                                        <i data-lucide="cloud" class="w-6 h-6 text-[#fbbf24]"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-base font-black text-[#1a0730]">סנכרון ענן בזמן אמת — Google Firebase ☁️</h3>
+                                        <p class="text-xs text-[#6f5888]">סנכרון דו-כיווני מיידי בין המחשב, הטלפון הנייד ופורטלי המתאמנים</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <button type="button" @click="testFirebaseConnection()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow-sm">
+                                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
+                                        <span>בדוק חיבור ענן ⚡</span>
+                                    </button>
+                                    <button type="button" @click="forceCloudPushAll()" class="bg-white hover:bg-[#faf6fc] border border-[#e6dcef] text-[#1a0730] font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer flex items-center gap-1" title="סנכרן את כל הנתונים המקומיים לענן">
+                                        <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                        <span>סנכרן הכל לענן</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- תצוגת סטטוס נתוני ענן -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                                <div class="bg-[#faf6fc] border border-[#e6dcef] p-3 rounded-2xl">
+                                    <span class="text-[10px] text-[#6f5888] font-bold block mb-1">פרויקט Firebase:</span>
+                                    <span class="font-black text-[#1a0730] font-mono text-xs block truncate" x-text="firebaseInput.projectId || 'ilai-fitness'"></span>
+                                </div>
+                                <div class="bg-[#faf6fc] border border-[#e6dcef] p-3 rounded-2xl">
+                                    <span class="text-[10px] text-[#6f5888] font-bold block mb-1">מתאמנים מסונכרנים:</span>
+                                    <span class="font-black text-emerald-700 text-xs block" x-text="clients.length + ' מתאמנים'"></span>
+                                </div>
+                                <div class="bg-[#faf6fc] border border-[#e6dcef] p-3 rounded-2xl">
+                                    <span class="text-[10px] text-[#6f5888] font-bold block mb-1">אירועי יומן:</span>
+                                    <span class="font-black text-[#1a0730] text-xs block" x-text="scheduleEvents.length + ' פגישות'"></span>
+                                </div>
+                                <div class="bg-[#faf6fc] border border-[#e6dcef] p-3 rounded-2xl">
+                                    <span class="text-[10px] text-[#6f5888] font-bold block mb-1">תנועות פיננסיות:</span>
+                                    <span class="font-black text-[#1a0730] text-xs block" x-text="transactions.length + ' עסקאות'"></span>
+                                </div>
+                            </div>
+
+                            <!-- מתג חשיפת מפתחות Firebase -->
+                            <div>
+                                <button type="button" @click="showKeysDetails = !showKeysDetails" class="text-xs font-bold text-[#1a0730] hover:text-[#fbbf24] flex items-center gap-1.5 transition cursor-pointer">
+                                    <i data-lucide="key" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
+                                    <span x-text="showKeysDetails ? 'הסתר מפתחות פרויקט Firebase ▲' : 'הצג / ערוך מפתחות פרויקט Firebase ▼'"></span>
+                                </button>
+                            </div>
+
+                            <!-- שדות עריכת מפתחות Firebase (אקורדיון) -->
+                            <div x-show="showKeysDetails" x-cloak class="space-y-4 pt-2 border-t border-[#e6dcef]">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#6f5888] mb-1">API Key</label>
+                                        <input type="text" x-model="firebaseInput.apiKey" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#fbbf24]">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#6f5888] mb-1">Auth Domain</label>
+                                        <input type="text" x-model="firebaseInput.authDomain" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#fbbf24]">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#6f5888] mb-1">Project ID</label>
+                                        <input type="text" x-model="firebaseInput.projectId" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#fbbf24]">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#6f5888] mb-1">Storage Bucket</label>
+                                        <input type="text" x-model="firebaseInput.storageBucket" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#fbbf24]">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#6f5888] mb-1">Messaging Sender ID</label>
+                                        <input type="text" x-model="firebaseInput.messagingSenderId" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#fbbf24]">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#6f5888] mb-1">App ID</label>
+                                        <input type="text" x-model="firebaseInput.appId" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#fbbf24]">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-wrap items-center gap-3 pt-2 text-xs">
+                                    <button @click="saveFirebaseConfig()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-5 py-2.5 rounded-xl shadow-md transition cursor-pointer">
+                                        <span>שמור מפתחות והפעל סנכרון ☁️</span>
+                                    </button>
+                                    <button @click="clearFirebaseConfig()" x-show="isCloudSynced" class="bg-white border border-rose-200 text-rose-700 font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">
+                                        <span>נתק חיבור ענן</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- תיבת הנחיות חוקי אבטחה ב-Firebase (Security Rules) -->
+                            <div class="bg-amber-50/70 border border-amber-200 p-4 rounded-2xl text-xs space-y-2 text-amber-950">
+                                <div class="flex items-center gap-2 font-black text-amber-900">
+                                    <i data-lucide="shield-alert" class="w-4 h-4 text-amber-600"></i>
+                                    <span>הנחיית חוקי גישה ב-Firebase Firestore (Rules):</span>
+                                </div>
+                                <p class="text-[11px] leading-relaxed">
+                                    כדי לאפשר סנכרון תקין בין כל המכשירים, ודא שב-<strong>Firebase Console -> Firestore Database -> Rules</strong> מוגדר:
+                                </p>
+                                <pre class="bg-amber-100/80 p-2.5 rounded-xl font-mono text-[10px] text-amber-900 overflow-x-auto select-all">allow read, write: if true;</pre>
+                            </div>
+                        </div>
+
+                        <!-- 2. כרטיס אבטחת מאמן וקוד גישה אישי (Coach Security & PIN) -->
+                        <div class="bg-white border border-[#e6dcef] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                            <div class="flex items-center justify-between border-b border-[#e6dcef] pb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="p-2.5 rounded-2xl bg-[#1a0730] text-[#fbbf24]">
+                                        <i data-lucide="lock" class="w-5 h-5 text-[#fbbf24]"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs md:text-sm font-black text-[#1a0730]">אבטחת כניסה וקוד מאמן 🔒</h4>
+                                        <p class="text-[10px] text-[#6f5888]">ניהול קוד הגישה האישי (PIN) והתחברות קבועה</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full font-bold">מאובטח</span>
+                            </div>
+
+                            <div class="space-y-3.5 text-xs">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-[#6f5888] mb-1">קוד גישה נוכחי למאמן (4 ספרות):</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="text" maxlength="6" x-model="coachPinSetting" class="w-32 bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2.5 text-center text-base font-black text-[#1a0730] tracking-widest focus:outline-none focus:border-[#fbbf24]">
+                                        <button type="button" @click="saveCoachPinSetting()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-4 py-2.5 rounded-xl text-xs transition cursor-pointer shadow-md">
+                                            עדכן קוד ✓
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- מתג שמירת התחברות קבועה -->
+                                <div class="bg-[#faf6fc] border border-[#e6dcef] p-3.5 rounded-2xl flex items-center justify-between">
+                                    <div>
+                                        <span class="text-xs font-black text-[#1a0730] block">הישאר מחובר במכשיר זה 📱</span>
+                                        <span class="text-[10px] text-[#6f5888]">כניסה ישירה ל-CRM בריענון דף ללא צורך בהקשת קוד חוזרת</span>
+                                    </div>
+                                    <button type="button" @click="togglePersistentAuth()" :class="isPersistentAuthEnabled ? 'bg-[#1a0730] text-[#fbbf24] border-[#381061]' : 'bg-slate-200 text-slate-600 border-slate-300'" class="px-3 py-1.5 rounded-xl text-xs font-black border transition cursor-pointer">
+                                        <span x-text="isPersistentAuthEnabled ? 'פעיל ✓' : 'כבוי ✕'"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. חיבור Gemini AI למחשבון התזונה -->
+                        <div class="bg-white border border-[#e6dcef] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                             <div class="flex items-center justify-between border-b border-[#e6dcef] pb-3">
                                 <div class="flex items-center gap-2.5">
                                     <div class="p-2.5 rounded-2xl bg-[#1a0730] text-[#fbbf24]">
                                         <i data-lucide="sparkles" class="w-5 h-5 text-[#fbbf24]"></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-xs md:text-sm font-black text-[#1a0730]">חיבור Gemini AI למחשבון התזונה וצילום צלחות 🧠📸</h4>
-                                        <p class="text-[10px] text-[#6f5888]">הזן מפתח API של Google Gemini לקבלת זיהוי חופשי של כל מאכל, דיבור וצילום צלחת</p>
+                                        <h4 class="text-xs md:text-sm font-black text-[#1a0730]">חיבור Google Gemini AI 🧠📸</h4>
+                                        <p class="text-[10px] text-[#6f5888]">זיהוי קלוריות, דיבור קולי וניתוח צילומי צלחת</p>
                                     </div>
                                 </div>
                                 <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border"
@@ -5095,9 +5270,9 @@
                             <div class="space-y-2 text-xs">
                                 <label class="block text-[10px] font-bold text-[#6f5888]">Google Gemini API Key:</label>
                                 <div class="flex items-center gap-2">
-                                    <input type="password" x-model="geminiApiKeyInput" placeholder="הדבק כאן את המפתח (AIzaSy...)" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2.5 text-xs text-[#1a0730] font-mono focus:outline-none focus:border-[#22c55e]">
-                                    <button type="button" @click="saveGeminiApiKey()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-5 py-2.5 rounded-xl text-xs whitespace-nowrap transition cursor-pointer shadow-md">
-                                        שמור מפתח ✨
+                                    <input type="password" x-model="geminiApiKeyInput" placeholder="הדבק מפתח (AIzaSy...)" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2.5 text-xs text-[#1a0730] font-mono focus:outline-none focus:border-[#fbbf24]">
+                                    <button type="button" @click="saveGeminiApiKey()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-4 py-2.5 rounded-xl text-xs whitespace-nowrap transition cursor-pointer shadow-md">
+                                        שמור ✨
                                     </button>
                                     <template x-if="geminiApiKey">
                                         <button type="button" @click="removeGeminiApiKey()" class="bg-rose-50 border border-rose-200 hover:bg-rose-100 text-rose-700 font-bold px-3 py-2.5 rounded-xl text-xs transition cursor-pointer" title="מחק מפתח">
@@ -5105,69 +5280,26 @@
                                         </button>
                                     </template>
                                 </div>
-                                <div class="flex items-center justify-between text-[10px] text-[#6f5888] pt-1">
-                                    <span>ניתן להפיק מפתח חינמי בתוך דקה מ- <a href="https://aistudio.google.com" target="_blank" class="text-emerald-700 underline font-bold">Google AI Studio</a>. המפתח נשמר בבטחה במערכת.</span>
-                                </div>
+                                <p class="text-[10px] text-[#6f5888] pt-1">
+                                    המפתח נשמר בבטחה במערכת ומאפשר זיהוי תזונה חכם ומהיר ב-0 שניות.
+                                </p>
                             </div>
                         </div>
 
-                        <!-- חיבור לסנכרון ענן (Firebase) -->
-                        <div class="bg-white border border-[#e6dcef] rounded-3xl p-5 md:p-6 shadow-xl space-y-4 md:col-span-2">
-                            <h4 class="text-xs md:text-sm font-black text-[#1a0730] border-b border-[#e6dcef] pb-3">חיבור לסנכרון ענן (Firebase) ☁️</h4>
-                            <p class="text-[11px] text-[#6f5888]">הזן את מפתחות הפרויקט שלך מתוך Firebase כדי לאפשר סנכרון דו-כיווני אוטומטי בזמן אמת בין המחשב לטלפון הנייד.</p>
-                            
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#6f5888] mb-1">API Key</label>
-                                    <input type="text" x-model="firebaseInput.apiKey" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#6f5888] mb-1">Auth Domain</label>
-                                    <input type="text" x-model="firebaseInput.authDomain" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#6f5888] mb-1">Project ID</label>
-                                    <input type="text" x-model="firebaseInput.projectId" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#6f5888] mb-1">Storage Bucket</label>
-                                    <input type="text" x-model="firebaseInput.storageBucket" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#6f5888] mb-1">Messaging Sender ID</label>
-                                    <input type="text" x-model="firebaseInput.messagingSenderId" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#6f5888] mb-1">App ID</label>
-                                    <input type="text" x-model="firebaseInput.appId" class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-xl p-2 text-[#1a0730] font-mono focus:outline-none focus:border-[#22c55e]">
-                                </div>
-                            </div>
-                            
-                            <div class="flex flex-wrap items-center gap-3 pt-2 text-xs">
-                                <button @click="saveFirebaseConfig()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-5 py-2.5 rounded-xl shadow-md transition cursor-pointer">
-                                    <span>חבר וסנכרן לענן ☁️</span>
-                                </button>
-                                <button @click="clearFirebaseConfig()" x-show="isCloudSynced" class="bg-[#faf6fc] border border-rose-200 text-rose-700 font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">
-                                    <span>נתק חיבור ענן</span>
-                                </button>
-                                <span x-show="isCloudSynced" class="text-emerald-700 font-black flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                                    <span>מחובר לענן - סנכרון פעיל בזמן אמת</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- ייצוא גיבוי מקומי -->
+                        <!-- 4. גיבוי מקומי ושחזור נתונים מלא (Backup & Restore) -->
                         <div class="bg-white border border-[#e6dcef] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                            <h4 class="text-xs md:text-sm font-black text-[#1a0730] border-b border-[#e6dcef] pb-3">גיבוי ידני מקומי 💾</h4>
-                            <p class="text-xs text-[#6f5888]">אפשרות להוריד גיבוי מקומי למכשיר שלך או להעלות גיבוי קודם.</p>
+                            <h4 class="text-xs md:text-sm font-black text-[#1a0730] border-b border-[#e6dcef] pb-3 flex items-center gap-2">
+                                <i data-lucide="hard-drive" class="w-4 h-4 text-[#fbbf24]"></i>
+                                <span>גיבוי ידני מקומי ושחזור 💾</span>
+                            </h4>
+                            <p class="text-xs text-[#6f5888]">הורדת קובץ גיבוי מלא של כל נתוני המאמן למחשב (JSON) או שחזור מקובץ קודם.</p>
                             
-                            <div class="flex items-center gap-3 text-xs">
-                                <button @click="exportDatabase()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                            <div class="flex items-center gap-3 text-xs flex-wrap pt-1">
+                                <button type="button" @click="exportDatabase()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
                                     <i data-lucide="download" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
-                                    <span>ייצא קובץ גיבוי</span>
+                                    <span>ייצא קובץ גיבוי (JSON)</span>
                                 </button>
-                                <label class="bg-[#faf6fc] border border-[#e6dcef] hover:bg-[#f0eae1] text-[#1a0730] font-black px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs">
+                                <label class="bg-[#faf6fc] border border-[#e6dcef] hover:bg-[#ede3f5] text-[#1a0730] font-black px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs">
                                     <i data-lucide="upload" class="w-3.5 h-3.5 text-emerald-700"></i>
                                     <span>ייבא קובץ גיבוי</span>
                                     <input type="file" @change="importDatabase" class="hidden" accept=".json">
@@ -5175,19 +5307,25 @@
                             </div>
                         </div>
 
-                        <!-- אתחול מערכת -->
+                        <!-- 5. אזור סכנה ואיפוס (Danger Zone) -->
                         <div class="bg-white border border-rose-200 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                            <h4 class="text-xs md:text-sm font-black text-rose-700 border-b border-rose-200 pb-3">אזור סכנה ⚠️</h4>
-                            <p class="text-xs text-[#6f5888]">ביצוע פעולה זו ימחק את כל המידע והיומן לצמיתות מהמכשיר הנוכחי.</p>
+                            <h4 class="text-xs md:text-sm font-black text-rose-700 border-b border-rose-200 pb-3 flex items-center gap-2">
+                                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i>
+                                <span>אזור סכנה — איפוס מערכת ⚠️</span>
+                            </h4>
+                            <p class="text-xs text-[#6f5888]">פעולה זו תמחק את כל הנתונים, המתאמנים והיומנים המקומיים מהמכשיר הנוכחי.</p>
                             
                             <div class="pt-1">
-                                <button @click="resetDatabase()" class="bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer">
+                                <button type="button" @click="resetDatabase()" class="bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-700 font-black px-4 py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                     <span>אתחל את כל המערכת 🗑️</span>
                                 </button>
                             </div>
                         </div>
+
                     </div>
                 </div>
+
 
             </div>
         </main>
@@ -6927,6 +7065,8 @@
                 // אימות ונעילת מאמן (קוד 1236)
                 isCoachAuthenticated: false,
                 coachPinInput: '',
+                coachPinSetting: localStorage.getItem('ilaico_coach_pin') || '1236',
+                isPersistentAuthEnabled: localStorage.getItem('ilaico_persistent_auth') === 'true',
                 coachPinError: false,
 
                 // פורטל מתאמן אישי
