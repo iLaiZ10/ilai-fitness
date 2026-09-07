@@ -3704,9 +3704,10 @@
                                                 <div x-init="ensureExerciseSetsDetail(ex)" class="bg-white border rounded-2xl p-4 md:p-5 shadow-xs space-y-4"
                                                      :class="ex.isSuperset ? 'border-2 border-amber-300 bg-amber-50/10' : 'border-[#e5dfd3]'">
                                                     
-                                                    <!-- שורה 1: שם תרגיל, מנוחה, סופר-סט, וידאו ומחיקה -->
-                                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                                                        <div class="md:col-span-5 flex items-center gap-2">
+                                                    <!-- שורה 1: שם תרגיל, קבוצת שריר, מנוחה, סופר-סט, וידאו ומחיקה -->
+                                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-center">
+                                                        <!-- שם תרגיל -->
+                                                        <div class="md:col-span-4 flex items-center gap-2">
                                                             <span class="w-7 h-7 rounded-lg bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] font-black text-xs flex items-center justify-center shrink-0" x-text="exIdx + 1"></span>
                                                             <div class="relative flex-1">
                                                                 <input type="text" 
@@ -3718,10 +3719,28 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="md:col-span-3 flex items-center gap-2">
-                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1.5 w-full">
+                                                        <!-- בחירת / זיהוי קבוצת שריר -->
+                                                        <div class="md:col-span-2">
+                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2 py-1.5">
+                                                                <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+                                                                <select x-model="ex.muscle" 
+                                                                        @change="saveData()" 
+                                                                        class="w-full bg-transparent text-xs font-black text-[#082722] focus:outline-none cursor-pointer">
+                                                                    <option value="chest">חזה</option>
+                                                                    <option value="back">גב</option>
+                                                                    <option value="legs">רגליים</option>
+                                                                    <option value="shoulders">כתפיים</option>
+                                                                    <option value="arms">ידיים</option>
+                                                                    <option value="abs">בטן/ליבה</option>
+                                                                    <option value="other">אחר / כללי</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- מנוחה מומלצת -->
+                                                        <div class="md:col-span-2">
+                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2 py-1.5">
                                                                 <i data-lucide="timer" class="w-3.5 h-3.5 text-amber-600 shrink-0"></i>
-                                                                <span class="text-[10px] text-[#5f756e] font-bold shrink-0">מנוחה:</span>
                                                                 <input type="text" 
                                                                        x-model="ex.rest" 
                                                                        @input="saveData()" 
@@ -3730,7 +3749,8 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="md:col-span-4 flex items-center justify-end gap-2 flex-wrap">
+                                                        <!-- סופר-סט, וידאו ומחיקה -->
+                                                        <div class="md:col-span-4 flex items-center justify-end gap-1.5 flex-wrap">
                                                             <button type="button" 
                                                                     @click="toggleExerciseSuperset(coachSelectedWorkoutDayIdx, exIdx)" 
                                                                     :class="ex.isSuperset ? 'bg-amber-100 text-amber-900 border-amber-300 shadow-xs' : 'bg-[#fbf8f2] hover:bg-slate-100 text-slate-600 border-[#e5dfd3]'"
@@ -3740,7 +3760,7 @@
                                                                 <span x-text="ex.isSuperset ? '⚡ סופר-סט' : 'סופר-סט'"></span>
                                                             </button>
 
-                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2.5 py-1.5 flex-1 min-w-[120px]">
+                                                            <div class="flex items-center gap-1.5 bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl px-2 py-1.5 flex-1 min-w-[100px]">
                                                                 <i data-lucide="video" class="w-3.5 h-3.5 text-red-500 shrink-0"></i>
                                                                 <input type="url" 
                                                                        x-model="ex.video" 
@@ -9488,6 +9508,10 @@ saveWorkoutPlanWithToast() {
                 },
                 ensureExerciseSetsDetail(ex) {
                     if (!ex) return;
+                    if (!ex.muscle) {
+                        if (ex.name && ex.name.trim()) ex.muscle = this.detectExerciseMuscle(ex.name);
+                        else ex.muscle = 'chest';
+                    }
                     if (!Array.isArray(ex.setsDetail)) {
                         ex.setsDetail = [];
                     }
@@ -9614,6 +9638,7 @@ saveWorkoutPlanWithToast() {
                     if (client && client.workoutPlan?.days?.[dayIdx]) {
                         const newEx = {
                             name: '',
+                            muscle: 'chest',
                             sets: 3,
                             reps: '10',
                             rest: '90 שנ\'',
@@ -9644,15 +9669,89 @@ saveWorkoutPlanWithToast() {
                     }
                 },
 
+                detectExerciseMuscle(name) {
+                    if (!name) return 'chest';
+                    const n = name.trim().toLowerCase();
+                    
+                    // Chest / חזה
+                    if (n.includes('חזה') || n.includes('בנץ') || n.includes('פרפר') || n.includes('מקבילים') || 
+                        n.includes('דחיקה') || n.includes('chest') || n.includes('bench') || n.includes('fly') || 
+                        n.includes('incline') || n.includes('decline') || n.includes('pushup') || n.includes('שכיבות סמיכה') ||
+                        n.includes('קרוסאובר') || n.includes('crossover') || n.includes('pec')) {
+                        return 'chest';
+                    }
+                    
+                    // Back / גב
+                    if (n.includes('גב') || n.includes('מתח') || n.includes('חתירה') || n.includes('פולי') || 
+                        n.includes('דדליפט') || n.includes('מסור') || n.includes('טי באר') || n.includes('t-bar') ||
+                        n.includes('pull') || n.includes('row') || n.includes('lat') || n.includes('deadlift') || 
+                        n.includes('chinups') || n.includes('chin-up') || n.includes('shrug') || n.includes('שראגס') ||
+                        n.includes('פול אובר') || n.includes('pullover') || n.includes('back') || n.includes('היפר אקסטנשן') ||
+                        n.includes('גוד מורנינג') || n.includes('good morning')) {
+                        return 'back';
+                    }
+                    
+                    // Legs / רגליים
+                    if (n.includes('סקוואט') || n.includes('רגליים') || n.includes('ארבע ראשי') || n.includes('תאומים') || 
+                        n.includes('לאנג') || n.includes('פשיטת ברכיים') || n.includes('כפיפת ברכיים') || n.includes('leg') || 
+                        n.includes('squat') || n.includes('lunge') || n.includes('calf') || n.includes('calves') || 
+                        n.includes('היפ תראסט') || n.includes('hip thrust') || n.includes('גלוטס') || n.includes('glute') || 
+                        n.includes('האק סקוואט') || n.includes('hack') || n.includes('פרס רגליים') || n.includes('לג פרס') || 
+                        n.includes('האמסטרינג') || n.includes('hamstring') || n.includes('בולגרי') || n.includes('bulgarian') ||
+                        n.includes('מקרבים') || n.includes('מרחיקים') || n.includes('adductor') || n.includes('abductor') ||
+                        n.includes('סומו') || n.includes('רומני') || n.includes('rdl') || n.includes('stiff')) {
+                        return 'legs';
+                    }
+                    
+                    // Shoulders / כתפיים
+                    if (n.includes('כתפיים') || n.includes('כתף') || n.includes('הרחקה לצדדים') || n.includes('הרחקת כתפיים') || 
+                        n.includes('לחיצת כתפיים') || n.includes('פרס') || n.includes('shoulder') || n.includes('press') || 
+                        n.includes('deltoid') || n.includes('delt') || n.includes('פייס פול') || n.includes('face pull') || 
+                        n.includes('מילטרי') || n.includes('military') || n.includes('אוברהד') || n.includes('overhead') || 
+                        n.includes('arnold') || n.includes('ארנולד') || n.includes('הרחקה אופקית') || n.includes('פרונט רייז') || 
+                        n.includes('lateral') || n.includes('סייד רייז')) {
+                        return 'shoulders';
+                    }
+                    
+                    // Arms / ידיים
+                    if (n.includes('יד') || n.includes('מרפקים') || n.includes('יד קדמית') || n.includes('יד אחורית') || 
+                        n.includes('פשיטת מרפקים') || n.includes('כפיפת מרפקים') || n.includes('טרייספס') || n.includes('בייספס') || 
+                        n.includes('bicep') || n.includes('tricep') || n.includes('curl') || n.includes('פטישים') || 
+                        n.includes('hammer') || n.includes('צרפתית') || n.includes('skull') || n.includes('קיקבק') || 
+                        n.includes('kickback') || n.includes('פריצ\'ר') || n.includes('preacher') || n.includes('ריכוז') || 
+                        n.includes('concentration') || n.includes('דיפס') || n.includes('dips') || n.includes('אמות') || 
+                        n.includes('forearm') || n.includes('wrist')) {
+                        return 'arms';
+                    }
+                    
+                    // Abs / בטן
+                    if (n.includes('בטן') || n.includes('ליבה') || n.includes('abs') || n.includes('core') || 
+                        n.includes('פלאנק') || n.includes('plank') || n.includes('כפיפות בטן') || n.includes('crunch') || 
+                        n.includes('רוסי') || n.includes('russian twist') || n.includes('הרמת רגליים') || n.includes('leg raise') || 
+                        n.includes('גלגל בטן') || n.includes('ab wheel') || n.includes('ואקום') || n.includes('vacuum') || 
+                        n.includes('הולו') || n.includes('hollow')) {
+                        return 'abs';
+                    }
+                    
+                    return 'chest';
+                },
+
                 onExerciseNameChange(dayIdx, exIdx) {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (!client || !client.workoutPlan?.days?.[dayIdx]?.exercises?.[exIdx]) return;
                     const ex = client.workoutPlan.days[dayIdx].exercises[exIdx];
                     this.ensureExerciseSetsDetail(ex);
-                    const found = this.exerciseLibrary.find(l => l.name === ex.name);
-                    if (found) {
-                        if (!ex.video && found.video) ex.video = found.video;
-                        if (!ex.rest) ex.rest = '90 שנ\'';
+                    
+                    if (ex.name && ex.name.trim()) {
+                        const q = ex.name.trim().toLowerCase();
+                        const found = this.exerciseLibrary.find(l => l.name.toLowerCase() === q || l.name.toLowerCase().includes(q) || q.includes(l.name.toLowerCase()));
+                        if (found) {
+                            if (found.muscle) ex.muscle = found.muscle;
+                            if (!ex.video && found.video) ex.video = found.video;
+                            if (!ex.rest && found.rest) ex.rest = found.rest;
+                        } else {
+                            ex.muscle = this.detectExerciseMuscle(ex.name);
+                        }
                     }
                     this.saveData();
                 },
@@ -9663,14 +9762,25 @@ saveWorkoutPlanWithToast() {
                     if (!c || !c.workoutPlan || !c.workoutPlan.days) return volume;
                     c.workoutPlan.days.forEach(d => {
                         (d.exercises || []).forEach(e => {
-                            const n = (e.name || '').toLowerCase();
                             const s = (e.setsDetail && e.setsDetail.length > 0) ? e.setsDetail.length : (parseInt(e.sets) || 3);
-                            if (n.includes('חזה') || n.includes('בנץ') || n.includes('פרפר') || n.includes('מקבילים') || n.includes('chest') || n.includes('bench')) volume['חזה'] += s;
-                            else if (n.includes('גב') || n.includes('מתח') || n.includes('חתירה') || n.includes('פולי') || n.includes('דדליפט') || n.includes('back') || n.includes('pull')) volume['גב'] += s;
-                            else if (n.includes('סקוואט') || n.includes('רגליים') || n.includes('ארבע ראשי') || n.includes('תאומים') || n.includes('לאנג') || n.includes('פשיטת') || n.includes('כפיפת ברכיים') || n.includes('squat') || n.includes('leg')) volume['רגליים'] += s;
-                            else if (n.includes('כתפיים') || n.includes('הרחקה') || n.includes('לחיצת כתפיים') || n.includes('פרס') || n.includes('shoulder') || n.includes('press')) volume['כתפיים'] += s;
-                            else if (n.includes('יד') || n.includes('מרפקים') || n.includes('יד קדמית') || n.includes('יד אחורית') || n.includes('פשיטת מרפקים') || n.includes('טרייספס') || n.includes('בייספס') || n.includes('bicep') || n.includes('tricep')) volume['ידיים'] += s;
-                            else volume['בטן/ליבה'] += s;
+                            let m = e.muscle;
+                            if (!m || m === 'other') {
+                                if (e.name) {
+                                    const q = e.name.trim().toLowerCase();
+                                    const found = this.exerciseLibrary?.find(l => l.name.toLowerCase() === q || l.name.toLowerCase().includes(q));
+                                    if (found && found.muscle) m = found.muscle;
+                                    else m = this.detectExerciseMuscle(e.name);
+                                } else {
+                                    m = 'chest';
+                                }
+                            }
+                            
+                            if (m === 'chest' || m === 'חזה') volume['חזה'] += s;
+                            else if (m === 'back' || m === 'גב') volume['גב'] += s;
+                            else if (m === 'legs' || m === 'רגליים') volume['רגליים'] += s;
+                            else if (m === 'shoulders' || m === 'כתפיים') volume['כתפיים'] += s;
+                            else if (m === 'arms' || m === 'ידיים') volume['ידיים'] += s;
+                            else if (m === 'abs' || m === 'core' || m === 'בטן' || m === 'בטן/ליבה') volume['בטן/ליבה'] += s;
                         });
                     });
                     return volume;
