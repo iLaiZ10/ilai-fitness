@@ -690,6 +690,107 @@
                         <p class="text-xs text-slate-400">מאמן ראשי: אילאי. מלא את הפרטים הבאים כדי להתחיל את הליווי שלך בצורה הטובה ביותר.</p>
                     </div>
 
+                    <!-- כרטיס 3 הסליידים של אילאי (Personal Journey Story Slides) -->
+                    <div class="bg-gradient-to-br from-[#1f053d] to-[#140029] border border-[#3b166e] rounded-3xl p-5 md:p-6 shadow-2xl relative overflow-hidden text-[#fbf8f2] space-y-4">
+                        <!-- עיטור זוהר ברקע -->
+                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-[#fbbf24]/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#c4b5fd]/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                        <!-- כותרת ראשית ואינדיקטור סליידים -->
+                        <div class="flex items-center justify-between border-b border-[#351266] pb-3 relative z-10">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-xl bg-[#310d5e] border border-[#facc15]/30 text-[#facc15] font-black text-sm flex items-center justify-center shadow-md">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                </span>
+                                <div>
+                                    <h3 class="text-xs md:text-sm font-black text-white">הסיפור האישי שלי — אילאי 👑</h3>
+                                    <p class="text-[10px] text-[#c4b5fd]">למה אני כאן כדי להוביל אותך לשינוי אמיתי</p>
+                                </div>
+                            </div>
+
+                            <!-- נקודות ניווט 1 / 2 / 3 -->
+                            <div class="flex items-center gap-1.5 bg-[#140029] border border-[#351266] p-1 rounded-xl">
+                                <template x-for="idx in [0, 1, 2]" :key="idx">
+                                    <button type="button" 
+                                            @click="intakeStorySlide = idx; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                                            :class="intakeStorySlide === idx ? 'bg-[#facc15] text-[#1f053d] font-black px-2.5 py-1' : 'text-[#c4b5fd] hover:text-white px-2 py-1 font-bold'"
+                                            class="rounded-lg text-[10px] transition cursor-pointer"
+                                            x-text="'סלייד ' + (idx + 1)">
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- תוכן 3 הסליידים -->
+                        <div class="relative z-10 min-h-[110px] flex items-center">
+                            <!-- סלייד 1 -->
+                            <div x-show="intakeStorySlide === 0" x-transition.opacity.duration.300ms class="space-y-2.5 w-full">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 1 מתוך 3 • נקודת המפנה ⏳</span>
+                                </div>
+                                <h4 class="text-sm md:text-base font-black text-[#facc15] leading-relaxed">
+                                    "שקלתי 140 ק"ג בגיל 15 והבנתי שאם לא אקח את עצמי בידיים אולי לא אגיע לגיל 20 בכלל"
+                                </h4>
+                                <p class="text-[11px] text-[#c4b5fd] leading-relaxed">
+                                    ההחלטה שלקחתי באותו הרגע שינתה לי את החיים. הבנתי שבריאות וכושר הם לא מותרות – הם הבסיס להכל.
+                                </p>
+                            </div>
+
+                            <!-- סלייד 2 -->
+                            <div x-show="intakeStorySlide === 1" x-transition.opacity.duration.300ms class="space-y-2.5 w-full" x-cloak>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 2 מתוך 3 • השיעור הגדול 💡</span>
+                                </div>
+                                <h4 class="text-sm md:text-base font-black text-[#facc15] leading-relaxed">
+                                    "ירדתי במשקל דרסטית ואיבדתי את רוב המסת שריר שלי - היום למדתי את הטעות"
+                                </h4>
+                                <p class="text-[11px] text-[#c4b5fd] leading-relaxed">
+                                    ירידה במשקל ללא ליווי מקצועי גרמה לי לאבד שריר ואנרגיה. היום אני מלמד אותך איך לרדת נכון, לשמור על השריר ולבנות גוף חטוב ובריא.
+                                </p>
+                            </div>
+
+                            <!-- סלייד 3 -->
+                            <div x-show="intakeStorySlide === 2" x-transition.opacity.duration.300ms class="space-y-2.5 w-full" x-cloak>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 3 מתוך 3 • הצמיחה והניצחון 🛡️</span>
+                                </div>
+                                <h4 class="text-sm md:text-base font-black text-[#facc15] leading-relaxed">
+                                    "הצבא היה המקום שלא מצאתי את עצמי בו וגם פגע לי בדבר החזק שלי -האימונים והתזונה אבל למדתי לצאת מזה ואני עדיין חי איתו היום"
+                                </h4>
+                                <p class="text-[11px] text-[#c4b5fd] leading-relaxed">
+                                    פיתחתי שיטה מנצחת שעובדת גם בתנאים הכי עמוסים ומאתגרים. בוא נבנה יחד את השינוי שמחזיק שלך!
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- כפתורי מעבר בין סליידים -->
+                        <div class="flex items-center justify-between pt-2 border-t border-[#351266] relative z-10 text-xs">
+                            <button type="button" 
+                                    @click="intakeStorySlide = Math.max(0, intakeStorySlide - 1); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                                    :disabled="intakeStorySlide === 0"
+                                    :class="intakeStorySlide === 0 ? 'opacity-30 cursor-not-allowed text-[#c4b5fd]' : 'text-[#facc15] hover:text-white cursor-pointer'"
+                                    class="flex items-center gap-1 font-bold">
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                <span>הקודם</span>
+                            </button>
+
+                            <template x-if="intakeStorySlide < 2">
+                                <button type="button" 
+                                        @click="intakeStorySlide = intakeStorySlide + 1; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                                        class="bg-[#310d5e] hover:bg-[#3b166e] text-[#facc15] border border-[#facc15]/30 px-3.5 py-1.5 rounded-xl font-black flex items-center gap-1.5 transition cursor-pointer">
+                                    <span>לסלייד הבא</span>
+                                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </template>
+
+                            <template x-if="intakeStorySlide === 2">
+                                <span class="text-[10px] text-[#facc15] font-black flex items-center gap-1">
+                                    <span>✨ עכשיו תורך להתחיל! מלא את השאלון למטה 👇</span>
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+
                     <!-- מד התקדמות (Progress Indicator) -->
                     <template x-if="!intakeSuccess">
                         <div class="space-y-2">
@@ -6700,6 +6801,7 @@
                     hatedFoods: '', notes: '', motivation: '', biggestChallenge: '' 
                 },
                 intakeStep: 1,
+                intakeStorySlide: 0,
                 intakeSuccess: false,
                 pdfUploading: false,
                 pdfBlobUrlCache: null,
