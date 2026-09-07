@@ -1267,6 +1267,30 @@
                     <!-- תוכן לשונית 2: אימונים אינטראקטיביים (Gym Mode 2.0) -->
                     <div x-show="portalActiveSubTab === 'workouts'" x-cloak class="space-y-4">
                         
+                        <!-- באנר האימון המומלץ להיום לפי יום בשבוע -->
+                        <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days.length > 0">
+                            <div class="bg-[#082722] border border-[#174e43] rounded-3xl p-4 md:p-5 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative overflow-hidden">
+                                <div class="flex items-center gap-3 relative z-10">
+                                    <div class="p-2.5 rounded-2xl bg-[#86efac]/20 text-[#86efac] border border-[#86efac]/30 shrink-0">
+                                        <i data-lucide="zap" class="w-5 h-5 text-[#86efac]"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-[10px] bg-[#86efac] text-[#082722] font-black px-2 py-0.5 rounded-full" x-text="getHebrewDayOfWeek()"></span>
+                                            <span class="text-xs text-[#93c7bb] font-bold">האימון המתוכנן שלך להיום 🎯</span>
+                                        </div>
+                                        <h3 class="text-sm md:text-base font-black text-white mt-0.5" x-text="portalClient.workoutPlan.days[getTodayRecommendedWorkoutIndex(portalClient)]?.name || 'אימון יומי'"></h3>
+                                    </div>
+                                </div>
+                                <button type="button" 
+                                        @click="portalSelectedWorkoutDayIdx = getTodayRecommendedWorkoutIndex(portalClient); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                                        class="bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black px-4 py-2.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md shadow-[#86efac]/20 transition cursor-pointer shrink-0 relative z-10">
+                                    <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                                    <span>🚀 התחל אימון זה</span>
+                                </button>
+                            </div>
+                        </template>
+
                         <!-- סלקטור ימי אימון אינטראקטיבי A / B / C -->
                         <template x-if="portalClient?.workoutPlan?.days && portalClient.workoutPlan.days.length > 0">
                             <div class="bg-white border border-[#e5dfd3] rounded-3xl p-3 shadow-lg">
@@ -1564,6 +1588,14 @@
                                                 </table>
                                             </div>
 
+                                             <!-- הערה אישית לתרגיל -->
+                                            <div class="pt-1">
+                                                <input type="text" 
+                                                       x-model="liveExerciseNotes[`d${dayIdx}_e${exIdx}`]"
+                                                       placeholder="הערה אישית לתרגיל (משקל, הרגשה, דגש לביצוע...)"
+                                                       class="w-full bg-white border border-[#e5dfd3] rounded-xl px-3 py-1.5 text-[11px] text-[#082722] font-semibold focus:outline-none focus:border-[#22c55e] placeholder:text-slate-400">
+                                            </div>
+
                                             <div class="flex justify-start pt-1">
                                                 <button type="button" @click="addLiveSetToExercise(dayIdx, exIdx)" class="text-[#082722] hover:text-emerald-700 text-[10px] font-bold flex items-center gap-1 cursor-pointer">
                                                     <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
@@ -1574,8 +1606,19 @@
                                     </template>
                                 </div>
 
+                                <!-- תיבת סיכום והערות אימון למאמן אילאי -->
+                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-2">
+                                    <label class="block text-xs font-black text-[#082722] flex items-center gap-1.5">
+                                        <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                        <span>איך הרגשת באימון? הערות ודגשים למאמן אילאי (אופציונלי):</span>
+                                    </label>
+                                    <textarea x-model="liveWorkoutSessionNotes" 
+                                              placeholder="ספר לאילאי איך הרגשת: רמות אנרגיה, משקלים שעלו, שרירים שנתפסו, כאב או תחושת ניצחון..." 
+                                              class="w-full bg-white border border-[#e5dfd3] rounded-xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#22c55e] h-20 resize-none font-medium placeholder:text-slate-400"></textarea>
+                                </div>
+
                                 <!-- כפתור סיום אימון וסגירת יום -->
-                                <div class="pt-4 border-t border-[#e5dfd3] flex flex-col sm:flex-row items-center justify-between gap-3">
+                                <div class="pt-2 border-t border-[#e5dfd3] flex flex-col sm:flex-row items-center justify-between gap-3">
                                     <div class="text-xs text-[#5f756e]">
                                         <span>סיימת את כל התרגילים? לחץ לסגירת האימון ונעילת יום מוצלח 👑</span>
                                     </div>
@@ -2062,50 +2105,218 @@
                         </template>
                     </div>
 
-                    <!-- תוכן לשונית 4: התקדמות, שקילות, שיקוף שבועי לאילאי ו-Drive -->
+                    <!-- תוכן לשונית 4: יומן תהליך & כתיבה חופשית, שקילות, ו-Google Drive -->
                     <div x-show="portalActiveSubTab === 'progress'" x-cloak class="space-y-4">
                         
-                        <!-- סרגל מעבר פנימי 3 אופציות -->
-                        <div class="grid grid-cols-3 gap-1 bg-white p-1.5 rounded-2xl border border-[#e5dfd3] text-center shadow-sm">
-                            <button @click="portalJournalSection = 'checkin'" 
-                                    :class="portalJournalSection === 'checkin' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
-                                <i data-lucide="scale" class="w-3.5 h-3.5"></i>
-                                <span>שקילה & מדדים</span>
-                            </button>
-                            
-                            <button @click="portalJournalSection = 'reflection'" 
+                        <!-- סרגל מעבר פנימי 3 עולמות תוכן -->
+                        <div class="grid grid-cols-3 gap-1.5 bg-white p-1.5 rounded-2xl border border-[#e5dfd3] text-center shadow-sm">
+                            <button type="button" 
+                                    @click="portalJournalSection = 'reflection'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
                                     :class="portalJournalSection === 'reflection' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
-                                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                                <span>שיקוף שבועי לאילאי</span>
+                                    class="py-2.5 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#86efac]"></i>
+                                <span>יומן תהליך & כתיבה ✍️</span>
+                            </button>
+
+                            <button type="button" 
+                                    @click="portalJournalSection = 'checkin'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
+                                    :class="portalJournalSection === 'checkin' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
+                                    class="py-2.5 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                                <span>שקילה & מדדים ⚖️</span>
                             </button>
                             
-                            <button @click="portalJournalSection = 'drive'" 
+                            <button type="button" 
+                                    @click="portalJournalSection = 'drive'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
                                     :class="portalJournalSection === 'drive' ? 'bg-[#082722] text-[#86efac] font-black shadow-md' : 'text-[#5f756e] hover:text-[#082722] font-bold'"
-                                    class="py-2 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                    class="py-2.5 px-1 rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
                                 <i data-lucide="folder" class="w-3.5 h-3.5"></i>
-                                <span>Google Drive</span>
+                                <span>Google Drive 📁</span>
                             </button>
                         </div>
 
-                        <!-- 1. טופס הזנת שקילה עצמאית והיסטוריה -->
-                        <div x-show="portalJournalSection === 'checkin'" class="space-y-4">
-                            <!-- טופס הזנת שקילה עצמאית -->
+                        <!-- 1. יומן תהליך וכתיבה חופשית לאילאי (Journaling & Reflection Hub) -->
+                        <div x-show="portalJournalSection === 'reflection'" class="space-y-4">
                             <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                                <div class="border-b border-[#e5dfd3] pb-3">
-                                    <h3 class="text-sm md:text-base font-black text-[#082722] flex items-center gap-2">
-                                        <i data-lucide="scale" class="w-5 h-5 text-[#22c55e]"></i>
-                                        <span>עדכון שקילה שבועי ⚖️</span>
-                                    </h3>
-                                    <p class="text-[10px] text-[#5f756e] mt-1">הזן את משקלך היום. הנתונים יתעדכנו ישירות במערכת המעקב של אילאי!</p>
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="pen-tool" class="w-5 h-5 text-[#86efac]"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm md:text-base font-black text-[#082722]">יומן תהליך, מחשבות ושיתוף לאילאי ✍️</h3>
+                                            <p class="text-[11px] text-[#5f756e]">כמה שיותר תכתוב ותשתף — ככה התהליך יהיה מדויק ומותאם יותר עבורך!</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3 py-1 rounded-xl text-xs font-bold self-start sm:self-auto" x-text="(portalClient?.reflectionLogs?.length || 0) + ' רשומות ביומן'"></span>
                                 </div>
 
-                                <!-- הודעת הצלחה -->
+                                <template x-if="portalReflectionSaved">
+                                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-3.5 rounded-2xl text-center text-xs font-bold animate-fade-in flex items-center justify-center gap-2">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                                        <span>הרשומה נשמרה ונשלחה ישירות לאילאי! הוא יעבור עליה וייתן לך משוב אישי. 👑</span>
+                                    </div>
+                                </template>
+
+                                <div class="space-y-3.5">
+                                    <!-- בחירת תחושה / Mood -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-[11px] font-bold text-[#082722]">איך אתה מרגיש היום / השבוע? בחר תחושה:</label>
+                                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+                                            <button type="button" 
+                                                    @click="portalProcessMood = 'great'"
+                                                    :class="portalProcessMood === 'great' ? 'bg-[#082722] text-[#86efac] border-[#082722] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-bold'"
+                                                    class="border p-2 rounded-xl text-xs transition cursor-pointer text-center">
+                                                🔥 מעולה ובשיא
+                                            </button>
+                                            <button type="button" 
+                                                    @click="portalProcessMood = 'strong'"
+                                                    :class="portalProcessMood === 'strong' ? 'bg-[#082722] text-[#86efac] border-[#082722] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-bold'"
+                                                    class="border p-2 rounded-xl text-xs transition cursor-pointer text-center">
+                                                💪 חזק ובשליטה
+                                            </button>
+                                            <button type="button" 
+                                                    @click="portalProcessMood = 'neutral'"
+                                                    :class="portalProcessMood === 'neutral' ? 'bg-[#082722] text-[#86efac] border-[#082722] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-bold'"
+                                                    class="border p-2 rounded-xl text-xs transition cursor-pointer text-center">
+                                                😐 סביר / שגרה
+                                            </button>
+                                            <button type="button" 
+                                                    @click="portalProcessMood = 'tired'"
+                                                    :class="portalProcessMood === 'tired' ? 'bg-[#082722] text-[#86efac] border-[#082722] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-bold'"
+                                                    class="border p-2 rounded-xl text-xs transition cursor-pointer text-center">
+                                                🥱 עייף / עמוס
+                                            </button>
+                                            <button type="button" 
+                                                    @click="portalProcessMood = 'challenged'"
+                                                    :class="portalProcessMood === 'challenged' ? 'bg-[#082722] text-[#86efac] border-[#082722] font-black' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] font-bold'"
+                                                    class="border p-2 rounded-xl text-xs transition cursor-pointer text-center">
+                                                🧗 מאותגר ונלחם
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- כותרת הרשומה -->
+                                    <div>
+                                        <input type="text" 
+                                               x-model="portalProcessEntryTitle" 
+                                               placeholder="כותרת לרשומה (למשל: מחשבות על האימונים השבוע, אתגר בארוחות סופ״ש, הישג משקל...)" 
+                                               class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl px-4 py-3 text-xs text-[#082722] font-bold focus:outline-none focus:border-[#22c55e]">
+                                    </div>
+
+                                    <!-- רעיונות לכתיבה -->
+                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl text-[11px] text-[#5f756e] space-y-1">
+                                        <span class="font-bold text-[#082722] block">💡 שאלות מכוונות לכתיבה:</span>
+                                        <div class="flex flex-wrap gap-1.5 pt-0.5">
+                                            <span class="bg-white px-2 py-0.5 rounded-lg border border-[#e5dfd3] text-[10px]">איך היה רמת הכוח והאנרגיה באימונים?</span>
+                                            <span class="bg-white px-2 py-0.5 rounded-lg border border-[#e5dfd3] text-[10px]">האם חווית רעב / חשקים בתזונה?</span>
+                                            <span class="bg-white px-2 py-0.5 rounded-lg border border-[#e5dfd3] text-[10px]">הצלחה אישית שאתה גאה בה</span>
+                                            <span class="bg-white px-2 py-0.5 rounded-lg border border-[#e5dfd3] text-[10px]">שאלה שתרצה שאילאי יענה עליה</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- אזור הכתיבה המרכזי -->
+                                    <div>
+                                        <textarea x-model="portalWeeklyReflectionText" 
+                                                  placeholder="כתוב כאן בחופשיות את כל המחשבות, התחושות, האתגרים וההצלחות שלך... כתוב כמה שיותר!" 
+                                                  class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 text-xs md:text-sm text-[#082722] focus:outline-none focus:border-[#22c55e] h-40 resize-none font-medium leading-relaxed"></textarea>
+                                    </div>
+
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[10px] text-[#5f756e]" x-text="(portalWeeklyReflectionText || '').trim().length > 0 ? ((portalWeeklyReflectionText.trim().split(/\s+/).length) + ' מילים נכתבו ✍️') : 'התחל לכתוב...'"></span>
+                                        <button type="button" @click="savePortalReflection()" class="bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 px-6 rounded-2xl text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-[#86efac]/20 transition cursor-pointer">
+                                            <i data-lucide="send" class="w-4 h-4"></i>
+                                            <span>שמור ושלח רשומה ביומן 💾</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- היסטוריית רשומות יומן ותגובות המאמן אילאי -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <h4 class="text-xs md:text-sm font-black text-[#082722] border-b border-[#e5dfd3] pb-2 flex items-center justify-between">
+                                    <span>רשומות קודמות ביומן התהליך</span>
+                                    <span class="text-[10px] text-[#5f756e] font-normal">מסודר לפי תאריכים</span>
+                                </h4>
+
+                                <template x-if="!portalClient?.reflectionLogs || portalClient.reflectionLogs.length === 0">
+                                    <div class="py-8 text-center text-slate-400 text-xs italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3]">
+                                        טרם כתבת רשומות ביומן. כתוב את הרשומה הראשונה שלך למעלה! ✍️
+                                    </div>
+                                </template>
+
+                                <div class="space-y-4">
+                                    <template x-for="ref in (portalClient?.reflectionLogs || [])" :key="ref.id">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm">
+                                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2 flex-wrap gap-2">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="font-extrabold text-xs text-[#082722]" x-text="ref.title || ('רשומה • ' + formatDate(ref.date))"></span>
+                                                    <template x-if="ref.moodLabel">
+                                                        <span class="text-[10px] bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-lg font-bold text-[#082722]" x-text="ref.moodLabel"></span>
+                                                    </template>
+                                                </div>
+                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" x-text="ref.reviewed ? 'נבדק ע״י אילאי ✅' : 'ממתין למשוב אילאי ⏳'"></span>
+                                            </div>
+
+                                            <div class="text-xs font-medium text-[#082722] whitespace-pre-line bg-white p-3.5 rounded-xl border border-[#e5dfd3] leading-relaxed" x-text="ref.text"></div>
+
+                                            <!-- תגובת המאמן אילאי -->
+                                            <template x-if="ref.coachFeedback">
+                                                <div class="bg-[#082722] text-[#fbf8f2] p-4 rounded-xl space-y-1.5 border border-[#133d35] shadow-sm">
+                                                    <div class="flex items-center justify-between">
+                                                        <span class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
+                                                            <i data-lucide="crown" class="w-4 h-4 text-[#86efac]"></i>
+                                                            <span>משוב והנחיות מהמאמן אילאי:</span>
+                                                        </span>
+                                                        <span class="text-[10px] text-[#93c7bb]" x-text="ref.reviewedAt ? formatDate(ref.reviewedAt) : ''"></span>
+                                                    </div>
+                                                    <p class="text-xs font-semibold text-[#fbf8f2] whitespace-pre-line" x-text="ref.coachFeedback"></p>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. שקילה & מדדים (Weight & Measurements Hub) -->
+                        <div x-show="portalJournalSection === 'checkin'" class="space-y-4">
+                            <!-- כרטיסי מדדי משקל מרכזיים (KPIs) -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <div class="bg-white border border-[#e5dfd3] p-3.5 rounded-2xl text-center space-y-1 shadow-sm">
+                                    <span class="text-[10px] text-[#5f756e] font-bold block">משקל התחלתי</span>
+                                    <span class="text-lg font-black text-[#082722]" x-text="(portalClient?.startWeight || portalClient?.checkins?.[0]?.weight || '-') + ' ק״ג'"></span>
+                                </div>
+                                <div class="bg-[#082722] border border-[#174e43] p-3.5 rounded-2xl text-center space-y-1 shadow-sm text-white">
+                                    <span class="text-[10px] text-[#86efac] font-bold block">משקל נוכחי</span>
+                                    <span class="text-lg font-black text-[#86efac]" x-text="(portalClient?.checkins?.length > 0 ? portalClient.checkins[portalClient.checkins.length - 1].weight : (portalClient?.startWeight || '-')) + ' ק״ג'"></span>
+                                </div>
+                                <div class="bg-white border border-[#e5dfd3] p-3.5 rounded-2xl text-center space-y-1 shadow-sm">
+                                    <span class="text-[10px] text-[#5f756e] font-bold block">משקל יעד</span>
+                                    <span class="text-lg font-black text-emerald-700" x-text="(portalClient?.targetWeight || '-') + ' ק״ג'"></span>
+                                </div>
+                                <div class="bg-white border border-[#e5dfd3] p-3.5 rounded-2xl text-center space-y-1 shadow-sm">
+                                    <span class="text-[10px] text-[#5f756e] font-bold block">סך שקילות</span>
+                                    <span class="text-lg font-black text-[#082722]" x-text="(portalClient?.checkins?.length || 0) + ' שקילות'"></span>
+                                </div>
+                            </div>
+
+                            <!-- טופס הזנת שקילה עצמאית -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                <div class="border-b border-[#e5dfd3] pb-3 flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-sm md:text-base font-black text-[#082722] flex items-center gap-2">
+                                            <i data-lucide="scale" class="w-5 h-5 text-[#22c55e]"></i>
+                                            <span>הזנת שקילה חדשה ⚖️</span>
+                                        </h3>
+                                        <p class="text-[10px] text-[#5f756e] mt-0.5">הזן את משקל הבוקר שלך בצום. הנתונים מתעדכנים ישירות לאילאי!</p>
+                                    </div>
+                                </div>
+
                                 <template x-if="portalCheckinSuccess">
-                                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-4 rounded-2xl text-center space-y-1 animate-fade-in">
+                                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-3.5 rounded-2xl text-center space-y-1 animate-fade-in">
                                         <i data-lucide="check-circle" class="w-6 h-6 mx-auto text-emerald-600 mb-1"></i>
-                                        <h4 class="text-xs font-bold text-[#082722]">השקילה נשלחה בהצלחה! 💪</h4>
+                                        <h4 class="text-xs font-bold text-[#082722]">השקילה נשמרה בהצלחה! 💪</h4>
                                         <p class="text-[10px] text-emerald-700">אילאי קיבל את העדכון שלך במערכת.</p>
                                     </div>
                                 </template>
@@ -2141,20 +2352,23 @@
                                     </div>
 
                                     <div>
-                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">איך עבר עליך השבוע? הערות / שאלות לאילאי</label>
-                                        <textarea x-model="portalNewCheckin.notes" placeholder="ספר על תחושות, אנרגיה באימונים, חריגות או אתגרים..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#22c55e] h-24 resize-none"></textarea>
+                                        <label class="block text-[10px] font-bold text-[#5f756e] mb-1">הערה לשקילה זו (איך הרגשת, שעת שקילה, חריגות)</label>
+                                        <textarea x-model="portalNewCheckin.notes" placeholder="למשל: שקילת בוקר אחרי צום, מרגיש קליל יותר..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-3 text-xs text-[#082722] focus:outline-none focus:border-[#22c55e] h-20 resize-none"></textarea>
                                     </div>
 
                                     <button type="submit" class="w-full bg-gradient-to-r from-[#86efac] to-[#4ade80] hover:from-[#4ade80] hover:to-[#22c55e] text-[#082722] font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-xl shadow-[#86efac]/20 transition cursor-pointer">
                                         <i data-lucide="send" class="w-4 h-4"></i>
-                                        <span>שלח שקילה שבועית לאילאי</span>
+                                        <span>שמור שקילה שבועית לאילאי</span>
                                     </button>
                                 </form>
                             </div>
 
                             <!-- היסטוריית שקילות -->
                             <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 shadow-xl space-y-3">
-                                <h4 class="text-xs font-bold text-[#082722] border-b border-[#e5dfd3] pb-2">היסטוריית השקילות האחרונות</h4>
+                                <h4 class="text-xs font-bold text-[#082722] border-b border-[#e5dfd3] pb-2">היסטוריית השקילות</h4>
+                                <template x-if="!portalClient?.checkins || portalClient.checkins.length === 0">
+                                    <div class="py-6 text-center text-slate-400 text-xs italic">טרם הוזנו שקילות</div>
+                                </template>
                                 <div class="space-y-2">
                                     <template x-for="(c, cIdx) in (portalClient?.checkins || []).slice().reverse()" :key="cIdx">
                                         <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-3 flex items-center justify-between text-xs">
@@ -2172,89 +2386,7 @@
                             </div>
                         </div>
 
-                        <!-- 2. יומן כתיבה ושיקוף שבועי לאילאי (לסופ"ש) -->
-                        <div x-show="portalJournalSection === 'reflection'" class="space-y-4">
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                                <div class="flex items-center gap-3 border-b border-[#e5dfd3] pb-3">
-                                    <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                                        <i data-lucide="sparkles" class="w-5 h-5"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm md:text-base font-extrabold text-[#082722]">יומן תהליך ושיקוף שבועי לאילאי 👑</h3>
-                                        <p class="text-[11px] text-[#5f756e]">ספר לאילאי איך עבר עליך השבוע, והוא יעבור על זה בסופ״ש וייתן לך משוב אישי!</p>
-                                    </div>
-                                </div>
-
-                                <template x-if="portalReflectionSaved">
-                                    <div class="bg-emerald-50 border border-emerald-300 text-emerald-800 p-3 rounded-2xl text-center text-xs font-bold animate-fade-in flex items-center justify-center gap-2">
-                                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
-                                        <span>השיקוף השבועי נשלח בהצלחה לאילאי! הוא יעבור עליו בסופ״ש ויגיב כאן. 👑</span>
-                                    </div>
-                                </template>
-
-                                <div class="space-y-3">
-                                    <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-3 rounded-2xl text-[11px] text-[#5f756e] space-y-1">
-                                        <span class="font-bold text-[#082722] block">💡 נושאים שמומלץ לשתף בהם:</span>
-                                        <ul class="list-disc list-inside space-y-0.5">
-                                            <li>איך הרגשת באימונים השבוע? רמות אנרגיה וכוח.</li>
-                                            <li>איך היה עם התזונה? שובע, חשקים למתוק או חריגות.</li>
-                                            <li>אתגרים, הצלחות אישיות או שאלות שיש לך לאילאי.</li>
-                                        </ul>
-                                    </div>
-
-                                    <div>
-                                        <textarea x-model="portalWeeklyReflectionText" placeholder="כתוב כאן בחופשיות לאילאי על השבוע שלך..." class="w-full bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-3.5 text-xs text-[#082722] focus:outline-none focus:border-[#082722] h-32 resize-none font-semibold"></textarea>
-                                    </div>
-
-                                    <button type="button" @click="savePortalReflection()" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 transition border border-[#174e43] shadow-md cursor-pointer">
-                                        <i data-lucide="send" class="w-4 h-4 text-[#86efac]"></i>
-                                        <span>שלח שיקוף שבועי לאילאי</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- היסטוריית שיקופים ומשוב של אילאי -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                                <h4 class="text-xs md:text-sm font-extrabold text-[#082722] border-b border-[#e5dfd3] pb-2">
-                                    שיקופים קודמים ומשוב המאמן
-                                </h4>
-
-                                <template x-if="!portalClient?.reflectionLogs || portalClient.reflectionLogs.length === 0">
-                                    <div class="py-8 text-center text-slate-400 text-xs italic">
-                                        טרם שלחת שיקופים שבועיים. כתוב את השיקוף הראשון שלך למעלה! ✍️
-                                    </div>
-                                </template>
-
-                                <div class="space-y-4">
-                                    <template x-for="ref in (portalClient?.reflectionLogs || [])" :key="ref.id">
-                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm">
-                                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
-                                                <span class="font-extrabold text-xs text-[#082722]" x-text="'השיקוף שלך • ' + formatDate(ref.date)"></span>
-                                                <span :class="ref.reviewed ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" x-text="ref.reviewed ? 'נבדק ע״י אילאי ✅' : 'ממתין לבדיקת סופ״ש ⏳'"></span>
-                                            </div>
-
-                                            <div class="text-xs font-semibold text-[#082722] whitespace-pre-line bg-white p-3 rounded-xl border border-[#e5dfd3]" x-text="ref.text"></div>
-
-                                            <!-- תגובת המאמן אילאי אם קיימת -->
-                                            <template x-if="ref.coachFeedback">
-                                                <div class="bg-[#082722] text-[#fbf8f2] p-4 rounded-xl space-y-1.5 border border-[#133d35]">
-                                                    <div class="flex items-center justify-between">
-                                                        <span class="text-xs font-black text-[#86efac] flex items-center gap-1.5">
-                                                            <i data-lucide="crown" class="w-4 h-4"></i>
-                                                            <span>משוב והנחיות מהמאמן אילאי:</span>
-                                                        </span>
-                                                        <span class="text-[10px] text-[#93c7bb]" x-text="ref.reviewedAt ? formatDate(ref.reviewedAt) : ''"></span>
-                                                    </div>
-                                                    <p class="text-xs font-semibold text-[#fbf8f2] whitespace-pre-line" x-text="ref.coachFeedback"></p>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 3. קישור ל-Google Drive -->
+                        <!-- 3. קישור ל-Google Drive & קבצים -->
                         <div x-show="portalJournalSection === 'drive'" class="space-y-4">
                             <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                                 <div class="flex items-center gap-3 border-b border-[#e5dfd3] pb-3">
@@ -2262,16 +2394,26 @@
                                         <i data-lucide="folder-up" class="w-5 h-5"></i>
                                     </div>
                                     <div>
-                                        <h3 class="text-sm md:text-base font-extrabold text-[#082722]">תיקיית Google Drive האישית שלך</h3>
-                                        <p class="text-[10px] text-[#5f756e]">גישה ישירה לתיקיית התמונות והקבצים המשותפת עם אילאי</p>
+                                        <h3 class="text-sm md:text-base font-extrabold text-[#082722]">תיקיית Google Drive האישית שלך 📁</h3>
+                                        <p class="text-[10px] text-[#5f756e]">גישה ישירה לתיקיית התמונות, הסרטונים והמסמכים המשותפת עם אילאי</p>
                                     </div>
+                                </div>
+
+                                <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-4 rounded-2xl space-y-2 text-xs text-[#082722]">
+                                    <span class="font-bold block text-[#082722]">📂 מה מומלץ להעלות לתיקיית ה-Drive שלך?</span>
+                                    <ul class="space-y-1 text-[#5f756e] text-[11px] list-disc list-inside">
+                                        <li>📸 <strong>תמונות התקדמות חודשיות</strong> (פרונט, גב, צד בתאורה קבועה).</li>
+                                        <li>🩸 <strong>תוצאות בדיקות דם תקופתיות</strong> ומסמכים רפואיים רלוונטיים.</li>
+                                        <li>🎥 <strong>סרטוני בדיקת טכניקה</strong> בתרגילים מורכבים (סקוואט, דדליפט, בנץ' פרס).</li>
+                                        <li>📄 <strong>טבלאות מעקב אישיות</strong> וקבצי PDF.</li>
+                                    </ul>
                                 </div>
 
                                 <template x-if="portalClient?.googleDriveUrl">
                                     <div class="space-y-3">
-                                        <a :href="portalClient.googleDriveUrl" target="_blank" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-3.5 px-4 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2 border border-[#174e43] shadow-md transition">
+                                        <a :href="portalClient.googleDriveUrl" target="_blank" class="w-full bg-[#082722] hover:bg-[#0f3830] text-[#86efac] font-black py-4 px-4 rounded-2xl text-xs md:text-sm flex items-center justify-center gap-2.5 border border-[#174e43] shadow-md transition cursor-pointer">
                                             <i data-lucide="external-link" class="w-4 h-4 text-[#86efac]"></i>
-                                            <span>פתח את תיקיית ה-Google Drive שלך</span>
+                                            <span>פתח את תיקיית ה-Google Drive שלך במסך מלא ↗</span>
                                         </a>
                                     </div>
                                 </template>
@@ -2280,7 +2422,7 @@
                                     <div class="bg-[#fbf8f2] border border-[#e5dfd3] p-6 rounded-2xl text-center space-y-2">
                                         <i data-lucide="folder" class="w-8 h-8 text-[#7a918a] mx-auto"></i>
                                         <p class="text-xs text-[#082722] font-bold">טרם הוגדר קישור לתיקיית Drive אישית</p>
-                                        <p class="text-[10px] text-[#5f756e]">אילאי יעדכן בקרוב את הקישור לתיקייה שלך, ובינתיים תוכל להעלות תמונות ישירות בלשונית "יומן אכילה & תמונות".</p>
+                                        <p class="text-[10px] text-[#5f756e]">אילאי יעדכן בקרוב את הקישור לתיקייה שלך, ובינתיים תוכל להעלות תמונות ישירות בלשונית "תזונה".</p>
                                     </div>
                                 </template>
                             </div>
@@ -3578,6 +3720,72 @@
                                 </div>
                             </div>
 
+                            <!-- יומן אימונים שבוצעו בפועל ע״י המתאמן (Workout Sessions & Trainee Notes) -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-2xl p-4 md:p-5 shadow-xl space-y-4">
+                                <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2.5">
+                                    <div class="flex items-center gap-2">
+                                        <div class="p-2 rounded-xl bg-[#082722] text-[#86efac]">
+                                            <i data-lucide="dumbbell" class="w-4 h-4 text-[#86efac]"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-xs md:text-sm font-black text-[#082722]">יומן אימונים שבוצעו בפועל ע״י המתאמן 🏋️‍♂️</h4>
+                                            <p class="text-[10px] text-[#5f756e]">אימונים חיים שהמתאמן ביצע, משקלים, סטים והערות אישיות</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-[10px] bg-[#fbf8f2] border border-[#e5dfd3] px-2.5 py-1 rounded-xl font-bold text-[#082722]" x-text="(currentClient?.workoutLogs?.length || 0) + ' אימונים תועדו'"></span>
+                                </div>
+
+                                <template x-if="!currentClient?.workoutLogs || currentClient.workoutLogs.length === 0">
+                                    <div class="py-8 text-center text-slate-400 text-xs italic bg-[#fbf8f2] rounded-xl border border-[#e5dfd3]">
+                                        טרם תועדו אימונים ע״י המתאמן באפליקציה
+                                    </div>
+                                </template>
+
+                                <div class="space-y-3">
+                                    <template x-for="wLog in (currentClient?.workoutLogs || [])" :key="wLog.id">
+                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-xl p-4 space-y-3 shadow-xs">
+                                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2 flex-wrap gap-2">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="bg-[#082722] text-[#86efac] font-black px-2.5 py-1 rounded-lg text-xs" x-text="wLog.dayName || 'אימון'"></span>
+                                                    <span class="text-xs font-bold text-[#5f756e]" x-text="formatDate(wLog.date)"></span>
+                                                </div>
+                                                <div class="flex items-center gap-2 text-xs font-bold">
+                                                    <span class="text-emerald-700 bg-white border border-[#e5dfd3] px-2.5 py-1 rounded-lg" x-text="(wLog.completedSets || 0) + ' סטים הושלמו'"></span>
+                                                    <template x-if="wLog.totalVolume">
+                                                        <span class="text-[#082722] bg-white border border-[#e5dfd3] px-2.5 py-1 rounded-lg" x-text="'נפח: ' + Number(wLog.totalVolume).toLocaleString() + ' ק״ג'"></span>
+                                                    </template>
+                                                </div>
+                                            </div>
+
+                                            <!-- הערות המתאמן על האימון -->
+                                            <template x-if="wLog.sessionNotes">
+                                                <div class="bg-amber-50 border border-amber-200 text-amber-900 p-2.5 rounded-xl text-xs space-y-0.5">
+                                                    <span class="font-bold block text-[10px] text-amber-800">💬 הערות המתאמן על האימון:</span>
+                                                    <p class="font-medium whitespace-pre-line" x-text="wLog.sessionNotes"></p>
+                                                </div>
+                                            </template>
+
+                                            <!-- פירוט התרגילים והמשקלים שהורמו -->
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                                <template x-for="(ex, eIdx) in (wLog.exercises || [])" :key="eIdx">
+                                                    <div class="bg-white border border-[#e5dfd3] p-2.5 rounded-lg text-xs space-y-1">
+                                                        <span class="font-bold text-[#082722] block truncate" x-text="ex.name"></span>
+                                                        <div class="flex flex-wrap gap-1">
+                                                            <template x-for="set in (ex.sets || [])" :key="set.setNum">
+                                                                <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-1.5 py-0.5 rounded text-[10px] font-bold" x-text="set.weight + 'kg × ' + set.reps"></span>
+                                                            </template>
+                                                        </div>
+                                                        <template x-if="ex.userNote">
+                                                            <p class="text-[9px] text-[#5f756e] italic mt-0.5" x-text="'הערה: ' + ex.userNote"></p>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
                             <!-- תצוגת טבלת Google Sheets של המתאמן אם הוגדר קישור -->
                             <template x-if="currentClient?.googleSheetsUrl">
                                 <div class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-4 md:p-5 shadow-xl space-y-3">
@@ -3902,65 +4110,259 @@
                             </div>
 
                             <!-- יומן תמונות ארוחות של המתאמן -->
-                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-3.5">
+                            <!-- יומן תזונה, מאקרו ותמונות מאורגן למאמן -->
+                            <div class="bg-white border border-[#e5dfd3] rounded-3xl p-5 md:p-6 shadow-xl space-y-5">
+                                <!-- כותרת וסרגל בקרה -->
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#e5dfd3] pb-4">
                                     <div class="flex items-center gap-3">
                                         <div class="p-2.5 rounded-2xl bg-[#082722] text-[#86efac]">
-                                            <i data-lucide="camera" class="w-5 h-5"></i>
+                                            <i data-lucide="utensils" class="w-5 h-5 text-[#86efac]"></i>
                                         </div>
                                         <div>
-                                            <h3 class="text-base md:text-lg font-black text-[#082722]">יומן תמונות וארוחות — <span x-text="currentClient?.name"></span> 📸</h3>
-                                            <p class="text-xs text-[#5f756e]">כל הארוחות, המאקרו והתמונות שהמתאמן העלה מהטלפון שלו בזמן אמת</p>
+                                            <h3 class="text-base md:text-lg font-black text-[#082722] flex items-center gap-2">
+                                                <span>יומן תזונה, מאקרו ותמונות יומי</span>
+                                                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full" x-text="currentClient?.name"></span>
+                                            </h3>
+                                            <p class="text-xs text-[#5f756e]">מעקב מובנה לפי ימים ו-4 ארוחות יומיות (בוקר, צהריים, ערב, ביניים)</p>
                                         </div>
                                     </div>
-                                    <span class="bg-[#fbf8f2] border border-[#e5dfd3] text-[#082722] px-3.5 py-1.5 rounded-xl text-xs font-bold self-start sm:self-auto" x-text="(currentClient?.foodLogs?.length || 0) + ' דיווחי ארוחות במערכת'"></span>
+
+                                    <!-- כפתורי החלפת תצוגה: יומית מול ציר זמן -->
+                                    <div class="flex items-center gap-2 self-end md:self-auto">
+                                        <button type="button" 
+                                                @click="coachFoodLogViewMode = 'daily'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                                                :class="coachFoodLogViewMode === 'daily' ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] hover:text-[#082722] font-bold'"
+                                                class="border border-[#e5dfd3] px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                            <span>תצוגת יום נבחר 📅</span>
+                                        </button>
+                                        <button type="button" 
+                                                @click="coachFoodLogViewMode = 'timeline'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
+                                                :class="coachFoodLogViewMode === 'timeline' ? 'bg-[#082722] text-[#86efac] font-black' : 'bg-[#fbf8f2] text-[#5f756e] hover:text-[#082722] font-bold'"
+                                                class="border border-[#e5dfd3] px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+                                            <i data-lucide="history" class="w-3.5 h-3.5"></i>
+                                            <span>כל ההיסטוריה 📜</span>
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <!-- סיכום יומי חי של מה שהמתאמן אכל היום מול היעד -->
-                                <div class="bg-[#082722] text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 border border-[#133d35]">
-                                    <div class="space-y-0.5">
-                                        <span class="text-[10px] text-[#93c7bb] font-bold block">סך שנאכל היום ע״י המתאמן:</span>
-                                        <div class="text-base font-black text-[#86efac]" x-text="getTodayConsumedCalories(currentClient) + ' / ' + (currentClient?.macroCalculated?.targetCalories || 0) + ' קל׳'"></div>
+                                <!-- מצב 1: תצוגת יום נבחר (Daily Mode) -->
+                                <div x-show="coachFoodLogViewMode === 'daily'" class="space-y-4">
+                                    <!-- סרגל מעבר תאריכים מהיר -->
+                                    <div class="flex items-center justify-between gap-2 overflow-x-auto pb-1 scrollbar-none text-[11px] font-bold border-b border-[#e5dfd3] pt-1">
+                                        <div class="flex items-center gap-1.5 shrink-0">
+                                            <template x-for="day in getPastDatesList(7)" :key="day.date">
+                                                <button type="button" 
+                                                        @click="setCoachFoodLogDate(day.date)"
+                                                        :class="(getCoachSelectedDate(currentClient) === day.date) ? 'bg-[#082722] text-[#86efac] border-[#082722] shadow-sm' : 'bg-[#fbf8f2] text-[#5f756e] border-[#e5dfd3] hover:text-[#082722]'"
+                                                        class="px-3 py-1.5 rounded-xl border shrink-0 transition flex items-center gap-1.5 cursor-pointer">
+                                                    <template x-if="getCoachDayTotals(currentClient, day.date).mealsCount > 0">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                    </template>
+                                                    <span x-text="day.label"></span>
+                                                    <template x-if="getCoachDayTotals(currentClient, day.date).calories > 0">
+                                                        <span class="text-[9px] font-black opacity-80" x-text="getCoachDayTotals(currentClient, day.date).calories + ' קל\''"></span>
+                                                    </template>
+                                                </button>
+                                            </template>
+                                        </div>
+                                        <div class="flex items-center gap-2 shrink-0">
+                                            <span class="text-[10px] text-[#5f756e] font-semibold hidden sm:inline">בחר תאריך:</span>
+                                            <input type="date" 
+                                                   :value="getCoachSelectedDate(currentClient)" 
+                                                   @change="setCoachFoodLogDate($event.target.value)" 
+                                                   class="bg-white border border-[#e5dfd3] text-[#082722] text-[11px] font-bold rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[#22c55e] cursor-pointer">
+                                        </div>
                                     </div>
-                                    <div class="flex items-center gap-3 text-xs font-bold">
-                                        <span class="bg-[#051c17] px-3 py-1.5 rounded-xl border border-[#174e43] text-[#86efac]" x-text="'חלבון: ' + getTodayConsumedProtein(currentClient) + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + 'ג׳'"></span>
-                                        <span class="bg-[#051c17] px-3 py-1.5 rounded-xl border border-[#174e43] text-[#38bdf8]" x-text="'פחמימה: ' + getTodayConsumedCarbs(currentClient) + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + 'ג׳'"></span>
-                                        <span class="bg-[#051c17] px-3 py-1.5 rounded-xl border border-[#174e43] text-[#fbbf24]" x-text="'שומן: ' + getTodayConsumedFat(currentClient) + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + 'ג׳'"></span>
-                                    </div>
-                                </div>
 
-                                <template x-if="!currentClient?.foodLogs || currentClient.foodLogs.length === 0">
-                                    <div class="p-12 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3] space-y-2">
-                                        <i data-lucide="camera-off" class="w-8 h-8 mx-auto text-[#7a918a]"></i>
-                                        <p class="font-bold text-xs text-[#082722]">טרם הועלו תמונות ארוחות ע״י המתאמן</p>
-                                        <p class="text-[10px]">כאשר המתאמן יצלם ארוחה באפליקציה שלו, היא תופיע כאן אוטומטית עם שעת הדיווח והפירוט!</p>
-                                    </div>
-                                </template>
+                                    <!-- כרטיס מדד קלוריות ומאקרו לתאריך הנבחר מול יעדי המאמן -->
+                                    <div class="bg-[#082722] text-white p-4 md:p-5 rounded-2xl border border-[#133d35] shadow-lg space-y-3">
+                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#133d35]/80 pb-2.5">
+                                            <div class="flex items-center gap-2">
+                                                <i data-lucide="calendar-check" class="w-4 h-4 text-[#86efac]"></i>
+                                                <span class="text-xs font-black text-white">סיכום תזונה לתאריך: <strong class="text-[#86efac]" x-text="formatDate(getCoachSelectedDate(currentClient))"></strong></span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[10px] bg-[#13443a] text-[#86efac] px-2.5 py-0.5 rounded-full font-bold border border-[#86efac]/30" x-text="getCoachDayTotals(currentClient).mealsCount + ' פריטים נרשמו'"></span>
+                                                <template x-if="getCoachDayTotals(currentClient).photosCount > 0">
+                                                    <span class="text-[10px] bg-emerald-500/20 text-[#86efac] px-2.5 py-0.5 rounded-full font-bold" x-text="getCoachDayTotals(currentClient).photosCount + ' תמונות צלחת 📸'"></span>
+                                                </template>
+                                            </div>
+                                        </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    <template x-for="log in (currentClient?.foodLogs || [])" :key="log.id">
-                                        <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm hover:border-[#22c55e]/50 transition">
-                                            <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
-                                                <span class="bg-[#082722] text-[#86efac] font-black px-2.5 py-1 rounded-xl text-[10px]" x-text="log.mealType || 'ארוחה'"></span>
-                                                <span class="text-[10px] text-[#5f756e] font-semibold" x-text="formatDate(log.date) + ' • ' + (log.time || '')"></span>
+                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                                            <!-- קלוריות -->
+                                            <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
+                                                <span class="text-[10px] text-[#93c7bb] font-bold block">קלוריות</span>
+                                                <div class="text-base md:text-lg font-black text-[#86efac]" x-text="getCoachDayTotals(currentClient).calories + ' / ' + (currentClient?.macroCalculated?.targetCalories || 2000)"></div>
+                                                <span class="text-[9px] text-[#5f756e]" x-text="Math.round((getCoachDayTotals(currentClient).calories / (currentClient?.macroCalculated?.targetCalories || 2000)) * 100) + '% מהיעד'"></span>
                                             </div>
 
-                                            <template x-if="log.photo">
-                                                <div @click="openMealPhotoLightbox(log.photo, (currentClient?.name || '') + ' - ' + (log.mealType || '') + ' (' + formatDate(log.date) + ')')" class="w-full h-48 rounded-xl overflow-hidden bg-black/5 relative group cursor-pointer border border-[#e5dfd3] hover:border-[#22c55e]" title="לחץ להגדלת תמונת הארוחה 🔍">
-                                                    <img :src="log.photo" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" />
-                                                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1 backdrop-blur-xs">
-                                                        <i data-lucide="zoom-in" class="w-4 h-4"></i>
-                                                        <span>הגדל תמונה</span>
+                                            <!-- חלבון -->
+                                            <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
+                                                <span class="text-[10px] text-[#93c7bb] font-bold block">חלבון</span>
+                                                <div class="text-base md:text-lg font-black text-[#86efac]" x-text="getCoachDayTotals(currentClient).protein + ' / ' + (currentClient?.macroCalculated?.targetProtein || 160) + 'ג\''"></div>
+                                                <span class="text-[9px] text-[#5f756e]">גרם חלבון</span>
+                                            </div>
+
+                                            <!-- פחמימה -->
+                                            <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
+                                                <span class="text-[10px] text-[#93c7bb] font-bold block">פחמימות</span>
+                                                <div class="text-base md:text-lg font-black text-[#38bdf8]" x-text="getCoachDayTotals(currentClient).carbs + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 220) + 'ג\''"></div>
+                                                <span class="text-[9px] text-[#5f756e]">גרם פחמימה</span>
+                                            </div>
+
+                                            <!-- שומן -->
+                                            <div class="bg-[#051c17] p-2.5 rounded-xl border border-[#174e43] space-y-0.5">
+                                                <span class="text-[10px] text-[#93c7bb] font-bold block">שומנים</span>
+                                                <div class="text-base md:text-lg font-black text-[#fbbf24]" x-text="getCoachDayTotals(currentClient).fat + ' / ' + (currentClient?.macroCalculated?.targetFat || 65) + 'ג\''"></div>
+                                                <span class="text-[9px] text-[#5f756e]">גרם שומן</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 4 כרטיסי ארוחות מסודרים ליום הנבחר (בוקר, צהריים, ערב, ביניים) -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <template x-for="mealInfo in [
+                                            { type: 'ארוחת בוקר', title: 'ארוחת בוקר 🌅' },
+                                            { type: 'ארוחת צהריים', title: 'ארוחת צהריים ☀️' },
+                                            { type: 'ארוחת ערב', title: 'ארוחת ערב 🌙' },
+                                            { type: 'ארוחת ביניים', title: 'ארוחות ביניים ונשנושים 🍎' }
+                                        ]" :key="mealInfo.type">
+                                            <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm hover:border-[#082722]/30 transition">
+                                                <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <h4 class="font-black text-xs md:text-sm text-[#082722]" x-text="mealInfo.title"></h4>
+                                                    </div>
+                                                    <!-- סיכום ארוחה -->
+                                                    <div class="text-[10px] font-bold text-[#082722] bg-white px-2 py-0.5 rounded-lg border border-[#e5dfd3]">
+                                                        <span class="text-emerald-700 font-black" x-text="getCoachMealSummary(currentClient, mealInfo.type).calories + ' קל\''"></span>
+                                                        <span class="text-slate-400 mx-1">|</span>
+                                                        <span x-text="'ח: ' + getCoachMealSummary(currentClient, mealInfo.type).protein + 'ג\''"></span>
+                                                        <span class="text-slate-400 mx-0.5">•</span>
+                                                        <span x-text="'פ: ' + getCoachMealSummary(currentClient, mealInfo.type).carbs + 'ג\''"></span>
+                                                        <span class="text-slate-400 mx-0.5">•</span>
+                                                        <span x-text="'ש: ' + getCoachMealSummary(currentClient, mealInfo.type).fat + 'ג\''"></span>
                                                     </div>
                                                 </div>
-                                            </template>
 
-                                            <div class="bg-white p-3 rounded-xl border border-[#e5dfd3] space-y-1">
-                                                <span class="text-[9px] text-[#5f756e] block font-bold">פירוט המנה:</span>
-                                                <p class="text-xs font-bold text-[#082722] whitespace-pre-line" x-text="log.description || 'ללא פירוט מילולי'"></p>
+                                                <!-- אם אין פריטים בארוחה זו -->
+                                                <template x-if="getCoachFoodLogsByMeal(currentClient, mealInfo.type).length === 0">
+                                                    <div class="py-4 text-center text-slate-400 text-xs italic">
+                                                        לא נרשמו פריטים בארוחה זו בתאריך הנבחר
+                                                    </div>
+                                                </template>
+
+                                                <!-- רשימת פריטים ותמונות בארוחה -->
+                                                <div class="space-y-2.5">
+                                                    <template x-for="log in getCoachFoodLogsByMeal(currentClient, mealInfo.type)" :key="log.id">
+                                                        <div class="bg-white border border-[#e5dfd3] rounded-xl p-3 space-y-2 shadow-xs">
+                                                            <div class="flex items-start justify-between gap-2">
+                                                                <div class="flex items-start gap-2.5">
+                                                                    <!-- תמונה ממוזערת עם לחיצה להגדלה -->
+                                                                    <template x-if="log.photo">
+                                                                        <div @click="openMealPhotoLightbox(log.photo, (currentClient?.name || '') + ' - ' + (log.mealType || '') + ' (' + formatDate(log.date) + ')')" 
+                                                                             class="w-14 h-14 rounded-xl overflow-hidden border-2 border-emerald-500/60 shrink-0 cursor-pointer hover:scale-105 transition shadow-xs group relative" 
+                                                                             title="לחץ להגדלת תמונה 🔍">
+                                                                            <img :src="log.photo" class="w-full h-full object-cover" />
+                                                                            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white">
+                                                                                <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </template>
+                                                                    <div class="space-y-0.5">
+                                                                        <span class="font-bold text-xs text-[#082722] block whitespace-pre-line" x-text="log.description || 'ארוחה רשומה'"></span>
+                                                                        <div class="text-[10px] text-[#5f756e] flex items-center gap-1.5 flex-wrap">
+                                                                            <span x-text="log.time || ''"></span>
+                                                                            <template x-if="log.calories">
+                                                                                <span class="font-black text-emerald-700" x-text="'• ' + log.calories + ' קל\''"></span>
+                                                                            </template>
+                                                                            <template x-if="log.protein">
+                                                                                <span x-text="'(ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\')'"></span>
+                                                                            </template>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <button type="button" @click="deletePortalFoodLog(log.id)" class="text-slate-400 hover:text-red-500 p-1 cursor-pointer" title="מחק רישום זה">
+                                                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                                </button>
+                                                            </div>
+
+                                                            <!-- משוב מאמן קיים -->
+                                                            <template x-if="log.coachFeedback">
+                                                                <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 p-2 rounded-lg text-[10px] font-semibold flex items-start gap-1.5">
+                                                                    <i data-lucide="crown" class="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5"></i>
+                                                                    <div>
+                                                                        <span class="font-bold">המשוב שלך למתאמן:</span>
+                                                                        <span x-text="log.coachFeedback"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                </div>
                                             </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- מצב 2: כל ההיסטוריה בציר זמן (Timeline Mode) -->
+                                <div x-show="coachFoodLogViewMode === 'timeline'" class="space-y-4">
+                                    <template x-if="getAllUniqueFoodLogDates(currentClient).length === 0">
+                                        <div class="py-12 text-center text-[#5f756e] italic bg-[#fbf8f2] rounded-2xl border border-[#e5dfd3]">
+                                            טרם נרשמו ארוחות ע״י המתאמן
                                         </div>
                                     </template>
+
+                                    <div class="space-y-4">
+                                        <template x-for="dayData in getAllUniqueFoodLogDates(currentClient)" :key="dayData.date">
+                                            <div class="bg-[#fbf8f2] border border-[#e5dfd3] rounded-2xl p-4 space-y-3 shadow-sm">
+                                                <div class="flex items-center justify-between border-b border-[#e5dfd3] pb-2 flex-wrap gap-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i>
+                                                        <span class="font-black text-xs md:text-sm text-[#082722]" x-text="formatDate(dayData.date)"></span>
+                                                        <span class="text-[10px] bg-white border border-[#e5dfd3] px-2 py-0.5 rounded-md font-bold text-[#5f756e]" x-text="dayData.count + ' פריטים'"></span>
+                                                    </div>
+                                                    <div class="text-xs font-bold text-[#082722] bg-white px-2.5 py-1 rounded-xl border border-[#e5dfd3]">
+                                                        <span class="text-emerald-700 font-black" x-text="Math.round(dayData.calories) + ' קל\''"></span>
+                                                        <span class="text-slate-400 mx-1">|</span>
+                                                        <span x-text="'ח: ' + Math.round(dayData.protein) + 'ג\''"></span>
+                                                        <span class="text-slate-400 mx-0.5">•</span>
+                                                        <span x-text="'פ: ' + Math.round(dayData.carbs) + 'ג\''"></span>
+                                                        <span class="text-slate-400 mx-0.5">•</span>
+                                                        <span x-text="'ש: ' + Math.round(dayData.fat) + 'ג\''"></span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- גריד פריטים לאותו יום -->
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    <template x-for="log in dayData.logs" :key="log.id">
+                                                        <div class="bg-white border border-[#e5dfd3] rounded-xl p-3 space-y-2 shadow-xs">
+                                                            <div class="flex items-center justify-between text-[10px] font-bold border-b border-[#e5dfd3]/60 pb-1.5">
+                                                                <span class="bg-[#082722] text-[#86efac] px-2 py-0.5 rounded-lg" x-text="log.mealType || 'ארוחה'"></span>
+                                                                <span class="text-[#5f756e]" x-text="log.time || ''"></span>
+                                                            </div>
+
+                                                            <template x-if="log.photo">
+                                                                <div @click="openMealPhotoLightbox(log.photo, (currentClient?.name || '') + ' - ' + (log.mealType || '') + ' (' + formatDate(log.date) + ')')" 
+                                                                     class="w-full h-36 rounded-lg overflow-hidden border border-[#e5dfd3] cursor-pointer hover:opacity-90 transition">
+                                                                    <img :src="log.photo" class="w-full h-full object-cover" loading="lazy" />
+                                                                </div>
+                                                            </template>
+
+                                                            <p class="text-xs font-bold text-[#082722] whitespace-pre-line" x-text="log.description || 'ללא פירוט'"></p>
+                                                            
+                                                            <div class="text-[10px] text-[#5f756e] font-semibold">
+                                                                <span class="text-emerald-700 font-bold" x-text="log.calories ? (log.calories + ' קל\'') : ''"></span>
+                                                                <span x-text="log.protein ? (' • ח: ' + log.protein + 'ג\' • פ: ' + log.carbs + 'ג\' • ש: ' + log.fat + 'ג\'') : ''"></span>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -5724,8 +6126,21 @@
                 previewMealPhotoUrl: '',
                 previewMealPhotoTitle: '',
                 portalWeeklyReflectionText: '',
+                portalProcessMood: 'great',
+                portalProcessEntryTitle: '',
                 portalFoodLogSaved: false,
                 portalReflectionSaved: false,
+
+                // מעקב תזונה ויומן ארוחות למאמן
+                coachFoodLogDateFilter: '',
+                coachFoodLogViewMode: 'daily',
+                coachFeedbackModal: false,
+                coachFeedbackLogId: null,
+                coachFeedbackText: '',
+
+                // מעקב אימונים חיים והערות מתאמן
+                liveWorkoutSessionNotes: '',
+                liveExerciseNotes: {},
 
                 // מעקב תזונה והזנה חכמה בסגנון MyFitnessPal Pro
                 isVoiceRecording: false,
@@ -7330,6 +7745,7 @@
 
                         exercisesLogged.push({
                             name: ex.name,
+                            userNote: this.liveExerciseNotes[exKey] || '',
                             sets: completedSetsForEx
                         });
                     });
@@ -7350,6 +7766,7 @@
                         dayName: day.name || day.dayName || ('אימון ' + (dayIdx + 1)),
                         totalVolume: totalVolume,
                         completedSets: completedSetsCount,
+                        sessionNotes: (this.liveWorkoutSessionNotes || '').trim(),
                         exercises: exercisesLogged
                     };
 
@@ -7368,8 +7785,11 @@
                         dayName: sessionLog.dayName,
                         totalVolume: totalVolume,
                         setsCount: completedSetsCount,
+                        sessionNotes: sessionLog.sessionNotes,
                         date: this.getTodayDate()
                     };
+
+                    this.liveWorkoutSessionNotes = '';
 
                     this.openWorkoutFinishModal = true;
                     if (typeof confetti === 'function') {
@@ -7878,6 +8298,105 @@
                     if (!c || !c.foodLogs) return [];
                     const date = this.portalNutritionViewDate || this.getTodayDate();
                     return c.foodLogs.filter(l => l && l.date === date && l.mealType === mealType);
+                },
+
+                getCoachSelectedDate(client) {
+                    return this.coachFoodLogDateFilter || this.getTodayDate();
+                },
+
+                setCoachFoodLogDate(dateStr) {
+                    this.coachFoodLogDateFilter = dateStr || this.getTodayDate();
+                    setTimeout(() => { if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                getCoachFoodLogsByMeal(client, mealType) {
+                    if (!client || !client.foodLogs) return [];
+                    const date = this.getCoachSelectedDate(client);
+                    return client.foodLogs.filter(l => l && l.date === date && l.mealType === mealType);
+                },
+
+                getCoachMealSummary(client, mealType) {
+                    const logs = this.getCoachFoodLogsByMeal(client, mealType);
+                    let cal = 0, pro = 0, carb = 0, fat = 0;
+                    logs.forEach(l => {
+                        cal += parseFloat(l.calories) || 0;
+                        pro += parseFloat(l.protein) || 0;
+                        carb += parseFloat(l.carbs) || 0;
+                        fat += parseFloat(l.fat) || 0;
+                    });
+                    return {
+                        count: logs.length,
+                        calories: Math.round(cal),
+                        protein: Math.round(pro * 10) / 10,
+                        carbs: Math.round(carb * 10) / 10,
+                        fat: Math.round(fat * 10) / 10
+                    };
+                },
+
+                getCoachDayTotals(client, targetDate) {
+                    if (!client || !client.foodLogs) return { calories: 0, protein: 0, carbs: 0, fat: 0, mealsCount: 0, photosCount: 0 };
+                    const date = targetDate || this.getCoachSelectedDate(client);
+                    let cal = 0, pro = 0, carb = 0, fat = 0, photos = 0, count = 0;
+                    client.foodLogs.forEach(l => {
+                        if (l && l.date === date) {
+                            count++;
+                            cal += parseFloat(l.calories) || 0;
+                            pro += parseFloat(l.protein) || 0;
+                            carb += parseFloat(l.carbs) || 0;
+                            fat += parseFloat(l.fat) || 0;
+                            if (l.photo) photos++;
+                        }
+                    });
+                    return {
+                        date,
+                        mealsCount: count,
+                        photosCount: photos,
+                        calories: Math.round(cal),
+                        protein: Math.round(pro * 10) / 10,
+                        carbs: Math.round(carb * 10) / 10,
+                        fat: Math.round(fat * 10) / 10
+                    };
+                },
+
+                getAllUniqueFoodLogDates(client) {
+                    if (!client || !client.foodLogs) return [];
+                    const datesMap = {};
+                    client.foodLogs.forEach(l => {
+                        if (l && l.date) {
+                            if (!datesMap[l.date]) {
+                                datesMap[l.date] = { date: l.date, count: 0, photos: 0, calories: 0, protein: 0, carbs: 0, fat: 0, logs: [] };
+                            }
+                            datesMap[l.date].count++;
+                            if (l.photo) datesMap[l.date].photos++;
+                            datesMap[l.date].calories += parseFloat(l.calories) || 0;
+                            datesMap[l.date].protein += parseFloat(l.protein) || 0;
+                            datesMap[l.date].carbs += parseFloat(l.carbs) || 0;
+                            datesMap[l.date].fat += parseFloat(l.fat) || 0;
+                            datesMap[l.date].logs.push(l);
+                        }
+                    });
+                    return Object.values(datesMap).sort((a, b) => b.date.localeCompare(a.date));
+                },
+
+                getHebrewDayOfWeek() {
+                    const days = ['יום ראשון', 'יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'שבת'];
+                    return days[new Date().getDay()] || 'יום ראשון';
+                },
+
+                getTodayRecommendedWorkoutIndex(client) {
+                    if (!client || !client.workoutPlan?.days || client.workoutPlan.days.length === 0) return 0;
+                    const todayHeb = this.getHebrewDayOfWeek();
+                    const matchIdx = client.workoutPlan.days.findIndex(d => {
+                        const name = (d.name || d.dayName || '').toLowerCase();
+                        if (todayHeb === 'יום ראשון' && (name.includes('ראשון') || name.includes('a'))) return true;
+                        if (todayHeb === 'יום שני' && (name.includes('שני') || name.includes('b'))) return true;
+                        if (todayHeb === 'יום שלישי' && (name.includes('שלישי') || name.includes('גב') || name.includes('b') || name.includes('c'))) return true;
+                        if (todayHeb === 'יום רביעי' && (name.includes('רביעי') || name.includes('d') || name.includes('a'))) return true;
+                        if (todayHeb === 'יום חמישי' && (name.includes('חמישי') || name.includes('רגליים') || name.includes('b') || name.includes('c'))) return true;
+                        if (todayHeb === 'יום שישי' && name.includes('שישי')) return true;
+                        return false;
+                    });
+                    return matchIdx !== -1 ? matchIdx : 0;
                 },
 
                 getMealTypeSummary(client, mealType) {
@@ -9303,14 +9822,25 @@
                     const client = this.portalClient;
                     if (!client || !client.id) return;
                     if (!this.portalWeeklyReflectionText.trim()) {
-                        alert("אנא כתוב את תוכן השיקוף לפני השליחה!");
+                        alert("אנא כתוב את תוכן השיקוף/היומן לפני השליחה!");
                         return;
                     }
                     if (!client.reflectionLogs) client.reflectionLogs = [];
                     
+                    const moodLabels = {
+                        'great': '🔥 מעולה ומלא מוטיבציה',
+                        'strong': '💪 חזק ובשליטה',
+                        'neutral': '😐 סביר / שגרה',
+                        'tired': '🥱 עייף / עמוס',
+                        'challenged': '🧗 מאותגר ונלחם'
+                    };
+
                     const refObj = {
                         id: 'ref_' + Date.now(),
                         date: this.getTodayDate(),
+                        title: (this.portalProcessEntryTitle || '').trim() || ('תיעוד תהליך • ' + this.formatDate(this.getTodayDate())),
+                        mood: this.portalProcessMood || 'great',
+                        moodLabel: moodLabels[this.portalProcessMood] || '🔥 מעולה',
                         text: this.portalWeeklyReflectionText.trim(),
                         coachFeedback: '',
                         reviewed: false,
@@ -9325,6 +9855,7 @@
                     this.saveData();
                     
                     this.portalWeeklyReflectionText = '';
+                    this.portalProcessEntryTitle = '';
                     this.portalReflectionSaved = true;
                     setTimeout(() => { this.portalReflectionSaved = false; }, 5000);
                 },
