@@ -206,66 +206,12 @@
             }
         }
         
-        /* סגנון טיפוגרפיה ורקע שמנת יוקרתי */
+                /* סגנון טיפוגרפיה ורקע שמנת/לבנדר יוקרתי (Royal Purple & Gold) */
         body {
-            background-color: #faf7fc;
-            color: #1f053d;
+            background-color: #f8f6fb;
+            color: #22004d;
             font-family: 'Assistant', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
             letter-spacing: -0.01em;
-        }
-
-        /* כרטיסים לבנים נקיים */
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1f053d\]) {
-            background-color: #ffffff;
-            border-color: #e4daed;
-            color: #1f053d;
-            box-shadow: 0 10px 30px -5px rgba(8, 39, 34, 0.04), 0 2px 6px -1px rgba(8, 39, 34, 0.02);
-        }
-        .bg-slate-950:not(.card-forest):not(.bg-\[\#1f053d\]):not(.bg-\[\#140029\]) {
-            background-color: #faf7fc;
-            border-color: #e4daed;
-            color: #1f053d;
-        }
-
-        /* כותרות וטקסטים בכרטיסים בהירים - צבע יער כהה וקריא */
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1f053d\]) h1,
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1f053d\]) h2,
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1f053d\]) h3,
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1f053d\]) h4,
-        .bg-slate-900:not(.card-forest):not(.bg-\[\#1f053d\]) .text-white:not(button):not(a):not(.text-white-force),
-        .bg-slate-950:not(.card-forest):not(.bg-\[\#1f053d\]) .text-white:not(button):not(a):not(.text-white-force),
-        .bg-white .text-white:not(button):not(a):not(.text-white-force) {
-            color: #1f053d;
-        }
-
-        /* טקסטים כהים כלליים */
-        .text-slate-200, .text-slate-100 {
-            color: #1f053d;
-        }
-        .text-slate-300 {
-            color: #1e3d36;
-        }
-        .text-slate-400 {
-            color: #705b8b;
-        }
-        .text-slate-500 {
-            color: #7a918a;
-        }
-        .text-slate-600 {
-            color: #4a635c;
-        }
-
-        /* טקסט לבן בכפתורים ובאלמנטים כהים */
-        .bg-\[\#1f053d\] .text-white,
-        .bg-\[\#1f053d\] h1, .bg-\[\#1f053d\] h2, .bg-\[\#1f053d\] h3, .bg-\[\#1f053d\] h4,
-        .card-forest .text-white,
-        .card-forest h1, .card-forest h2, .card-forest h3, .card-forest h4,
-        button .text-white, a .text-white,
-        button.text-white, a.text-white,
-        .bg-amber-500, .bg-amber-600,
-        .bg-red-600, .bg-rose-600, .bg-blue-600,
-        .bg-gradient-to-r {
-            color: #ffffff;
         }
 
         /* אינטראקציה טקטילית לכפתורים */
@@ -277,15 +223,9 @@
         }
 
         /* שדות קלט נקיים ויוקרתיים */
-        input:not([type="checkbox"]):not([type="range"]), select, textarea {
-            background-color: #ffffff;
-            border-color: #e4daed;
-            color: #1f053d;
-        }
         input:not([type="checkbox"]):not([type="range"]):focus, select:focus, textarea:focus {
-            background-color: #ffffff;
-            border-color: #1f053d;
-            box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.3);
+            border-color: #fbbf24 !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2) !important;
         }
 
         /* הסרת סרגל גלילה בטאבים לנייד */
@@ -682,93 +622,94 @@
                     </div>
                 </div>
                 
-                <!-- 0. טאב שאלון קליטה דיגיטלי ללקוח -->
+                                <!-- 0. טאב שאלון קליטה דיגיטלי ללקוח -->
                 <div x-show="activeTab === 'intake'" x-cloak class="max-w-xl mx-auto py-6 md:py-12 space-y-6">
+                    <!-- כותרת ראשית ולוגו שחור/סגול לקריאות מושלמת על רקע בהיר -->
                     <div class="text-center space-y-2">
-                        <img src="logo-light.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-14 w-auto mx-auto object-contain mb-1">
-                        <h2 class="text-xl md:text-2xl font-black text-white">שאלון קליטה דיגיטלי למתאמן</h2>
-                        <p class="text-xs text-slate-400">מאמן ראשי: אילאי. מלא את הפרטים הבאים כדי להתחיל את הליווי שלך בצורה הטובה ביותר.</p>
+                        <img src="logo.png" alt="ILAI Fitness - שינוי שמחזיק" class="h-16 w-auto mx-auto object-contain mb-1 drop-shadow-sm">
+                        <h2 class="text-2xl md:text-3xl font-black text-[#22004d]">שאלון קליטה דיגיטלי למתאמן</h2>
+                        <p class="text-xs md:text-sm text-[#705b8b] font-medium">מאמן ראשי: אילאי • מלא את הפרטים כדי שנתחיל את הליווי בצורה הטובה ביותר</p>
                     </div>
 
-                    <!-- כרטיס 3 הסליידים של אילאי (Personal Journey Story Slides) -->
-                    <div class="bg-gradient-to-br from-[#1f053d] to-[#140029] border border-[#3b166e] rounded-3xl p-5 md:p-6 shadow-2xl relative overflow-hidden text-[#fbf8f2] space-y-4">
-                        <!-- עיטור זוהר ברקע -->
-                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-[#fbbf24]/10 rounded-full blur-3xl pointer-events-none"></div>
-                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#c4b5fd]/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <!-- כרטיס 3 הסליידים של אילאי (Personal Journey Story Slides) - סגול מלכותי עמוק עם זהב ולבן צח -->
+                    <div class="bg-[#22004d] border border-[#3b166e] rounded-3xl p-5 md:p-7 shadow-2xl relative overflow-hidden text-white space-y-5">
+                        <!-- עיטורי זוהר מוזהבים ברקע -->
+                        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-[#fbbf24]/15 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute -right-10 -top-10 w-48 h-48 bg-[#c4b5fd]/15 rounded-full blur-2xl pointer-events-none"></div>
 
-                        <!-- כותרת ראשית ואינדיקטור סליידים -->
+                        <!-- שורת כותרת וסלקטור סליידים -->
                         <div class="flex items-center justify-between border-b border-[#351266] pb-3 relative z-10">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-8 h-8 rounded-xl bg-[#310d5e] border border-[#facc15]/30 text-[#facc15] font-black text-sm flex items-center justify-center shadow-md">
+                            <div class="flex items-center gap-3">
+                                <span class="w-9 h-9 rounded-2xl bg-[#310d5e] border border-[#fbbf24]/40 text-[#fbbf24] font-black text-sm flex items-center justify-center shadow-md">
                                     <i data-lucide="sparkles" class="w-4 h-4"></i>
                                 </span>
                                 <div>
-                                    <h3 class="text-xs md:text-sm font-black text-white">הסיפור האישי שלי — אילאי 👑</h3>
-                                    <p class="text-[10px] text-[#c4b5fd]">למה אני כאן כדי להוביל אותך לשינוי אמיתי</p>
+                                    <h3 class="text-sm md:text-base font-black text-white">הסיפור האישי שלי — אילאי 👑</h3>
+                                    <p class="text-[11px] text-[#c4b5fd]">למה אני כאן כדי להוביל אותך לשינוי אמיתי</p>
                                 </div>
                             </div>
 
-                            <!-- נקודות ניווט 1 / 2 / 3 -->
+                            <!-- נקודות מעבר מהירות בין סליידים -->
                             <div class="flex items-center gap-1.5 bg-[#140029] border border-[#351266] p-1 rounded-xl">
                                 <template x-for="idx in [0, 1, 2]" :key="idx">
                                     <button type="button" 
                                             @click="intakeStorySlide = idx; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
-                                            :class="intakeStorySlide === idx ? 'bg-[#facc15] text-[#1f053d] font-black px-2.5 py-1' : 'text-[#c4b5fd] hover:text-white px-2 py-1 font-bold'"
-                                            class="rounded-lg text-[10px] transition cursor-pointer"
+                                            :class="intakeStorySlide === idx ? 'bg-[#fbbf24] text-[#22004d] font-black shadow-md' : 'text-[#c4b5fd] hover:text-white font-bold'"
+                                            class="px-2.5 py-1 rounded-lg text-[10px] transition cursor-pointer"
                                             x-text="'סלייד ' + (idx + 1)">
                                     </button>
                                 </template>
                             </div>
                         </div>
 
-                        <!-- תוכן 3 הסליידים -->
-                        <div class="relative z-10 min-h-[110px] flex items-center">
+                        <!-- תוכן 3 הסליידים - פונטים וצבעים חדים וקריאים -->
+                        <div class="relative z-10 min-h-[120px] flex items-center">
                             <!-- סלייד 1 -->
-                            <div x-show="intakeStorySlide === 0" x-transition.opacity.duration.300ms class="space-y-2.5 w-full">
+                            <div x-show="intakeStorySlide === 0" x-transition.opacity.duration.300ms class="space-y-3 w-full">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 1 מתוך 3 • נקודת המפנה ⏳</span>
+                                    <span class="text-[10px] md:text-[11px] bg-[#fbbf24]/20 text-[#fbbf24] border border-[#fbbf24]/40 px-3 py-0.5 rounded-full font-black">סלייד 1 מתוך 3 • נקודת המפנה ⏳</span>
                                 </div>
-                                <h4 class="text-sm md:text-base font-black text-[#facc15] leading-relaxed">
+                                <h4 class="text-base md:text-lg font-black text-[#fbbf24] leading-relaxed">
                                     "שקלתי 140 ק"ג בגיל 15 והבנתי שאם לא אקח את עצמי בידיים אולי לא אגיע לגיל 20 בכלל"
                                 </h4>
-                                <p class="text-[11px] text-[#c4b5fd] leading-relaxed">
+                                <p class="text-xs md:text-sm text-[#e4daed] leading-relaxed font-medium">
                                     ההחלטה שלקחתי באותו הרגע שינתה לי את החיים. הבנתי שבריאות וכושר הם לא מותרות – הם הבסיס להכל.
                                 </p>
                             </div>
 
                             <!-- סלייד 2 -->
-                            <div x-show="intakeStorySlide === 1" x-transition.opacity.duration.300ms class="space-y-2.5 w-full" x-cloak>
+                            <div x-show="intakeStorySlide === 1" x-transition.opacity.duration.300ms class="space-y-3 w-full" x-cloak>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 2 מתוך 3 • השיעור הגדול 💡</span>
+                                    <span class="text-[10px] md:text-[11px] bg-[#fbbf24]/20 text-[#fbbf24] border border-[#fbbf24]/40 px-3 py-0.5 rounded-full font-black">סלייד 2 מתוך 3 • השיעור הגדול 💡</span>
                                 </div>
-                                <h4 class="text-sm md:text-base font-black text-[#facc15] leading-relaxed">
+                                <h4 class="text-base md:text-lg font-black text-[#fbbf24] leading-relaxed">
                                     "ירדתי במשקל דרסטית ואיבדתי את רוב המסת שריר שלי - היום למדתי את הטעות"
                                 </h4>
-                                <p class="text-[11px] text-[#c4b5fd] leading-relaxed">
+                                <p class="text-xs md:text-sm text-[#e4daed] leading-relaxed font-medium">
                                     ירידה במשקל ללא ליווי מקצועי גרמה לי לאבד שריר ואנרגיה. היום אני מלמד אותך איך לרדת נכון, לשמור על השריר ולבנות גוף חטוב ובריא.
                                 </p>
                             </div>
 
                             <!-- סלייד 3 -->
-                            <div x-show="intakeStorySlide === 2" x-transition.opacity.duration.300ms class="space-y-2.5 w-full" x-cloak>
+                            <div x-show="intakeStorySlide === 2" x-transition.opacity.duration.300ms class="space-y-3 w-full" x-cloak>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-bold">סלייד 3 מתוך 3 • הצמיחה והניצחון 🛡️</span>
+                                    <span class="text-[10px] md:text-[11px] bg-[#fbbf24]/20 text-[#fbbf24] border border-[#fbbf24]/40 px-3 py-0.5 rounded-full font-black">סלייד 3 מתוך 3 • הצמיחה והניצחון 🛡️</span>
                                 </div>
-                                <h4 class="text-sm md:text-base font-black text-[#facc15] leading-relaxed">
+                                <h4 class="text-base md:text-lg font-black text-[#fbbf24] leading-relaxed">
                                     "הצבא היה המקום שלא מצאתי את עצמי בו וגם פגע לי בדבר החזק שלי -האימונים והתזונה אבל למדתי לצאת מזה ואני עדיין חי איתו היום"
                                 </h4>
-                                <p class="text-[11px] text-[#c4b5fd] leading-relaxed">
+                                <p class="text-xs md:text-sm text-[#e4daed] leading-relaxed font-medium">
                                     פיתחתי שיטה מנצחת שעובדת גם בתנאים הכי עמוסים ומאתגרים. בוא נבנה יחד את השינוי שמחזיק שלך!
                                 </p>
                             </div>
                         </div>
 
-                        <!-- כפתורי מעבר בין סליידים -->
-                        <div class="flex items-center justify-between pt-2 border-t border-[#351266] relative z-10 text-xs">
+                        <!-- ניווט תחתון בסליידר -->
+                        <div class="flex items-center justify-between pt-3 border-t border-[#351266] relative z-10 text-xs">
                             <button type="button" 
                                     @click="intakeStorySlide = Math.max(0, intakeStorySlide - 1); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
                                     :disabled="intakeStorySlide === 0"
-                                    :class="intakeStorySlide === 0 ? 'opacity-30 cursor-not-allowed text-[#c4b5fd]' : 'text-[#facc15] hover:text-white cursor-pointer'"
+                                    :class="intakeStorySlide === 0 ? 'opacity-30 cursor-not-allowed text-[#c4b5fd]' : 'text-[#fbbf24] hover:text-white cursor-pointer'"
                                     class="flex items-center gap-1 font-bold">
                                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 <span>הקודם</span>
@@ -777,14 +718,14 @@
                             <template x-if="intakeStorySlide < 2">
                                 <button type="button" 
                                         @click="intakeStorySlide = intakeStorySlide + 1; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
-                                        class="bg-[#310d5e] hover:bg-[#3b166e] text-[#facc15] border border-[#facc15]/30 px-3.5 py-1.5 rounded-xl font-black flex items-center gap-1.5 transition cursor-pointer">
+                                        class="bg-[#310d5e] hover:bg-[#3b166e] text-[#fbbf24] border border-[#fbbf24]/40 px-4 py-2 rounded-xl font-black flex items-center gap-1.5 transition cursor-pointer shadow-md">
                                     <span>לסלייד הבא</span>
                                     <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
                                 </button>
                             </template>
 
                             <template x-if="intakeStorySlide === 2">
-                                <span class="text-[10px] text-[#facc15] font-black flex items-center gap-1">
+                                <span class="text-xs text-[#fbbf24] font-black flex items-center gap-1.5">
                                     <span>✨ עכשיו תורך להתחיל! מלא את השאלון למטה 👇</span>
                                 </span>
                             </template>
@@ -794,13 +735,13 @@
                     <!-- מד התקדמות (Progress Indicator) -->
                     <template x-if="!intakeSuccess">
                         <div class="space-y-2">
-                            <div class="flex justify-between text-[9px] sm:text-[10px] text-slate-450 font-bold px-1">
-                                <span :class="intakeStep >= 1 ? 'text-emerald-400' : ''">1. פרטים אישיים</span>
-                                <span :class="intakeStep >= 2 ? 'text-emerald-400' : ''">2. כושר ותזונה</span>
-                                <span :class="intakeStep >= 3 ? 'text-emerald-400' : ''">3. מנטלי ובריאות</span>
+                            <div class="flex justify-between text-xs font-black px-1">
+                                <span :class="intakeStep >= 1 ? 'text-[#22004d]' : 'text-[#705b8b]'">1. פרטים אישיים</span>
+                                <span :class="intakeStep >= 2 ? 'text-[#22004d]' : 'text-[#705b8b]'">2. כושר ותזונה</span>
+                                <span :class="intakeStep >= 3 ? 'text-[#22004d]' : 'text-[#705b8b]'">3. מנטלי ובריאות</span>
                             </div>
-                            <div class="h-1.5 w-full bg-slate-900 border border-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-amber-500 transition-all duration-300" :style="'width: ' + (intakeStep === 1 ? '33.3%' : (intakeStep === 2 ? '66.6%' : '100%'))"></div>
+                            <div class="h-2 w-full bg-[#e4daed] rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 transition-all duration-300 rounded-full" :style="'width: ' + (intakeStep === 1 ? '33.3%' : (intakeStep === 2 ? '66.6%' : '100%'))"></div>
                             </div>
                         </div>
                     </template>
@@ -808,15 +749,15 @@
                     <!-- מסך הצלחה -->
                     <template x-if="intakeSuccess">
                         <div class="bg-white border border-[#e4daed] rounded-3xl p-8 text-center space-y-6 shadow-2xl animate-fade-in">
-                            <div class="w-16 h-16 bg-[#1f053d] text-[#facc15] rounded-full flex items-center justify-center mx-auto shadow-lg shadow-[#1f053d]/20">
+                            <div class="w-16 h-16 bg-[#22004d] text-[#fbbf24] rounded-full flex items-center justify-center mx-auto shadow-lg shadow-[#22004d]/20">
                                 <i data-lucide="check" class="w-8 h-8"></i>
                             </div>
                             <div class="space-y-2">
-                                <h3 class="text-xl font-black text-[#1f053d]">השאלון נשלח בהצלחה לאילאי! 🚀</h3>
-                                <p class="text-xs text-[#705b8b] leading-relaxed max-w-md mx-auto">הפרטים שלך נקלטו בהצלחה במערכת הליווי של אילאי. התוכנית המותאמת אישית שלך מתחילה עכשיו!</p>
+                                <h3 class="text-xl font-black text-[#22004d]">השאלון נשלח בהצלחה לאילאי! 🚀</h3>
+                                <p class="text-xs md:text-sm text-[#705b8b] leading-relaxed max-w-md mx-auto">הפרטים שלך נקלטו בהצלחה במערכת הליווי של אילאי. התוכנית המותאמת אישית שלך מתחילה עכשיו!</p>
                             </div>
                             <div class="pt-2">
-                                <a :href="'https://wa.me/972509172005?text=' + encodeURIComponent('היי אילאי! סיימתי כרגע למלא את שאלון הקליטה המורחב באפליקציה 💪')" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black py-3.5 px-6 rounded-2xl text-xs inline-flex items-center gap-2 shadow-lg shadow-amber-500/30 transition">
+                                <a :href="'https://wa.me/972509172005?text=' + encodeURIComponent('היי אילאי! סיימתי כרגע למלא את שאלון הקליטה המורחב באפליקציה 💪')" target="_blank" class="bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-[#22004d] font-black py-3.5 px-6 rounded-2xl text-xs md:text-sm inline-flex items-center gap-2 shadow-xl shadow-amber-500/25 transition">
                                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                                     <span>עדכן את אילאי בוואטסאפ שסיימת 👑</span>
                                 </a>
@@ -824,46 +765,46 @@
                         </div>
                     </template>
 
-                    <!-- טופס ההזנה -->
+                    <!-- טופס ההזנה (כרטיס לבן יוקרתי עם שדות קלט מודרניים) -->
                     <template x-if="!intakeSuccess">
-                        <form @submit.prevent="submitIntakeForm()" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-5 text-xs md:text-sm">
+                        <form @submit.prevent="submitIntakeForm()" class="bg-white border border-[#e4daed] rounded-3xl p-6 md:p-8 shadow-xl space-y-6 text-xs md:text-sm">
                             
                             <!-- שלב 1: פרטים אישיים ואורח חיים -->
                             <div x-show="intakeStep === 1" class="space-y-4">
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">שם מלא *</label>
-                                    <input type="text" x-model="newIntake.name" required placeholder="ישראל ישראלי" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                    <label class="block text-xs font-black text-[#22004d]">שם מלא *</label>
+                                    <input type="text" x-model="newIntake.name" required placeholder="ישראל ישראלי" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition">
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">מספר טלפון *</label>
-                                        <input type="tel" x-model="newIntake.phone" required placeholder="0501234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold text-left">
+                                        <label class="block text-xs font-black text-[#22004d]">מספר טלפון *</label>
+                                        <input type="tel" x-model="newIntake.phone" required placeholder="0501234567" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition text-left">
                                     </div>
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">אימייל (אופציונלי)</label>
-                                        <input type="email" x-model="newIntake.email" placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold text-left">
+                                        <label class="block text-xs font-black text-[#22004d]">אימייל (אופציונלי)</label>
+                                        <input type="email" x-model="newIntake.email" placeholder="name@example.com" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition text-left">
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-3 gap-3">
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">גיל</label>
-                                        <input type="number" x-model="newIntake.age" placeholder="למשל: 25" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">גיל</label>
+                                        <input type="number" x-model="newIntake.age" placeholder="למשל: 25" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition">
                                     </div>
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">גובה (ס"מ)</label>
-                                        <input type="number" x-model="newIntake.height" placeholder="למשל: 175" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">גובה (ס"מ)</label>
+                                        <input type="number" x-model="newIntake.height" placeholder="למשל: 175" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition">
                                     </div>
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">שעות שינה</label>
-                                        <input type="number" x-model="newIntake.sleepHours" placeholder="למשל: 7" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">שעות שינה</label>
+                                        <input type="number" x-model="newIntake.sleepHours" placeholder="למשל: 7" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition">
                                     </div>
                                 </div>
 
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">רמת פעילות יומיומית</label>
-                                    <select x-model="newIntake.activityLevel" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                    <label class="block text-xs font-black text-[#22004d]">רמת פעילות יומיומית</label>
+                                    <select x-model="newIntake.activityLevel" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition cursor-pointer">
                                         <option value="יושבני (עבודה משרדית, מעט תנועה)">יושבני (עבודה משרדית, מעט תנועה)</option>
                                         <option value="פעילות קלה (עמידה ממושכת, הליכה קלה)">פעילות קלה (עמידה ממושכת, הליכה קלה)</option>
                                         <option value="פעילות בינונית (תנועה מרובה, עבודה פיזית קלה)">פעילות בינונית (תנועה מרובה, עבודה פיזית קלה)</option>
@@ -871,8 +812,8 @@
                                     </select>
                                 </div>
 
-                                <div class="flex justify-end pt-2">
-                                    <button type="button" @click="if (newIntake.name && newIntake.phone) { intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50); } else { alert('אנא מלא שם מלא ומספר טלפון!') }" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                <div class="flex justify-end pt-3">
+                                    <button type="button" @click="if (newIntake.name && newIntake.phone) { intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50); } else { alert('אנא מלא שם מלא ומספר טלפון!') }" class="bg-[#22004d] hover:bg-[#2d0066] text-[#fbbf24] font-black px-6 py-3 rounded-2xl transition shadow-lg shadow-[#22004d]/20 text-xs md:text-sm flex items-center gap-2 cursor-pointer">
                                         <span>המשך לשלב הבא</span>
                                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
                                     </button>
@@ -883,35 +824,35 @@
                             <div x-show="intakeStep === 2" class="space-y-4" x-cloak>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">משקל נוכחי (ק"ג)</label>
-                                        <input type="number" step="0.1" x-model="newIntake.startWeight" placeholder="למשל: 80" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">משקל נוכחי (ק"ג)</label>
+                                        <input type="number" step="0.1" x-model="newIntake.startWeight" placeholder="למשל: 80" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition">
                                     </div>
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">מטרה עיקרית</label>
-                                        <input type="text" x-model="newIntake.goal" placeholder="חיטוב, מסה, שיפור כושר..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">מטרה עיקרית</label>
+                                        <input type="text" x-model="newIntake.goal" placeholder="חיטוב, מסה, שיפור כושר..." class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition">
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">ניסיון ספורטיבי</label>
-                                        <select x-model="newIntake.experience" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">ניסיון ספורטיבי</label>
+                                        <select x-model="newIntake.experience" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition cursor-pointer">
                                             <option value="מתחיל (ללא ניסיון או פחות מחצי שנה)">מתחיל (פחות מחצי שנה)</option>
                                             <option value="בינוני (חצי שנה עד שנתיים)">בינוני (חצי שנה עד שנתיים)</option>
                                             <option value="מתקדם (מעל שנתיים של אימון עקבי)">מתקדם (מעל שנתיים)</option>
                                         </select>
                                     </div>
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">מיקום אימונים</label>
-                                        <select x-model="newIntake.trainingLocation" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">מיקום אימונים</label>
+                                        <select x-model="newIntake.trainingLocation" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition cursor-pointer">
                                             <option value="חדר כושר">חדר כושר</option>
                                             <option value="בית">בית (משקל גוף/ציוד קל)</option>
                                             <option value="פארק / באוויר הפתוח">פארק / באוויר הפתוח</option>
                                         </select>
                                     </div>
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">אימונים בשבוע</label>
-                                        <select x-model="newIntake.weeklyWorkouts" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">אימונים בשבוע</label>
+                                        <select x-model="newIntake.weeklyWorkouts" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition cursor-pointer">
                                             <option value="2 אימונים בשבוע">2 אימונים בשבוע</option>
                                             <option value="3 אימונים בשבוע">3 אימונים בשבוע</option>
                                             <option value="4 אימונים בשבוע">4 אימונים בשבוע</option>
@@ -923,8 +864,8 @@
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">העדפה תזונתית</label>
-                                        <select x-model="newIntake.dietPreference" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">העדפה תזונתית</label>
+                                        <select x-model="newIntake.dietPreference" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition cursor-pointer">
                                             <option value="ללא מגבלות">ללא מגבלות (אוכל הכל)</option>
                                             <option value="כשר">כשר</option>
                                             <option value="צמחוני">צמחוני</option>
@@ -934,22 +875,22 @@
                                         </select>
                                     </div>
                                     <div class="space-y-1">
-                                        <label class="block text-[10px] font-bold text-slate-400">מספר ארוחות ביום</label>
-                                        <input type="text" x-model="newIntake.mealsPerDay" placeholder="למשל: 3 ארוחות גדולות וביניים" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                        <label class="block text-xs font-black text-[#22004d]">מספר ארוחות ביום</label>
+                                        <input type="text" x-model="newIntake.mealsPerDay" placeholder="למשל: 3 ארוחות גדולות וביניים" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition">
                                     </div>
                                 </div>
 
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">מאכלים שאתה שונא או אלרגי אליהם</label>
-                                    <input type="text" x-model="newIntake.hatedFoods" placeholder="למשל: כוסברה, טונה, בצל חי..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold">
+                                    <label class="block text-xs font-black text-[#22004d]">מאכלים שאתה שונא או אלרגי אליהם</label>
+                                    <input type="text" x-model="newIntake.hatedFoods" placeholder="למשל: כוסברה, טונה, בצל חי..." class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition">
                                 </div>
 
-                                <div class="flex justify-between pt-2">
-                                    <button type="button" @click="intakeStep = 1; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-slate-950 border border-slate-800 text-slate-350 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
+                                <div class="flex justify-between items-center pt-3">
+                                    <button type="button" @click="intakeStep = 1; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-[#faf8fd] hover:bg-slate-100 text-[#705b8b] hover:text-[#22004d] border border-[#e4daed] font-bold px-5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                                         <span>חזור</span>
                                     </button>
-                                    <button type="button" @click="intakeStep = 3; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                    <button type="button" @click="intakeStep = 3; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-[#22004d] hover:bg-[#2d0066] text-[#fbbf24] font-black px-6 py-3 rounded-2xl transition shadow-lg shadow-[#22004d]/20 text-xs md:text-sm flex items-center gap-1.5 cursor-pointer">
                                         <span>המשך לשלב הבא</span>
                                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
                                     </button>
@@ -959,38 +900,38 @@
                             <!-- שלב 3: מנטלי ובריאות -->
                             <div x-show="intakeStep === 3" class="space-y-4" x-cloak>
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">מצב בריאותי, פציעות או הערות מיוחדות</label>
-                                    <textarea x-model="newIntake.notes" placeholder="פרט כאן רגישויות, בעיות גב/ברכיים, העדפות תזונה וכדומה..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold resize-none h-20"></textarea>
+                                    <label class="block text-xs font-black text-[#22004d]">מצב בריאותי, פציעות או הערות מיוחדות</label>
+                                    <textarea x-model="newIntake.notes" placeholder="פרט כאן רגישויות, בעיות גב/ברכיים, העדפות תזונה וכדומה..." class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition resize-none h-20"></textarea>
                                 </div>
 
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">למה דווקא עכשיו החלטת לעשות שינוי? (מוטיבציה) *</label>
-                                    <textarea x-model="newIntake.motivation" required placeholder="מה מניע אותך להתחיל את התהליך עכשיו?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold resize-none h-20"></textarea>
+                                    <label class="block text-xs font-black text-[#22004d]">למה דווקא עכשיו החלטת לעשות שינוי? (מוטיבציה) *</label>
+                                    <textarea x-model="newIntake.motivation" required placeholder="מה מניע אותך להתחיל את התהליך עכשיו?" class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition resize-none h-20"></textarea>
                                 </div>
 
                                 <div class="space-y-1">
-                                    <label class="block text-[10px] font-bold text-slate-400">מה האתגר/הקושי הכי גדול שלך כיום בתזונה או באימונים? *</label>
-                                    <textarea x-model="newIntake.biggestChallenge" required placeholder="מתוקים, חוסר זמן, התמדה, קושי לתכנן ארוחות..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 text-xs font-semibold resize-none h-20"></textarea>
+                                    <label class="block text-xs font-black text-[#22004d]">מה האתגר/הקושי הכי גדול שלך כיום בתזונה או באימונים? *</label>
+                                    <textarea x-model="newIntake.biggestChallenge" required placeholder="מתוקים, חוסר זמן, התמדה, קושי לתכנן ארוחות..." class="w-full bg-[#faf8fd] border border-[#e4daed] rounded-xl px-3.5 py-2.5 text-[#22004d] font-bold text-xs md:text-sm focus:bg-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition resize-none h-20"></textarea>
                                 </div>
 
                                 <!-- הסכמה לתנאי שימוש, הצהרת בריאות ומדיניות פרטיות (עמידה בחוק) -->
-                                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2">
+                                <div class="bg-[#faf8fd] border border-[#e4daed] rounded-2xl p-4 space-y-2">
                                     <label class="flex items-start gap-2.5 cursor-pointer">
-                                        <input type="checkbox" x-model="newIntake.privacyConsent" required class="mt-1 w-4 h-4 rounded text-emerald-500 bg-slate-900 border-slate-700 focus:ring-emerald-500 cursor-pointer">
-                                        <span class="text-[11px] text-slate-300 font-semibold leading-relaxed">
+                                        <input type="checkbox" x-model="newIntake.privacyConsent" required class="mt-1 w-4 h-4 rounded text-[#22004d] bg-white border-[#e4daed] focus:ring-amber-400 cursor-pointer">
+                                        <span class="text-[11px] text-[#22004d] font-semibold leading-relaxed">
                                             קראתי ואני מאשר את 
-                                            <button type="button" @click="openPrivacyModal = true" class="text-emerald-400 font-bold underline hover:text-emerald-300">הצהרת הבריאות, תנאי השימוש ומדיניות הפרטיות</button> 
+                                            <button type="button" @click="openPrivacyModal = true" class="text-amber-600 font-bold underline hover:text-amber-700">הצהרת הבריאות, תנאי השימוש ומדיניות הפרטיות</button> 
                                             של ILAICO ומאשר כי מסרתי את הפרטים מרצוני החופשי לצורך התאמת הליווי. *
                                         </span>
                                     </label>
                                 </div>
 
-                                <div class="flex justify-between pt-2">
-                                    <button type="button" @click="intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-slate-950 border border-slate-800 text-slate-355 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
+                                <div class="flex justify-between items-center pt-3">
+                                    <button type="button" @click="intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-[#faf8fd] hover:bg-slate-100 text-[#705b8b] hover:text-[#22004d] border border-[#e4daed] font-bold px-5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                                         <span>חזור</span>
                                     </button>
-                                    <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                    <button type="submit" class="bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-[#22004d] font-black px-7 py-3 rounded-2xl transition shadow-xl shadow-amber-500/25 text-xs md:text-sm flex items-center gap-2 cursor-pointer">
                                         <i data-lucide="send" class="w-4 h-4"></i>
                                         <span>שלח שאלון קליטה</span>
                                     </button>
