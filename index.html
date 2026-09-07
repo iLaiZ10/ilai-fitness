@@ -8827,6 +8827,124 @@
                 },
 
                 // טעינת הגדרות Firebase
+                // בדיקת חיבור חי בזמן אמת ל-Firebase (Live Ping)
+                async testFirebaseConnection() {
+                    if (!this.db) {
+                        if (this.firebaseConfig && typeof firebase !== 'undefined' && firebase.apps) {
+                            try {
+                                let app = !firebase.apps.length ? firebase.initializeApp(this.firebaseConfig) : firebase.app();
+                                this.db = app.firestore();
+                                this.isCloudSynced = true;
+                            } catch(e) {
+                                alert("שגיאה באתחול Firebase: " + e.message);
+                                return;
+                            }
+                        } else {
+                            alert("Firebase אינו מאותחל. אנא לחץ על 'שמור מפתחות והפעל סנכרון' תחילה.");
+                            return;
+                        }
+                    }
+                    
+                    try {
+                        const testDocRef = this.db.collection("config").doc("_ping_test");
+                        const testPayload = { timestamp: new Date().toISOString(), status: "connected", coach: "Ilai", ping: true };
+                        await testDocRef.set(testPayload);
+                        const doc = await testDocRef.get();
+                        if (doc.exists) {
+                            this.isCloudSynced = true;
+                            alert("⚡ חיבור Google Firebase תקין ופעיל ב-100%!\nכל הנתונים מסונכרנים בזמן אמת.");
+                        } else {
+                            alert("⚠️ הנתונים נשלחו אך לא נקראו בחזרה. בדוק את חוקי האבטחה (Rules).");
+                        }
+                    } catch (err) {
+                        console.error("Firebase ping error:", err);
+                        if (err.code === 'permission-denied' || (err.message && err.message.includes('Missing or insufficient permissions'))) {
+                            alert("❌ שגיאת הרשאות ב-Firebase (Permission Denied)!\n\nעליך להיכנס ל-Firebase Console -> Firestore Database -> Rules ולהגדיר:\nallow read, write: if true;");
+                        } else {
+                            alert("❌ שגיאה בבדיקת חיבור ענן: " + err.message);
+                        }
+                    }
+                },
+
+                // סנכרון ודחיפת כל הנתונים המקומיים לענן (Force Full Cloud Sync)
+                async forceCloudPushAll() {
+                    if (!this.db) {
+                        alert("חיבור הענן אינו פעיל. אנא שמור את מפתחות הפרויקט תחילה.");
+                        return;
+                    }
+                    try {
+                        let count = 0;
+                        for (const client of this.clients) {
+                            if (client && client.id) {
+                                await this.db.collection("clients").doc(client.id).set(client);
+                                count++;
+                            }
+                        }
+                        await this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents || [] });
+                        await this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates || [] });
+                        await this.db.collection("config").doc("meal_templates").set({ templates: this.mealPlanTemplates || [] });
+                        if (this.transactions && this.transactions.length > 0) {
+                            for (const tx of this.transactions) {
+                                if (tx && tx.id) {
+                                    await this.db.collection("transactions").doc(tx.id).set(tx);
+                                }
+                            }
+                        }
+                        this.isCloudSynced = true;
+                        alert(`🚀 סנכרון ענן מלא בוצע בהצלחה! סונכרנו ${count} מתאמנים, יומן פגישות, תבניות אימון ותנועות פיננסיות.`);
+                    } catch (err) {
+                        console.error("Force push error:", err);
+                        alert("❌ שגיאה בדחיפת נתונים לענן: " + err.message);
+                    }
+                },
+
+                // עדכון קוד גישה אישי של המאמן
+                saveCoachPinSetting() {
+                    const pin = (this.coachPinSetting || '').trim();
+                    if (!pin || pin.length < 4) {
+                        alert("אנא הזן קוד מאמן בן 4 ספרות לפחות.");
+                        return;
+                    }
+                    localStorage.setItem('ilaico_coach_pin', pin);
+                    alert("✅ קוד הגישה של המאמן עודכן בהצלחה ל: " + pin);
+                },
+
+                // מתג כניסה קבועה למכשיר
+                togglePersistentAuth() {
+                    this.isPersistentAuthEnabled = !this.isPersistentAuthEnabled;
+                    localStorage.setItem('ilaico_persistent_auth', this.isPersistentAuthEnabled ? 'true' : 'false');
+                    if (this.isPersistentAuthEnabled) {
+                        localStorage.setItem('ilaico_coach_auth', 'true');
+                    }
+                },
+
+                // שמירה והסרה של מפתח Gemini AI
+                saveGeminiApiKey() {
+                    const key = (this.geminiApiKeyInput || '').trim();
+                    if (!key) {
+                        alert("אנא הזן מפתח API של Google Gemini.");
+                        return;
+                    }
+                    this.geminiApiKey = key;
+                    localStorage.setItem('gemini_api_key', key);
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("settings").doc("global").set({ geminiApiKey: key }, { merge: true });
+                    }
+                    alert("✨ מפתח Google Gemini AI נשמר והופעל בהצלחה!");
+                },
+
+                removeGeminiApiKey() {
+                    if (confirm("האם להסיר את מפתח Google Gemini AI?")) {
+                        this.geminiApiKey = '';
+                        this.geminiApiKeyInput = '';
+                        localStorage.removeItem('gemini_api_key');
+                        if (this.isCloudSynced && this.db) {
+                            this.db.collection("settings").doc("global").set({ geminiApiKey: '' }, { merge: true });
+                        }
+                        alert("המפתח הוסר.");
+                    }
+                },
+
                 loadFirebaseConfig() {
                     let savedConfig = localStorage.getItem('il_fitness_firebase_config');
                     const isDisabled = localStorage.getItem('il_fitness_firebase_disabled') === 'true';
