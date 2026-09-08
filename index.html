@@ -8940,7 +8940,7 @@
                         let count = 0;
                         for (const client of this.clients) {
                             if (client && client.id) {
-                                await this.db.collection("clients").doc(client.id).set(client);
+                                await this.saveClientToCloud(client);
                                 count++;
                             }
                         }
@@ -9009,7 +9009,38 @@
                     }
                 },
 
-                                sanitizeForFirestore(obj) {
+                                
+                saveClientToCloud(client) {
+                    if (!client || !client.id) return;
+                    
+                    // 1. גיבוי מקומי מהיר ומוגן לפי מזהה מתאמן
+                    try {
+                        if (client.foodLogs && client.foodLogs.length > 0) {
+                            localStorage.setItem('il_fitness_foodlogs_' + client.id, JSON.stringify(client.foodLogs));
+                        }
+                    } catch(e) {}
+
+                    // 2. שמירה מסונכרנת לענן Firebase עם מניעת חריגת מגבלת נפח
+                    if (this.isCloudSynced && this.db) {
+                        try {
+                            const sanitized = this.sanitizeForFirestore(client);
+                            if (sanitized && sanitized.foodLogs && sanitized.foodLogs.length > 25) {
+                                sanitized.foodLogs.slice(25).forEach(l => {
+                                    if (l && l.photo && l.photo.length > 300) {
+                                        l.photo = ''; // שמירה על כל פרטי הארוחה והורדת התמונה מהיסטוריה רחוקה
+                                    }
+                                });
+                            }
+                            this.db.collection("clients").doc(client.id).set(sanitized).catch(err => {
+                                console.warn("Cloud saveClient error:", err);
+                            });
+                        } catch(err) {
+                            console.warn("Serialization error in saveClientToCloud:", err);
+                        }
+                    }
+                },
+
+                sanitizeForFirestore(obj) {
                     try {
                         return JSON.parse(JSON.stringify(obj, (key, value) => {
                             if (value === undefined) return null;
@@ -9093,7 +9124,7 @@
                         this.db.collection("clients").get().then(snapshot => {
                             if (snapshot.empty && this.clients.length > 0) {
                                 this.clients.forEach(c => {
-                                    if (c && c.id) { this.db.collection("clients").doc(c.id).set(c); }
+                                    if (c && c.id) { this.saveClientToCloud(c); }
                                 });
                                 this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents });
                                 this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates });
@@ -9158,18 +9189,16 @@
                     if (!this.db) return;
 
                     this.db.collection("clients").onSnapshot(snapshot => {
-                        this.cloudError = null; // Clear previous errors if successful
+                        this.cloudError = null;
                         
-                        // Migration from local storage to cloud if cloud database is empty
                         if (snapshot.empty) {
                             const savedV2 = localStorage.getItem('il_fitness_db_v2');
                             if (savedV2) {
                                 try {
                                     const parsed = JSON.parse(savedV2);
                                     if (parsed.clients && parsed.clients.length > 0) {
-                                        console.log("Migrating local database to empty cloud...");
                                         parsed.clients.forEach(c => {
-                                            if (c && c.id) { this.db.collection("clients").doc(c.id).set(this.sanitizeForFirestore(c)); }
+                                            if (c && c.id) { this.saveClientToCloud(c); }
                                         });
                                         if (parsed.scheduleEvents && parsed.scheduleEvents.length > 0) {
                                             this.db.collection("config").doc("schedule").set(this.sanitizeForFirestore({ events: parsed.scheduleEvents }));
@@ -9193,24 +9222,42 @@
                         const cloudClients = [];
                         snapshot.forEach(doc => {
                             const cloudClient = doc.data();
-                            // Preserve freshly added local foodLogs & reflections if cloud hasn't caught up
+                            
+                            // 1. גיבוי מקומי לפי מזהה מתאמן
+                            let localFoodLogs = [];
+                            try {
+                                const stored = localStorage.getItem('il_fitness_foodlogs_' + cloudClient.id);
+                                if (stored) localFoodLogs = JSON.parse(stored) || [];
+                            } catch(e) {}
+
+                            // 2. מתאמן נוכחי בזיכרון המקומי
                             const localClient = this.clients && this.clients.find(c => c.id === cloudClient.id);
-                            if (localClient) {
-                                if (localClient.foodLogs && localClient.foodLogs.length > 0) {
-                                    const cloudFoodIds = new Set((cloudClient.foodLogs || []).map(l => l.id));
-                                    const freshLocal = localClient.foodLogs.filter(l => l && l.id && !cloudFoodIds.has(l.id));
-                                    if (freshLocal.length > 0) {
-                                        cloudClient.foodLogs = [...freshLocal, ...(cloudClient.foodLogs || [])];
-                                    }
-                                }
-                                if (localClient.reflectionLogs && localClient.reflectionLogs.length > 0) {
-                                    const cloudRefIds = new Set((cloudClient.reflectionLogs || []).map(r => r.id));
-                                    const freshRef = localClient.reflectionLogs.filter(r => r && r.id && !cloudRefIds.has(r.id));
-                                    if (freshRef.length > 0) {
-                                        cloudClient.reflectionLogs = [...freshRef, ...(cloudClient.reflectionLogs || [])];
-                                    }
+                            if (localClient && localClient.foodLogs) {
+                                const storedIds = new Set(localFoodLogs.map(l => l.id));
+                                localClient.foodLogs.forEach(l => {
+                                    if (l && l.id && !storedIds.has(l.id)) localFoodLogs.unshift(l);
+                                });
+                            }
+
+                            // 3. מיזוג ארוחות מוגן למניעת היעלמות
+                            if (localFoodLogs.length > 0) {
+                                const cloudFoodIds = new Set((cloudClient.foodLogs || []).map(l => l.id));
+                                const missingInCloud = localFoodLogs.filter(l => l && l.id && !cloudFoodIds.has(l.id));
+                                if (missingInCloud.length > 0) {
+                                    cloudClient.foodLogs = [...missingInCloud, ...(cloudClient.foodLogs || [])];
+                                    setTimeout(() => { this.saveClientToCloud(cloudClient); }, 150);
                                 }
                             }
+
+                            // 4. מיזוג שיקופים שבועיים
+                            if (localClient && localClient.reflectionLogs && localClient.reflectionLogs.length > 0) {
+                                const cloudRefIds = new Set((cloudClient.reflectionLogs || []).map(r => r.id));
+                                const freshRef = localClient.reflectionLogs.filter(r => r && r.id && !cloudRefIds.has(r.id));
+                                if (freshRef.length > 0) {
+                                    cloudClient.reflectionLogs = [...freshRef, ...(cloudClient.reflectionLogs || [])];
+                                }
+                            }
+
                             cloudClients.push(cloudClient);
                         });
                         this.clients = cloudClients;
@@ -9218,7 +9265,6 @@
                         console.error("Clients sync error:", err);
                         this.cloudError = "שגיאת גישה לענן (Firebase): ודא שחוקי הגישה (Rules) מוגדרים ל-allow read, write: if true ב-Firebase console.";
                         this.isCloudSynced = false;
-                        this.loadLocalDatabase();
                     });
 
                     this.db.collection("config").doc("schedule").onSnapshot(doc => {
@@ -9262,7 +9308,7 @@
                         const targetClient = (this.clients && this.clients.find(c => c.id === (this.portalClientId || this.selectedClientId))) || this.currentClient;
                         if (targetClient && targetClient.id) {
                             try {
-                                this.db.collection("clients").doc(targetClient.id).set(targetClient).catch(err => console.warn("Cloud sync client error:", err));
+                                this.saveClientToCloud(targetClient).catch(err => console.warn("Cloud sync client error:", err));
                             } catch(e) {}
                         }
                         try {
@@ -9405,9 +9451,7 @@
                     client.personalSessionStatus = 'scheduled';
                     client.personalSessionDate = this.newEvent.date;
                     
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.openAddEventModal = false;
                     this.resetNewEventForm();
@@ -9420,9 +9464,7 @@
                         const client = this.clients.find(c => c.id === event.clientId);
                         if (client && client.personalSessionDate === event.date) {
                             client.personalSessionStatus = newStatus;
-                            if (this.isCloudSynced && this.db) {
-                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                            }
+                            this.saveClientToCloud(client);
                         }
                         this.saveData();
                     }
@@ -9436,9 +9478,7 @@
                             if (client && client.personalSessionDate === event.date) {
                                 client.personalSessionStatus = 'pending';
                                 client.personalSessionDate = '';
-                                if (this.isCloudSynced && this.db) {
-                                    if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                                }
+                                this.saveClientToCloud(client);
                             }
                         }
                         this.scheduleEvents = this.scheduleEvents.filter(e => e.id !== eventId);
@@ -9508,9 +9548,7 @@
                         amount: amount,
                         status: 'pending'
                     });
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.showSaveToast("נוסף חודש חיוב " + nextMonth + " ל-" + client.name + " (" + amount + " ₪)!");
                 },
@@ -9858,7 +9896,7 @@
 
                     this.clients.push(newClientObj);
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(newId).set(newClientObj);
+                        this.saveClientToCloud(newClientObj);
                     }
                     this.saveData();
                     this.openAddClientModal = false;
@@ -9995,7 +10033,7 @@
                         
                         this.clients[idx] = { ...this.clients[idx], ...this.editingClient };
                         if (this.isCloudSynced && this.db) {
-                            if (this.editingClient && this.editingClient.id) this.db.collection("clients").doc(this.editingClient.id).set(this.clients[idx]);
+                            if (this.editingClient && this.editingClient.id) this.saveClientToCloud(this.clients[idx]);
                         }
                         this.saveData();
                         this.openEditModal = false;
@@ -10036,7 +10074,7 @@
                             }).then(url => {
                                 client.mealPlanPdfUrl = url;
                                 if (this.db) {
-                                    if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
+                                    if (client && client.id) { this.saveClientToCloud(client); }
                                 }
                                 this.saveData();
                                 this.pdfUploading = false;
@@ -10135,9 +10173,7 @@
                         const client = this.clients.find(c => c.id === this.selectedClientId);
                         if (client) {
                             client.mealPlanPdfUrl = '';
-                            if (this.isCloudSynced && this.db) {
-                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                            }
+                            this.saveClientToCloud(client);
                             this.saveData();
                             alert("תפריט ה-PDF הוסר בהצלחה.");
                         }
@@ -10151,9 +10187,7 @@
                     if (url !== null) {
                         url = this.getCleanPdfUrl(url);
                         client.mealPlanPdfUrl = url;
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -10243,9 +10277,7 @@
                     }
                     client.mealPlan.meals[this.targetMealIndex].items.push(newItem);
                     
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.openFoodLibraryModal = false;
                 },
@@ -10301,9 +10333,7 @@
                     client.checkins.sort((a, b) => new Date(a.date) - new Date(b.date));
                     client.needsAttention = false;
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.portalCheckinSuccess = true;
                     this.portalNewCheckin.weight = '';
@@ -10320,9 +10350,7 @@
                     const dateStr = this.getTodayDate();
                     const entry = `[${dateStr}] ${this.portalTodayJournal}`;
                     client.notes = (client.notes ? client.notes + '\n\n' : '') + entry;
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.portalJournalSaved = true;
                     this.portalTodayJournal = '';
@@ -10336,7 +10364,7 @@
                     if (client) {
                         client.needsAttention = !client.needsAttention;
                         if (this.isCloudSynced && this.db) {
-                            this.db.collection("clients").doc(id).set(client);
+                            this.saveClientToCloud(client);
                         }
                         this.saveData();
                     }
@@ -10359,9 +10387,7 @@
                         if (this.newCheckin.isDrop) client.needsAttention = true;
                         client.checkins.push(checkinObj);
                         client.checkins.sort((a, b) => new Date(a.date) - new Date(b.date));
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         this.resetNewCheckinForm();
                     }
@@ -10372,9 +10398,7 @@
                         const client = this.clients.find(c => c.id === this.selectedClientId);
                         if (client) {
                             client.checkins.splice(index, 1);
-                            if (this.isCloudSynced && this.db) {
-                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                            }
+                            this.saveClientToCloud(client);
                             this.saveData();
                         }
                     }
@@ -10391,9 +10415,7 @@
                     if (ex.isSuperset) {
                         ex.supersetGroup = ex.supersetGroup || 'A';
                     }
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                 },
 
@@ -10431,9 +10453,7 @@
                         this.addWorkoutDay();
                     }
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.openBlockArchiveModal = false;
                     this.newBlockNameInput = '';
@@ -10448,9 +10468,7 @@
                         client.workoutPlan.currentWeek = archivedBlock.currentWeek || 'שבוע 1';
                         client.workoutPlan.notes = archivedBlock.notes || '';
                         client.workoutPlan.days = JSON.parse(JSON.stringify(archivedBlock.days || []));
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         this.openBlockHistoryModal = false;
                         alert('הבלוק שוחזר בהצלחה! 👑');
@@ -10486,9 +10504,7 @@
                         fat: foodItem.fat
                     });
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.openFoodLibraryModal = false;
                 },
@@ -10539,9 +10555,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         day.exercises.push(newEx);
                     }
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.openExerciseLibraryModal = false;
                 },
@@ -10589,9 +10603,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (client) {
                         client.googleDriveUrl = url;
                         client.googleDriveFolderUrl = url;
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -10600,9 +10612,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const client = this.clients.find(c => c.id === clientId);
                     if (client) {
                         client.googleSheetsUrl = url;
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -10654,9 +10664,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                 saveWorkoutPlanWithToast() {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (client) {
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         this.workoutSavedToast = true;
                         this.playVictorySound();
@@ -10703,9 +10711,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             type: prevSet ? prevSet.type : 'work'
                         });
                         ex.sets = ex.setsDetail.length;
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -10719,9 +10725,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             ex.setsDetail.splice(setIdx, 1);
                             ex.setsDetail.forEach((s, i) => { s.setNum = i + 1; });
                             ex.sets = ex.setsDetail.length;
-                            if (this.isCloudSynced && this.db) {
-                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                            }
+                            this.saveClientToCloud(client);
                             this.saveData();
                         }
                     }
@@ -10752,9 +10756,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                 }
                             ]
                         });
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -10764,9 +10766,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         const client = this.clients.find(c => c.id === this.selectedClientId);
                         if (client && client.workoutPlan?.days) {
                             client.workoutPlan.days.splice(dayIdx, 1);
-                            if (this.isCloudSynced && this.db) {
-                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                            }
+                            this.saveClientToCloud(client);
                             this.saveData();
                         }
                     }
@@ -10779,9 +10779,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         const cloned = JSON.parse(JSON.stringify(original));
                         cloned.name = (cloned.name || 'אימון') + ' (שכפול)';
                         client.workoutPlan.days.splice(dayIdx + 1, 0, cloned);
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -10803,9 +10801,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             ]
                         };
                         client.workoutPlan.days[dayIdx].exercises.push(newEx);
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -10814,9 +10810,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (client && client.workoutPlan?.days?.[dayIdx]?.exercises) {
                         client.workoutPlan.days[dayIdx].exercises.splice(exIdx, 1);
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -11002,9 +10996,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                 date: this.getTodayDate()
                             });
                         }
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         return true;
                     }
@@ -11068,9 +11060,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     this.scorecardWorkout = 'yes';
                     this.autoSaveDailyScorecard(true);
 
-                    if (this.isCloudSynced && this.db) {
-                        if (c && c.id) { this.db.collection("clients").doc(c.id).set(c); }
-                    }
+                    this.saveClientToCloud(c);
                     this.saveData();
 
                     this.lastFinishedWorkoutSummary = {
@@ -11211,7 +11201,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (window.firebase && firebase.apps.length) {
                         const app = firebase.apps[0];
                         const db = app.firestore();
-                        db.collection("clients").doc(newId).set(newClientObj)
+                        db.collection("clients").doc(newId).set(this.sanitizeForFirestore(newClientObj))
                             .then(() => {
                                 this.intakeSuccess = true;
                             })
@@ -11263,9 +11253,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     if (confirm(`האם לטעון את תבנית האימון "${templateName}"? פעולה זו תדרוס את תוכנית האימונים הנוכחית של המתאמן.`)) {
                         client.workoutPlan = JSON.parse(JSON.stringify(template.workoutPlan));
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         alert("התבנית נטענה בהצלחה!");
                         this.selectClient(client.id);
@@ -11308,9 +11296,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     if (confirm(`האם לטעון את תבנית התפריט "${templateName}"? פעולה זו תדרוס את תוכנית התזונה הנוכחית של המתאמן.`)) {
                         client.mealPlan = JSON.parse(JSON.stringify(template.mealPlan));
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         alert("תבנית התפריט נטענה בהצלחה!");
                         this.selectClient(client.id);
@@ -11322,9 +11308,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (client && client.payments[index]) {
                         client.payments[index].status = client.payments[index].status === 'paid' ? 'pending' : 'paid';
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -11333,9 +11317,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const client = this.clients.find(c => c.id === clientId);
                     if (client && client.payments[index]) {
                         client.payments[index].status = client.payments[index].status === 'paid' ? 'pending' : 'paid';
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -11356,9 +11338,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         client.personalSessionStatus = 'completed';
                         const event = this.scheduleEvents.find(e => e.clientId === clientId && e.status === 'scheduled');
                         if (event) event.status = 'completed';
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         alert("פגישת המתאמן סומנה כבוצעה בהצלחה! 💪");
                     }
@@ -11397,9 +11377,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             { food: '', quantity: '100 גרם', calories: 150, protein: 20, carbs: 10, fat: 3 }
                         ]
                     });
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
                 },
@@ -11409,9 +11387,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         const client = this.clients.find(c => c.id === this.selectedClientId);
                         if (client && client.mealPlan?.meals) {
                             client.mealPlan.meals.splice(mIdx, 1);
-                            if (this.isCloudSynced && this.db) {
-                                if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                            }
+                            this.saveClientToCloud(client);
                             this.saveData();
                         }
                     }
@@ -11429,9 +11405,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             carbs: 0,
                             fat: 0
                         });
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -11440,9 +11414,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (client && client.mealPlan?.meals?.[mIdx]?.items) {
                         client.mealPlan.meals[mIdx].items.splice(iIdx, 1);
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -11743,26 +11715,10 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (cIdx !== -1) {
                         this.clients[cIdx] = client;
                     }
+                    this.clients = [...this.clients];
 
-                    const totalCal = this.getTodayConsumedCalories(client);
-                    const targetCal = parseFloat(client.macroCalculated?.targetCalories) || 2000;
-                    if (totalCal >= targetCal * 0.7) {
-                        this.scorecardNutrition = 'yes';
-                        this.autoSaveDailyScorecard(true);
-                    }
-
-                    // Direct Cloud Sync with sanitized payload
-                    if (this.isCloudSynced && this.db && client.id) {
-                        try {
-                            const cleanDoc = this.sanitizeForFirestore(client);
-                            this.db.collection("clients").doc(client.id).set(cleanDoc).catch(err => {
-                                console.warn("Cloud foodLog direct save error:", err);
-                            });
-                        } catch(e) {
-                            console.warn("Cloud foodLog serialization error:", e);
-                        }
-                    }
-
+                    // שמירה מוגנת לענן ולגיבוי המקומי
+                    this.saveClientToCloud(client);
                     this.saveData();
 
                     this.portalFoodLogSaved = true;
@@ -11804,9 +11760,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     };
 
                     client.foodLogs.unshift(logObj);
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
 
                     this.openQuickAddCalorieModal = false;
@@ -12436,9 +12390,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     };
 
                     client.foodLogs.unshift(logObj);
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
 
                     this.openFoodSearchModal = false;
@@ -12570,9 +12522,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         injuries: client.notes
                     };
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.openEditIntakeModal = false;
                     alert(`שאלון הקליטה של ${client.name} עודכן ונשמר בהצלחה! 👑`);
@@ -12587,9 +12537,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     client.dailyWater = Math.max(0, client.dailyWater + amount);
                     client.lastTrackedDate = this.getTodayDate();
                     this.portalDailyWater = client.dailyWater;
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.autoSaveDailyScorecard(false);
                 },
@@ -12599,9 +12547,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (!client) return;
                     client.dailyWater = 0;
                     this.portalDailyWater = 0;
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.autoSaveDailyScorecard(false);
                 },
@@ -12613,9 +12559,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     client.dailySteps = parseInt(steps) || 0;
                     client.lastTrackedDate = this.getTodayDate();
                     this.portalDailySteps = client.dailySteps;
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.autoSaveDailyScorecard(false);
                 },
@@ -13097,7 +13041,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     this.clients.unshift(newClientObj);
                     if (this.isCloudSynced && this.db) {
-                        this.db.collection("clients").doc(newClientObj.id).set(newClientObj);
+                        this.saveClientToCloud(newClientObj);
                     }
                     this.saveData();
                     this.openImportIntakeModal = false;
@@ -13176,9 +13120,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     };
                     
                     client.foodLogs.unshift(logObj);
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     
                     this.portalMealDescription = '';
@@ -13193,9 +13135,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     if (confirm("האם להסיר פריט זה מיומן התזונה?")) {
                         client.foodLogs = client.foodLogs.filter(l => l.id !== logId);
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
                     }
@@ -13232,9 +13172,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     
                     client.reflectionLogs.unshift(refObj);
                     client.needsAttention = true; // Alerts coach on dashboard
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     
                     this.portalWeeklyReflectionText = '';
@@ -13251,9 +13189,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         ref.coachFeedback = feedbackText;
                         ref.reviewed = true;
                         ref.reviewedAt = this.getTodayDate();
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                         alert("משוב המאמן נשמר ונשלח למתאמן בהצלחה! 👑");
                     }
@@ -13293,7 +13229,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                     else { this.clients = imported.clients || []; this.scheduleEvents = imported.scheduleEvents || []; this.workoutTemplates = imported.workoutTemplates || []; }
                                     
                                     if (this.isCloudSynced && this.db) {
-                                        this.clients.forEach(c => this.db.collection("clients").doc(c.id).set(c));
+                                        this.clients.forEach(c => this.saveClientToCloud(c));
                                     }
                                     this.saveData();
                                     alert("שוחזר בהצלחה!");
@@ -13782,9 +13718,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         client.dailyScorecards.unshift(entry);
                     }
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
 
                     if (showCelebration) {
@@ -13893,9 +13827,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     client.dailyScorecards.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.openCoachScorecardModal = false;
                     alert(`הדיווח לתאריך ${sc.date} נשמר ועודכן בהצלחה! 👑`);
@@ -13908,9 +13840,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         if (Array.isArray(client.dailyScorecards)) {
                             client.dailyScorecards = client.dailyScorecards.filter(s => s && s.date !== dateStr);
                         }
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                         this.saveData();
                     }
                 },
@@ -13972,9 +13902,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         client.lastTrackedDate = todayStr;
                         client.streakDays = this.getClientStreak(client);
 
-                        if (this.isCloudSynced && this.db) {
-                            if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                        }
+                        this.saveClientToCloud(client);
                     } else if (!client.lastTrackedDate) {
                         client.lastTrackedDate = todayStr;
                     }
@@ -14085,9 +14013,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         timestamp: new Date().toISOString()
                     });
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
-                    }
+                    this.saveClientToCloud(client);
                     this.saveData();
                     this.openPrModal = false;
 
