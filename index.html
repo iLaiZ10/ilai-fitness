@@ -626,7 +626,7 @@
                                 <span :class="intakeStep >= 3 ? 'text-emerald-400' : ''">3. מנטלי ובריאות</span>
                             </div>
                             <div class="h-1.5 w-full bg-slate-900 border border-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-emerald-500 transition-all duration-300" :style="'width: ' + (intakeStep === 1 ? '33.3%' : (intakeStep === 2 ? '66.6%' : '100%'))"></div>
+                                <div class="h-full bg-gradient-to-r from-[#1a0730] to-[#fbbf24] transition-all duration-300" :style="'width: ' + (intakeStep === 1 ? '33.3%' : (intakeStep === 2 ? '66.6%' : '100%'))"></div>
                             </div>
                         </div>
                     </template>
@@ -698,7 +698,7 @@
                                 </div>
 
                                 <div class="flex justify-end pt-2">
-                                    <button type="button" @click="if (newIntake.name && newIntake.phone) { intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50); } else { alert('אנא מלא שם מלא ומספר טלפון!') }" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                    <button type="button" @click="if (newIntake.name && newIntake.phone) { intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50); } else { alert('אנא מלא שם מלא ומספר טלפון!') }" class="bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] hover:from-[#f59e0b] hover:to-[#d97706] text-[#1a0730] font-black px-6 py-2.5 rounded-2xl transition shadow-md text-xs flex items-center gap-1.5 cursor-pointer">
                                         <span>המשך לשלב הבא</span>
                                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
                                     </button>
@@ -936,7 +936,7 @@
                                         <div class="flex items-center gap-2 flex-wrap">
                                             <h3 class="text-sm md:text-base font-black text-[#1a0730]">צ'ק-ליסט יומי חי של אלופים 👑</h3>
                                             <template x-if="!portalScorecardViewDate || portalScorecardViewDate === getTodayDate()">
-                                                <span class="text-[10px] bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                                <span class="text-[10px] bg-[#f5effa] text-[#1a0730] border border-[#ded0eb] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
                                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                                     <span>נשמר אוטומטית</span>
                                                 </span>
@@ -2417,7 +2417,7 @@
                                         </div>
                                         <div class="flex items-center gap-1.5">
                                             <template x-if="task.type === 'zoom'">
-                                                <button @click="markPersonalSessionDone(task.id)" class="bg-blue-600/20 text-blue-400 border border-blue-900 text-[10px] px-2 py-1 rounded">בוצע</button>
+                                                <button @click="markPersonalSessionDone(task.id)" class="bg-[#faf6fc] hover:bg-[#1a0730] hover:text-[#fbbf24] text-[#1a0730] border border-[#ded0eb] text-[10px] font-bold px-2.5 py-1 rounded-xl transition cursor-pointer">בוצע</button>
                                             </template>
                                             <button @click="selectClient(task.id)" class="text-[10px] text-slate-400 px-2 py-1 rounded bg-slate-900 border border-slate-800">לכרטיס</button>
                                         </div>
@@ -2557,7 +2557,7 @@
 
                                             <!-- שקילה שבועית -->
                                             <td class="py-3.5 px-3 text-center">
-                                                <span :class="isClientCheckedInThisWeek(client) ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-flex items-center gap-1">
+                                                <span :class="isClientCheckedInThisWeek(client) ? 'bg-[#f5effa] text-[#1a0730] border-[#ded0eb]' : 'bg-[#fffbeb] text-[#92400e] border-[#fde68a]'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-flex items-center gap-1">
                                                     <template x-if="isClientCheckedInThisWeek(client)">
                                                         <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-700"></i>
                                                     </template>
@@ -2598,7 +2598,7 @@
 
                                             <!-- תשלום חודשי -->
                                             <td class="py-3.5 px-3 text-center">
-                                                <span :class="isCurrentMonthPaid(client) ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-rose-100 text-rose-800 border-rose-300'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-block" x-text="isCurrentMonthPaid(client) ? 'שולם 🟢' : 'ממתין 🟡'"></span>
+                                                <span :class="isCurrentMonthPaid(client) ? 'bg-[#f5effa] text-[#1a0730] border-[#ded0eb]' : 'bg-[#fff1f2] text-[#9f1239] border-[#fecdd3]'" class="text-[10px] px-2.5 py-1 rounded-xl font-bold border inline-block" x-text="isCurrentMonthPaid(client) ? 'שולם 🟢' : 'ממתין 🟡'"></span>
                                             </td>
 
                                             <!-- פעולות -->
@@ -2611,7 +2611,7 @@
                                                     <button @click="selectClient(client.id)" class="bg-white hover:bg-slate-100 border border-[#e6dcef] text-[#1a0730] px-2.5 py-1 rounded-lg text-[10px] font-bold transition">
                                                         כרטיס
                                                     </button>
-                                                    <a :href="getWhatsAppLink(client, 'weighin')" target="_blank" class="bg-[#22c55e] text-white p-1 rounded-lg hover:bg-[#16a34a] transition" title="וואטסאפ">
+                                                    <a :href="getWhatsAppLink(client, 'weighin')" target="_blank" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] p-1.5 rounded-xl transition cursor-pointer shadow-2xs" title="וואטסאפ">
                                                         <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                                                     </a>
                                                 </div>
@@ -2791,7 +2791,7 @@
                                         <span class="text-[9px] text-slate-500 block">מפגש השבוע:</span>
                                         <span :class="getPersonalSessionClass(client.personalSessionStatus)" class="px-1.5 py-0.5 rounded text-[9px] border inline-block mt-0.5" x-text="getPersonalSessionLabel(client.personalSessionStatus)"></span>
                                     </div>
-                                    <button @click="selectClient(client.id)" class="bg-emerald-500 text-slate-950 px-3.5 py-1.5 rounded-lg font-bold text-xs">ניהול מתאמן</button>
+                                    <button @click="selectClient(client.id)" class="bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] text-[#1a0730] px-4 py-1.5 rounded-xl font-black text-xs shadow-md">ניהול מתאמן</button>
                                 </div>
                             </div>
                         </template>
@@ -2874,7 +2874,7 @@
                                 <div class="space-y-1.5">
                                     <div class="flex items-center gap-2.5 flex-wrap">
                                         <h3 class="text-xl md:text-3xl font-black text-[#1a0730] tracking-tight" x-text="currentClient?.name"></h3>
-                                        <span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 shadow-sm">
+                                        <span class="text-[10px] bg-[#1a0730] text-[#fbbf24] border border-[#fbbf24]/30 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 shadow-xs">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
                                             <span>VIP ליווי אישי</span>
                                         </span>
