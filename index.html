@@ -7368,6 +7368,12 @@
                 workoutTemplates: [],
                 mealPlanTemplates: [],
                 transactions: [],
+
+                // דגלי בטיחות סנכרון: נדלקים רק אחרי שהענן נקרא בהצלחה.
+                // מונעים כתיבת מערך ריק מעל היומן והתבניות הקיימים.
+                cloudScheduleReady: false,
+                cloudTemplatesReady: false,
+                cloudMealTemplatesReady: false,
                 
                 // אובייקטים לטפסים
                 newClient: { name: '', phone: '', email: '', startDate: '', startWeight: '', goal: '', pricePerMonth: 250, paymentMonths: 3 },
@@ -9306,18 +9312,22 @@
                         if (doc.exists) {
                             this.scheduleEvents = doc.data().events || [];
                         }
+                        // הענן נקרא בהצלחה - מעכשיו מותר לכתוב חזרה
+                        this.cloudScheduleReady = true;
                     }, err => console.error("Schedule sync error:", err));
 
                     this.db.collection("config").doc("templates").onSnapshot(doc => {
                         if (doc.exists) {
                             this.workoutTemplates = doc.data().templates || [];
                         }
+                        this.cloudTemplatesReady = true;
                     }, err => console.error("Templates sync error:", err));
 
                     this.db.collection("config").doc("meal_templates").onSnapshot(doc => {
                         if (doc.exists) {
                             this.mealPlanTemplates = doc.data().templates || [];
                         }
+                        this.cloudMealTemplatesReady = true;
                     }, err => console.error("Meal templates sync error:", err));
 
                     this.db.collection("transactions").onSnapshot(snapshot => {
@@ -9346,11 +9356,22 @@
                                 this.saveClientToCloud(targetClient);
                             } catch(e) {}
                         }
-                        try {
-                            this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents || [] }).catch(() => {});
-                            this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates || [] }).catch(() => {});
-                            this.db.collection("config").doc("meal_templates").set({ templates: this.mealPlanTemplates || [] }).catch(() => {});
-                        } catch(e) {}
+                        // מסמכי config נכתבים רק אחרי שהענן נקרא בהצלחה, ולעולם לא מהפורטל/שאלון.
+                        // בלי השמירה הזו כל דפדפן חדש דורס את היומן והתבניות במערך ריק.
+                        const isCoachContext = this.activeTab !== 'portal' && this.activeTab !== 'intake';
+                        if (isCoachContext) {
+                            try {
+                                if (this.cloudScheduleReady) {
+                                    this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents || [] }).catch(() => {});
+                                }
+                                if (this.cloudTemplatesReady) {
+                                    this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates || [] }).catch(() => {});
+                                }
+                                if (this.cloudMealTemplatesReady) {
+                                    this.db.collection("config").doc("meal_templates").set({ templates: this.mealPlanTemplates || [] }).catch(() => {});
+                                }
+                            } catch(e) {}
+                        }
                     }
                     
                     try {
@@ -13970,6 +13991,14 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                 checkAndProcessMidnightRollover() {
                     const todayStr = this.getTodayDate();
+
+                    // רץ פעם ביום בלבד. קודם לכן הפונקציה רצה כל 60 שניות וקראה
+                    // ל-saveData בכל פעם = 4 כתיבות לדקה לכל טאב פתוח,
+                    // כ-5,760 כתיבות ביום - חריגה מהמכסה החינמית של Firestore.
+                    let lastChecked = null;
+                    try { lastChecked = localStorage.getItem('il_last_checked_date'); } catch (e) {}
+                    if (lastChecked === todayStr) return;
+
                     if (this.clients && this.clients.length > 0) {
                         this.clients.forEach(client => {
                             this.processMidnightRolloverForClient(client);
