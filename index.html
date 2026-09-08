@@ -8850,7 +8850,12 @@
                 },
 
                 initApp() {
+                    // 1. טעינה מקומית ראשונית מהירה מהזיכרון
+                    this.loadLocalDatabase();
+                    
+                    // 2. הפעלת חיבור וסנכרון ענן Firebase בזמן אמת
                     this.loadFirebaseConfig();
+
                     this.resetNewClientForm();
                     this.resetNewCheckinForm();
                     this.resetNewEventForm();
@@ -8871,12 +8876,6 @@
                         this.isCoachAuthenticated = true;
                         localStorage.setItem('ilaico_coach_auth', 'true');
                         localStorage.setItem('ilaico_persistent_auth', 'true');
-                    }
-
-                    // בדיקה ראשונית - רק אם המאגר ריק לגמרי טוענים נתוני דוגמה
-                    if (this.clients.length === 0) {
-                        this.loadDefaultData();
-                        this.saveData();
                     }
 
                     // סגירת יום ואיפוס אוטומטי בחצות (00:00)
