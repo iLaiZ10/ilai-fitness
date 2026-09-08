@@ -2307,7 +2307,7 @@
                 </div>
 
                 <!-- 1. טאב לוח בקרה -->
-                <div x-show="activeTab === 'dashboard'" x-cloak class="space-y-6">
+                <div x-show="isCoachAuthenticated && (activeTab === 'dashboard')" x-cloak class="space-y-6">
                     
                     <!-- באנר כניסה מהירה למערכות הליבה של אילאי (Executive Hub 2.0) -->
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
@@ -2722,7 +2722,7 @@
                 </div>
 
                 <!-- 2. טאב רשימת מתאמנים -->
-                <div x-show="activeTab === 'clients' && !selectedClientId" x-cloak class="space-y-6">
+                <div x-show="isCoachAuthenticated && (activeTab === 'clients' && !selectedClientId)" x-cloak class="space-y-6">
                     <!-- חיפוש ופילטרים -->
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col gap-4 shadow-xl">
                         <div class="flex flex-col md:flex-row gap-4 justify-between items-center w-full">
@@ -2857,7 +2857,7 @@
                 </div>
 
                 <!-- 3. טאב יומן שבועי -->
-                <div x-show="activeTab === 'schedule'" x-cloak class="space-y-6">
+                <div x-show="isCoachAuthenticated && (activeTab === 'schedule')" x-cloak class="space-y-6">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
                         <div class="flex items-center gap-4 justify-between w-full md:w-auto">
                             <h3 class="text-sm md:text-xl font-black text-[#1a0730]">יומן אימונים ושיחות</h3>
@@ -2909,7 +2909,7 @@
                 </div>
 
                 <!-- 4. כרטיס מתאמן מפורט -->
-                <div x-show="activeTab === 'clients' && selectedClientId" x-cloak class="space-y-6">
+                <div x-show="isCoachAuthenticated && (activeTab === 'clients' && selectedClientId)" x-cloak class="space-y-6">
                     
                     <!-- באנר כותרת עליון יוקרתי - Luxury Cream & Forest Client Card -->
                     <div class="bg-gradient-to-br from-[#f5effa] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#c9b7de] rounded-3xl p-5 md:p-7 shadow-xl space-y-5 text-[#1a0730] relative overflow-hidden">
@@ -4660,7 +4660,7 @@
                 </div>
 
                 <!-- 5. טאב מעקב פיננסי 2.0 (Executive Financial Suite) -->
-                <div x-show="activeTab === 'finances'" x-cloak class="space-y-6 animate-fade-in text-[#1a0730]">
+                <div x-show="isCoachAuthenticated && (activeTab === 'finances')" x-cloak class="space-y-6 animate-fade-in text-[#1a0730]">
                     
                     <!-- כותרת ראשית ופעולות מהירות -->
                     <div class="bg-gradient-to-r from-[#1a0730] via-[#2d0c4f] to-[#1a0730] border border-[#381061] rounded-3xl p-5 md:p-7 shadow-2xl text-white relative overflow-hidden">
@@ -5202,7 +5202,7 @@
 
                 
                 <!-- 6. טאב הגדרות וסנכרון ענן 2.0 (Executive Settings & Cloud Suite) -->
-                <div x-show="activeTab === 'settings'" x-cloak class="space-y-6 animate-fade-in text-[#1a0730]">
+                <div x-show="isCoachAuthenticated && (activeTab === 'settings')" x-cloak class="space-y-6 animate-fade-in text-[#1a0730]">
                     
                     <!-- כותרת ראשית של הגדרות -->
                     <div class="bg-gradient-to-r from-[#1a0730] via-[#2d0c4f] to-[#1a0730] border border-[#381061] rounded-3xl p-5 md:p-7 shadow-2xl text-white relative overflow-hidden">
@@ -7028,7 +7028,7 @@
 
             <div class="p-4 border-t border-[#c9b7de] flex justify-end gap-2 bg-[#f5effa]">
                 <button type="button" @click="openFoodLibraryModal = false" class="bg-[#faf6fc] border border-[#c9b7de] text-[#6f5888] px-4 py-2 rounded-xl text-xs font-bold">ביטול</button>
-                <button type="button" @click="addSelectedFoodToMeal()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
+                <button type="button" @click="addSelectedFoodToMealPlan()" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     <span>הוסף לתפריט</span>
                 </button>
@@ -7248,7 +7248,9 @@
                 targetMealIndex: null,
 
                 // אימות ונעילת מאמן (קוד 1236)
-                isCoachAuthenticated: true,
+                // מתחיל סגור. ערך התחלתי true גרם להצצה לתוכן ה-CRM
+                // בשבריר שנייה לפני ש-initApp הספיק לרוץ.
+                isCoachAuthenticated: false,
                 coachPinInput: '',
                 coachPinSetting: localStorage.getItem('ilaico_coach_pin') || '1236',
                 isPersistentAuthEnabled: localStorage.getItem('ilaico_persistent_auth') === 'true',
@@ -9790,6 +9792,25 @@
                 },
 
                 // עדכון addTransaction לתמיכה בשדות העשירים
+                // כפתור המחיקה במעקב הפיננסי קרא לפונקציה הזו והיא לא הייתה
+                // קיימת, כך שכל לחיצה עליו זרקה שגיאה ולא מחקה כלום.
+                deleteTransaction(txId) {
+                    if (!txId) return;
+                    const tx = (this.transactions || []).find(t => t && t.id === txId);
+                    if (!tx) return;
+                    const label = tx.description ? ' "' + tx.description + '"' : '';
+                    if (!confirm('למחוק את התנועה' + label + ' על סך ' + tx.amount + ' ₪?')) return;
+
+                    this.transactions = this.transactions.filter(t => t && t.id !== txId);
+                    if (this.isCloudSynced && this.db) {
+                        this.db.collection("transactions").doc(txId).delete().catch(err => {
+                            console.warn("Transaction delete error:", err);
+                        });
+                    }
+                    this.saveData();
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
                 addTransaction() {
                     if (!this.newTransaction.amount || !this.newTransaction.description) {
                         alert("אנא מלא סכום ותיאור!");
@@ -10334,7 +10355,11 @@
                     };
                 },
 
-                addSelectedFoodToMeal() {
+                // הוספת מזון לתוכנית התזונה מצד המאמן.
+                // קודם לכן נקראה גם היא addSelectedFoodToMeal, ופונקציה מאוחרת
+                // יותר באותו שם (חיפוש המזון בפורטל) דרסה אותה. התוצאה:
+                // הכפתור "הוסף לארוחה" בתוכנית התזונה לא הוסיף שום דבר.
+                addSelectedFoodToMealPlan() {
                     if (!this.selectedFoodItem || this.targetMealIndex === null) return;
                     const client = this.clients.find(c => c.id === this.selectedClientId);
                     if (!client || !client.mealPlan || !client.mealPlan.meals[this.targetMealIndex]) return;
@@ -10895,19 +10920,6 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     }
                 },
 
-                onExerciseNameChange(dayIdx, exIdx) {
-                    const client = this.clients.find(c => c.id === this.selectedClientId);
-                    if (!client || !client.workoutPlan?.days?.[dayIdx]?.exercises?.[exIdx]) return;
-                    const ex = client.workoutPlan.days[dayIdx].exercises[exIdx];
-                    this.ensureExerciseSetsDetail(ex);
-                    const found = this.exerciseLibrary.find(l => l.name === ex.name);
-                    if (found) {
-                        if (!ex.video && found.video) ex.video = found.video;
-                        if (!ex.rest) ex.rest = '90 שנ\'';
-                    }
-                    this.saveData();
-                },
-
                 getMuscleGroupWeeklyVolume(client) {
                     const c = client || this.portalClient || this.currentClient;
                     const volume = { 'חזה': 0, 'גב': 0, 'רגליים': 0, 'כתפיים': 0, 'ידיים': 0, 'בטן/ליבה': 0 };
@@ -11438,10 +11450,19 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (!client || !client.workoutPlan?.days?.[dayIdx]?.exercises?.[exIdx]) return;
                     const ex = client.workoutPlan.days[dayIdx].exercises[exIdx];
                     if (!ex.name) return;
-                    const found = this.exerciseLibrary.find(e => e.name.toLowerCase().includes(ex.name.trim().toLowerCase()) || ex.name.trim().toLowerCase().includes(e.name.toLowerCase()));
+                    this.ensureExerciseSetsDetail(ex);
+                    // התאמה מדויקת קודם, ואם אין - התאמה חלקית
+                    const q = ex.name.trim().toLowerCase();
+                    const found = this.exerciseLibrary.find(e => e.name.toLowerCase() === q)
+                               || this.exerciseLibrary.find(e => e.name.toLowerCase().includes(q) || q.includes(e.name.toLowerCase()));
                     if (found) {
-                        if (found.video && !ex.videoUrl) ex.videoUrl = found.video;
+                        // חובה ex.video - זה השדה שהתבניות קוראות ממנו.
+                        // גרסה קודמת כתבה ל-ex.videoUrl, שאף אחד לא קורא,
+                        // ולכן סרטוני ההדרכה מעולם לא נצמדו לתרגיל.
+                        if (found.video && !ex.video) ex.video = found.video;
+                        if (!ex.rest) ex.rest = '90 שנ\'';
                     }
+                    this.saveData();
                 },
 
                 addMeal() {
@@ -11642,6 +11663,26 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (!c || !c.foodLogs) return [];
                     const date = this.portalNutritionViewDate || this.getTodayDate();
                     return c.foodLogs.filter(l => l && l.date === date && l.mealType === mealType);
+                },
+
+                // סיכום קלוריות ומאקרו לסוג ארוחה אחד.
+                // התבנית בפורטל קראה לפונקציה הזו ארבע פעמים והיא לא הייתה
+                // מוגדרת בכלל, כך שכל מתאמן קיבל שגיאות והסיכום נשאר ריק.
+                getMealTypeSummary(client, mealType) {
+                    const logs = this.getTodayMealLogsByType(client, mealType);
+                    const sum = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+                    logs.forEach(l => {
+                        sum.calories += parseFloat(l.calories) || 0;
+                        sum.protein  += parseFloat(l.protein)  || 0;
+                        sum.carbs    += parseFloat(l.carbs)    || 0;
+                        sum.fat      += parseFloat(l.fat)      || 0;
+                    });
+                    return {
+                        calories: Math.round(sum.calories),
+                        protein: Math.round(sum.protein),
+                        carbs: Math.round(sum.carbs),
+                        fat: Math.round(sum.fat)
+                    };
                 },
 
                 getCoachSelectedDate(client) {
@@ -12408,7 +12449,11 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                 getFilteredFoodDatabase() {
                     const list = this.getMasterFoodDatabase() || [];
                     const q = (this.foodSearchQuery || '').trim().toLowerCase();
-                    const cat = this.foodSearchCategory || 'all';
+                    // כפתורי הסינון ב-UI קשורים ל-foodCategoryFilter. גרסה קודמת
+                    // קראה רק את foodSearchCategory, ולכן הכפתורים לא סיננו כלום.
+                    const cat = this.foodCategoryFilter && this.foodCategoryFilter !== 'all'
+                        ? this.foodCategoryFilter
+                        : (this.foodSearchCategory || 'all');
 
                     let filtered = list;
                     if (cat !== 'all') {
@@ -12717,8 +12762,10 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (this.restTimerInterval) {
                         clearInterval(this.restTimerInterval);
                         this.restTimerInterval = null;
-                        this.isRestTimerRunning = false;
                     }
+                    // מחוץ ל-if: אם האינטרוול כבר null, הדגל נשאר true
+                    // והכפתור נתקע במצב "רץ".
+                    this.isRestTimerRunning = false;
                 },
 
                 resumeRestTimer() {
