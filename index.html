@@ -8939,7 +8939,7 @@
                         let count = 0;
                         for (const client of this.clients) {
                             if (client && client.id) {
-                                await this.saveClientToCloud(client);
+                                this.saveClientToCloud(client);
                                 count++;
                             }
                         }
@@ -9307,7 +9307,7 @@
                         const targetClient = (this.clients && this.clients.find(c => c.id === (this.portalClientId || this.selectedClientId))) || this.currentClient;
                         if (targetClient && targetClient.id) {
                             try {
-                                this.saveClientToCloud(targetClient).catch(err => console.warn("Cloud sync client error:", err));
+                                this.saveClientToCloud(targetClient);
                             } catch(e) {}
                         }
                         try {
