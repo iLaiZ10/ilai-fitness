@@ -9007,6 +9007,18 @@
                     }
                 },
 
+                                sanitizeForFirestore(obj) {
+                    try {
+                        return JSON.parse(JSON.stringify(obj, (key, value) => {
+                            if (value === undefined) return null;
+                            if (typeof value === 'function') return undefined;
+                            return value;
+                        }));
+                    } catch(e) {
+                        return obj;
+                    }
+                },
+
                 loadFirebaseConfig() {
                     let savedConfig = localStorage.getItem('il_fitness_firebase_config');
                     const isDisabled = localStorage.getItem('il_fitness_firebase_disabled') === 'true';
@@ -9155,17 +9167,17 @@
                                     if (parsed.clients && parsed.clients.length > 0) {
                                         console.log("Migrating local database to empty cloud...");
                                         parsed.clients.forEach(c => {
-                                            if (c && c.id) { this.db.collection("clients").doc(c.id).set(c); }
+                                            if (c && c.id) { this.db.collection("clients").doc(c.id).set(this.sanitizeForFirestore(c)); }
                                         });
                                         if (parsed.scheduleEvents && parsed.scheduleEvents.length > 0) {
-                                            this.db.collection("config").doc("schedule").set({ events: parsed.scheduleEvents });
+                                            this.db.collection("config").doc("schedule").set(this.sanitizeForFirestore({ events: parsed.scheduleEvents }));
                                         }
                                         if (parsed.workoutTemplates && parsed.workoutTemplates.length > 0) {
-                                            this.db.collection("config").doc("templates").set({ templates: parsed.workoutTemplates });
+                                            this.db.collection("config").doc("templates").set(this.sanitizeForFirestore({ templates: parsed.workoutTemplates }));
                                         }
                                         if (parsed.transactions && parsed.transactions.length > 0) {
                                             parsed.transactions.forEach(t => {
-                                                if (t && t.id) { this.db.collection("transactions").doc(t.id).set(t); }
+                                                if (t && t.id) { this.db.collection("transactions").doc(t.id).set(this.sanitizeForFirestore(t)); }
                                             });
                                         }
                                         return;
@@ -9178,7 +9190,26 @@
 
                         const cloudClients = [];
                         snapshot.forEach(doc => {
-                            cloudClients.push(doc.data());
+                            const cloudClient = doc.data();
+                            // Preserve freshly added local foodLogs & reflections if cloud hasn't caught up
+                            const localClient = this.clients && this.clients.find(c => c.id === cloudClient.id);
+                            if (localClient) {
+                                if (localClient.foodLogs && localClient.foodLogs.length > 0) {
+                                    const cloudFoodIds = new Set((cloudClient.foodLogs || []).map(l => l.id));
+                                    const freshLocal = localClient.foodLogs.filter(l => l && l.id && !cloudFoodIds.has(l.id));
+                                    if (freshLocal.length > 0) {
+                                        cloudClient.foodLogs = [...freshLocal, ...(cloudClient.foodLogs || [])];
+                                    }
+                                }
+                                if (localClient.reflectionLogs && localClient.reflectionLogs.length > 0) {
+                                    const cloudRefIds = new Set((cloudClient.reflectionLogs || []).map(r => r.id));
+                                    const freshRef = localClient.reflectionLogs.filter(r => r && r.id && !cloudRefIds.has(r.id));
+                                    if (freshRef.length > 0) {
+                                        cloudClient.reflectionLogs = [...freshRef, ...(cloudClient.reflectionLogs || [])];
+                                    }
+                                }
+                            }
+                            cloudClients.push(cloudClient);
                         });
                         this.clients = cloudClients;
                     }, err => {
@@ -11647,33 +11678,15 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const todayHeb = this.getHebrewDayOfWeek();
                     const matchIdx = client.workoutPlan.days.findIndex(d => {
                         const name = (d.name || d.dayName || '').toLowerCase();
-                        if (todayHeb === 'יום ראשון' && (name.includes('ראשון') || name.includes('a'))) return true;
-                        if (todayHeb === 'יום שני' && (name.includes('שני') || name.includes('b'))) return true;
-                        if (todayHeb === 'יום שלישי' && (name.includes('שלישי') || name.includes('גב') || name.includes('b') || name.includes('c'))) return true;
-                        if (todayHeb === 'יום רביעי' && (name.includes('רביעי') || name.includes('d') || name.includes('a'))) return true;
-                        if (todayHeb === 'יום חמישי' && (name.includes('חמישי') || name.includes('רגליים') || name.includes('b') || name.includes('c'))) return true;
-                        if (todayHeb === 'יום שישי' && name.includes('שישי')) return true;
+                        if (todayHeb === 'יום ראשון' && (name.includes('ראשון') || name.includes('a') || name.includes('א'))) return true;
+                        if (todayHeb === 'יום שני' && (name.includes('שני') || name.includes('b') || name.includes('ב'))) return true;
+                        if (todayHeb === 'יום שלישי' && (name.includes('שלישי') || name.includes('c') || name.includes('ג'))) return true;
+                        if (todayHeb === 'יום רביעי' && (name.includes('רביעי') || name.includes('d') || name.includes('ד'))) return true;
+                        if (todayHeb === 'יום חמישי' && (name.includes('חמישי') || name.includes('e') || name.includes('ה'))) return true;
+                        if (todayHeb === 'יום שישי' && (name.includes('שישי') || name.includes('ו'))) return true;
                         return false;
                     });
                     return matchIdx !== -1 ? matchIdx : 0;
-                },
-
-                getMealTypeSummary(client, mealType) {
-                    const logs = this.getTodayMealLogsByType(client, mealType);
-                    let cal = 0, pro = 0, carb = 0, fat = 0;
-                    logs.forEach(l => {
-                        cal += parseFloat(l.calories) || 0;
-                        pro += parseFloat(l.protein) || 0;
-                        carb += parseFloat(l.carbs) || 0;
-                        fat += parseFloat(l.fat) || 0;
-                    });
-                    return {
-                        calories: Math.round(cal),
-                        protein: Math.round(pro * 10) / 10,
-                        carbs: Math.round(carb * 10) / 10,
-                        fat: Math.round(fat * 10) / 10,
-                        count: logs.length
-                    };
                 },
 
                 saveAiMealToJournal(targetMealType) {
@@ -11682,6 +11695,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         if (this.clients && this.clients.length > 0) {
                             client = this.clients[0];
                             this.portalClientId = client.id;
+                            this.selectedClientId = client.id;
                         } else {
                             alert("לא נמצא כרטיס מתאמן פעיל לשמירת הארוחה.");
                             return;
@@ -11698,24 +11712,35 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     const mealType = targetMealType || this.portalMealType || 'ארוחת צהריים';
                     const targetDate = this.portalNutritionViewDate || this.getTodayDate();
+                    
                     const logObj = {
-                        id: 'fl_' + Date.now() + '_' + Math.floor(Math.random()*1000),
+                        id: 'fl_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
                         date: targetDate,
                         time: timeStr,
                         mealType: mealType,
-                        description: this.aiFoodQuery || this.portalMealDescription || 'ארוחה מחושבת ב-AI',
-                        calories: this.aiAnalyzedMeal.calories || 0,
-                        protein: this.aiAnalyzedMeal.protein || 0,
-                        carbs: this.aiAnalyzedMeal.carbs || 0,
-                        fat: this.aiAnalyzedMeal.fat || 0,
-                        items: this.aiAnalyzedMeal.items || [],
+                        description: (this.aiFoodQuery || this.portalMealDescription || 'ארוחה מחושבת ב-AI').trim(),
+                        calories: Math.round(Number(this.aiAnalyzedMeal.calories) || 0),
+                        protein: Math.round((Number(this.aiAnalyzedMeal.protein) || 0) * 10) / 10,
+                        carbs: Math.round((Number(this.aiAnalyzedMeal.carbs) || 0) * 10) / 10,
+                        fat: Math.round((Number(this.aiAnalyzedMeal.fat) || 0) * 10) / 10,
+                        items: (this.aiAnalyzedMeal.items || []).map(it => ({
+                            name: it.name || 'מאכל',
+                            cal: Math.round(Number(it.cal) || 0),
+                            pro: Math.round((Number(it.pro) || 0) * 10) / 10,
+                            carb: Math.round((Number(it.carb) || 0) * 10) / 10,
+                            fat: Math.round((Number(it.fat) || 0) * 10) / 10,
+                            swap: it.swap || ''
+                        })),
                         photo: this.portalMealPhoto || ''
                     };
 
                     client.foodLogs.unshift(logObj);
-
-                    // Ensure target date is active so item is immediately visible
                     this.portalNutritionViewDate = targetDate;
+
+                    const cIdx = this.clients.findIndex(c => c.id === client.id);
+                    if (cIdx !== -1) {
+                        this.clients[cIdx] = client;
+                    }
 
                     const totalCal = this.getTodayConsumedCalories(client);
                     const targetCal = parseFloat(client.macroCalculated?.targetCalories) || 2000;
@@ -11724,12 +11749,18 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         this.autoSaveDailyScorecard(true);
                     }
 
-                    // Direct Cloud Sync
+                    // Direct Cloud Sync with sanitized payload
                     if (this.isCloudSynced && this.db && client.id) {
                         try {
-                            this.db.collection("clients").doc(client.id).set(client).catch(err => console.warn("Cloud foodLog save error:", err));
-                        } catch(e) {}
+                            const cleanDoc = this.sanitizeForFirestore(client);
+                            this.db.collection("clients").doc(client.id).set(cleanDoc).catch(err => {
+                                console.warn("Cloud foodLog direct save error:", err);
+                            });
+                        } catch(e) {
+                            console.warn("Cloud foodLog serialization error:", e);
+                        }
                     }
+
                     this.saveData();
 
                     this.portalFoodLogSaved = true;
