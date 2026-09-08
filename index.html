@@ -1821,6 +1821,14 @@
                             </template>
                         </div>
 
+                        <!-- הודעת הצלחה בשמירת ארוחה -->
+                        <template x-if="portalFoodLogSaved">
+                            <div class="bg-[#1a0730] border-2 border-[#fbbf24] text-[#fbbf24] p-3.5 rounded-2xl text-center text-xs font-black shadow-xl animate-bounce flex items-center justify-center gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#fbbf24]"></i>
+                                <span>הארוחה נשמרה ביומן התזונה שלך בהצלחה! 🥑</span>
+                            </div>
+                        </template>
+
                         <!-- 3. פירוט 4 ארוחות היום (MyFitnessPal Meal Diary) -->
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
@@ -9218,23 +9226,52 @@
 
                 saveData() {
                     if (this.isCloudSynced && this.db) {
-                        if (this.currentClient) {
-                            if (this.currentClient && this.currentClient.id) { this.db.collection("clients").doc(this.currentClient.id).set(this.currentClient); }
+                        const targetClient = (this.clients && this.clients.find(c => c.id === (this.portalClientId || this.selectedClientId))) || this.currentClient;
+                        if (targetClient && targetClient.id) {
+                            try {
+                                this.db.collection("clients").doc(targetClient.id).set(targetClient).catch(err => console.warn("Cloud sync client error:", err));
+                            } catch(e) {}
                         }
-                        this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents });
-                        this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates });
-                        this.db.collection("config").doc("meal_templates").set({ templates: this.mealPlanTemplates });
+                        try {
+                            this.db.collection("config").doc("schedule").set({ events: this.scheduleEvents || [] }).catch(() => {});
+                            this.db.collection("config").doc("templates").set({ templates: this.workoutTemplates || [] }).catch(() => {});
+                            this.db.collection("config").doc("meal_templates").set({ templates: this.mealPlanTemplates || [] }).catch(() => {});
+                        } catch(e) {}
                     }
-                    const db = {
-                        clients: this.clients,
-                        scheduleEvents: this.scheduleEvents,
-                        workoutTemplates: this.workoutTemplates,
-                        mealPlanTemplates: this.mealPlanTemplates,
-                        transactions: this.transactions
-                    };
-                    localStorage.setItem('il_fitness_db_v2', JSON.stringify(db));
+                    
+                    try {
+                        const db = {
+                            clients: this.clients,
+                            scheduleEvents: this.scheduleEvents,
+                            workoutTemplates: this.workoutTemplates,
+                            mealPlanTemplates: this.mealPlanTemplates,
+                            transactions: this.transactions
+                        };
+                        localStorage.setItem('il_fitness_db_v2', JSON.stringify(db));
+                    } catch(err) {
+                        console.warn("LocalStorage quota full, trimming older meal photos...", err);
+                        try {
+                            const safeClients = JSON.parse(JSON.stringify(this.clients));
+                            safeClients.forEach(c => {
+                                if (c.foodLogs && c.foodLogs.length > 10) {
+                                    c.foodLogs.slice(10).forEach(l => { if (l.photo && l.photo.length > 300) l.photo = ''; });
+                                }
+                            });
+                            const safeDb = {
+                                clients: safeClients,
+                                scheduleEvents: this.scheduleEvents,
+                                workoutTemplates: this.workoutTemplates,
+                                mealPlanTemplates: this.mealPlanTemplates,
+                                transactions: this.transactions
+                            };
+                            localStorage.setItem('il_fitness_db_v2', JSON.stringify(safeDb));
+                        } catch(e2) {
+                            console.error("Critical storage save error:", e2);
+                        }
+                    }
+                    
                     setTimeout(() => {
-                        if (window.lucide) window.lucide.createIcons();
+                        if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons();
                     }, 50);
                 },
 
@@ -11640,8 +11677,16 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                 },
 
                 saveAiMealToJournal(targetMealType) {
-                    const client = this.portalClient || this.currentClient;
-                    if (!client || !client.id) return;
+                    let client = (this.clients && this.clients.find(c => c.id === (this.portalClientId || this.selectedClientId))) || this.portalClient || this.currentClient;
+                    if (!client || !client.id) {
+                        if (this.clients && this.clients.length > 0) {
+                            client = this.clients[0];
+                            this.portalClientId = client.id;
+                        } else {
+                            alert("לא נמצא כרטיס מתאמן פעיל לשמירת הארוחה.");
+                            return;
+                        }
+                    }
                     if (!this.aiAnalyzedMeal) {
                         alert("אנא נתח ארוחה תחילה לפני שמירתה ביומן!");
                         return;
@@ -11654,7 +11699,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const mealType = targetMealType || this.portalMealType || 'ארוחת צהריים';
                     const targetDate = this.portalNutritionViewDate || this.getTodayDate();
                     const logObj = {
-                        id: 'fl_' + Date.now(),
+                        id: 'fl_' + Date.now() + '_' + Math.floor(Math.random()*1000),
                         date: targetDate,
                         time: timeStr,
                         mealType: mealType,
@@ -11669,6 +11714,9 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     client.foodLogs.unshift(logObj);
 
+                    // Ensure target date is active so item is immediately visible
+                    this.portalNutritionViewDate = targetDate;
+
                     const totalCal = this.getTodayConsumedCalories(client);
                     const targetCal = parseFloat(client.macroCalculated?.targetCalories) || 2000;
                     if (totalCal >= targetCal * 0.7) {
@@ -11676,8 +11724,11 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         this.autoSaveDailyScorecard(true);
                     }
 
-                    if (this.isCloudSynced && this.db) {
-                        if (client && client.id) { this.db.collection("clients").doc(client.id).set(client); }
+                    // Direct Cloud Sync
+                    if (this.isCloudSynced && this.db && client.id) {
+                        try {
+                            this.db.collection("clients").doc(client.id).set(client).catch(err => console.warn("Cloud foodLog save error:", err));
+                        } catch(e) {}
                     }
                     this.saveData();
 
@@ -11687,8 +11738,8 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     this.aiFoodQuery = '';
                     this.aiAnalyzedMeal = null;
 
-                    setTimeout(() => { this.portalFoodLogSaved = false; }, 4000);
-                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                    setTimeout(() => { this.portalFoodLogSaved = false; }, 5000);
+                    setTimeout(() => { if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons(); }, 50);
                 },
 
                 saveQuickAddMeal() {
@@ -13041,7 +13092,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             const canvas = document.createElement('canvas');
                             let width = img.width;
                             let height = img.height;
-                            const maxDim = 800;
+                            const maxDim = 420; // Optimized for mobile thumbnails & Firestore quota safety (<25KB)
                             if (width > height && width > maxDim) {
                                 height = Math.round((height * maxDim) / width);
                                 width = maxDim;
@@ -13053,11 +13104,13 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             canvas.height = height;
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, width, height);
-                            const compressed = canvas.toDataURL('image/jpeg', 0.72);
+                            const compressed = canvas.toDataURL('image/jpeg', 0.60);
                             callback(compressed);
                         };
+                        img.onerror = () => { callback(''); };
                         img.src = e.target.result;
                     };
+                    reader.onerror = () => { callback(''); };
                     reader.readAsDataURL(file);
                 },
 
