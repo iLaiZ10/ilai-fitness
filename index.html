@@ -1606,40 +1606,76 @@
                                 <span class="bg-[#fbbf24]/20 text-[#1a0730] text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-[#fbbf24]/40">AI Engine ✨</span>
                             </div>
 
-                            <!-- שדה הזנה רב-ערוצי -->
+                            <!-- 3 אפשרויות הזנה מהירות וברורות: תמונה, הודעה קולית, הקלדה -->
+                            <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+                                <label class="bg-white hover:bg-[#faf6fc] text-[#1a0730] border-2 border-[#ded0eb] hover:border-[#fbbf24] p-2.5 rounded-2xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition font-black">
+                                    <i data-lucide="camera" class="w-4 h-4 text-[#fbbf24] shrink-0"></i>
+                                    <span>📸 צלם צלחת</span>
+                                    <input type="file" accept="image/*" class="hidden" @change="handleMealPhotoUpload($event)">
+                                </label>
+
+                                <button type="button" 
+                                        @click="startVoiceFoodInput()" 
+                                        :class="isVoiceRecording ? 'bg-red-600 text-white animate-pulse border-red-700' : 'bg-white hover:bg-[#faf6fc] text-[#1a0730] border-[#ded0eb] hover:border-[#fbbf24]'" 
+                                        class="border-2 p-2.5 rounded-2xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition font-black">
+                                    <i data-lucide="mic" class="w-4 h-4 shrink-0" :class="isVoiceRecording ? 'text-white' : 'text-[#fbbf24]'"></i>
+                                    <span x-text="isVoiceRecording ? 'מקליט... 🎙️' : '🎙️ הודעה קולית'"></span>
+                                </button>
+
+                                <button type="button" 
+                                        @click="$refs.foodTextInput?.focus()" 
+                                        class="bg-white hover:bg-[#faf6fc] text-[#1a0730] border-2 border-[#ded0eb] hover:border-[#fbbf24] p-2.5 rounded-2xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition font-black">
+                                    <i data-lucide="edit-3" class="w-4 h-4 text-[#fbbf24] shrink-0"></i>
+                                    <span>✍️ הקלד מאכל</span>
+                                </button>
+                            </div>
+
+                            <!-- תצוגה מקדימה של תמונת צלחת שהועלתה -->
+                            <template x-if="portalMealPhoto">
+                                <div class="flex items-center gap-3 bg-white p-2.5 rounded-2xl border-2 border-[#4d1a80]/30 shadow-sm animate-scale-up">
+                                    <img :src="portalMealPhoto" class="w-14 h-14 rounded-xl object-cover border border-[#4d1a80] shadow-xs" />
+                                    <div class="flex-1 text-xs">
+                                        <span class="font-black text-[#1a0730] block">תמונת צלחת שצולמה 📸</span>
+                                        <span class="text-[10px] text-[#6f5888]">מוכנה לחישוב מדויק ב-AI</span>
+                                    </div>
+                                    <button type="button" @click="portalMealPhoto = '';" class="text-rose-600 hover:text-rose-800 p-1.5 text-xs font-black">הסר ✕</button>
+                                </div>
+                            </template>
+
+                            <!-- שדה הזנה ראשי עם כפתור חישוב -->
                             <div class="space-y-2">
                                 <div class="relative flex items-center">
                                     <input type="text" 
+                                           x-ref="foodTextInput"
                                            x-model="aiFoodQuery" 
                                            @focus="isAiAnalyzing = false"
                                            @click="isAiAnalyzing = false"
                                            @input="isAiAnalyzing = false"
                                            @keydown.enter.prevent="analyzeFoodWithAi()"
-                                           placeholder="הקלד או הקלט: למשל 2 כפות הגשה אורז, 180 גרם דג אמנון, כף טחינה גולמית וסלט..." 
-                                           class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-2xl px-4 py-3 text-xs text-[#1a0730] font-semibold focus:outline-none focus:border-[#22c55e] pr-4 pl-36 shadow-inner">
+                                           placeholder="הקלד או הקלט: למשל 2 כפות הגשה אורז, 180 גרם דג אמנון, כף טחינה וסלט..." 
+                                           class="w-full bg-[#faf6fc] border border-[#e6dcef] rounded-2xl px-4 py-3 text-xs text-[#1a0730] font-semibold focus:outline-none focus:border-[#fbbf24] pr-4 pl-36 shadow-inner">
                                     
                                     <div class="absolute left-1.5 top-1.5 bottom-1.5 flex items-center gap-1">
-                                        <!-- כפתור מיקרופון הקלטה קולית -->
+                                        <!-- כפתור מיקרופון -->
                                         <button type="button" 
                                                 @click="startVoiceFoodInput()"
                                                 :class="isVoiceRecording ? 'bg-red-600 text-white animate-pulse' : 'bg-slate-100 hover:bg-slate-200 text-[#1a0730]'"
                                                 class="p-2 rounded-xl text-xs font-bold flex items-center justify-center transition cursor-pointer"
                                                 :title="isVoiceRecording ? 'עצור הקלטה' : 'הקלטה קולית בעברית'">
-                                            <i data-lucide="flame" x-show="isVoiceRecording" class="w-4 h-4 text-white"></i>
-                                            <i data-lucide="message-circle" x-show="!isVoiceRecording" class="w-4 h-4 text-[#1a0730]"></i>
+                                            <i data-lucide="mic" class="w-4 h-4"></i>
                                         </button>
 
-                                        <!-- כפתור העלאת/צילום תמונה -->
+                                        <!-- כפתור מצלמה -->
                                         <label class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#1a0730] cursor-pointer flex items-center justify-center transition" title="צלם צלחת / בחר תמונה">
                                             <i data-lucide="camera" class="w-4 h-4"></i>
                                             <input type="file" accept="image/*" class="hidden" @change="handleMealPhotoUpload($event)">
                                         </label>
 
-                                        <!-- כפתור ניתוח AI -->
+                                        <!-- כפתור ניתוח AI ראשי -->
                                         <button type="button" 
                                                 @click="analyzeFoodWithAi()" 
                                                 :disabled="isAiAnalyzing"
-                                                class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] px-3.5 py-2 rounded-xl text-xs font-black flex items-center gap-1 transition border border-[#451675] shadow-md cursor-pointer">
+                                                class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] px-4 py-2 rounded-xl text-xs font-black flex items-center gap-1 transition border border-[#451675] shadow-md cursor-pointer">
                                             <span x-show="!isAiAnalyzing">חשב ✨</span>
                                             <span x-show="isAiAnalyzing" class="flex items-center gap-1">
                                                 <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>
@@ -11823,37 +11859,62 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     if (apiKey) {
                         try {
-                            const prompt = `אתה מחשבון התזונה והקלוריות הרשמי של המאמן אילאי, המבוסס ב-100% על מאגר FoodsDictionary הישראלי ומשרד הבריאות.
-עליך לזהות בדיוק של 100% כל מאכל, מותג, מנת מסעדה, סלנג, קינוח, פרי, ירק, צילום צלחת או מאכל עדתי.
-לעולם אל תחליף מאכל שהוזן במאכל אחר (דג אמנון הוא דג אמנון, סלמון הוא סלמון, שווארמה בלאפה היא לאפה, במבה היא במבה).
+                            const prompt = `אתה מחשבון התזונה והקלוריות הרשמי והמדויק ביותר של המאמן אילאי, המבוסס ב-100% על מאגר FoodsDictionary הישראלי, משרד הבריאות והמותגים בישראל.
+עליך לזהות בדיוק מירבי כל מאכל, מותג, מנת מסעדה, סלנג, קינוח, פרי, ירק, צילום צלחת, תיאור קולי או טקסט חופשי בעברית.
 
-פרופיל המתאמן:
+פרופיל אישי של המתאמן:
 - יעד יומי: ${targetCal} קלוריות | ${targetPro} גרם חלבון.
 - מטרה: ${clientGoal}.
-- קלוריות שנותרו להיום: ${remainingCal} קלוריות.
+- קלוריות שנותרו להיום: ${remainingCal} קק"ל.
 
-תיאור המנה שהמתאמן הזין:
+תיאור המנה שהמתאמן הזין (טקסט / תמלול קולי / צילום צלחת):
 "${rawQuery || (this.portalMealPhoto ? 'צלחת שצולמה בתמונה' : '')}"
 
-ערכים תזונתיים רשמיים לפי FoodsDictionary (מזון מוכן/מבושל):
-- אורז לבן/יסמין/בסמטי מבושל: 130 קל', 2.7ג' חלבון, 28ג' פחמימה ל-100ג' (כף הגשה 55ג' = ~72 קל', כוס מבושלת 160ג' = ~208 קל').
-- פסטה/ספגטי מבושלים: 155 קל', 5.8ג' חלבון, 31ג' פחמימה ל-100ג' (כף הגשה 55ג' = ~85 קל').
-- פתיתים מבושלים: 160 קל', 5.2ג' חלבון, 32ג' פחמימה ל-100ג'.
-- תפוח אדמה אפוי/מבושל: 86 קל', 2ג' חלבון, 20ג' פחמימה ל-100ג' (יח' בינונית ~145 קל').
-- בטטה אפויה: 90 קל', 2ג' חלבון, 21ג' פחמימה ל-100ג' (יח' בינונית ~162 קל').
-- שיבולת שועל / קוואקר: 389 קל'/100ג' (חצי כוס ~40ג' = 155 קל', 6.8ג' חלבון).
-- חזה עוף מבושל/צלוי: 165 קל', 31ג' חלבון, 3.6ג' שומן ל-100ג' (מנה 180ג' = ~297 קל', 55.8ג' חלבון).
-- דג אמנון (מושט) אפוי: 128 קל', 26.2ג' חלבון, 2.6ג' שומן ל-100ג' (פילה 180ג' = ~230 קל', 47.1ג' חלבון).
-- פילה סלמון אפוי: 206 קל', 22.1ג' חלבון, 12.3ג' שומן ל-100ג' (מנה 180ג' = ~370 קל', 39.8ג' חלבון).
-- דג דניס אפוי: 150 קל', 20.5ג' חלבון ל-100ג'.
-- ביצה L: 75 קל', 6.8ג' חלבון, 5.2ג' שומן.
-- טחינה גולמית: 640 קל'/100ג' (כף 15ג' = 96 קל', 3.6ג' חלבון, 8.3ג' שומן).
-- שמן זית: 884 קל'/100ג' (כף 10ג' = 88 קל').
-- פיתה קלה: 99 קל'. פיתה רגילה: 255 קל'. לחם קל: 40-45 קל' לפרוסה. לחם מלא: 75 קל' לפרוסה.
+ערכי בסיס רשמיים ומדויקים לפי FoodsDictionary (מזון מוכן/מבושל):
+- חלבונים:
+  * חזה עוף צלוי/מבושל: 165 קל', 31ג' חלבון, 3.6ג' שומן ל-100ג' (מנה 180ג' = 297 קל', 55.8ג' חלבון).
+  * פילה סלמון אפוי: 206 קל', 22.1ג' חלבון, 12.3ג' שומן ל-100ג' (מנה 180ג' = 370 קל', 39.8ג' חלבון).
+  * דג אמנון (מושט) אפוי: 128 קל', 26.2ג' חלבון, 2.6ג' שומן ל-100ג' (פילה 180ג' = 230 קל', 47.1ג' חלבון).
+  * דניס אפוי: 150 קל', 20.5ג' חלבון ל-100ג'.
+  * בקר רזה 5% (טחון/פילה): 135 קל', 21ג' חלבון, 5ג' שומן ל-100ג'.
+  * טונה במי מלח: 120 קל', 28ג' חלבון לקופסה (112ג').
+  * ביצה לארג' (L): 75 קל', 6.8ג' חלבון, 5.2ג' שומן (2 ביצים = 150 קל', 13.6ג' חלבון).
+  * חלבון ביצה (לבן בלבד): 17 קל', 3.8ג' חלבון.
+  * יוגורט חלבון GO PRO / דנונה פרו: 130-150 קל', 20-25ג' חלבון לגביע.
+  * גבינת קוטג' 5%: 95 קל', 11ג' חלבון ל-100ג' (גביע 250ג' = 235 קל', 27.5ג' חלבון).
+  * גבינה לבנה 5%: 90 קל', 10ג' חלבון ל-100ג'.
+  * אבקת חלבון (סקופ 30ג'): 120 קל', 24-25ג' חלבון.
 
-החזר אך ורק JSON תקין ומדויק ללא שום טקסט, הסברים או תגיות מסביב:
+- פחמימות ותוספות:
+  * אורז לבן/יסמין/בסמטי מבושל: 130 קל', 2.7ג' חלבון, 28ג' פחמימה ל-100ג' (כף הגשה 55ג' = 72 קל', כוס מבושלת 160ג' = 208 קל').
+  * פסטה/ספגטי מבושלים: 155 קל', 5.8ג' חלבון, 31ג' פחמימה ל-100ג' (כף הגשה 55ג' = 85 קל', כוס 150ג' = 232 קל').
+  * פתיתים מבושלים: 160 קל', 5.2ג' חלבון, 32ג' פחמימה ל-100ג'.
+  * תפוח אדמה אפוי/מבושל: 86 קל', 2ג' חלבון, 20ג' פחמימה ל-100ג' (תפוא בינוני 170ג' = 145 קל').
+  * בטטה אפויה: 90 קל', 2ג' חלבון, 21ג' פחמימה ל-100ג' (בטטה בינונית 180ג' = 162 קל').
+  * קוואקר / שיבולת שועל: 389 קל'/100ג' (חצי כוס 40ג' = 155 קל', 6.8ג' חלבון).
+  * פיתה רגילה: 255 קל', 8.5ג' חלבון, 52ג' פחמימה.
+  * פיתה קלה / כוסמין: 99 קל', 6ג' חלבון, 20ג' פחמימה.
+  * לאפה: 450-500 קל', 14ג' חלבון, 95ג' פחמימה.
+  * פרוסת לחם אחיד/מלא: 75 קל', 3ג' חלבון. פרוסת לחם קל: 40-45 קל'.
+
+- שומנים ורטבים:
+  * שמן זית: 884 קל'/100ג' (כף 10ג' = 88 קל').
+  * טחינה גולמית משומשום מלא: 640 קל'/100ג' (כף 15ג' = 96 קל', 3.6ג' חלבון, 8.3ג' שומן).
+  * טחינה מוכנה: 30 קל' לכף (15ג').
+  * אבוקדו: 160 קל', 2ג' חלבון, 15ג' שומן ל-100ג' (חצי אבוקדו = 120 קל').
+  * שקדים / אגוזי מלך: 600 קל'/100ג' (חופן 25ג' = 150 קל').
+
+- מנות רחוב ומסעדות פופולריות:
+  * שווארמה הודו/פרגית בלאפה עם טחינה וסלטים: 1050 קל', 58ג' חלבון, 110ג' פחמימה, 38ג' שומן.
+  * שווארמה בפיתה עם טחינה וסלטים: 720 קל', 42ג' חלבון, 65ג' פחמימה, 28ג' שומן.
+  * שווארמה בצלחת (250ג' בשר + אורז/סלט): 650 קל', 55ג' חלבון, 40ג' פחמימה, 26ג' שומן.
+  * פלאפל בפיתה (4-5 כדורים, טחינה, סלט): 560 קל', 16ג' חלבון, 72ג' פחמימה, 22ג' שומן.
+  * שניצל מטוגן (150ג'): 330 קל', 28ג' חלבון, 18ג' פחמימה, 16ג' שומן.
+  * המבורגר 200ג' בלחמנייה: 650 קל', 38ג' חלבון, 45ג' פחמימה, 32ג' שומן.
+
+החזר אך ורק JSON תקני ומדויק ללא שום טקסט נלווה או סימני markdown מיותרים:
 {
-  "calories": סך קלוריות מחושב מדויק לפי FoodsDictionary,
+  "calories": סך קלוריות כמספר שלם,
   "protein": סך חלבון בגרמים,
   "carbs": סך פחמימות בגרמים,
   "fat": סך שומן בגרמים,
@@ -11901,11 +11962,11 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             }
 
                             const modelsToTry = [
-                                'models/gemini-3.5-flash-lite',
-                                'models/gemini-flash-lite-latest',
-                                'models/gemini-flash-latest',
-                                'models/gemma-4-31b-it',
-                                'models/gemini-2.5-flash-lite'
+                                'models/gemini-2.0-flash',
+                                'models/gemini-1.5-flash',
+                                'models/gemini-2.0-flash-lite',
+                                'models/gemini-1.5-flash-8b',
+                                'models/gemini-1.5-pro'
                             ];
 
                             for (const mName of modelsToTry) {
