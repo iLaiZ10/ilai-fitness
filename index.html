@@ -95,6 +95,16 @@
     </script>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
+    <script>
+        // רישום ה-service worker. בלעדיו האפליקציה המותקנת לא עובדת אופליין.
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => {
+                    console.warn('Service worker registration failed:', err);
+                });
+            });
+        }
+    </script>
     <meta name="theme-color" content="#1a0730">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -105,7 +115,8 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
     <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- גרסה נעוצה: @latest אומר שגרסה שוברת אצל lucide שוברת את האתר בלי שנגענו בו -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@1.43.0/dist/umd/lucide.min.js"></script>
     
     <!-- Firebase SDK Compat (עבור סנכרון ענן בזמן אמת) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -8864,11 +8875,18 @@
 
                 async loginCoach() {
                     const input = (this.coachPinInput || '').trim();
-                    const hashed = await this.hashPin(input);
-                    if (hashed === '7b0838c2af7e6b1f3fe5a49c32dd459d997a931cee349ca6869f3c17cc838394' || input === '1236') {
+                    // משווה מול הקוד שהוגדר בהגדרות. קודם לכן ההשוואה הייתה מול
+                    // קבוע קשיח, כך ששינוי הקוד במסך ההגדרות לא השפיע על שום דבר.
+                    const expected = (this.coachPinSetting || '1236').trim();
+                    if (input && input === expected) {
                         this.isCoachAuthenticated = true;
                         this.coachPinError = false;
                         this.coachPinInput = '';
+                        try {
+                            if (this.isPersistentAuthEnabled) {
+                                localStorage.setItem('ilaico_coach_auth', 'true');
+                            }
+                        } catch (e) {}
                         setTimeout(() => {
                             if (window.lucide) window.lucide.createIcons();
                         }, 50);
@@ -8882,6 +8900,7 @@
                     this.isCoachAuthenticated = false;
                     localStorage.removeItem('ilaico_coach_auth_token');
                     localStorage.removeItem('ilaico_coach_authenticated');
+                    localStorage.removeItem('ilaico_coach_auth');
                     this.coachPinInput = '';
                     this.coachPinError = false;
                     this.activeTab = 'dashboard';
@@ -8914,10 +8933,15 @@
                         this.selectedClientId = this.portalClientId;
                         this.isCoachAuthenticated = false;
                     } else {
-                        // כניסה ישירה ומיידית למאמן
-                        this.isCoachAuthenticated = true;
-                        localStorage.setItem('ilaico_coach_auth', 'true');
-                        localStorage.setItem('ilaico_persistent_auth', 'true');
+                        // מסך הנעילה נדרש. קודם לכן שורה זו קבעה isCoachAuthenticated = true,
+                        // כך שכל מי שנכנס לכתובת הבסיס קיבל גישת מנהל מלאה בלי קוד.
+                        // "זכור אותי" נשמר רק אם המאמן הפעיל אותו במפורש בהגדרות.
+                        let remembered = false;
+                        try {
+                            remembered = localStorage.getItem('ilaico_persistent_auth') === 'true'
+                                      && localStorage.getItem('ilaico_coach_auth') === 'true';
+                        } catch (e) {}
+                        this.isCoachAuthenticated = remembered;
                     }
 
                     // סגירת יום ואיפוס אוטומטי בחצות (00:00)

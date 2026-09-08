@@ -24,6 +24,22 @@ module.exports = async (req, res) => {
     return res.status(200).send('Telegram Bot is running');
   }
 
+  // אימות שהבקשה הגיעה באמת מטלגרם.
+  // ה-chatId שנבדק בהמשך מגיע מגוף הבקשה, כלומר תוקף ששולט בגוף
+  // יכול פשוט לכתוב שם את המזהה המורשה. הכותרת הזו היא הדבר היחיד
+  // שהוא לא יכול לזייף. הגדרה: setWebhook עם secret_token זהה
+  // ל-TELEGRAM_WEBHOOK_SECRET שמוגדר ב-Vercel.
+  const expectedSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (expectedSecret) {
+    const got = req.headers['x-telegram-bot-api-secret-token'];
+    if (got !== expectedSecret) {
+      console.warn('Rejected webhook call with bad secret token');
+      return res.status(401).send('Unauthorized');
+    }
+  } else {
+    console.warn('TELEGRAM_WEBHOOK_SECRET is not set - webhook is unauthenticated');
+  }
+
   const update = req.body;
   if (!update || !update.message) {
     return res.status(200).send('No message found');
