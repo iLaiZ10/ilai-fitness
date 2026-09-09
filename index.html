@@ -11927,7 +11927,9 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     // ⚡ 1. בדיקת זיכרון מטמון חכם (Instant Cache) למענה ב-0 מילישניות
                     if (rawQuery && !this.portalMealPhoto) {
                         try {
-                            const cacheKey = 'ilai_meal_' + rawQuery.toLowerCase();
+                            // v2: מפריד מתוצאות שחושבו ע"י המודלים הישנים, אחרת ארוחה
+                            // שנשמרה פעם אחת הייתה חוזרת מהמטמון לנצח בלי להתעדכן.
+                            const cacheKey = 'ilai_meal_v2_' + rawQuery.toLowerCase();
                             const cached = localStorage.getItem(cacheKey);
                             if (cached) {
                                 const parsedCached = JSON.parse(cached);
@@ -12001,6 +12003,13 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
   * שניצל מטוגן (150ג'): 330 קל', 28ג' חלבון, 18ג' פחמימה, 16ג' שומן.
   * המבורגר 200ג' בלחמנייה: 650 קל', 38ג' חלבון, 45ג' פחמימה, 32ג' שומן.
 
+חוקי חישוב מחייבים:
+1. ערך שכתוב לידו "ל-100ג'" הוא לכל 100 גרם בלבד. אסור להעתיק אותו כמו שהוא למנה — חובה להכפיל לפי המשקל בפועל. דוגמה: אורז לבן מבושל הוא 28ג' פחמימה ל-100ג', ולכן כוס מבושלת (160ג') היא 45ג' פחמימה ולא 28.
+2. משקלי הגשה סטנדרטיים כשלא צוינה כמות: כוס אורז/פסטה/קוסקוס מבושלים = 160ג'; כף שמן = 13.5ג' שומן ו-120 קל'; כפית שמן = 4.5ג' שומן; כף טחינה גולמית = 15ג'; פרוסת לחם = 30ג'; כוס נוזל = 240 מ"ל.
+3. חובה למלא את כל ארבעת הערכים לכל פריט. אסור להשאיר שומן או פחמימה על 0 כשהמאכל מכיל אותם. שמן, טחינה, אבוקדו, אגוזים וגבינות הם מקורות שומן משמעותיים.
+4. בדיקת היגיון לפני ההחזרה: הקלוריות חייבות להתאים לנוסחה חלבון×4 + פחמימה×4 + שומן×9, בסטייה של עד 10%. אם לא מתאים — תקן את הגרמים, לא את הקלוריות.
+5. סכום ה-items חייב להיות שווה לערכים הכוללים.
+
 החזר אך ורק JSON תקני ומדויק ללא שום טקסט נלווה או סימני markdown מיותרים:
 {
   "calories": סך קלוריות כמספר שלם,
@@ -12034,7 +12043,11 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                     generationConfig: {
                                         response_mime_type: "application/json",
                                         temperature: 0.1,
-                                        maxOutputTokens: 1000
+                                        // מודלי Gemini החדשים מוציאים טוקני "חשיבה" שנספרים כאן.
+                                        // ב-1000 נשרפו ~958 על חשיבה ונשארו 27 לתשובה, כך שה-JSON
+                                        // חזר קטוע (finishReason: MAX_TOKENS), הפרסור נכשל,
+                                        // והמתאמן קיבל בשקט את ההערכה המקומית הגסה.
+                                        maxOutputTokens: 4000
                                     }
                                 };
                             } else {
@@ -12045,17 +12058,33 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                     generationConfig: {
                                         response_mime_type: "application/json",
                                         temperature: 0.1,
-                                        maxOutputTokens: 1000
+                                        // מודלי Gemini החדשים מוציאים טוקני "חשיבה" שנספרים כאן.
+                                        // ב-1000 נשרפו ~958 על חשיבה ונשארו 27 לתשובה, כך שה-JSON
+                                        // חזר קטוע (finishReason: MAX_TOKENS), הפרסור נכשל,
+                                        // והמתאמן קיבל בשקט את ההערכה המקומית הגסה.
+                                        maxOutputTokens: 4000
                                     }
                                 };
                             }
 
+                            // כל חמשת המודלים הקודמים (2.0-flash, 1.5-flash, 2.0-flash-lite,
+                            // 1.5-flash-8b, 1.5-pro) הוצאו משירות ומחזירים 404, כך שכל
+                            // ניתוח ארוחה נפל למחשבון המקומי בלי שאיש ידע.
+                            //
+                            // נבדק מול ה-API החי על מנה מדודה (~621 קל' / 60ג' חלבון):
+                            //   flash-lite-latest   2.0 שנ'   645 קל'   +3.9%   מחזיר עברית
+                            //   3-flash-preview     7.4 שנ'   662 קל'   +6.6%   מחזיר אנגלית
+                            //   3.1-flash-lite      5.1 שנ'   585 קל'   -5.8%
+                            // הראשון גם המהיר וגם המדויק, וחשוב מכך - שמות המאכלים חוזרים
+                            // בעברית, מה שקריטי לתצוגה. השאר הם גיבוי.
+                            //
+                            // אלה שמות alias שמתעדכנים מעצמם. זו בחירה מכוונת: הצמדה
+                            // לגרסה מדויקת היא בדיוק מה שהשבית את הבוט כשהמודלים הוצאו.
                             const modelsToTry = [
-                                'models/gemini-2.0-flash',
-                                'models/gemini-1.5-flash',
-                                'models/gemini-2.0-flash-lite',
-                                'models/gemini-1.5-flash-8b',
-                                'models/gemini-1.5-pro'
+                                'models/gemini-flash-lite-latest',
+                                'models/gemini-3-flash-preview',
+                                'models/gemini-3.1-flash-lite',
+                                'models/gemini-flash-latest'
                             ];
 
                             for (const mName of modelsToTry) {
@@ -12107,7 +12136,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                                     // שמירה בזיכרון מטמון חכם
                                                     if (rawQuery && !this.portalMealPhoto) {
                                                         try {
-                                                            localStorage.setItem('ilai_meal_' + rawQuery.toLowerCase(), JSON.stringify(analyzedResult));
+                                                            localStorage.setItem('ilai_meal_v2_' + rawQuery.toLowerCase(), JSON.stringify(analyzedResult));
                                                         } catch(e) {}
                                                     }
 
