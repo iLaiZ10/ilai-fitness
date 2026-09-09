@@ -7253,7 +7253,9 @@
                 isCoachAuthenticated: false,
                 coachPinInput: '',
                 coachPinSetting: localStorage.getItem('ilaico_coach_pin') || '1236',
-                isPersistentAuthEnabled: localStorage.getItem('ilaico_persistent_auth') === 'true',
+                // דלוק כברירת מחדל: הקוד נדרש פעם אחת בכל מכשיר, לא בכל כניסה.
+                // כיבוי מפורש בהגדרות שומר 'false' ואז הקוד יידרש בכל פתיחה.
+                isPersistentAuthEnabled: localStorage.getItem('ilaico_persistent_auth') !== 'false',
                 coachPinError: false,
 
                 // פורטל מתאמן אישי
@@ -8937,10 +8939,11 @@
                     } else {
                         // מסך הנעילה נדרש. קודם לכן שורה זו קבעה isCoachAuthenticated = true,
                         // כך שכל מי שנכנס לכתובת הבסיס קיבל גישת מנהל מלאה בלי קוד.
-                        // "זכור אותי" נשמר רק אם המאמן הפעיל אותו במפורש בהגדרות.
+                        // "זכור אותי" דלוק כברירת מחדל, אבל דורש התחברות מוצלחת
+                        // אחת במכשיר הזה: בלי ilaico_coach_auth אין דילוג על הקוד.
                         let remembered = false;
                         try {
-                            remembered = localStorage.getItem('ilaico_persistent_auth') === 'true'
+                            remembered = localStorage.getItem('ilaico_persistent_auth') !== 'false'
                                       && localStorage.getItem('ilaico_coach_auth') === 'true';
                         } catch (e) {}
                         this.isCoachAuthenticated = remembered;
