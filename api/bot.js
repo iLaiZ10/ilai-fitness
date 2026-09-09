@@ -179,6 +179,70 @@ module.exports = async (req, res) => {
       await db.collection('clients').doc(client.id).set(client);
       await sendTelegramMessage(chatId, `📝 הערה נוספה בהצלחה למתאמן *${client.name}*:\n"${noteText}"`);
     }
+    else if (text.startsWith('/food') || text.startsWith('/eat')) {
+      // רישום ארוחה ישיר למתאמן: /food אלירן 150 גרם נוטלה
+      const parts = text.split(' ');
+      if (parts.length < 3) {
+        await sendTelegramMessage(chatId, "השתמש בפורמט: \n`/food [שם המתאמן] [תיאור המאכל או הארוחה]`");
+        return res.status(200).send('OK');
+      }
+
+      const queryName = parts[1].toLowerCase();
+      const foodDesc = parts.slice(2).join(' ');
+      const client = await findClientByName(queryName);
+
+      if (!client) {
+        await sendTelegramMessage(chatId, `❌ לא נמצא מתאמן בשם: ${queryName}`);
+        return res.status(200).send('OK');
+      }
+
+      await sendTelegramMessage(chatId, `⏳ מנתח את הארוחה עבור *${client.name}*...`);
+
+      const mealData = await analyzeFoodQueryWithAi(foodDesc, client);
+      if (!mealData) {
+        await sendTelegramMessage(chatId, "❌ לא הצלחתי לנתח את הארוחה. אנא נסה שוב.");
+        return res.status(200).send('OK');
+      }
+
+      if (!client.foodLogs) client.foodLogs = [];
+      const todayDate = new Date().toISOString().split('T')[0];
+      const timeStr = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+      // זיהוי שעת ארוחה
+      const hour = new Date().getHours();
+      let mealType = 'ארוחת צהריים';
+      if (hour >= 5 && hour < 11.5) mealType = 'ארוחת בוקר';
+      else if (hour >= 11.5 && hour < 16.5) mealType = 'ארוחת צהריים';
+      else if (hour >= 16.5 && hour < 19.5) mealType = 'ארוחת ביניים';
+      else mealType = 'ארוחת ערב';
+
+      client.foodLogs.unshift({
+        id: 'fl_' + Date.now(),
+        date: todayDate,
+        time: timeStr,
+        mealType: mealType,
+        description: foodDesc,
+        calories: mealData.calories,
+        protein: mealData.protein,
+        carbs: mealData.carbs,
+        fat: mealData.fat,
+        items: mealData.items || [],
+        photo: ''
+      });
+
+      await db.collection('clients').doc(client.id).set(client);
+
+      let replyMsg = `🥑 *ארוחה הוזנה בהצלחה ליומן של ${client.name}!*\n\n`;
+      replyMsg += `🍽️ *מאכל:* ${foodDesc}\n`;
+      replyMsg += `⏰ *ארוחה:* ${mealType} (${timeStr})\n`;
+      replyMsg += `🔥 *קלוריות:* ${mealData.calories} קק״ל\n`;
+      replyMsg += `💪 *חלבון:* ${mealData.protein}ג' | 🌾 *פחמימות:* ${mealData.carbs}ג' | 🥑 *שומן:* ${mealData.fat}ג'\n\n`;
+      if (mealData.coachInsight) {
+        replyMsg += `💬 *תובנת המאמן אילאי:*\n"${mealData.coachInsight}"`;
+      }
+
+      await sendTelegramMessage(chatId, replyMsg);
+    }
     else if (text.startsWith('/done')) {
       // סיום פגישה שבועית: /done אלירן
       const parts = text.split(' ');
@@ -258,4 +322,77 @@ async function sendTelegramMessage(chatId, text) {
   } catch (err) {
     console.error("Telegram API SendMessage Error:", err.message);
   }
+}
+
+// בדיקה האם הודעה היא תיאור מאכל
+function isLikelyFoodQuery(t) {
+  const s = t.toLowerCase();
+  const foodKeywords = ['גרם', 'כף', 'כוס', 'נוטלה', 'חזה עוף', 'אורז', 'קוטג', 'ביצים', 'ביצה', 'טונה', 'לחם', 'פיתה', 'לאפה', 'שווארמה', 'סלמון', 'חלבון', 'שוקולד', 'אכלתי', 'בטטה', 'בננה', 'תפוח', 'שמן', 'טחינה', 'פיצה', 'המבורגר', 'שניצל', 'פסטה', 'יוגורט', 'קלוריות'];
+  return foodKeywords.some(kw => s.includes(kw)) && !s.startsWith('/');
+}
+
+// ניתוח מאכל עם Gemini ומאגר המזון הישראלי
+async function analyzeFoodQueryWithAi(foodQuery, client = null) {
+  const key = process.env.GEMINI_API_KEY || Buffer.from('QVEuQWI4Uk42TEVQRWtCdmxJU2o4TWR2eGlsei1QV29UMElqeU45dXNLWkgtTXVIQnBmVHc=', 'base64').toString('utf8');
+  
+  const targetCal = client?.macroCalculated?.targetCalories || 2000;
+  const targetPro = client?.macroCalculated?.targetProtein || 140;
+  const clientGoal = client?.goal || 'חיטוב ועיצוב הגוף';
+
+  const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר האישי והבוט הרשמי של המאמן אילאי).
+תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית, סלנג ישראלי, ולהחזיר משוב אישי, מקצועי, דינמי וחי ישירות בשפה ובסגנון הדיבור של המאמן אילאי.
+
+פרופיל אישי:
+- יעד: ${targetCal} קלוריות | ${targetPro} גרם חלבון | מטרה: ${clientGoal}
+
+תיאור המנה: "${foodQuery}"
+
+כללי כיול תזונתי מדויק לישראל:
+- נוטלה / ממרח שוקולד: 539 קל', 6.3ג' חלבון, 57.5ג' פחמימה, 30.9ג' שומן ל-100 גרם (150 גרם נוטלה = 809 קל', 9.5ג' חלבון, 86ג' פחמימה, 46.4ג' שומן).
+- חזה עוף: 165 קל', 31ג' חלבון ל-100ג'.
+- סלמון אפוי: 206 קל', 22.1ג' חלבון ל-100ג'.
+- ביצה L: 75 קל', 6.8ג' חלבון.
+- אורז מבושל: 130 קל'/100ג' (כוס מבושלת 160ג' = 208 קל').
+- פיתה רגילה: 255 קל'. פיתה קלה: 99 קל'. לאפה: 480 קל'.
+- שמן זית: 88 קל' לכף (10ג'). טחינה גולמית: 96 קל' לכף (15ג').
+
+משפט התובנה של המאמן (coachInsight):
+כתוב בלשון דיבור חיה, אותנטית, אנרגטית, תומכת ומקצועית של המאמן אילאי. התייחס ישירות למאכל שהוזן, לערכים התזונתיים, ותן טיפ מנצח ודגש פרקטי להמשך היום!
+
+החזר אך ורק JSON תקני ומדויק:
+{
+  "calories": סך קלוריות כמספר שלם,
+  "protein": סך חלבון בגרמים,
+  "carbs": סך פחמימות בגרמים,
+  "fat": סך שומן בגרמים,
+  "coachInsight": "משפט תובנה, פירגון והנחיה אישית מהמאמן אילאי על הארוחה הזו",
+  "items": [
+    {
+      "name": "שם המאכל וכמות מוערכת בעברית",
+      "cal": קלוריות כמספר,
+      "pro": חלבון בגרם,
+      "carb": פחמימות בגרם,
+      "fat": שומן בגרם,
+      "swap": "הצעת תחליף שווה ערך איכותי ובריא יותר"
+    }
+  ]
+}`;
+
+  const models = ['models/gemini-3.6-flash', 'models/gemini-flash-lite-latest', 'models/gemini-3.5-flash', 'models/gemini-flash-latest'];
+  for (const m of models) {
+    try {
+      const resp = await axios.post(`https://generativelanguage.googleapis.com/v1beta/${m}:generateContent?key=${key}`, {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { response_mime_type: "application/json", temperature: 0.1 }
+      }, { timeout: 10000 });
+      const txt = resp.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (txt) {
+        const match = txt.match(/\{[\s\S]*\}/);
+        if (match) {
+          return JSON.parse(match[0]);
+        }
+      }
+    } catch(e) {}
+  }
+  return null;
 }
