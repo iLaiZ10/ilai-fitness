@@ -179,6 +179,50 @@ module.exports = async (req, res) => {
       await db.collection('clients').doc(client.id).set(client);
       await sendTelegramMessage(chatId, `📝 הערה נוספה בהצלחה למתאמן *${client.name}*:\n"${noteText}"`);
     }
+    else if (text.startsWith('/macros') || text.startsWith('/macro') || text.startsWith('/target')) {
+      // עדכון יעדי מאקרו: /macros אלירן 2200 160 220 65
+      const parts = text.split(' ');
+      if (parts.length < 3) {
+        await sendTelegramMessage(chatId, "השתמש בפורמט: \n`/macros [שם המתאמן] [קלוריות] [חלבון] [פחמימות] [שומן]`\nדוגמה: `/macros אלירן 2200 160 220 65`");
+        return res.status(200).send('OK');
+      }
+
+      const queryName = parts[1].toLowerCase();
+      const client = await findClientByName(queryName);
+
+      if (!client) {
+        await sendTelegramMessage(chatId, `❌ לא נמצא מתאמן בשם: ${queryName}`);
+        return res.status(200).send('OK');
+      }
+
+      const cal = parseFloat(parts[2]) || 2000;
+      const pro = parseFloat(parts[3]) || 140;
+      const carb = parseFloat(parts[4]) || 200;
+      const fat = parseFloat(parts[5]) || 60;
+
+      client.targetCalories = cal;
+      client.targetProtein = pro;
+      client.targetCarbs = carb;
+      client.targetFat = fat;
+      client.macroCalculated = {
+        targetCalories: cal,
+        targetProtein: pro,
+        targetCarbs: carb,
+        targetFat: fat
+      };
+
+      await db.collection('clients').doc(client.id).set(client);
+
+      let replyMsg = `🎯 *יעדי מאקרו עודכנו בהצלחה עבור ${client.name}!*\n\n`;
+      replyMsg += `🔥 *יעד קלורי:* ${cal} קק״ל / יום\n`;
+      replyMsg += `💪 *חלבון:* ${pro} גרם\n`;
+      replyMsg += `🌾 *פחמימות:* ${carb} גרם\n`;
+      replyMsg += `🥑 *שומן:* ${fat} גרם\n\n`;
+      replyMsg += `⚡ הסנכרון לענן ולפורטל המתאמן בוצע בזמן אמת.`;
+
+      await sendTelegramMessage(chatId, replyMsg);
+      return res.status(200).send('OK');
+    }
     else if (text.startsWith('/food') || text.startsWith('/eat')) {
       // רישום ארוחה ישיר למתאמן: /food אלירן 150 גרם נוטלה
       const parts = text.split(' ');

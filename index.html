@@ -7201,6 +7201,14 @@
                 editingIntake: {},
                 openAddClientModal: false,
                 openEditModal: false,
+                openMacroEditModal: false,
+                editingMacroClient: null,
+                editingMacroCalories: 2200,
+                editingMacroProtein: 160,
+                editingMacroCarbs: 220,
+                editingMacroFat: 65,
+                editingWaterTarget: 3000,
+                editingStepsTarget: 10000,
                 openAddEventModal: false,
                 openImportIntakeModal: false,
                 openFoodLibraryModal: false,
@@ -10138,6 +10146,55 @@
                     }, 100);
                 },
 
+                openMacroModal(client) {
+                    const c = client || this.currentClient;
+                    if (!c) return;
+                    this.editingMacroClient = c;
+                    this.editingMacroCalories = c.macroCalculated?.targetCalories || c.targetCalories || 2200;
+                    this.editingMacroProtein = c.macroCalculated?.targetProtein || c.targetProtein || 160;
+                    this.editingMacroCarbs = c.macroCalculated?.targetCarbs || c.targetCarbs || 220;
+                    this.editingMacroFat = c.macroCalculated?.targetFat || c.targetFat || 65;
+                    this.editingWaterTarget = c.waterTarget || 3000;
+                    this.editingStepsTarget = c.stepsTarget || 10000;
+                    this.openMacroEditModal = true;
+                    setTimeout(() => { if (typeof window !== "undefined" && window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                saveMacroModal() {
+                    if (!this.editingMacroClient) return;
+                    const idx = this.clients.findIndex(c => c.id === this.editingMacroClient.id);
+                    if (idx !== -1) {
+                        const cal = parseFloat(this.editingMacroCalories) || 2000;
+                        const pro = parseFloat(this.editingMacroProtein) || 140;
+                        const carb = parseFloat(this.editingMacroCarbs) || 200;
+                        const fat = parseFloat(this.editingMacroFat) || 60;
+                        const water = parseFloat(this.editingWaterTarget) || 3000;
+                        const steps = parseFloat(this.editingStepsTarget) || 10000;
+
+                        const updatedClient = {
+                            ...this.clients[idx],
+                            targetCalories: cal,
+                            targetProtein: pro,
+                            targetCarbs: carb,
+                            targetFat: fat,
+                            waterTarget: water,
+                            stepsTarget: steps,
+                            macroCalculated: {
+                                targetCalories: cal,
+                                targetProtein: pro,
+                                targetCarbs: carb,
+                                targetFat: fat
+                            }
+                        };
+
+                        this.clients[idx] = updatedClient;
+                        this.saveClientToCloud(updatedClient);
+                        this.saveData();
+                    }
+                    this.openMacroEditModal = false;
+                    setTimeout(() => { if (typeof window !== "undefined" && window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
                 openEditClientModal(client) {
                     this.editingClient = { 
                         pricePerMonth: client.pricePerMonth !== undefined ? client.pricePerMonth : 250,
@@ -10172,6 +10229,12 @@
                             this.editingClient.payments = newPayments;
                         }
                         
+                        if (this.editingClient.macroCalculated) {
+                            this.editingClient.targetCalories = parseFloat(this.editingClient.macroCalculated.targetCalories) || 2000;
+                            this.editingClient.targetProtein = parseFloat(this.editingClient.macroCalculated.targetProtein) || 140;
+                            this.editingClient.targetCarbs = parseFloat(this.editingClient.macroCalculated.targetCarbs) || 200;
+                            this.editingClient.targetFat = parseFloat(this.editingClient.macroCalculated.targetFat) || 60;
+                        }
                         this.clients[idx] = { ...this.clients[idx], ...this.editingClient };
                         if (this.isCloudSynced && this.db) {
                             if (this.editingClient && this.editingClient.id) this.saveClientToCloud(this.clients[idx]);
@@ -14345,5 +14408,70 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
             };
         }
     </script>
+
+    <!-- מודל עריכת יעדי מאקרו ויעדים יומיים (Macro Target Edit Modal) -->
+    <div x-show="openMacroEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" style="display: none;" x-transition>
+        <div class="bg-white border border-[#c9b7de] w-full max-w-md rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openMacroEditModal = false">
+            <div class="p-4 md:p-5 border-b border-[#c9b7de] flex justify-between items-center bg-[#f5effa]">
+                <h3 class="text-sm md:text-base font-black text-[#1a0730] flex items-center gap-2">
+                    <i data-lucide="target" class="w-5 h-5 text-[#fbbf24]"></i>
+                    <span>עריכת יעדי מאקרו — <span class="text-[#3e1568]" x-text="editingMacroClient?.name"></span></span>
+                </h3>
+                <button @click="openMacroEditModal = false" class="text-[#6f5888] hover:text-[#1a0730] p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
+            </div>
+
+            <form @submit.prevent="saveMacroModal()" class="p-5 space-y-4 text-xs md:text-sm">
+                <!-- כרטיס הסבר -->
+                <div class="bg-[#faf6fc] border border-[#c9b7de] p-3 rounded-2xl flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-[#240a3e] text-[#fbbf24] flex items-center justify-center font-black text-sm shrink-0">🎯</div>
+                    <p class="text-[11px] text-[#6f5888] font-semibold leading-snug">
+                        היעדים שתגדיר כאן יסונכרנו אוטומטית לענן, ישפיעו על יומן האכילה, בוט ה-AI וגרפי ההתקדמות של המתאמן.
+                    </p>
+                </div>
+
+                <!-- שדות מאקרו -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] space-y-1">
+                        <label class="block text-[10px] font-bold text-[#6f5888]">🔥 קלוריות יומיות (קק״ל)</label>
+                        <input type="number" x-model="editingMacroCalories" required class="w-full bg-white border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-black text-sm text-center focus:outline-none focus:border-[#fbbf24]">
+                    </div>
+                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] space-y-1">
+                        <label class="block text-[10px] font-bold text-[#6f5888]">💪 חלבון (גרם)</label>
+                        <input type="number" x-model="editingMacroProtein" required class="w-full bg-white border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-black text-sm text-center focus:outline-none focus:border-[#fbbf24]">
+                    </div>
+                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] space-y-1">
+                        <label class="block text-[10px] font-bold text-[#6f5888]">🌾 פחמימות (גרם)</label>
+                        <input type="number" x-model="editingMacroCarbs" required class="w-full bg-white border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-black text-sm text-center focus:outline-none focus:border-[#fbbf24]">
+                    </div>
+                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] space-y-1">
+                        <label class="block text-[10px] font-bold text-[#6f5888]">🥑 שומן (גרם)</label>
+                        <input type="number" x-model="editingMacroFat" required class="w-full bg-white border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-black text-sm text-center focus:outline-none focus:border-[#fbbf24]">
+                    </div>
+                </div>
+
+                <!-- יעדי מים וצעדים -->
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                    <div>
+                        <label class="block text-[10px] font-bold text-[#6f5888] mb-1">💧 יעד מים יומי (מ״ל)</label>
+                        <input type="number" x-model="editingWaterTarget" placeholder="3000" class="w-full bg-[#faf6fc] border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-bold text-xs text-center focus:outline-none focus:border-[#fbbf24]">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-[#6f5888] mb-1">👣 יעד צעדים יומי</label>
+                        <input type="number" x-model="editingStepsTarget" placeholder="10000" class="w-full bg-[#faf6fc] border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-bold text-xs text-center focus:outline-none focus:border-[#fbbf24]">
+                    </div>
+                </div>
+
+                <!-- כפתורי פעולה -->
+                <div class="pt-4 border-t border-[#c9b7de] flex justify-end gap-2 text-xs">
+                    <button type="button" @click="openMacroEditModal = false" class="bg-[#faf6fc] border border-[#c9b7de] text-[#6f5888] hover:text-[#1a0730] px-4 py-2 rounded-xl font-bold">ביטול</button>
+                    <button type="submit" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                        <i data-lucide="check" class="w-4 h-4 text-[#fbbf24]"></i>
+                        <span>שמור יעדים לענן ⚡</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
