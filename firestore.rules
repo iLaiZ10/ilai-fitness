@@ -1,0 +1,99 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────
+//  ILAI FITNESS — חוקי גישה ל-Firestore
+//
+//  המצב היום הוא  allow read, write: if true  — כלומר כל מי שפותח
+//  קישור פורטל מוריד לדפדפן את הטלפונים, המשקלים, התשלומים והתמונות
+//  של כל המתאמנים, ויכול גם לכתוב לכל מסמך.
+//
+//  ⚠️  אל תדביק את הקובץ הזה לפני שקראת את "מה חייב לקרות קודם".
+//      החוקים כאן דורשים התחברות (Auth), והאפליקציה עדיין לא מתחברת.
+//      הדבקה עכשיו תנתק את המערכת מהענן.
+//
+//  מה חייב לקרות קודם:
+//  1. ב-Firebase Console → Authentication → Sign-in method:
+//     להפעיל Anonymous.
+//  2. באפליקציה, לפני loadDataFromCloud, לקרוא ל:
+//        await firebase.auth().signInAnonymously();
+//  3. לסמן את המאמן: מסמך ב-coaches/{uid} שנוצר ידנית פעם אחת
+//     ב-Console עבור ה-uid שלך.
+//  4. לשמור את ה-uid של כל מתאמן על כרטיס הלקוח שלו (שדה portalUid),
+//     כדי שהפורטל יזהה מי מולו.
+//
+//  עד שכל זה מוכן — עדיף להשאיר את החוקים הפתוחים ולדעת את הסיכון,
+//  מאשר להדביק חוקים שינתקו מתאמנים באמצע ליווי.
+// ─────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // המאמן: מי שיש לו מסמך ב-coaches/{uid}
+    function isCoach() {
+      return request.auth != null
+          && exists(/databases/$(database)/documents/coaches/$(request.auth.uid));
+    }
+
+    // המתאמן עצמו: ה-uid שלו רשום על כרטיס הלקוח
+    function isOwner(clientId) {
+      return request.auth != null
+          && get(/databases/$(database)/documents/clients/$(clientId)).data.portalUid == request.auth.uid;
+    }
+
+    // השדות שמתאמן רשאי לשנות בכרטיס של עצמו.
+    // כל השאר (תוכנית אימונים, תפריט, תשלומים, מחיר) - מאמן בלבד.
+    function onlyTraineeFields() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly([
+               'dailyWater', 'dailySteps', 'foodLogs', 'reflectionLogs',
+               'dailyScorecards', 'checkins', 'personalRecords', 'prs',
+               'lastActiveAt', 'habitStreak'
+             ]);
+    }
+
+    match /clients/{clientId} {
+      allow read:   if isCoach() || isOwner(clientId);
+      allow create: if isCoach();
+      allow update: if isCoach() || (isOwner(clientId) && onlyTraineeFields());
+      allow delete: if isCoach();
+    }
+
+    // יומן פגישות ותבניות - קריאה למחוברים, כתיבה למאמן בלבד.
+    // זה מה שמונע את מחיקת היומן מדפדפן של מתאמן.
+    match /config/{doc} {
+      allow read:  if request.auth != null;
+      allow write: if isCoach();
+    }
+
+    // כספים - מאמן בלבד, בשני הכיוונים.
+    match /transactions/{txId} {
+      allow read, write: if isCoach();
+    }
+
+    // הגדרות כלליות (כולל מפתח Gemini) - מאמן בלבד.
+    // עדיף בכלל להעביר את המפתח ל-env var בצד השרת.
+    match /settings/{doc} {
+      allow read, write: if isCoach();
+    }
+
+    // רשימת המאמנים עצמה - נוצרת ידנית ב-Console, לא מהאפליקציה.
+    match /coaches/{uid} {
+      allow read:  if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // שאלון קליטה ציבורי: מותר ליצור פנייה, אסור לקרוא או לשנות.
+    // המאמן מאשר ומעביר ל-clients מתוך המערכת.
+    match /intake_submissions/{subId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() < 100;
+      allow read, update, delete: if isCoach();
+    }
+
+    // ברירת מחדל: כל מה שלא הוגדר במפורש - חסום.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

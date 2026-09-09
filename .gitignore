@@ -2,3 +2,4 @@
 *.log
 .system_generated/
 scratch/
+.claude/
