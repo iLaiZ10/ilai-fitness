@@ -1621,7 +1621,7 @@
                             <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
                                 <label class="bg-white hover:bg-[#faf6fc] text-[#1a0730] border-2 border-[#ded0eb] hover:border-[#fbbf24] p-2.5 rounded-2xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition font-black">
                                     <i data-lucide="camera" class="w-4 h-4 text-[#a15c07] shrink-0"></i>
-                                    <span>📸 צלם צלחת</span>
+                                    <span>צלם צלחת</span>
                                     <input type="file" accept="image/*" class="hidden" @change="handleMealPhotoUpload($event)">
                                 </label>
 
@@ -1629,15 +1629,28 @@
                                         @click="startVoiceFoodInput()" 
                                         :class="isVoiceRecording ? 'bg-red-600 text-white animate-pulse border-red-700' : 'bg-white hover:bg-[#faf6fc] text-[#1a0730] border-[#ded0eb] hover:border-[#fbbf24]'" 
                                         class="border-2 p-2.5 rounded-2xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition font-black">
-                                    <i data-lucide="mic" class="w-4 h-4 shrink-0" :class="isVoiceRecording ? 'text-white' : 'text-[#fbbf24]'"></i>
-                                    <span x-text="isVoiceRecording ? 'מקליט... 🎙️' : '🎙️ הודעה קולית'"></span>
+                                    <!-- אותו כפתור מתחיל ומסיים, והאייקון מתחלף למרובע עצירה
+                                         כדי שיהיה ברור שלחיצה נוספת מסיימת ולא מתחילה מחדש.
+                                         SVG מוטמע ולא data-lucide בכוונה: lucide מחליף את ה-<i>
+                                         ב-svg, ואז Alpine מחזיק הפניה לצומת שכבר לא בעץ - הוא
+                                         מוסיף אייקון חדש בכל מעבר מצב ולא מצליח להסיר את הישן,
+                                         כך שהם נערמים. x-show רק מסתיר, אף פעם לא מוחק. -->
+                                    <svg x-show="!isVoiceRecording" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 text-[#fbbf24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="9" y="2" width="6" height="11" rx="3"></rect>
+                                        <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                    </svg>
+                                    <svg x-show="isVoiceRecording" x-cloak xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                                    </svg>
+                                    <span x-text="isVoiceRecording ? 'סיים הקלטה' : 'הקלט'"></span>
                                 </button>
 
                                 <button type="button" 
                                         @click="$refs.foodTextInput?.focus()" 
                                         class="bg-white hover:bg-[#faf6fc] text-[#1a0730] border-2 border-[#ded0eb] hover:border-[#fbbf24] p-2.5 rounded-2xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition font-black">
                                     <i data-lucide="edit-3" class="w-4 h-4 text-[#a15c07] shrink-0"></i>
-                                    <span>✍️ הקלד מאכל</span>
+                                    <span>הקלד מאכל</span>
                                 </button>
                             </div>
 
@@ -1667,14 +1680,9 @@
                                            class="w-full bg-[#faf6fc] border border-[#c9b7de] rounded-2xl px-4 py-3 text-xs text-[#1a0730] font-semibold focus:outline-none focus:border-[#fbbf24] pr-4 pl-36 shadow-inner">
                                     
                                     <div class="absolute left-1.5 top-1.5 bottom-1.5 flex items-center gap-1">
-                                        <!-- כפתור מיקרופון -->
-                                        <button type="button" 
-                                                @click="startVoiceFoodInput()"
-                                                :class="isVoiceRecording ? 'bg-red-600 text-white animate-pulse' : 'bg-slate-100 hover:bg-slate-200 text-[#1a0730]'"
-                                                class="p-2 rounded-xl text-xs font-bold flex items-center justify-center transition cursor-pointer"
-                                                :title="isVoiceRecording ? 'עצור הקלטה' : 'הקלטה קולית בעברית'">
-                                            <i data-lucide="mic" class="w-4 h-4"></i>
-                                        </button>
+                                        <!-- המיקרופון הוסר מכאן בכוונה: היה מיקרופון שני
+                                             זהה בשורת הכפתורים למעלה, ושניהם קראו לאותה
+                                             פונקציה. שליטה אחת על ההקלטה, במקום אחד. -->
 
                                         <!-- כפתור מצלמה -->
                                         <label class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#1a0730] cursor-pointer flex items-center justify-center transition" title="צלם צלחת / בחר תמונה">
@@ -1697,12 +1705,17 @@
 
                                 <!-- מצב הקלטה פעיל -->
                                 <template x-if="isVoiceRecording">
-                                    <div class="bg-red-50 border border-red-200 p-2.5 rounded-xl flex items-center justify-between text-xs text-red-700 animate-pulse font-bold">
+                                    <!-- animate-pulse הוסר מהמיכל: הוא הבהב את כל הטקסט
+                                         והקשה על הקריאה. הנקודה הפועמת לבדה מספיקה. -->
+                                    <div class="bg-red-50 border border-red-200 p-2.5 rounded-xl flex items-center justify-between text-xs text-red-700 font-bold animate-scale-up">
                                         <div class="flex items-center gap-2">
-                                            <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
-                                            <span>מקליט דיבור בעברית... אמור מה אכלת עכשיו 🎙️</span>
+                                            <span class="relative flex w-2.5 h-2.5 shrink-0">
+                                                <span class="absolute inline-flex w-full h-full rounded-full bg-red-500 opacity-75 animate-ping"></span>
+                                                <span class="relative inline-flex w-2.5 h-2.5 rounded-full bg-red-600"></span>
+                                            </span>
+                                            <span>מקליט... אמור מה אכלת</span>
                                         </div>
-                                        <button type="button" @click="stopVoiceFoodInput()" class="bg-red-600 text-white px-2.5 py-1 rounded-lg text-[10px] cursor-pointer">סיום</button>
+                                        <button type="button" @click="stopVoiceFoodInput()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-[11px] font-black cursor-pointer transition shrink-0">סיים הקלטה</button>
                                     </div>
                                 </template>
 
@@ -11548,6 +11561,16 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                 },
 
                 // --- מתודות מחשבון תזונה AI, הקלטה קולית ויומן MyFitnessPal Pro ---
+                // כל שינוי במצב ההקלטה מחליף בין שני אייקוני lucide (mic / square).
+                // בלי createIcons האייקון החדש נשאר <i> ריק, ולכן כל מעבר מצב עובר כאן,
+                // כולל onend ו-onerror שמגיעים אסינכרונית מזיהוי הדיבור.
+                setVoiceRecording(value) {
+                    this.isVoiceRecording = !!value;
+                    setTimeout(() => {
+                        if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons();
+                    }, 50);
+                },
+
                 startVoiceFoodInput() {
                     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
                     if (!SpeechRec) {
@@ -11557,7 +11580,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     
                     if (this.isVoiceRecording && this.voiceRecognition) {
                         try { this.voiceRecognition.stop(); } catch(e) {}
-                        this.isVoiceRecording = false;
+                        this.setVoiceRecording(false);
                         return;
                     }
 
@@ -11567,11 +11590,11 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         recognition.continuous = false;
                         recognition.interimResults = false;
 
-                        this.isVoiceRecording = true;
+                        this.setVoiceRecording(true);
                         this.voiceRecognition = recognition;
 
                         recognition.onstart = () => {
-                            this.isVoiceRecording = true;
+                            this.setVoiceRecording(true);
                         };
 
                         recognition.onresult = (event) => {
@@ -11587,17 +11610,17 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                         recognition.onerror = (event) => {
                             console.warn("Speech recognition error:", event.error);
-                            this.isVoiceRecording = false;
+                            this.setVoiceRecording(false);
                         };
 
                         recognition.onend = () => {
-                            this.isVoiceRecording = false;
+                            this.setVoiceRecording(false);
                         };
 
                         recognition.start();
                     } catch (e) {
                         console.error("Speech recognition error:", e);
-                        this.isVoiceRecording = false;
+                        this.setVoiceRecording(false);
                     }
                 },
 
@@ -11605,7 +11628,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     if (this.voiceRecognition) {
                         try { this.voiceRecognition.stop(); } catch(e) {}
                     }
-                    this.isVoiceRecording = false;
+                    this.setVoiceRecording(false);
                 },
 
                 setNutritionViewDate(dateStr) {
