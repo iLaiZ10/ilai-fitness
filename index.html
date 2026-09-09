@@ -12367,12 +12367,8 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                     generationConfig: {
                                         response_mime_type: "application/json",
                                         temperature: 0.1,
-                                        maxOutputTokens: 4000,
-                                        // gemini-3.6-flash מדויק בול על מנת ייחוס שקולה,
-                                        // אבל בלי הגבלה הוא חושב 861 טוקנים ולוקח ~24 שניות.
-                                        // עם תקציב חשיבה של 200 הוא מחזיר בדיוק את אותם
-                                        // הערכים ב-2.8 שניות. הדיוק נשמר, ההמתנה נעלמת.
-                                        thinkingConfig: { thinkingBudget: 200 }
+                                        maxOutputTokens: 800,
+                                        thinkingConfig: { thinkingBudget: 1 }
                                     }
                                 };
                             } else {
@@ -12385,12 +12381,8 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                     generationConfig: {
                                         response_mime_type: "application/json",
                                         temperature: 0.1,
-                                        maxOutputTokens: 4000,
-                                        // gemini-3.6-flash מדויק בול על מנת ייחוס שקולה,
-                                        // אבל בלי הגבלה הוא חושב 861 טוקנים ולוקח ~24 שניות.
-                                        // עם תקציב חשיבה של 200 הוא מחזיר בדיוק את אותם
-                                        // הערכים ב-2.8 שניות. הדיוק נשמר, ההמתנה נעלמת.
-                                        thinkingConfig: { thinkingBudget: 200 }
+                                        maxOutputTokens: 800,
+                                        thinkingConfig: { thinkingBudget: 1 }
                                     }
                                 };
                             }
