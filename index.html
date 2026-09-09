@@ -1666,6 +1666,17 @@
                                 </div>
                             </template>
 
+                            <!-- פס התקדמות וסטטוס ניתוח חי -->
+                            <template x-if="isAiAnalyzing">
+                                <div class="bg-gradient-to-r from-[#1a0730] to-[#3e1568] border-2 border-[#fbbf24] p-3 rounded-2xl flex items-center justify-between text-xs text-white font-bold shadow-lg animate-pulse">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-6 h-6 rounded-full border-2 border-[#fbbf24] border-t-transparent animate-spin shrink-0"></div>
+                                        <span class="text-[#fbbf24] font-black" x-text="portalMealPhoto ? '📸 סורק את הצלחת ומחשב קלוריות ומאקרו... ⚡' : '🧠 מחשב נתונים תזונתיים ומכסות... ⚡'"></span>
+                                    </div>
+                                    <span class="text-[10px] bg-[#fbbf24]/20 text-[#fbbf24] border border-[#fbbf24]/40 px-2 py-0.5 rounded-full">Vision AI 1.0s</span>
+                                </div>
+                            </template>
+
                             <!-- שדה הזנה ראשי עם כפתור חישוב -->
                             <div class="space-y-2">
                                 <div class="relative flex items-center">
@@ -7340,6 +7351,7 @@
                 aiFoodQuery: '',
                 aiAnalyzedMeal: null,
                 isAiAnalyzing: false,
+                aiAnalysisStep: '',
 
                 // ספריית מזונות חכמה
                 foodSearchQuery: '',
@@ -13557,6 +13569,8 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                 handleMealPhotoUpload(event) {
                     const file = event.target?.files?.[0];
                     if (!file) return;
+                    this.isAiAnalyzing = true;
+                    this.aiAnalysisStep = '📸 סורק את הצלחת...';
                     this.compressImage(file, (base64) => {
                         this.portalMealPhoto = base64;
                         this.aiFoodQuery = this.aiFoodQuery || 'צלחת שצולמה 📸';
@@ -13572,7 +13586,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             const canvas = document.createElement('canvas');
                             let width = img.width;
                             let height = img.height;
-                            const maxDim = 420; // Optimized for mobile thumbnails & Firestore quota safety (<25KB)
+                            const maxDim = 400; // Ultra-fast mobile Vision thumbnail (<20KB)
                             if (width > height && width > maxDim) {
                                 height = Math.round((height * maxDim) / width);
                                 width = maxDim;
@@ -13584,7 +13598,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             canvas.height = height;
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, width, height);
-                            const compressed = canvas.toDataURL('image/jpeg', 0.60);
+                            const compressed = canvas.toDataURL('image/jpeg', 0.65);
                             callback(compressed);
                         };
                         img.onerror = () => { callback(''); };
