@@ -180,12 +180,15 @@ module.exports = async (req, res) => {
       await sendTelegramMessage(chatId, `📝 הערה נוספה בהצלחה למתאמן *${client.name}*:\n"${noteText}"`);
     }
     else if (text.startsWith('/macros') || text.startsWith('/macro') || text.startsWith('/target')) {
-      // עדכון מכסות קלוריות ומאקרו: /macros אלירן 900 800 300 או /macros אלירן 2000 160 220 65
+      // עדכון מכסות קלוריות, מאקרו וקלוריות חופשיות:
+      // 1. /macros אלירן 900 800 300 (חלבון, פחמימה, שומן - 0 חופשיות)
+      // 2. /macros אלירן 900 700 250 150 (חלבון, פחמימה, שומן, חופשיות = סה"כ 2000)
+      // 3. /macros אלירן 2000 160 200 55 150 (סה"כ קלוריות, גרמים חלבון, פחמימה, שומן, חופשיות)
       const parts = text.split(' ');
       if (parts.length < 3) {
-        let help = "🎯 *הגדרת מכסות קלוריות או גרמים למתאמן:*\n\n";
-        help += "1️⃣ *לפי מכסות קלוריות (חלבון, פחמימה, שומן):*\n`/macros [שם] 900 800 300`\n(900 קל' חלבון, 800 קל' פחמימה, 300 קל' שומן = סה״כ 2000 קק״ל)\n\n";
-        help += "2️⃣ *לפי גרמים:*\n`/macros [שם] 2000 160 220 65`\n(2000 קלוריות, 160ג' חלבון, 220ג' פחמימה, 65ג' שומן)";
+        let help = "🎯 *הגדרת מכסות קלוריות, מאקרו וקלוריות חופשיות:*\n\n";
+        help += "1️⃣ *לפי מכסות קלוריות (חלבון, פחמימה, שומן, [חופשיות]):*\n`/macros [שם] 900 700 250 150`\n(900 קל' חלבון, 700 פחמימה, 250 שומן, 150 חופשיות = 2000 סה״כ)\n\n";
+        help += "2️⃣ *לפי גרמים:*\n`/macros [שם] 2000 160 200 55 150`\n(2000 קק״ל, 160ג' חלבון, 200ג' פחמימה, 55ג' שומן, 150 קל' חופשיות)";
         await sendTelegramMessage(chatId, help);
         return res.status(200).send('OK');
       }
@@ -198,23 +201,45 @@ module.exports = async (req, res) => {
         return res.status(200).send('OK');
       }
 
-      let cal, proG, carbG, fatG, proCal, carbCal, fatCal;
+      let cal, proG, carbG, fatG, proCal, carbCal, fatCal, freeCal = 0;
 
       if (parts.length === 5) {
         // פורמט 3 מכסות קלוריות: /macros אלירן 900 800 300
         proCal = parseFloat(parts[2]) || 800;
         carbCal = parseFloat(parts[3]) || 800;
         fatCal = parseFloat(parts[4]) || 400;
+        freeCal = 0;
         cal = proCal + carbCal + fatCal;
         proG = Math.round((proCal / 4) * 10) / 10;
         carbG = Math.round((carbCal / 4) * 10) / 10;
         fatG = Math.round((fatCal / 9) * 10) / 10;
+      } else if (parts.length === 6) {
+        // פורמט 4 מכסות קלוריות כולל חופשיות: /macros אלירן 900 700 250 150
+        proCal = parseFloat(parts[2]) || 800;
+        carbCal = parseFloat(parts[3]) || 700;
+        fatCal = parseFloat(parts[4]) || 250;
+        freeCal = parseFloat(parts[5]) || 0;
+        cal = proCal + carbCal + fatCal + freeCal;
+        proG = Math.round((proCal / 4) * 10) / 10;
+        carbG = Math.round((carbCal / 4) * 10) / 10;
+        fatG = Math.round((fatCal / 9) * 10) / 10;
+      } else if (parts.length >= 7) {
+        // פורמט גרמים מלא + חופשיות: /macros אלירן 2000 160 200 55 150
+        cal = parseFloat(parts[2]) || 2000;
+        proG = parseFloat(parts[3]) || 160;
+        carbG = parseFloat(parts[4]) || 200;
+        fatG = parseFloat(parts[5]) || 55;
+        freeCal = parseFloat(parts[6]) || 0;
+        proCal = Math.round(proG * 4);
+        carbCal = Math.round(carbG * 4);
+        fatCal = Math.round(fatG * 9);
       } else {
-        // פורמט 4 ערכים (קלוריות + גרמים): /macros אלירן 2000 160 220 65
+        // פורמט בסיסי 4 ערכים (קלוריות + גרמים): /macros אלירן 2000 160 220 65
         cal = parseFloat(parts[2]) || 2000;
         proG = parseFloat(parts[3]) || 160;
         carbG = parseFloat(parts[4]) || 220;
         fatG = parseFloat(parts[5]) || 65;
+        freeCal = 0;
         proCal = Math.round(proG * 4);
         carbCal = Math.round(carbG * 4);
         fatCal = Math.round(fatG * 9);
@@ -227,6 +252,7 @@ module.exports = async (req, res) => {
       client.targetProteinCal = proCal;
       client.targetCarbsCal = carbCal;
       client.targetFatCal = fatCal;
+      client.targetFreeCal = freeCal;
       
       client.macroCalculated = {
         targetCalories: cal,
@@ -235,17 +261,21 @@ module.exports = async (req, res) => {
         targetFat: fatG,
         targetProteinCal: proCal,
         targetCarbsCal: carbCal,
-        targetFatCal: fatCal
+        targetFatCal: fatCal,
+        targetFreeCal: freeCal
       };
 
       await db.collection('clients').doc(client.id).set(client);
 
-      let replyMsg = `🎯 *מכסות קלוריות ומאקרו עודכנו בהצלחה עבור ${client.name}!*\n\n`;
+      let replyMsg = `🎯 *מכסות קלוריות, מאקרו וקלוריות חופשיות עודכנו עבור ${client.name}!*\n\n`;
       replyMsg += `🔥 *סך יעד קלורי:* ${cal} קק״ל / יום\n\n`;
       replyMsg += `🥩 *מכסת חלבון:* ${proCal} קק״ל (${proG} גרם) — ${Math.round((proCal/cal)*100)}%\n`;
       replyMsg += `🌾 *מכסת פחמימות:* ${carbCal} קק״ל (${carbG} גרם) — ${Math.round((carbCal/cal)*100)}%\n`;
-      replyMsg += `🥑 *מכסת שומן:* ${fatCal} קק״ל (${fatG} גרם) — ${Math.round((fatCal/cal)*100)}%\n\n`;
-      replyMsg += `⚡ מסונכרן חי לענן, לפורטל ולסוכן ה-AI של המתאמן.`;
+      replyMsg += `🥑 *מכסת שומן:* ${fatCal} קק״ל (${fatG} גרם) — ${Math.round((fatCal/cal)*100)}%\n`;
+      if (freeCal > 0) {
+        replyMsg += `🍨 *תקציב קלוריות חופשיות:* ${freeCal} קק״ל — ${Math.round((freeCal/cal)*100)}%\n`;
+      }
+      replyMsg += `\n⚡ מסונכרן חי לענן, לפורטל ולסוכן ה-AI של המתאמן.`;
 
       await sendTelegramMessage(chatId, replyMsg);
       return res.status(200).send('OK');
@@ -414,17 +444,19 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
   const targetProCal = client?.macroCalculated?.targetProteinCal || client?.targetProteinCal || Math.round(targetPro * 4);
   const targetCarbCal = client?.macroCalculated?.targetCarbsCal || client?.targetCarbsCal || Math.round(targetCarb * 4);
   const targetFatCal = client?.macroCalculated?.targetFatCal || client?.targetFatCal || Math.round(targetFat * 9);
+  const targetFreeCal = client?.macroCalculated?.targetFreeCal !== undefined ? client?.macroCalculated?.targetFreeCal : (client?.targetFreeCal || 0);
   
   const clientGoal = client?.goal || 'חיטוב ועיצוב הגוף';
 
   const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר האישי והבוט הרשמי של המאמן אילאי).
-תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית או סלנג ישראלי, לחשב את סך הקלוריות והמאקרו (חלבון×4, פחמימה×4, שומן×9), ולהתאים את הכיסוי למכסות הקלוריות היומיות של המתאמן.
+תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית או סלנג ישראלי, לחשב את סך הקלוריות והמאקרו (חלבון×4, פחמימה×4, שומן×9), ולהתאים את הכיסוי למכסות הקלוריות היומיות ותקציב הקלוריות החופשיות של המתאמן.
 
 פרופיל מכסות קלוריות ויעדים:
 - סך יעד קלורי: ${targetCal} קק״ל
 - מכסת חלבון: ${targetProCal} קק״ל (${targetPro} גרם)
 - מכסת פחמימות: ${targetCarbCal} קק״ל (${targetCarb} גרם)
 - מכסת שומן: ${targetFatCal} קק״ל (${targetFat} גרם)
+- תקציב קלוריות חופשיות (פינוק / גמיש): ${targetFreeCal} קק״ל
 - מטרה: ${clientGoal}
 
 תיאור המנה: "${foodQuery}"
@@ -441,7 +473,7 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
 
 משפט התובנה של המאמן אילאי (coachInsight):
 כתוב בלשון דיבור חיה, אותנטית, אנרגטית, תומכת ומקצועית של המאמן אילאי.
-התייחס במדויק לחלוקה הקלורית מכל מאקרו בארוחה הזו (חלבון, פחמימה, שומן), כמה קלוריות כוסו מתוך כל מכסה קלורית יומית, כמה קלוריות נותרו להיום בכל אחת מהמכסות (או אם נוצרה חריגה), ותן טיפ מנצח ודגש פרקטי מה לאכול בהמשך היום כדי לסגור את היעדים בצורה מושלמת!
+התייחס במדויק לחלוקה הקלורית מכל מאקרו בארוחה הזו (חלבון, פחמימה, שומן), כמה קלוריות כוסו מתוך כל מכסה קלורית יומית, כמה קלוריות נותרו להיום בכל אחת מהמכסות (או אם נוצרה חריגה), האם נוצלו קלוריות מתקציב הקלוריות החופשיות (אם מדובר בפינוק/ממתק/נשנוש), ותן טיפ מנצח ודגש פרקטי מה לאכול בהמשך היום כדי לסגור את היעדים בצורה מושלמת!
 
 החזר אך ורק JSON תקני ומדויק:
 {
@@ -452,7 +484,7 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
   "proteinCal": קלוריות מחלבון כמספר,
   "carbsCal": קלוריות מפחמימה כמספר,
   "fatCal": קלוריות משומן כמספר,
-  "coachInsight": "משפט תובנה, פירגון והנחיה אישית ממוקדת מכסות מהמאמן אילאי",
+  "coachInsight": "משפט תובנה, פירגון והנחיה אישית ממוקדת מכסות ותקציב חופשי מהמאמן אילאי",
   "items": [
     {
       "name": "שם המאכל וכמות מוערכת בעברית",
