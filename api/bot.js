@@ -180,10 +180,13 @@ module.exports = async (req, res) => {
       await sendTelegramMessage(chatId, `📝 הערה נוספה בהצלחה למתאמן *${client.name}*:\n"${noteText}"`);
     }
     else if (text.startsWith('/macros') || text.startsWith('/macro') || text.startsWith('/target')) {
-      // עדכון יעדי מאקרו: /macros אלירן 2200 160 220 65
+      // עדכון מכסות קלוריות ומאקרו: /macros אלירן 900 800 300 או /macros אלירן 2000 160 220 65
       const parts = text.split(' ');
       if (parts.length < 3) {
-        await sendTelegramMessage(chatId, "השתמש בפורמט: \n`/macros [שם המתאמן] [קלוריות] [חלבון] [פחמימות] [שומן]`\nדוגמה: `/macros אלירן 2200 160 220 65`");
+        let help = "🎯 *הגדרת מכסות קלוריות או גרמים למתאמן:*\n\n";
+        help += "1️⃣ *לפי מכסות קלוריות (חלבון, פחמימה, שומן):*\n`/macros [שם] 900 800 300`\n(900 קל' חלבון, 800 קל' פחמימה, 300 קל' שומן = סה״כ 2000 קק״ל)\n\n";
+        help += "2️⃣ *לפי גרמים:*\n`/macros [שם] 2000 160 220 65`\n(2000 קלוריות, 160ג' חלבון, 220ג' פחמימה, 65ג' שומן)";
+        await sendTelegramMessage(chatId, help);
         return res.status(200).send('OK');
       }
 
@@ -195,30 +198,54 @@ module.exports = async (req, res) => {
         return res.status(200).send('OK');
       }
 
-      const cal = parseFloat(parts[2]) || 2000;
-      const pro = parseFloat(parts[3]) || 140;
-      const carb = parseFloat(parts[4]) || 200;
-      const fat = parseFloat(parts[5]) || 60;
+      let cal, proG, carbG, fatG, proCal, carbCal, fatCal;
+
+      if (parts.length === 5) {
+        // פורמט 3 מכסות קלוריות: /macros אלירן 900 800 300
+        proCal = parseFloat(parts[2]) || 800;
+        carbCal = parseFloat(parts[3]) || 800;
+        fatCal = parseFloat(parts[4]) || 400;
+        cal = proCal + carbCal + fatCal;
+        proG = Math.round((proCal / 4) * 10) / 10;
+        carbG = Math.round((carbCal / 4) * 10) / 10;
+        fatG = Math.round((fatCal / 9) * 10) / 10;
+      } else {
+        // פורמט 4 ערכים (קלוריות + גרמים): /macros אלירן 2000 160 220 65
+        cal = parseFloat(parts[2]) || 2000;
+        proG = parseFloat(parts[3]) || 160;
+        carbG = parseFloat(parts[4]) || 220;
+        fatG = parseFloat(parts[5]) || 65;
+        proCal = Math.round(proG * 4);
+        carbCal = Math.round(carbG * 4);
+        fatCal = Math.round(fatG * 9);
+      }
 
       client.targetCalories = cal;
-      client.targetProtein = pro;
-      client.targetCarbs = carb;
-      client.targetFat = fat;
+      client.targetProtein = proG;
+      client.targetCarbs = carbG;
+      client.targetFat = fatG;
+      client.targetProteinCal = proCal;
+      client.targetCarbsCal = carbCal;
+      client.targetFatCal = fatCal;
+      
       client.macroCalculated = {
         targetCalories: cal,
-        targetProtein: pro,
-        targetCarbs: carb,
-        targetFat: fat
+        targetProtein: proG,
+        targetCarbs: carbG,
+        targetFat: fatG,
+        targetProteinCal: proCal,
+        targetCarbsCal: carbCal,
+        targetFatCal: fatCal
       };
 
       await db.collection('clients').doc(client.id).set(client);
 
-      let replyMsg = `🎯 *יעדי מאקרו עודכנו בהצלחה עבור ${client.name}!*\n\n`;
-      replyMsg += `🔥 *יעד קלורי:* ${cal} קק״ל / יום\n`;
-      replyMsg += `💪 *חלבון:* ${pro} גרם\n`;
-      replyMsg += `🌾 *פחמימות:* ${carb} גרם\n`;
-      replyMsg += `🥑 *שומן:* ${fat} גרם\n\n`;
-      replyMsg += `⚡ הסנכרון לענן ולפורטל המתאמן בוצע בזמן אמת.`;
+      let replyMsg = `🎯 *מכסות קלוריות ומאקרו עודכנו בהצלחה עבור ${client.name}!*\n\n`;
+      replyMsg += `🔥 *סך יעד קלורי:* ${cal} קק״ל / יום\n\n`;
+      replyMsg += `🥩 *מכסת חלבון:* ${proCal} קק״ל (${proG} גרם) — ${Math.round((proCal/cal)*100)}%\n`;
+      replyMsg += `🌾 *מכסת פחמימות:* ${carbCal} קק״ל (${carbG} גרם) — ${Math.round((carbCal/cal)*100)}%\n`;
+      replyMsg += `🥑 *מכסת שומן:* ${fatCal} קק״ל (${fatG} גרם) — ${Math.round((fatCal/cal)*100)}%\n\n`;
+      replyMsg += `⚡ מסונכרן חי לענן, לפורטל ולסוכן ה-AI של המתאמן.`;
 
       await sendTelegramMessage(chatId, replyMsg);
       return res.status(200).send('OK');
@@ -379,20 +406,32 @@ function isLikelyFoodQuery(t) {
 async function analyzeFoodQueryWithAi(foodQuery, client = null) {
   const key = process.env.GEMINI_API_KEY || Buffer.from('QVEuQWI4Uk42TEVQRWtCdmxJU2o4TWR2eGlsei1QV29UMElqeU45dXNLWkgtTXVIQnBmVHc=', 'base64').toString('utf8');
   
-  const targetCal = client?.macroCalculated?.targetCalories || 2000;
-  const targetPro = client?.macroCalculated?.targetProtein || 140;
+  const targetCal = client?.macroCalculated?.targetCalories || client?.targetCalories || 2000;
+  const targetPro = client?.macroCalculated?.targetProtein || client?.targetProtein || 140;
+  const targetCarb = client?.macroCalculated?.targetCarbs || client?.targetCarbs || 200;
+  const targetFat = client?.macroCalculated?.targetFat || client?.targetFat || 60;
+  
+  const targetProCal = client?.macroCalculated?.targetProteinCal || client?.targetProteinCal || Math.round(targetPro * 4);
+  const targetCarbCal = client?.macroCalculated?.targetCarbsCal || client?.targetCarbsCal || Math.round(targetCarb * 4);
+  const targetFatCal = client?.macroCalculated?.targetFatCal || client?.targetFatCal || Math.round(targetFat * 9);
+  
   const clientGoal = client?.goal || 'חיטוב ועיצוב הגוף';
 
   const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר האישי והבוט הרשמי של המאמן אילאי).
-תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית, סלנג ישראלי, ולהחזיר משוב אישי, מקצועי, דינמי וחי ישירות בשפה ובסגנון הדיבור של המאמן אילאי.
+תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית או סלנג ישראלי, לחשב את סך הקלוריות והמאקרו (חלבון×4, פחמימה×4, שומן×9), ולהתאים את הכיסוי למכסות הקלוריות היומיות של המתאמן.
 
-פרופיל אישי:
-- יעד: ${targetCal} קלוריות | ${targetPro} גרם חלבון | מטרה: ${clientGoal}
+פרופיל מכסות קלוריות ויעדים:
+- סך יעד קלורי: ${targetCal} קק״ל
+- מכסת חלבון: ${targetProCal} קק״ל (${targetPro} גרם)
+- מכסת פחמימות: ${targetCarbCal} קק״ל (${targetCarb} גרם)
+- מכסת שומן: ${targetFatCal} קק״ל (${targetFat} גרם)
+- מטרה: ${clientGoal}
 
 תיאור המנה: "${foodQuery}"
 
 כללי כיול תזונתי מדויק לישראל:
 - נוטלה / ממרח שוקולד: 539 קל', 6.3ג' חלבון, 57.5ג' פחמימה, 30.9ג' שומן ל-100 גרם (150 גרם נוטלה = 809 קל', 9.5ג' חלבון, 86ג' פחמימה, 46.4ג' שומן).
+- שווארמה בלאפה עם טחינה וסלטים: 1050 קל', 65ג' חלבון (260 קל'), 110ג' פחמימה (440 קל'), 39ג' שומן (351 קל').
 - חזה עוף: 165 קל', 31ג' חלבון ל-100ג'.
 - סלמון אפוי: 206 קל', 22.1ג' חלבון ל-100ג'.
 - ביצה L: 75 קל', 6.8ג' חלבון.
@@ -400,8 +439,9 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
 - פיתה רגילה: 255 קל'. פיתה קלה: 99 קל'. לאפה: 480 קל'.
 - שמן זית: 88 קל' לכף (10ג'). טחינה גולמית: 96 קל' לכף (15ג').
 
-משפט התובנה של המאמן (coachInsight):
-כתוב בלשון דיבור חיה, אותנטית, אנרגטית, תומכת ומקצועית של המאמן אילאי. התייחס ישירות למאכל שהוזן, לערכים התזונתיים, ותן טיפ מנצח ודגש פרקטי להמשך היום!
+משפט התובנה של המאמן אילאי (coachInsight):
+כתוב בלשון דיבור חיה, אותנטית, אנרגטית, תומכת ומקצועית של המאמן אילאי.
+התייחס במדויק לחלוקה הקלורית מכל מאקרו בארוחה הזו (חלבון, פחמימה, שומן), כמה קלוריות כוסו מתוך כל מכסה קלורית יומית, כמה קלוריות נותרו להיום בכל אחת מהמכסות (או אם נוצרה חריגה), ותן טיפ מנצח ודגש פרקטי מה לאכול בהמשך היום כדי לסגור את היעדים בצורה מושלמת!
 
 החזר אך ורק JSON תקני ומדויק:
 {
@@ -409,7 +449,10 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
   "protein": סך חלבון בגרמים,
   "carbs": סך פחמימות בגרמים,
   "fat": סך שומן בגרמים,
-  "coachInsight": "משפט תובנה, פירגון והנחיה אישית מהמאמן אילאי על הארוחה הזו",
+  "proteinCal": קלוריות מחלבון כמספר,
+  "carbsCal": קלוריות מפחמימה כמספר,
+  "fatCal": קלוריות משומן כמספר,
+  "coachInsight": "משפט תובנה, פירגון והנחיה אישית ממוקדת מכסות מהמאמן אילאי",
   "items": [
     {
       "name": "שם המאכל וכמות מוערכת בעברית",

@@ -3133,17 +3133,26 @@
                                         </div>
                                         
                                         <div class="grid grid-cols-3 gap-2 text-center text-xs">
-                                            <div class="bg-white p-2.5 rounded-xl border border-[#c9b7de] shadow-sm space-y-0.5">
-                                                <span class="text-[9px] text-[#6f5888] block font-bold">חלבון</span>
-                                                <span class="text-sm font-black text-[#240a3e]" x-text="(currentClient?.targetProtein || currentClient?.macroCalculated?.targetProtein || 160) + 'g'"></span>
+                                            <!-- חלבון -->
+                                            <div class="bg-white p-3 rounded-xl border border-[#c9b7de] shadow-sm space-y-1">
+                                                <span class="text-[10px] text-[#6f5888] block font-bold">🥩 חלבון</span>
+                                                <div class="font-black text-sm text-[#240a3e]" x-text="(currentClient?.targetProteinCal || Math.round((currentClient?.targetProtein||160)*4)) + ' קק״ל'"></div>
+                                                <div class="text-[10px] text-[#6f5888] font-bold" x-text="'(' + (currentClient?.targetProtein || currentClient?.macroCalculated?.targetProtein || 160) + ' גרם)'"></div>
+                                                <div class="text-[9px] text-[#15803d] font-bold pt-0.5" x-text="'נצרך: ' + Math.round((getTodayConsumedProtein(currentClient)||0)*4) + ' קק״ל (' + (getTodayConsumedProtein(currentClient)||0) + 'ג')'"></div>
                                             </div>
-                                            <div class="bg-white p-2.5 rounded-xl border border-[#c9b7de] shadow-sm space-y-0.5">
-                                                <span class="text-[9px] text-[#6f5888] block font-bold">פחמימות</span>
-                                                <span class="text-sm font-black text-[#a15c07]" x-text="(currentClient?.targetCarbs || currentClient?.macroCalculated?.targetCarbs || 220) + 'g'"></span>
+                                            <!-- פחמימות -->
+                                            <div class="bg-white p-3 rounded-xl border border-[#c9b7de] shadow-sm space-y-1">
+                                                <span class="text-[10px] text-[#6f5888] block font-bold">🌾 פחמימות</span>
+                                                <div class="font-black text-sm text-[#a15c07]" x-text="(currentClient?.targetCarbsCal || Math.round((currentClient?.targetCarbs||220)*4)) + ' קק״ל'"></div>
+                                                <div class="text-[10px] text-[#6f5888] font-bold" x-text="'(' + (currentClient?.targetCarbs || currentClient?.macroCalculated?.targetCarbs || 220) + ' גרם)'"></div>
+                                                <div class="text-[9px] text-[#a15c07] font-bold pt-0.5" x-text="'נצרך: ' + Math.round((getTodayConsumedCarbs(currentClient)||0)*4) + ' קק״ל (' + (getTodayConsumedCarbs(currentClient)||0) + 'ג')'"></div>
                                             </div>
-                                            <div class="bg-white p-2.5 rounded-xl border border-[#c9b7de] shadow-sm space-y-0.5">
-                                                <span class="text-[9px] text-[#6f5888] block font-bold">שומן</span>
-                                                <span class="text-sm font-black text-[#dc2626]" x-text="(currentClient?.targetFat || currentClient?.macroCalculated?.targetFat || 65) + 'g'"></span>
+                                            <!-- שומן -->
+                                            <div class="bg-white p-3 rounded-xl border border-[#c9b7de] shadow-sm space-y-1">
+                                                <span class="text-[10px] text-[#6f5888] block font-bold">🥑 שומן</span>
+                                                <div class="font-black text-sm text-[#dc2626]" x-text="(currentClient?.targetFatCal || Math.round((currentClient?.targetFat||65)*9)) + ' קק״ל'"></div>
+                                                <div class="text-[10px] text-[#6f5888] font-bold" x-text="'(' + (currentClient?.targetFat || currentClient?.macroCalculated?.targetFat || 65) + ' גרם)'"></div>
+                                                <div class="text-[9px] text-[#dc2626] font-bold pt-0.5" x-text="'נצרך: ' + Math.round((getTodayConsumedFat(currentClient)||0)*9) + ' קק״ל (' + (getTodayConsumedFat(currentClient)||0) + 'ג')'"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -7260,6 +7269,10 @@
                 editingMacroProtein: 160,
                 editingMacroCarbs: 220,
                 editingMacroFat: 65,
+                editingMacroProteinCal: 640,
+                editingMacroCarbsCal: 880,
+                editingMacroFatCal: 585,
+                macroEditMode: 'calories', // 'calories' or 'grams'
                 editingWaterTarget: 3000,
                 editingStepsTarget: 10000,
                 openAddEventModal: false,
@@ -10203,40 +10216,103 @@
                     const c = client || this.currentClient;
                     if (!c) return;
                     this.editingMacroClient = c;
-                    this.editingMacroCalories = c.macroCalculated?.targetCalories || c.targetCalories || 2200;
-                    this.editingMacroProtein = c.macroCalculated?.targetProtein || c.targetProtein || 160;
-                    this.editingMacroCarbs = c.macroCalculated?.targetCarbs || c.targetCarbs || 220;
-                    this.editingMacroFat = c.macroCalculated?.targetFat || c.targetFat || 65;
+                    
+                    const proG = parseFloat(c.macroCalculated?.targetProtein || c.targetProtein) || 160;
+                    const carbG = parseFloat(c.macroCalculated?.targetCarbs || c.targetCarbs) || 220;
+                    const fatG = parseFloat(c.macroCalculated?.targetFat || c.targetFat) || 65;
+                    
+                    const proCal = parseFloat(c.macroCalculated?.targetProteinCal || c.targetProteinCal) || Math.round(proG * 4);
+                    const carbCal = parseFloat(c.macroCalculated?.targetCarbsCal || c.targetCarbsCal) || Math.round(carbG * 4);
+                    const fatCal = parseFloat(c.macroCalculated?.targetFatCal || c.targetFatCal) || Math.round(fatG * 9);
+                    const totalCal = parseFloat(c.macroCalculated?.targetCalories || c.targetCalories) || (proCal + carbCal + fatCal);
+
+                    this.editingMacroCalories = totalCal;
+                    this.editingMacroProtein = proG;
+                    this.editingMacroCarbs = carbG;
+                    this.editingMacroFat = fatG;
+                    this.editingMacroProteinCal = proCal;
+                    this.editingMacroCarbsCal = carbCal;
+                    this.editingMacroFatCal = fatCal;
+                    
                     this.editingWaterTarget = c.waterTarget || 3000;
                     this.editingStepsTarget = c.stepsTarget || 10000;
                     this.openMacroEditModal = true;
                     setTimeout(() => { if (typeof window !== "undefined" && window.lucide) window.lucide.createIcons(); }, 50);
                 },
 
+                onMacroCalChange(type) {
+                    if (type === 'protein') {
+                        const cal = parseFloat(this.editingMacroProteinCal) || 0;
+                        this.editingMacroProtein = Math.round((cal / 4) * 10) / 10;
+                    } else if (type === 'carbs') {
+                        const cal = parseFloat(this.editingMacroCarbsCal) || 0;
+                        this.editingMacroCarbs = Math.round((cal / 4) * 10) / 10;
+                    } else if (type === 'fat') {
+                        const cal = parseFloat(this.editingMacroFatCal) || 0;
+                        this.editingMacroFat = Math.round((cal / 9) * 10) / 10;
+                    }
+                    this.editingMacroCalories = Math.round((parseFloat(this.editingMacroProteinCal) || 0) + (parseFloat(this.editingMacroCarbsCal) || 0) + (parseFloat(this.editingMacroFatCal) || 0));
+                },
+
+                onMacroGramsChange(type) {
+                    if (type === 'protein') {
+                        const g = parseFloat(this.editingMacroProtein) || 0;
+                        this.editingMacroProteinCal = Math.round(g * 4);
+                    } else if (type === 'carbs') {
+                        const g = parseFloat(this.editingMacroCarbs) || 0;
+                        this.editingMacroCarbsCal = Math.round(g * 4);
+                    } else if (type === 'fat') {
+                        const g = parseFloat(this.editingMacroFat) || 0;
+                        this.editingMacroFatCal = Math.round(g * 9);
+                    }
+                    this.editingMacroCalories = Math.round((parseFloat(this.editingMacroProteinCal) || 0) + (parseFloat(this.editingMacroCarbsCal) || 0) + (parseFloat(this.editingMacroFatCal) || 0));
+                },
+
+                setMacroPreset(proPercent, carbPercent, fatPercent) {
+                    const total = parseFloat(this.editingMacroCalories) || 2000;
+                    this.editingMacroProteinCal = Math.round(total * (proPercent / 100));
+                    this.editingMacroCarbsCal = Math.round(total * (carbPercent / 100));
+                    this.editingMacroFatCal = Math.round(total * (fatPercent / 100));
+                    this.editingMacroProtein = Math.round((this.editingMacroProteinCal / 4) * 10) / 10;
+                    this.editingMacroCarbs = Math.round((this.editingMacroCarbsCal / 4) * 10) / 10;
+                    this.editingMacroFat = Math.round((this.editingMacroFatCal / 9) * 10) / 10;
+                },
+
                 saveMacroModal() {
                     if (!this.editingMacroClient) return;
                     const idx = this.clients.findIndex(c => c.id === this.editingMacroClient.id);
                     if (idx !== -1) {
-                        const cal = parseFloat(this.editingMacroCalories) || 2000;
-                        const pro = parseFloat(this.editingMacroProtein) || 140;
-                        const carb = parseFloat(this.editingMacroCarbs) || 200;
-                        const fat = parseFloat(this.editingMacroFat) || 60;
+                        const proCal = parseFloat(this.editingMacroProteinCal) || Math.round((parseFloat(this.editingMacroProtein) || 0) * 4);
+                        const carbCal = parseFloat(this.editingMacroCarbsCal) || Math.round((parseFloat(this.editingMacroCarbs) || 0) * 4);
+                        const fatCal = parseFloat(this.editingMacroFatCal) || Math.round((parseFloat(this.editingMacroFat) || 0) * 9);
+                        const totalCal = parseFloat(this.editingMacroCalories) || (proCal + carbCal + fatCal);
+                        
+                        const proG = parseFloat(this.editingMacroProtein) || Math.round((proCal / 4) * 10) / 10;
+                        const carbG = parseFloat(this.editingMacroCarbs) || Math.round((carbCal / 4) * 10) / 10;
+                        const fatG = parseFloat(this.editingMacroFat) || Math.round((fatCal / 9) * 10) / 10;
+                        
                         const water = parseFloat(this.editingWaterTarget) || 3000;
                         const steps = parseFloat(this.editingStepsTarget) || 10000;
 
                         const updatedClient = {
                             ...this.clients[idx],
-                            targetCalories: cal,
-                            targetProtein: pro,
-                            targetCarbs: carb,
-                            targetFat: fat,
+                            targetCalories: totalCal,
+                            targetProtein: proG,
+                            targetCarbs: carbG,
+                            targetFat: fatG,
+                            targetProteinCal: proCal,
+                            targetCarbsCal: carbCal,
+                            targetFatCal: fatCal,
                             waterTarget: water,
                             stepsTarget: steps,
                             macroCalculated: {
-                                targetCalories: cal,
-                                targetProtein: pro,
-                                targetCarbs: carb,
-                                targetFat: fat
+                                targetCalories: totalCal,
+                                targetProtein: proG,
+                                targetCarbs: carbG,
+                                targetFat: fatG,
+                                targetProteinCal: proCal,
+                                targetCarbsCal: carbCal,
+                                targetFatCal: fatCal
                             }
                         };
 
@@ -12123,10 +12199,12 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר האישי והבוט הרשמי של המאמן אילאי).
 תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית, סלנג ישראלי או צילום צלחת, ולהחזיר משוב אישי, מקצועי, דינמי וחי ישירות בשפה ובסגנון הדיבור של המאמן אילאי.
 
-פרופיל אישי של המתאמן:
-- יעד יומי: ${targetCal} קלוריות | ${targetPro} גרם חלבון.
-- מטרה: ${clientGoal}.
-- קלוריות שנותרו להיום: ${remainingCal} קק"ל.
+פרופיל מכסות קלוריות ויעדי מאקרו של המתאמן:
+- סך יעד קלורי יומי: ${targetCal} קק״ל (נצרכו עד כה היום: ${todayCals} קק״ל, נותרו ${remainingCal} קק״ל)
+- מכסת קלוריות חלבון: ${targetProCal} קק״ל (${targetPro} גרם חלבון) | נצרך עד כה היום: ${todayProCal} קל' (${todayPro}ג')
+- מכסת קלוריות פחמימות: ${targetCarbCal} קק״ל (${targetCarb} גרם פחמימות) | נצרך עד כה היום: ${todayCarbCal} קל' (${todayCarb}ג')
+- מכסת קלוריות שומן: ${targetFatCal} קק״ל (${targetFat} גרם שומן) | נצרך עד כה היום: ${todayFatCal} קל' (${todayFat}ג')
+- מטרת ליווי: ${clientGoal}
 
 תיאור המנה שהמתאמן הזין (טקסט / תמלול קולי / צילום צלחת):
 "${rawQuery || (this.portalMealPhoto ? "צלחת שצולמה בתמונה" : "")}"
@@ -12204,8 +12282,9 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
   * שניצל מטוגן (150ג'): 330 קל', 28ג' חלבון, 18ג' פחמימה, 16ג' שומן.
   * המבורגר 200ג' בלחמנייה: 650 קל', 38ג' חלבון, 45ג' פחמימה, 32ג' שומן.
 
-משפט התובנה של המאמן (coachInsight):
-כתוב בלשון דיבור חיה, אותנטית, אנרגטית, תומכת ומקצועית של המאמן אילאי. התייחס ישירות למאכל שהוזן, לערכים התזונתיים, ותן טיפ מנצח ודגש פרקטי להמשך היום!
+משפט התובנה של המאמן אילאי (coachInsight):
+כתוב בלשון דיבור אותנטית, חיה, אנרגטית, ישירה ומקצועית של המאמן אילאי.
+התייחס במדויק לחלוקה הקלורית מכל מאקרו בארוחה הזו (חלבון×4, פחמימה×4, שומן×9), כמה קלוריות כוסו מתוך כל מכסה קלורית יומית (חלבון, פחמימה, שומן), כמה קלוריות נותרו להיום בכל אחת מהמכסות (או אם נוצרה חריגה בשומן/פחמימה/קלוריות), ותן דגש והנחיה מנצחת מה לאכול בהמשך היום כדי לסגור את היעדים בצורה מושלמת!
 
 החזר אך ורק JSON תקני ומדויק ללא שום טקסט נלווה או סימני markdown מיותרים:
 {
@@ -14464,41 +14543,136 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
     <!-- מודל עריכת יעדי מאקרו ויעדים יומיים (Macro Target Edit Modal) -->
     <div x-show="openMacroEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" style="display: none;" x-transition>
-        <div class="bg-white border border-[#c9b7de] w-full max-w-md rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openMacroEditModal = false">
+        <div class="bg-white border border-[#c9b7de] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openMacroEditModal = false">
             <div class="p-4 md:p-5 border-b border-[#c9b7de] flex justify-between items-center bg-[#f5effa]">
                 <h3 class="text-sm md:text-base font-black text-[#1a0730] flex items-center gap-2">
                     <i data-lucide="target" class="w-5 h-5 text-[#fbbf24]"></i>
-                    <span>עריכת יעדי מאקרו — <span class="text-[#3e1568]" x-text="editingMacroClient?.name"></span></span>
+                    <span>הגדרת מכסות קלוריות ומאקרו — <span class="text-[#3e1568]" x-text="editingMacroClient?.name"></span></span>
                 </h3>
                 <button @click="openMacroEditModal = false" class="text-[#6f5888] hover:text-[#1a0730] p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
             </div>
 
             <form @submit.prevent="saveMacroModal()" class="p-5 space-y-4 text-xs md:text-sm">
-                <!-- כרטיס הסבר -->
-                <div class="bg-[#faf6fc] border border-[#c9b7de] p-3 rounded-2xl flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-[#240a3e] text-[#fbbf24] flex items-center justify-center font-black text-sm shrink-0">🎯</div>
-                    <p class="text-[11px] text-[#6f5888] font-semibold leading-snug">
-                        היעדים שתגדיר כאן יסונכרנו אוטומטית לענן, ישפיעו על יומן האכילה, בוט ה-AI וגרפי ההתקדמות של המתאמן.
-                    </p>
+                <!-- כרטיס הסבר וסך קלוריות כולל -->
+                <div class="bg-[#faf6fc] border border-[#c9b7de] p-3.5 rounded-2xl flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-10 h-10 rounded-xl bg-[#240a3e] text-[#fbbf24] flex items-center justify-center font-black text-base shrink-0 shadow-sm">🔥</div>
+                        <div>
+                            <span class="text-[10px] text-[#6f5888] font-bold block">סך יעד קלורי יומי מחושב</span>
+                            <span class="text-base font-black text-[#1a0730]" x-text="editingMacroCalories + ' קק״ל / יום'"></span>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-[10px] text-[#6f5888] font-bold block">חלוקה באחוזים</span>
+                        <span class="text-xs font-black text-[#3e1568]" x-text="Math.round(((editingMacroProteinCal||0)/(editingMacroCalories||1))*100) + '% חלבון | ' + Math.round(((editingMacroCarbsCal||0)/(editingMacroCalories||1))*100) + '% פחמימה | ' + Math.round(((editingMacroFatCal||0)/(editingMacroCalories||1))*100) + '% שומן'"></span>
+                    </div>
                 </div>
 
-                <!-- שדות מאקרו -->
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] space-y-1">
-                        <label class="block text-[10px] font-bold text-[#6f5888]">🔥 קלוריות יומיות (קק״ל)</label>
-                        <input type="number" x-model="editingMacroCalories" required class="w-full bg-white border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-black text-sm text-center focus:outline-none focus:border-[#fbbf24]">
+                <!-- סרגל אחוזים ויזואלי צבעוני -->
+                <div class="w-full h-3 bg-[#e6dcef] rounded-full overflow-hidden flex shadow-inner">
+                    <div class="bg-[#240a3e] h-full transition-all duration-300" :style="'width: ' + Math.round(((editingMacroProteinCal||0)/(editingMacroCalories||1))*100) + '%'" title="חלבון"></div>
+                    <div class="bg-[#fbbf24] h-full transition-all duration-300" :style="'width: ' + Math.round(((editingMacroCarbsCal||0)/(editingMacroCalories||1))*100) + '%'" title="פחמימה"></div>
+                    <div class="bg-[#dc2626] h-full transition-all duration-300" :style="'width: ' + Math.round(((editingMacroFatCal||0)/(editingMacroCalories||1))*100) + '%'" title="שומן"></div>
+                </div>
+
+                <!-- כפתורי תבניות מהירות (Quick Preset Pills) -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                    <span class="text-[10px] text-[#6f5888] font-bold shrink-0">תבנית מהירה:</span>
+                    <button type="button" @click="setMacroPreset(45, 35, 20)" class="bg-white hover:bg-[#faf6fc] border border-[#c9b7de] text-[#1a0730] px-2.5 py-1 rounded-xl text-[10px] font-black transition cursor-pointer shrink-0">
+                        ⚡ חיטוב קלאסי (45/35/20)
+                    </button>
+                    <button type="button" @click="setMacroPreset(40, 40, 20)" class="bg-white hover:bg-[#faf6fc] border border-[#c9b7de] text-[#1a0730] px-2.5 py-1 rounded-xl text-[10px] font-black transition cursor-pointer shrink-0">
+                        ⚖️ איזון ועיצוב (40/40/20)
+                    </button>
+                    <button type="button" @click="setMacroPreset(30, 50, 20)" class="bg-white hover:bg-[#faf6fc] border border-[#c9b7de] text-[#1a0730] px-2.5 py-1 rounded-xl text-[10px] font-black transition cursor-pointer shrink-0">
+                        💪 עלייה במסה (30/50/20)
+                    </button>
+                </div>
+
+                <!-- שדות מכסות קלוריות וגרמים מקבילים -->
+                <div class="space-y-2.5">
+                    <!-- 1. מכסת חלבון -->
+                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] flex items-center justify-between gap-3">
+                        <div class="w-1/3">
+                            <span class="text-xs font-black text-[#1a0730] flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#240a3e] shrink-0"></span>
+                                <span>🥩 חלבון</span>
+                            </span>
+                            <span class="text-[9px] text-[#6f5888] font-bold block" x-text="Math.round(((editingMacroProteinCal||0)/(editingMacroCalories||1))*100) + '% מסך הקלוריות'"></span>
+                        </div>
+                        <div class="flex items-center gap-2 w-2/3">
+                            <div class="flex-1">
+                                <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5 text-center">מכסה בקלוריות</label>
+                                <div class="relative">
+                                    <input type="number" x-model="editingMacroProteinCal" @input="onMacroCalChange('protein')" placeholder="900" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#fbbf24]">
+                                    <span class="absolute left-2 top-1.5 text-[9px] text-[#6f5888]">קק״ל</span>
+                                </div>
+                            </div>
+                            <span class="text-[#c9b7de] font-black text-xs pt-3">⇄</span>
+                            <div class="flex-1">
+                                <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5 text-center">שווה ערך בגרמים</label>
+                                <div class="relative">
+                                    <input type="number" step="0.5" x-model="editingMacroProtein" @input="onMacroGramsChange('protein')" placeholder="225" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#fbbf24]">
+                                    <span class="absolute left-2 top-1.5 text-[9px] text-[#6f5888]">גרם</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] space-y-1">
-                        <label class="block text-[10px] font-bold text-[#6f5888]">💪 חלבון (גרם)</label>
-                        <input type="number" x-model="editingMacroProtein" required class="w-full bg-white border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-black text-sm text-center focus:outline-none focus:border-[#fbbf24]">
+
+                    <!-- 2. מכסת פחמימות -->
+                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] flex items-center justify-between gap-3">
+                        <div class="w-1/3">
+                            <span class="text-xs font-black text-[#1a0730] flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#fbbf24] shrink-0"></span>
+                                <span>🌾 פחמימות</span>
+                            </span>
+                            <span class="text-[9px] text-[#6f5888] font-bold block" x-text="Math.round(((editingMacroCarbsCal||0)/(editingMacroCalories||1))*100) + '% מסך הקלוריות'"></span>
+                        </div>
+                        <div class="flex items-center gap-2 w-2/3">
+                            <div class="flex-1">
+                                <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5 text-center">מכסה בקלוריות</label>
+                                <div class="relative">
+                                    <input type="number" x-model="editingMacroCarbsCal" @input="onMacroCalChange('carbs')" placeholder="800" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#fbbf24]">
+                                    <span class="absolute left-2 top-1.5 text-[9px] text-[#6f5888]">קק״ל</span>
+                                </div>
+                            </div>
+                            <span class="text-[#c9b7de] font-black text-xs pt-3">⇄</span>
+                            <div class="flex-1">
+                                <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5 text-center">שווה ערך בגרמים</label>
+                                <div class="relative">
+                                    <input type="number" step="0.5" x-model="editingMacroCarbs" @input="onMacroGramsChange('carbs')" placeholder="200" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#fbbf24]">
+                                    <span class="absolute left-2 top-1.5 text-[9px] text-[#6f5888]">גרם</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] space-y-1">
-                        <label class="block text-[10px] font-bold text-[#6f5888]">🌾 פחמימות (גרם)</label>
-                        <input type="number" x-model="editingMacroCarbs" required class="w-full bg-white border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-black text-sm text-center focus:outline-none focus:border-[#fbbf24]">
-                    </div>
-                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] space-y-1">
-                        <label class="block text-[10px] font-bold text-[#6f5888]">🥑 שומן (גרם)</label>
-                        <input type="number" x-model="editingMacroFat" required class="w-full bg-white border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-black text-sm text-center focus:outline-none focus:border-[#fbbf24]">
+
+                    <!-- 3. מכסת שומן -->
+                    <div class="bg-[#faf6fc] p-3 rounded-2xl border border-[#c9b7de] flex items-center justify-between gap-3">
+                        <div class="w-1/3">
+                            <span class="text-xs font-black text-[#1a0730] flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#dc2626] shrink-0"></span>
+                                <span>🥑 שומן</span>
+                            </span>
+                            <span class="text-[9px] text-[#6f5888] font-bold block" x-text="Math.round(((editingMacroFatCal||0)/(editingMacroCalories||1))*100) + '% מסך הקלוריות'"></span>
+                        </div>
+                        <div class="flex items-center gap-2 w-2/3">
+                            <div class="flex-1">
+                                <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5 text-center">מכסה בקלוריות</label>
+                                <div class="relative">
+                                    <input type="number" x-model="editingMacroFatCal" @input="onMacroCalChange('fat')" placeholder="300" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#fbbf24]">
+                                    <span class="absolute left-2 top-1.5 text-[9px] text-[#6f5888]">קק״ל</span>
+                                </div>
+                            </div>
+                            <span class="text-[#c9b7de] font-black text-xs pt-3">⇄</span>
+                            <div class="flex-1">
+                                <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5 text-center">שווה ערך בגרמים</label>
+                                <div class="relative">
+                                    <input type="number" step="0.5" x-model="editingMacroFat" @input="onMacroGramsChange('fat')" placeholder="33.3" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#fbbf24]">
+                                    <span class="absolute left-2 top-1.5 text-[9px] text-[#6f5888]">גרם</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -14519,12 +14693,13 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     <button type="button" @click="openMacroEditModal = false" class="bg-[#faf6fc] border border-[#c9b7de] text-[#6f5888] hover:text-[#1a0730] px-4 py-2 rounded-xl font-bold">ביטול</button>
                     <button type="submit" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] font-black px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
                         <i data-lucide="check" class="w-4 h-4 text-[#fbbf24]"></i>
-                        <span>שמור יעדים לענן ⚡</span>
+                        <span>שמור מכסות לענן ⚡</span>
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
 
 </body>
 </html>
