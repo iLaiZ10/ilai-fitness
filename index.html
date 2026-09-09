@@ -12194,6 +12194,31 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const todayCals = this.getTodayConsumedCalories(client);
                     const remainingCal = Math.max(0, targetCal - todayCals);
 
+                    // הפרומפט מפרט מכסות מאקרו, אבל 12 המשתנים האלה מעולם לא הוגדרו.
+                    // הראשון שנקרא (targetProCal) זרק, ה-catch שמסביב בלע את השגיאה,
+                    // ולכן גם הטקסט וגם ניתוח התמונה נפלו בשקט למחשבון המקומי, בלי
+                    // אף קריאה ל-Gemini. הטקסט נראה תקין רק כי המאגר המקומי מכיר
+                    // מאכלים נפוצים; לתמונה אין התאמה מקומית ולכן היא החזירה
+                    // 400 קק"ל קבועות בשם "ארוחה מעורבת".
+                    const targetCarb = parseFloat(client.macroCalculated?.targetCarbs) || 220;
+                    const targetFat = parseFloat(client.macroCalculated?.targetFat) || 65;
+
+                    const targetProCal = Math.round(targetPro * 4);
+                    const targetCarbCal = Math.round(targetCarb * 4);
+                    const targetFatCal = Math.round(targetFat * 9);
+                    // קלוריות חופשיות: ערך מפורש אם הוגדר, אחרת מה שנשאר אחרי שלושת המאקרו
+                    const explicitFree = parseFloat(client.macroCalculated?.targetFreeCal);
+                    const targetFreeCal = !isNaN(explicitFree)
+                        ? explicitFree
+                        : Math.max(0, targetCal - (targetProCal + targetCarbCal + targetFatCal));
+
+                    const todayPro = Math.round(this.getTodayConsumedProtein(client) || 0);
+                    const todayCarb = Math.round(this.getTodayConsumedCarbs(client) || 0);
+                    const todayFat = Math.round(this.getTodayConsumedFat(client) || 0);
+                    const todayProCal = Math.round(todayPro * 4);
+                    const todayCarbCal = Math.round(todayCarb * 4);
+                    const todayFatCal = Math.round(todayFat * 9);
+
                     // ⚡ 1. בדיקת זיכרון מטמון חכם (Instant Cache) למענה מיידי
                     if (rawQuery && !this.portalMealPhoto) {
                         try {
