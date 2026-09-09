@@ -12187,6 +12187,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     let rawQuery = (this.aiFoodQuery || '').trim();
                     if (!rawQuery && !this.portalMealPhoto) {
                         alert("אנא הזן תיאור מאכל, הקלט הודעה קולית או צלם את הצלחת!");
+                        this.isAiAnalyzing = false;
                         return;
                     }
 
@@ -12199,293 +12200,232 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     }
 
                     const client = this.portalClient || this.currentClient || {};
-                    const targetCal = client.macroCalculated?.targetCalories || 2000;
-                    const targetPro = client.macroCalculated?.targetProtein || 140;
-                    const clientGoal = client.goal || "חיטוב ועיצוב הגוף";
+                    const targetCal = client.macroCalculated?.targetCalories || client.targetCalories || 2000;
+                    const targetPro = client.macroCalculated?.targetProtein || client.targetProtein || 140;
+                    const targetCarb = parseFloat(client.macroCalculated?.targetCarbs || client.targetCarbs) || 220;
+                    const targetFat = parseFloat(client.macroCalculated?.targetFat || client.targetFat) || 65;
 
+                    const targetProCal = client.macroCalculated?.targetProteinCal || client.targetProteinCal || Math.round(targetPro * 4);
+                    const targetCarbCal = client.macroCalculated?.targetCarbsCal || client.targetCarbsCal || Math.round(targetCarb * 4);
+                    const targetFatCal = client.macroCalculated?.targetFatCal || client.targetFatCal || Math.round(targetFat * 9);
+                    
+                    const explicitFree = parseFloat(client.macroCalculated?.targetFreeCal !== undefined ? client.macroCalculated.targetFreeCal : client.targetFreeCal);
+                    const targetFreeCal = !isNaN(explicitFree) ? explicitFree : Math.max(0, targetCal - (targetProCal + targetCarbCal + targetFatCal));
+
+                    const clientGoal = client.goal || "חיטוב ועיצוב הגוף";
                     const todayCals = this.getTodayConsumedCalories(client);
                     const remainingCal = Math.max(0, targetCal - todayCals);
 
-                    // הפרומפט מפרט מכסות מאקרו, אבל 12 המשתנים האלה מעולם לא הוגדרו.
-                    // הראשון שנקרא (targetProCal) זרק, ה-catch שמסביב בלע את השגיאה,
-                    // ולכן גם הטקסט וגם ניתוח התמונה נפלו בשקט למחשבון המקומי, בלי
-                    // אף קריאה ל-Gemini. הטקסט נראה תקין רק כי המאגר המקומי מכיר
-                    // מאכלים נפוצים; לתמונה אין התאמה מקומית ולכן היא החזירה
-                    // 400 קק"ל קבועות בשם "ארוחה מעורבת".
-                    const targetCarb = parseFloat(client.macroCalculated?.targetCarbs) || 220;
-                    const targetFat = parseFloat(client.macroCalculated?.targetFat) || 65;
-
-                    const targetProCal = Math.round(targetPro * 4);
-                    const targetCarbCal = Math.round(targetCarb * 4);
-                    const targetFatCal = Math.round(targetFat * 9);
-                    // קלוריות חופשיות: ערך מפורש אם הוגדר, אחרת מה שנשאר אחרי שלושת המאקרו
-                    const explicitFree = parseFloat(client.macroCalculated?.targetFreeCal);
-                    const targetFreeCal = !isNaN(explicitFree)
-                        ? explicitFree
-                        : Math.max(0, targetCal - (targetProCal + targetCarbCal + targetFatCal));
-
-                    const todayPro = Math.round(this.getTodayConsumedProtein(client) || 0);
-                    const todayCarb = Math.round(this.getTodayConsumedCarbs(client) || 0);
-                    const todayFat = Math.round(this.getTodayConsumedFat(client) || 0);
-                    const todayProCal = Math.round(todayPro * 4);
-                    const todayCarbCal = Math.round(todayCarb * 4);
-                    const todayFatCal = Math.round(todayFat * 9);
-
-                    // ⚡ 1. בדיקת זיכרון מטמון חכם (Instant Cache) למענה מיידי
+                    // בדיקת מטמון חכם (גרסה 6 למניעת תוצאות שגויות מהעבר)
                     if (rawQuery && !this.portalMealPhoto) {
                         try {
-                            const cacheKey = "ilai_meal_v4_" + rawQuery.toLowerCase();
+                            const cacheKey = "ilai_meal_v6_" + rawQuery.toLowerCase();
                             const cached = localStorage.getItem(cacheKey);
                             if (cached) {
                                 const parsedCached = JSON.parse(cached);
                                 if (parsedCached && parsedCached.calories > 0) {
                                     this.aiAnalyzedMeal = parsedCached;
                                     this.isAiAnalyzing = false;
-                                    setTimeout(() => { if (typeof window !== "undefined" && window.lucide) window.lucide.createIcons(); }, 50);
+                                    setTimeout(() => { if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons(); }, 50);
                                     return;
                                 }
                             }
                         } catch(e) {}
-
-                        // ⚡ 2. הרצה מקומית מיידית ב-0ms לתצוגה חיה בזמן שה-AI מחדד את התובנות
-                        this.runLocalFoodAnalysis();
                     }
 
-                    const apiKey = this.getEffectiveGeminiKey();
+                    const clientGoalsObj = {
+                        targetCalories: targetCal,
+                        targetProtein: targetPro,
+                        targetCarbs: targetCarb,
+                        targetFat: targetFat,
+                        targetProteinCal: targetProCal,
+                        targetCarbsCal: targetCarbCal,
+                        targetFatCal: targetFatCal,
+                        targetFreeCal: targetFreeCal,
+                        goal: clientGoal
+                    };
 
-                    if (apiKey) {
-                        try {
-                            const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר האישי והבוט הרשמי של המאמן אילאי).
-תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית, סלנג ישראלי או צילום צלחת, ולהחזיר משוב אישי, מקצועי, דינמי וחי ישירות בשפה ובסגנון הדיבור של המאמן אילאי.
+                    let parsedResult = null;
 
-פרופיל מכסות קלוריות ויעדי מאקרו של המתאמן:
-- סך יעד קלורי יומי: ${targetCal} קק״ל (נצרכו עד כה היום: ${todayCals} קק״ל, נותרו ${remainingCal} קק״ל)
-- מכסת קלוריות חלבון: ${targetProCal} קק״ל (${targetPro} גרם חלבון) | נצרך עד כה היום: ${todayProCal} קל' (${todayPro}ג')
-- מכסת קלוריות פחמימות: ${targetCarbCal} קק״ל (${targetCarb} גרם פחמימות) | נצרך עד כה היום: ${todayCarbCal} קל' (${todayCarb}ג')
-- מכסת קלוריות שומן: ${targetFatCal} קק״ל (${targetFat} גרם שומן) | נצרך עד כה היום: ${todayFatCal} קל' (${todayFat}ג')
-- תקציב קלוריות חופשיות (פינוק / גמיש): ${targetFreeCal} קק״ל
+                    // 1. ניסיון פנייה ישיר דרך שרת ה-API של Vercel (אמין, מהיר וללא חסימות דפדפן)
+                    try {
+                        const isVision = Boolean(this.portalMealPhoto && this.portalMealPhoto.startsWith("data:image"));
+                        const apiPayload = {
+                            query: rawQuery,
+                            photoBase64: isVision ? this.portalMealPhoto : undefined,
+                            mimeType: isVision ? (this.portalMealPhoto.split(';')[0].replace('data:', '') || 'image/jpeg') : undefined,
+                            clientGoals: clientGoalsObj
+                        };
+
+                        const vercelResp = await fetch('/api/analyze-food', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(apiPayload)
+                        });
+
+                        if (vercelResp.ok) {
+                            const vercelData = await vercelResp.json();
+                            if (vercelData && typeof vercelData.calories === 'number' && vercelData.calories > 10) {
+                                parsedResult = vercelData;
+                            }
+                        }
+                    } catch(errServer) {
+                        console.warn('Server endpoint /api/analyze-food unavailable, trying direct Gemini:', errServer);
+                    }
+
+                    // 2. אם השרת לא זמין (למשל ריצה מקומית), פנייה ישירה ל-Gemini API
+                    if (!parsedResult) {
+                        const apiKey = this.getEffectiveGeminiKey();
+                        if (apiKey) {
+                            try {
+                                const isVision = Boolean(this.portalMealPhoto && this.portalMealPhoto.startsWith("data:image"));
+                                const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר האישי והבוט הרשמי של המאמן אילאי).
+תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית, סלנג ישראלי או צילום צלחת, לחשב את סך הקלוריות והמאקרו המדויק (כולל לחמים, באגטים, שמנים, ממרחים וכל המרכיבים), ולהתאים את הכיסוי למכסות הקלוריות של המתאמן.
+
+פרופיל מכסות קלוריות ויעדים של המתאמן:
+- סך יעד קלורי: ${targetCal} קק״ל (נצרכו: ${todayCals}, נותרו: ${remainingCal})
+- מכסת חלבון: ${targetProCal} קק״ל (${targetPro} גרם)
+- מכסת פחמימות: ${targetCarbCal} קק״ל (${targetCarb} גרם)
+- מכסת שומן: ${targetFatCal} קק״ל (${targetFat} גרם)
+- תקציב קלוריות חופשיות: ${targetFreeCal} קק״ל
 - מטרת ליווי: ${clientGoal}
 
-תיאור המנה שהמתאמן הזין (טקסט / תמלול קולי / צילום צלחת):
-"${rawQuery || (this.portalMealPhoto ? "צלחת שצולמה בתמונה" : "")}"
+תיאור המנה: "${rawQuery || (this.portalMealPhoto ? "צלחת שצולמה בתמונה" : "")}"
 
-חשוב מכל — תחשוב כמו בן אדם שמכיר את המדף בסופר, לא כמו טבלה:
-
-• שם מותג = מוצר מוכן, לא חומר גלם. "סלט כרוב של אחלה" הוא סלט על בסיס
-  מיונז ושמן, בערך 150-200 קל' ל-100 גרם — ולא כרוב חי שהוא 25. כך גם
-  סלטי אחלה/צבר/מיקי בכלל: חומוס, טחינה, מטבוחה, סלט חצילים, כרוב, קולסלו.
-  אם צוין מותג ישראלי (אחלה, צבר, תנובה, שטראוס, עלית, אסם, תלמה, יטבתה,
-  טרה, זוגלובק, של יום, מאמא עוף, סוגת) — נתח את המוצר המסחרי עצמו.
-• מזון מוכן מגיע עם מה שמכינים אותו איתו. סלט במסעדה מגיע עם רוטב ושמן,
-  ירקות מוקפצים מוקפצים בשמן, שניצל מטוגן, פסטה מגיעה עם רוטב.
-  אל תניח "ללא תוספת שמן" אלא אם המתאמן כתב זאת במפורש.
-• מנת מסעדה או טייק אווי גדולה מהמנה הביתית. אם נכתב "מנה" בלי משקל,
-  תניח את הגודל שבאמת מגישים בישראל.
-• סלנג ותיאורים חופשיים הם חלק מהעבודה: "צלחת של אמא", "משהו קטן",
-  "נשנשתי", "חצי מנה" — תעריך בהיגיון ותמשיך, בלי לבקש הבהרות.
-• עדיף להעריך גבוה מדי מאשר נמוך מדי. מתאמן שמדווח נמוך מדי לא יבין
-  למה הוא לא יורד במשקל.
-
-ערכי בסיס רשמיים ומדויקים לפי FoodsDictionary ומשרד הבריאות:
-- ממרחים, מתוקים ונשנושים:
-  * נוטלה / ממרח שוקולד נוטלה / ממרח השחר: 539 קל', 6.3ג' חלבון, 57.5ג' פחמימה, 30.9ג' שומן ל-100 גרם (כף 25ג' = 135 קל'; 150 גרם נוטלה = 809 קל', 9.5ג' חלבון, 86ג' פחמימה, 46.4ג' שומן).
-  * חמאת בוטנים טבעית: 588 קל'/100ג' (כף 18ג' = 106 קל', 4.5ג' חלבון, 9ג' שומן).
-  * ממרח לוטוס / עוגיות: 580 קל'/100ג' (כף 20ג' = 116 קל').
-  * שוקולד מריר / חלב: 540 קל'/100ג' (קובייה = 27 קל').
-  * דבש / סילאן: 320 קל'/100ג' (כף 15ג' = 48 קל', כפית 5ג' = 16 קל').
-  * חלבה: 520 קל'/100ג' (12ג' חלבון, 30ג' שומן, 50ג' פחמימה).
-  * במבה שקית 25ג': 134 קל', 4ג' חלבון, 11.3ג' פחמימה, 8ג' שומן.
-  * עוגיות / ופלים: 480-520 קל'/100ג'.
-  * קרואסון / רוגלך: 420 קל'/100ג' (יחידה 80ג' = 336 קל').
-  * בורקס גבינה/תפו"א: 380 קל'/100ג' (יחידה 80ג' = 304 קל').
-  * משולש פיצה: 270 קל', 12ג' חלבון, 32ג' פחמימה, 10ג' שומן (100ג').
-
-- חלבונים:
-  * חזה עוף צלוי/מבושל: 165 קל', 31ג' חלבון, 3.6ג' שומן ל-100ג' (מנה 180ג' = 297 קל', 55.8ג' חלבון).
-  * פילה סלמון אפוי: 206 קל', 22.1ג' חלבון, 12.3ג' שומן ל-100ג' (מנה 180ג' = 370 קל', 39.8ג' חלבון).
-  * דג אמנון (מושט) אפוי: 128 קל', 26.2ג' חלבון, 2.6ג' שומן ל-100ג' (פילה 180ג' = 230 קל', 47.1ג' חלבון).
-  * דניס אפוי: 150 קל', 20.5ג' חלבון ל-100ג'.
-  * בקר רזה 5% (טחון/פילה): 135 קל', 21ג' חלבון, 5ג' שומן ל-100ג'.
-  * טונה במי מלח: 120 קל', 28ג' חלבון לקופסה (112ג').
-  * ביצה לארג' (L): 75 קל', 6.8ג' חלבון, 5.2ג' שומן (2 ביצים = 150 קל', 13.6ג' חלבון).
-  * חלבון ביצה (לבן בלבד): 17 קל', 3.8ג' חלבון.
-  * יוגורט חלבון GO PRO / דנונה פרו: 130-150 קל', 20-25ג' חלבון לגביע.
-  * גבינת קוטג' 5%: 95 קל', 11ג' חלבון ל-100ג' (גביע 250ג' = 235 קל', 27.5ג' חלבון).
-  * גבינה לבנה 5%: 90 קל', 10ג' חלבון ל-100ג'.
-  * אבקת חלבון (סקופ 30ג'): 120 קל', 24-25ג' חלבון.
-  * טופו טבעי: 120 קל', 14ג' חלבון, 2.5ג' פחמימה, 6.5ג' שומן ל-100ג'.
-
-- פחמימות ותוספות:
-  * אורז לבן/יסמין/בסמטי מבושל: 130 קל', 2.7ג' חלבון, 28ג' פחמימה ל-100ג' (כף הגשה 55ג' = 72 קל', כוס מבושלת 160ג' = 208 קל').
-  * פסטה/ספגטי מבושלים: 155 קל', 5.8ג' חלבון, 31ג' פחמימה ל-100ג' (כף הגשה 55ג' = 85 קל', כוס 150ג' = 232 קל').
-  * פתיתים מבושלים: 160 קל', 5.2ג' חלבון, 32ג' פחמימה ל-100ג'.
-  * תפוח אדמה אפוי/מבושל: 86 קל', 2ג' חלבון, 20ג' פחמימה ל-100ג' (תפוא בינוני 170ג' = 145 קל').
-  * בטטה אפויה: 90 קל', 2ג' חלבון, 21ג' פחמימה ל-100ג' (בטטה בינונית 180ג' = 162 קל').
-  * קוואקר / שיבולת שועל: 389 קל'/100ג' (חצי כוס 40ג' = 155 קל', 6.8ג' חלבון).
-  * פיתה רגילה: 255 קל', 8.5ג' חלבון, 52ג' פחמימה.
-  * פיתה קלה / כוסמין: 99 קל', 6ג' חלבון, 20ג' פחמימה.
-  * לאפה: 450-500 קל', 14ג' חלבון, 95ג' פחמימה.
-  * פרוסת לחם אחיד/מלא: 75 קל', 3ג' חלבון. פרוסת לחם קל: 40-45 קל'.
-
-- שומנים ורטבים:
-  * שמן זית: 884 קל'/100ג' (כף 10ג' = 88 קל').
-  * טחינה גולמית משומשום מלא: 640 קל'/100ג' (כף 15ג' = 96 קל', 3.6ג' חלבון, 8.3ג' שומן).
-  * טחינה מוכנה: 30 קל' לכף (15ג').
-  * אבוקדו: 160 קל', 2ג' חלבון, 15ג' שומן ל-100ג' (חצי אבוקדו = 120 קל').
-  * שקדים / אגוזי מלך: 600 קל'/100ג' (חופן 25ג' = 150 קל').
-
-- מנות רחוב ומסעדות פופולריות:
-  * שווארמה הודו/פרגית בלאפה עם טחינה וסלטים: 1050 קל', 58ג' חלבון, 110ג' פחמימה, 38ג' שומן.
-  * שווארמה בפיתה עם טחינה וסלטים: 720 קל', 42ג' חלבון, 65ג' פחמימה, 28ג' שומן.
-  * שווארמה בצלחת (250ג' בשר + אורז/סלט): 650 קל', 55ג' חלבון, 40ג' פחמימה, 26ג' שומן.
-  * פלאפל בפיתה (4-5 כדורים, טחינה, סלט): 560 קל', 16ג' חלבון, 72ג' פחמימה, 22ג' שומן.
-  * שניצל מטוגן (150ג'): 330 קל', 28ג' חלבון, 18ג' פחמימה, 16ג' שומן.
-  * המבורגר 200ג' בלחמנייה: 650 קל', 38ג' חלבון, 45ג' פחמימה, 32ג' שומן.
+דגשי כיול תזונתי מדויק לישראל (הערך תמיד את המנה המלאה כולל הלחם והשמנים!):
+- באגט לבן/צרפתי: באגט שלם = 500-550 קלוריות, 18ג חלבון, 105ג פחמימה. חצי באגט = 250-275 קלוריות.
+- כריך / באגט חביתה (באגט שלם + 2 ביצים + מיונז + ירקות): כ-720-750 קלוריות (34ג חלבון, 107ג פחמימה, 17ג שומן).
+- חביתה מ-2 ביצים: 160-180 קלוריות (כולל שמן טיגון), 14ג חלבון, 12ג שומן.
+- מריחה של מיונז לייט (15ג): 40-45 קלוריות. מיונז רגיל: 95-100 קלוריות.
+- שווארמה בלאפה עם טחינה וסלטים: 1050 קלוריות, 65ג חלבון, 110ג פחמימה, 39ג שומן.
+- נוטלה: 539 קל'/100ג (150 גרם נוטלה = 809 קלוריות, 9.5ג חלבון, 86ג פחמימה, 46.4ג שומן).
+- חזה עוף: 165 קל', 31ג חלבון ל-100ג. סלמון: 206 קל', 22ג חלבון ל-100ג.
+- אורז מבושל: 130 קל'/100ג (כוס מבושלת = 208 קל'). פיתה רגילה: 255 קל'. לאפה: 480 קל'.
 
 משפט התובנה של המאמן אילאי (coachInsight):
-כתוב בלשון דיבור אותנטית, חיה, אנרגטית, ישירה ומקצועית של המאמן אילאי.
-התייחס במדויק לחלוקה הקלורית מכל מאקרו בארוחה הזו (חלבון×4, פחמימה×4, שומן×9), כמה קלוריות כוסו מתוך כל מכסה קלורית יומית (חלבון, פחמימה, שומן), כמה קלוריות נותרו להיום בכל אחת מהמכסות (או אם נוצרה חריגה בשומן/פחמימה/קלוריות), ותן דגש והנחיה מנצחת מה לאכול בהמשך היום כדי לסגור את היעדים בצורה מושלמת!
+כתוב בלשון דיבור חיה, אותנטית, תומכת ומקצועית של המאמן אילאי עם כיסוי מכסות והנחיה להמשך היום!
 
-החזר אך ורק JSON תקני ומדויק ללא שום טקסט נלווה או סימני markdown מיותרים:
+החזר אך ורק JSON תקני ומדויק:
 {
   "calories": סך קלוריות כמספר שלם,
-  "protein": סך חלבון בגרמים,
-  "carbs": סך פחמימות בגרמים,
-  "fat": סך שומן בגרמים,
-  "coachInsight": "משפט תובנה, פירגון והנחיה אישית מהמאמן אילאי על הארוחה הזו",
+  "protein": גרם חלבון,
+  "carbs": גרם פחמימה,
+  "fat": גרם שומן,
+  "proteinCal": קלוריות מחלבון,
+  "carbsCal": קלוריות מפחמימה,
+  "fatCal": קלוריות משומן,
+  "coachInsight": "משפט תובנה ופירגון מקצועי מהמאמן אילאי",
   "items": [
     {
-      "name": "שם המאכל וכמות מוערכת בעברית (למשל: '150 גרם ממרח נוטלה' או '180 גרם חזה עוף צלוי')",
+      "name": "שם המאכל וכמות מוערכת בעברית (למשל: 'באגט שלם', 'חביתה מ-2 ביצים')",
       "cal": קלוריות כמספר,
       "pro": חלבון בגרם,
       "carb": פחמימות בגרם,
       "fat": שומן בגרם,
-      "swap": "הצעת תחליף שווה ערך איכותי ובריא יותר"
+      "swap": "הצעת תחליף איכותי"
     }
   ]
 }`;
 
-                            let body;
-                            if (this.portalMealPhoto && this.portalMealPhoto.startsWith("data:image")) {
-                                const base64Data = this.portalMealPhoto.split(",")[1];
-                                const mimeType = this.portalMealPhoto.split(";")[0].replace("data:", "") || "image/jpeg";
-                                body = {
-                                    contents: [{
-                                        parts: [
-                                            { text: prompt },
-                                            { inline_data: { mime_type: mimeType, data: base64Data } }
-                                        ]
-                                    }],
+                                let parts = [{ text: prompt }];
+                                if (isVision) {
+                                    const base64Data = this.portalMealPhoto.split(',')[1];
+                                    const mimeType = this.portalMealPhoto.split(';')[0].replace('data:', '') || 'image/jpeg';
+                                    parts.push({ inline_data: { mime_type: mimeType, data: base64Data } });
+                                }
+
+                                const directPayload = {
+                                    contents: [{ parts }],
                                     generationConfig: {
-                                        response_mime_type: "application/json",
-                                        temperature: 0.1,
-                                        maxOutputTokens: 800,
-                                        thinkingConfig: { thinkingBudget: 1 }
+                                        response_mime_type: 'application/json',
+                                        temperature: 0.1
                                     }
                                 };
-                            } else {
-                                body = {
-                                    contents: [{
-                                        parts: [
-                                            { text: prompt }
-                                        ]
-                                    }],
-                                    generationConfig: {
-                                        response_mime_type: "application/json",
-                                        temperature: 0.1,
-                                        maxOutputTokens: 800,
-                                        thinkingConfig: { thinkingBudget: 1 }
-                                    }
-                                };
-                            }
 
-                            // הסדר קובע מה מתאמן מקבל בפועל. ל-3.6-flash יש תקרה של
-                            // 20 בקשות ליום בשכבה החינמית (GenerateRequestsPerDay-FreeTier),
-                            // ואחריה הוא מחזיר 429 וממשיכים לבא בתור. לכן שני המודלים
-                            // המדויקים ראשונים, ו-flash-lite אחרון: הוא המהיר ביותר אבל
-                            // נמדד ב-537 קק"ל על מנה שהערך האמיתי שלה 621, כלומר 13% נמוך.
-                            // קודם הוא היה שני, אז מהניתוח ה-21 ביום כל המספרים צנחו.
-                            const modelsToTry = [
-                                "models/gemini-3.6-flash",
-                                "models/gemini-3.5-flash",
-                                "models/gemini-flash-latest",
-                                "models/gemini-flash-lite-latest"
-                            ];
+                                const candidateModels = [
+                                    'models/gemini-flash-lite-latest',
+                                    'models/gemini-3.5-flash-lite',
+                                    'models/gemini-3.5-flash',
+                                    'models/gemini-flash-latest'
+                                ];
 
-                            for (const mName of modelsToTry) {
-                                try {
-                                    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/${mName}:generateContent?key=${apiKey}`, {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify(body)
-                                    });
-                                    if (resp.ok) {
-                                        const resData = await resp.json();
-                                        const outText = resData.candidates?.[0]?.content?.parts?.[0]?.text;
-                                        if (outText) {
-                                            const jsonMatch = outText.match(/\{[\s\S]*\}/);
-                                            if (jsonMatch) {
-                                                const parsed = JSON.parse(jsonMatch[0]);
-                                                if (parsed && typeof parsed.calories === "number") {
-                                                    const totalCal = Math.round(parsed.calories || 0);
-                                                    const totalPro = Math.round((parsed.protein || 0) * 10) / 10;
-                                                    const totalCarb = Math.round((parsed.carbs || 0) * 10) / 10;
-                                                    const totalFat = Math.round((parsed.fat || 0) * 10) / 10;
-                                                    const proCal = totalPro * 4;
-                                                    const carbCal = totalCarb * 4;
-                                                    const fatCal = totalFat * 9;
-                                                    const sumCal = proCal + carbCal + fatCal || 1;
-
-                                                    const analyzedResult = {
-                                                        query: rawQuery || (this.portalMealPhoto ? "צלחת שנותחה ב-Vision AI 📸" : "ארוחה מחושבת"),
-                                                        calories: totalCal,
-                                                        protein: totalPro,
-                                                        carbs: totalCarb,
-                                                        fat: totalFat,
-                                                        coachInsight: parsed.coachInsight || `ארוחה מעולה המכילה ${totalPro} גרם חלבון! נותרו לך עוד ${Math.max(0, remainingCal - totalCal)} קלוריות להיום.`,
-                                                        pProtein: Math.round((proCal / sumCal) * 100),
-                                                        pCarbs: Math.round((carbCal / sumCal) * 100),
-                                                        pFat: Math.max(0, 100 - Math.round((proCal / sumCal) * 100) - Math.round((carbCal / sumCal) * 100)),
-                                                        items: (parsed.items || []).map(it => ({
-                                                            name: it.name || "מאכל",
-                                                            cal: Math.round(it.cal || 0),
-                                                            pro: Math.round((it.pro || 0) * 10) / 10,
-                                                            carb: Math.round((it.carb || 0) * 10) / 10,
-                                                            fat: Math.round((it.fat || 0) * 10) / 10,
-                                                            swap: it.swap || ""
-                                                        }))
-                                                    };
-
-                                                    this.aiAnalyzedMeal = analyzedResult;
-
-                                                    // שמירה בזיכרון מטמון חכם
-                                                    if (rawQuery && !this.portalMealPhoto) {
-                                                        try {
-                                                            localStorage.setItem("ilai_meal_v4_" + rawQuery.toLowerCase(), JSON.stringify(analyzedResult));
-                                                        } catch(e) {}
+                                for (const m of candidateModels) {
+                                    try {
+                                        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/${m}:generateContent?key=${apiKey}`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(directPayload)
+                                        });
+                                        if (resp.ok) {
+                                            const resData = await resp.json();
+                                            const outText = resData.candidates?.[0]?.content?.parts?.[0]?.text;
+                                            if (outText) {
+                                                const jsonMatch = outText.match(/\{[\s\S]*\}/);
+                                                if (jsonMatch) {
+                                                    const parsed = JSON.parse(jsonMatch[0]);
+                                                    if (parsed && typeof parsed.calories === 'number' && parsed.calories > 10) {
+                                                        parsedResult = parsed;
+                                                        break;
                                                     }
-
-                                                    this.isAiAnalyzing = false;
-                                                    setTimeout(() => { if (typeof window !== "undefined" && window.lucide) window.lucide.createIcons(); }, 50);
-                                                    return;
                                                 }
                                             }
                                         }
-                                    }
-                                } catch(err) {
-                                    console.warn(`Model ${mName} attempt error:`, err);
+                                    } catch(e) {}
                                 }
+                            } catch(directErr) {
+                                console.warn('Direct Gemini call failed:', directErr);
                             }
-                        } catch(e) {
-                            console.warn("Gemini API call failed, local analysis already active:", e);
                         }
                     }
 
-                    // במקרה שאין מפתח או שגיאת רשת, הניתוח המקומי המהיר כבר מוצג
-                    if (!this.aiAnalyzedMeal) {
+                    // 3. תוצאה מוכנה או חישוב מקומי
+                    if (parsedResult) {
+                        const parsed = parsedResult;
+                        const totalCal = Math.round(parsed.calories || 0);
+                        const totalPro = Math.round((parsed.protein || 0) * 10) / 10;
+                        const totalCarb = Math.round((parsed.carbs || 0) * 10) / 10;
+                        const totalFat = Math.round((parsed.fat || 0) * 10) / 10;
+                        const proCal = Math.round(parsed.proteinCal || (totalPro * 4));
+                        const carbCal = Math.round(parsed.carbsCal || (totalCarb * 4));
+                        const fatCal = Math.round(parsed.fatCal || (totalFat * 9));
+                        const sumCal = proCal + carbCal + fatCal || 1;
+
+                        const analyzedResult = {
+                            query: rawQuery || (this.portalMealPhoto ? "צלחת שנותחה ב-Vision AI 📸" : "ארוחה מחושבת"),
+                            calories: totalCal,
+                            protein: totalPro,
+                            carbs: totalCarb,
+                            fat: totalFat,
+                            proteinCal: proCal,
+                            carbsCal: carbCal,
+                            fatCal: fatCal,
+                            coachInsight: parsed.coachInsight || `ארוחה מעולה המכילה ${totalPro} גרם חלבון! נותרו לך עוד ${Math.max(0, remainingCal - totalCal)} קלוריות להיום.`,
+                            pProtein: Math.round((proCal / sumCal) * 100),
+                            pCarbs: Math.round((carbCal / sumCal) * 100),
+                            pFat: Math.max(0, 100 - Math.round((proCal / sumCal) * 100) - Math.round((carbCal / sumCal) * 100)),
+                            items: (parsed.items || []).map(it => ({
+                                name: it.name || "מאכל",
+                                cal: Math.round(it.cal || 0),
+                                pro: Math.round((it.pro || 0) * 10) / 10,
+                                carb: Math.round((it.carb || 0) * 10) / 10,
+                                fat: Math.round((it.fat || 0) * 10) / 10,
+                                swap: it.swap || ""
+                            }))
+                        };
+
+                        this.aiAnalyzedMeal = analyzedResult;
+
+                        if (rawQuery && !this.portalMealPhoto) {
+                            try {
+                                localStorage.setItem("ilai_meal_v6_" + rawQuery.toLowerCase(), JSON.stringify(analyzedResult));
+                            } catch(e) {}
+                        }
+                    } else {
                         this.runLocalFoodAnalysis();
                     }
+
                     this.isAiAnalyzing = false;
+                    setTimeout(() => { if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons(); }, 50);
                 },
 
                 getMasterFoodDatabase() {
