@@ -2997,6 +2997,14 @@
                                 </button>
 
                                 <button type="button" 
+                                        @click="openMacroModal(currentClient)" 
+                                        class="flex-1 sm:flex-none justify-center bg-[#faf6fc] hover:bg-[#f5effa] text-[#1a0730] border border-[#c9b7de] hover:border-[#4d1a80] px-3.5 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+                                        title="ערוך יעדי מאקרו ותזונה">
+                                    <i data-lucide="target" class="w-4 h-4 text-[#fbbf24]"></i>
+                                    <span>🎯 ערוך יעדי מאקרו</span>
+                                </button>
+
+                                <button type="button" 
                                         @click="openEditClient(currentClient)" 
                                         class="bg-white hover:bg-slate-50 text-[#1a0730] p-2.5 rounded-2xl transition border border-[#c9b7de] shadow-sm cursor-pointer" 
                                         title="ערוך פרטי מתאמן">
@@ -3115,7 +3123,13 @@
                                                 <i data-lucide="pie-chart" class="w-4 h-4 text-[#15803d]"></i>
                                                 <span>יעדי מאקרו ותזונה מוגדרים:</span>
                                             </span>
-                                            <span class="text-[11px] font-black bg-[#f5effa] text-[#1a0730] border border-[#ded0eb] px-2.5 py-0.5 rounded-full" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' קק״ל / יום'"></span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[11px] font-black bg-[#f5effa] text-[#1a0730] border border-[#ded0eb] px-2.5 py-0.5 rounded-full" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' קק״ל / יום'"></span>
+                                                <button type="button" @click="openMacroModal(currentClient)" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] px-3 py-1 rounded-xl text-xs font-black shadow-sm transition flex items-center gap-1 cursor-pointer">
+                                                    <i data-lucide="edit-3" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
+                                                    <span>ערוך יעדים 🎯</span>
+                                                </button>
+                                            </div>
                                         </div>
                                         
                                         <div class="grid grid-cols-3 gap-2 text-center text-xs">
@@ -4088,6 +4102,16 @@
                             </div>
 
                             <!-- השוואת יעדים -->
+                            <div class="flex items-center justify-between pb-1">
+                                <h4 class="text-xs font-black text-[#1a0730] flex items-center gap-1.5">
+                                    <i data-lucide="pie-chart" class="w-4 h-4 text-[#15803d]"></i>
+                                    <span>השוואת תפריט מול יעדי מאקרו שהוגדרו:</span>
+                                </h4>
+                                <button type="button" @click="openMacroModal(currentClient)" class="bg-[#1a0730] hover:bg-[#2d0c4f] text-[#fbbf24] px-3 py-1.5 rounded-xl text-xs font-black shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                                    <i data-lucide="target" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
+                                    <span>ערוך יעדי מאקרו 🎯</span>
+                                </button>
+                            </div>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
                                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">קלוריות</span>
@@ -6857,6 +6881,35 @@
                 <div>
                     <label class="block text-[10px] font-bold text-[#6f5888] mb-1">מטרה עיקרית</label>
                     <input type="text" x-model="editingClient.goal" class="w-full bg-[#faf6fc] border border-[#c9b7de] rounded-xl px-3 py-2 text-[#1a0730] font-bold focus:outline-none focus:border-[#22c55e]">
+                </div>
+
+                <!-- עריכת יעדי מאקרו למתאמן -->
+                <div class="bg-[#faf6fc] border border-[#c9b7de] p-3.5 rounded-2xl space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-black text-[#1a0730] flex items-center gap-1.5">
+                            <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-[#15803d]"></i>
+                            <span>🎯 יעדי מאקרו יומיים למתאמן</span>
+                        </label>
+                        <span class="text-[9px] text-[#6f5888] font-bold">משפיע על יומן האכילה וה-AI</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5">קלוריות (קק״ל)</label>
+                            <input type="number" x-model="editingClient.macroCalculated.targetCalories" placeholder="2200" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2.5 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#22c55e]">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5">חלבון (גרם)</label>
+                            <input type="number" x-model="editingClient.macroCalculated.targetProtein" placeholder="160" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2.5 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#22c55e]">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5">פחמימות (גרם)</label>
+                            <input type="number" x-model="editingClient.macroCalculated.targetCarbs" placeholder="220" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2.5 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#22c55e]">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-[#6f5888] mb-0.5">שומן (גרם)</label>
+                            <input type="number" x-model="editingClient.macroCalculated.targetFat" placeholder="65" class="w-full bg-white border border-[#c9b7de] rounded-xl px-2.5 py-1.5 text-[#1a0730] font-black text-xs text-center focus:outline-none focus:border-[#22c55e]">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
