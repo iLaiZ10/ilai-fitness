@@ -12395,11 +12395,17 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                 };
                             }
 
+                            // הסדר קובע מה מתאמן מקבל בפועל. ל-3.6-flash יש תקרה של
+                            // 20 בקשות ליום בשכבה החינמית (GenerateRequestsPerDay-FreeTier),
+                            // ואחריה הוא מחזיר 429 וממשיכים לבא בתור. לכן שני המודלים
+                            // המדויקים ראשונים, ו-flash-lite אחרון: הוא המהיר ביותר אבל
+                            // נמדד ב-537 קק"ל על מנה שהערך האמיתי שלה 621, כלומר 13% נמוך.
+                            // קודם הוא היה שני, אז מהניתוח ה-21 ביום כל המספרים צנחו.
                             const modelsToTry = [
                                 "models/gemini-3.6-flash",
-                                "models/gemini-flash-lite-latest",
                                 "models/gemini-3.5-flash",
-                                "models/gemini-flash-latest"
+                                "models/gemini-flash-latest",
+                                "models/gemini-flash-lite-latest"
                             ];
 
                             for (const mName of modelsToTry) {
