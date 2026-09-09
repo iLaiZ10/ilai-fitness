@@ -11934,149 +11934,6 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     }
                 },
 
-                // ── מאגר התזונה הלאומי הישראלי (משרד הבריאות, data.gov.il) ──
-                // 4,624 מזונות עם ערכים ל-100 גרם, כולל מאות מנות ישראליות מבושלות.
-                // זה המקור הרשמי שגם FoodsDictionary נשען עליו, והוא ברישיון פתוח.
-                // ה-API מחזיר access-control-allow-origin: * ולכן נקרא ישירות מהדפדפן.
-                NATIONAL_FOOD_RESOURCE: 'c3cb0630-0650-46c1-a068-82d575c094b2',
-
-                // החיפוש דורש שכל המילים יימצאו, ולכן מונח כמו "גביע יוגורט"
-                // מחזיר אפס תוצאות. מורידים מילה מהסוף עד שמתקבלת תשובה.
-                async searchNationalFoodDb(term, limit = 14) {
-                    const words = String(term || '').trim().split(/\s+/).filter(Boolean);
-                    for (let n = words.length; n >= 1; n--) {
-                        const url = 'https://data.gov.il/api/3/action/datastore_search'
-                            + '?resource_id=' + this.NATIONAL_FOOD_RESOURCE
-                            + '&q=' + encodeURIComponent(words.slice(0, n).join(' '))
-                            + '&limit=' + limit;
-                        try {
-                            const res = await fetch(url, { signal: AbortSignal.timeout(9000) });
-                            if (!res.ok) continue;
-                            const recs = (await res.json())?.result?.records || [];
-                            if (recs.length) {
-                                return recs.map(r => ({
-                                    id: r._id,
-                                    name: r.shmmitzrach,
-                                    kcal: parseFloat(r.food_energy) || 0,
-                                    pro: parseFloat(r.protein) || 0,
-                                    carb: parseFloat(r.carbohydrates) || 0,
-                                    fat: parseFloat(r.total_fat) || 0
-                                }));
-                            }
-                        } catch (e) { /* ממשיכים למונח קצר יותר */ }
-                    }
-                    return [];
-                },
-
-                async callGeminiJson(prompt, timeoutMs = 22000) {
-                    const key = this.getEffectiveGeminiKey();
-                    if (!key) throw new Error('no key');
-                    const models = ['models/gemini-flash-lite-latest', 'models/gemini-3-flash-preview'];
-                    let lastErr = null;
-                    for (const m of models) {
-                        try {
-                            const res = await fetch('https://generativelanguage.googleapis.com/v1beta/' + m + ':generateContent?key=' + key, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    contents: [{ parts: [{ text: prompt }] }],
-                                    generationConfig: { response_mime_type: 'application/json', temperature: 0, maxOutputTokens: 4000 }
-                                }),
-                                signal: AbortSignal.timeout(timeoutMs)
-                            });
-                            if (!res.ok) { lastErr = new Error(m + ' ' + res.status); continue; }
-                            const txt = (await res.json())?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                            const match = txt.match(/[\[{][\s\S]*[\]}]/);
-                            if (!match) { lastErr = new Error('no json'); continue; }
-                            return JSON.parse(match[0]);
-                        } catch (e) { lastErr = e; }
-                    }
-                    throw lastErr || new Error('gemini failed');
-                },
-
-                // מחזיר תוצאה מגובה במאגר, או null כדי שהמסלול הרגיל ימשיך.
-                // הערכים מחושבים מקומית מנתוני המאגר - המודל רק מפרק ומתאים.
-                async analyzeMealWithNationalDb(rawQuery) {
-                    if (!rawQuery || !rawQuery.trim()) return null;
-
-                    const items = await this.callGeminiJson(
-`פרק את תיאור הארוחה לפריטי מזון והערך משקל בגרמים.
-משקלי הגשה: כוס אורז/פסטה/קוסקוס מבושלים 160ג', כף שמן 13.5ג', כפית שמן 4.5ג',
-פרוסת לחם 30ג', ביצה L 55ג', כף טחינה גולמית 15ג', כוס נוזל 240ג',
-גביע יוגורט 200ג', פרי בינוני 120ג', כף גדושה קוטג' 15ג'.
-"q" הוא שם המאכל הבסיסי בלבד, מילה או שתיים, בלי מילות אריזה או הגשה
-(גביע, כוס, מנה, פרוסה, קופסה, יחידה). דוגמה: "גביע יוגורט 3%" → q = "יוגורט 3%".
-"est" הוא הערכה שלך לערכים ל-100 גרם, לשימוש רק אם הפריט לא יימצא במאגר.
-החזר JSON: [{"q":"","label":"","grams":0,"est":{"kcal":0,"pro":0,"carb":0,"fat":0}}]
-ארוחה: "${rawQuery}"`);
-
-                    if (!Array.isArray(items) || !items.length) return null;
-                    const trimmed = items.slice(0, 8);
-
-                    const candidates = await Promise.all(trimmed.map(i => this.searchNationalFoodDb(i.q)));
-
-                    const menu = trimmed.map((it, i) =>
-                        'פריט ' + i + ': "' + (it.label || it.q) + '" (' + it.grams + ' גרם)\n' +
-                        (candidates[i].length
-                            ? candidates[i].map(c => '   [' + c.id + '] ' + c.name + " — " + c.kcal + " קל'/100ג'").join('\n')
-                            : '   (אין מועמדים)')
-                    ).join('\n\n');
-
-                    const picks = await this.callGeminiJson(
-`בחר לכל פריט את מזהה השורה המדויקת ביותר מתוך מאגר התזונה הלאומי.
-העדף מזון בסיסי על מוצר מותג. העדף "ללא עור" / "בלי קליפה" / "ללא עצם" על "עם".
-העדף את צורת ההכנה שצוינה. אל תבחר מוצר *בטעם* המאכל במקום המאכל עצמו.
-אם באמת אין התאמה סבירה החזר id: null.
-${menu}
-
-החזר JSON: [{"index":0,"id":null}]`);
-
-                    const pickMap = {};
-                    (Array.isArray(picks) ? picks : []).forEach(p => { pickMap[p.index] = p.id; });
-
-                    const total = { calories: 0, protein: 0, carbs: 0, fat: 0 };
-                    let fromDb = 0;
-                    const outItems = trimmed.map((it, i) => {
-                        const grams = parseFloat(it.grams) || 0;
-                        const f = grams / 100;
-                        const row = (candidates[i] || []).find(c => c.id === pickMap[i]);
-                        // פריט בלי התאמה נופל להערכת המודל ולא נעלם מהסכום
-                        const src = row || (it.est || {});
-                        const cal = (parseFloat(src.kcal) || 0) * f;
-                        const pro = (parseFloat(src.pro) || 0) * f;
-                        const carb = (parseFloat(src.carb) || 0) * f;
-                        const fat = (parseFloat(src.fat) || 0) * f;
-                        total.calories += cal; total.protein += pro; total.carbs += carb; total.fat += fat;
-                        if (row) fromDb++;
-                        return {
-                            name: (it.label || it.q) + ' (' + grams + ' גרם)',
-                            cal: Math.round(cal),
-                            pro: Math.round(pro * 10) / 10,
-                            carb: Math.round(carb * 10) / 10,
-                            fat: Math.round(fat * 10) / 10,
-                            swap: row ? row.name : ''
-                        };
-                    });
-
-                    if (!total.calories) return null;
-
-                    const p = Math.round(total.protein * 10) / 10;
-                    const c = Math.round(total.carbs * 10) / 10;
-                    const ft = Math.round(total.fat * 10) / 10;
-                    const sum = (p * 4 + c * 4 + ft * 9) || 1;
-                    return {
-                        query: rawQuery,
-                        calories: Math.round(total.calories),
-                        protein: p, carbs: c, fat: ft,
-                        coachInsight: 'חושב לפי מאגר התזונה הלאומי של משרד הבריאות — ' + fromDb + ' מתוך ' + outItems.length + ' פריטים אומתו מול המאגר.',
-                        pProtein: Math.round((p * 4 / sum) * 100),
-                        pCarbs: Math.round((c * 4 / sum) * 100),
-                        pFat: Math.max(0, 100 - Math.round((p * 4 / sum) * 100) - Math.round((c * 4 / sum) * 100)),
-                        items: outItems,
-                        source: 'national-db'
-                    };
-                },
-
                 async analyzeFoodWithAi() {
                     let rawQuery = (this.aiFoodQuery || '').trim();
                     if (!rawQuery && !this.portalMealPhoto) {
@@ -12097,7 +11954,7 @@ ${menu}
                     const targetPro = client.macroCalculated?.targetProtein || 140;
                     const clientGoal = client.goal || "חיטוב ועיצוב הגוף";
 
-                    const todayCals = this.getClientTodayCalories(client);
+                    const todayCals = this.getTodayConsumedCalories(client);
                     const remainingCal = Math.max(0, targetCal - todayCals);
 
                     // ⚡ 1. בדיקת זיכרון מטמון חכם (Instant Cache) למענה מיידי
@@ -12227,7 +12084,12 @@ ${menu}
                                     generationConfig: {
                                         response_mime_type: "application/json",
                                         temperature: 0.1,
-                                        maxOutputTokens: 4000
+                                        maxOutputTokens: 4000,
+                                        // gemini-3.6-flash מדויק בול על מנת ייחוס שקולה,
+                                        // אבל בלי הגבלה הוא חושב 861 טוקנים ולוקח ~24 שניות.
+                                        // עם תקציב חשיבה של 200 הוא מחזיר בדיוק את אותם
+                                        // הערכים ב-2.8 שניות. הדיוק נשמר, ההמתנה נעלמת.
+                                        thinkingConfig: { thinkingBudget: 200 }
                                     }
                                 };
                             } else {
@@ -12240,7 +12102,12 @@ ${menu}
                                     generationConfig: {
                                         response_mime_type: "application/json",
                                         temperature: 0.1,
-                                        maxOutputTokens: 4000
+                                        maxOutputTokens: 4000,
+                                        // gemini-3.6-flash מדויק בול על מנת ייחוס שקולה,
+                                        // אבל בלי הגבלה הוא חושב 861 טוקנים ולוקח ~24 שניות.
+                                        // עם תקציב חשיבה של 200 הוא מחזיר בדיוק את אותם
+                                        // הערכים ב-2.8 שניות. הדיוק נשמר, ההמתנה נעלמת.
+                                        thinkingConfig: { thinkingBudget: 200 }
                                     }
                                 };
                             }
@@ -12619,7 +12486,7 @@ ${menu}
                     const targetCal = client.macroCalculated?.targetCalories || 2000;
                     const targetPro = client.macroCalculated?.targetProtein || 140;
                     const clientGoal = client.goal || "חיטוב";
-                    const todayCals = this.getClientTodayCalories(client);
+                    const todayCals = this.getTodayConsumedCalories(client);
                     const remainingCal = Math.max(0, targetCal - todayCals);
 
                     let dynamicInsight = "";
@@ -12979,7 +12846,7 @@ ${menu}
                                 this.restTimerSeconds--;
                             } else {
                                 this.stopRestTimer();
-                                this.playTimerAlarm();
+                                this.playTimerChime();
                             }
                         }, 1000);
                     }
