@@ -12192,7 +12192,6 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     }
 
                     this.isAiAnalyzing = true;
-                    this.aiAnalyzedMeal = null;
 
                     // זיהוי חכם של סוג הארוחה לפי שעת היום
                     if (!this.portalMealType) {
@@ -12216,7 +12215,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const todayCals = this.getTodayConsumedCalories(client);
                     const remainingCal = Math.max(0, targetCal - todayCals);
 
-                    // בדיקת מטמון חכם (גרסה 6 למניעת תוצאות שגויות מהעבר)
+                    // ⚡ 1. בדיקת מטמון חכם למענה מיידי
                     if (rawQuery && !this.portalMealPhoto) {
                         try {
                             const cacheKey = "ilai_meal_v6_" + rawQuery.toLowerCase();
@@ -12231,6 +12230,9 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                 }
                             }
                         } catch(e) {}
+
+                        // ⚡ 2. הרצה מקומית מיידית ב-0ms לתצוגה חיה ומהירה ללא שום השהייה!
+                        this.runLocalFoodAnalysis();
                     }
 
                     const clientGoalsObj = {
@@ -12247,7 +12249,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                     let parsedResult = null;
 
-                    // 1. ניסיון פנייה ישיר דרך שרת ה-API של Vercel (אמין, מהיר וללא חסימות דפדפן)
+                    // ⚡ 3. ניסיון פנייה ישיר דרך שרת ה-API של Vercel (אמין, מהיר ומדויק)
                     try {
                         const isVision = Boolean(this.portalMealPhoto && this.portalMealPhoto.startsWith("data:image"));
                         const apiPayload = {
@@ -12273,7 +12275,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         console.warn('Server endpoint /api/analyze-food unavailable, trying direct Gemini:', errServer);
                     }
 
-                    // 2. אם השרת לא זמין (למשל ריצה מקומית), פנייה ישירה ל-Gemini API
+                    // ⚡ 4. אם השרת לא זמין (למשל ריצה מקומית), פנייה ישירה ל-Gemini API
                     if (!parsedResult) {
                         const apiKey = this.getEffectiveGeminiKey();
                         if (apiKey) {
@@ -12378,7 +12380,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         }
                     }
 
-                    // 3. תוצאה מוכנה או חישוב מקומי
+                    // ⚡ 5. תוצאה מוכנה או חישוב מקומי
                     if (parsedResult) {
                         const parsed = parsedResult;
                         const totalCal = Math.round(parsed.calories || 0);
@@ -12420,7 +12422,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                 localStorage.setItem("ilai_meal_v6_" + rawQuery.toLowerCase(), JSON.stringify(analyzedResult));
                             } catch(e) {}
                         }
-                    } else {
+                    } else if (!this.aiAnalyzedMeal) {
                         this.runLocalFoodAnalysis();
                     }
 

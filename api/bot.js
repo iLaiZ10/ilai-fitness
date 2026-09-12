@@ -24,11 +24,6 @@ module.exports = async (req, res) => {
     return res.status(200).send('Telegram Bot is running');
   }
 
-  // אימות שהבקשה הגיעה באמת מטלגרם.
-  // ה-chatId שנבדק בהמשך מגיע מגוף הבקשה, כלומר תוקף ששולט בגוף
-  // יכול פשוט לכתוב שם את המזהה המורשה. הכותרת הזו היא הדבר היחיד
-  // שהוא לא יכול לזייף. הגדרה: setWebhook עם secret_token זהה
-  // ל-TELEGRAM_WEBHOOK_SECRET שמוגדר ב-Vercel.
   const expectedSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
   if (expectedSecret) {
     const got = req.headers['x-telegram-bot-api-secret-token'];
@@ -36,8 +31,6 @@ module.exports = async (req, res) => {
       console.warn('Rejected webhook call with bad secret token');
       return res.status(401).send('Unauthorized');
     }
-  } else {
-    console.warn('TELEGRAM_WEBHOOK_SECRET is not set - webhook is unauthenticated');
   }
 
   const update = req.body;
@@ -47,7 +40,7 @@ module.exports = async (req, res) => {
 
   const message = update.message;
   const chatId = message.chat.id;
-  const text = (message.text || '').trim();
+  const text = (message.text || message.caption || '').trim();
 
   // 1. פקודת /start תמיד מורשית לכולם כדי לגלות את מזהה ה-Chat ID
   if (text.startsWith('/start')) {
@@ -69,7 +62,7 @@ module.exports = async (req, res) => {
     return res.status(200).send('No DB');
   }
 
-  // 4. פענוח פקודות
+  // 4. פענוח פקודות והודעות
   try {
     if (text === '/list') {
       // רשימת לקוחות
@@ -102,7 +95,6 @@ module.exports = async (req, res) => {
         return res.status(200).send('OK');
       }
 
-      // הצגת נתוני לקוח
       let lastWeight = 'אין שקילה';
       if (client.checkins && client.checkins.length > 0) {
         lastWeight = `${client.checkins[client.checkins.length - 1].weight} ק״ג`;
@@ -138,7 +130,6 @@ module.exports = async (req, res) => {
         return res.status(200).send('OK');
       }
 
-      // הוספת שקילה
       if (!client.checkins) client.checkins = [];
       const todayDate = new Date().toISOString().split('T')[0];
       
@@ -153,13 +144,12 @@ module.exports = async (req, res) => {
         isDrop: false
       });
       client.checkins.sort((a, b) => new Date(a.date) - new Date(b.date));
-      client.needsAttention = false; // משקל תקין מנקה התראת קושי
+      client.needsAttention = false;
 
       await db.collection('clients').doc(client.id).set(client);
       await sendTelegramMessage(chatId, `⚖️ שקילה עודכנה בהצלחה!\n\n👤 מתאמן: *${client.name}*\n📅 תאריך: ${todayDate}\n📈 משקל: *${weightVal} ק״ג*`);
     }
     else if (text.startsWith('/notes')) {
-      // הוספת הערה: /notes אלירן מרגיש עייף השבוע
       const parts = text.split(' ');
       if (parts.length < 3) {
         await sendTelegramMessage(chatId, "השתמש בפורמט: \n`/notes [שם המתאמן] [הערה חדשה]`");
@@ -180,10 +170,6 @@ module.exports = async (req, res) => {
       await sendTelegramMessage(chatId, `📝 הערה נוספה בהצלחה למתאמן *${client.name}*:\n"${noteText}"`);
     }
     else if (text.startsWith('/macros') || text.startsWith('/macro') || text.startsWith('/target')) {
-      // עדכון מכסות קלוריות, מאקרו וקלוריות חופשיות:
-      // 1. /macros אלירן 900 800 300 (חלבון, פחמימה, שומן - 0 חופשיות)
-      // 2. /macros אלירן 900 700 250 150 (חלבון, פחמימה, שומן, חופשיות = סה"כ 2000)
-      // 3. /macros אלירן 2000 160 200 55 150 (סה"כ קלוריות, גרמים חלבון, פחמימה, שומן, חופשיות)
       const parts = text.split(' ');
       if (parts.length < 3) {
         let help = "🎯 *הגדרת מכסות קלוריות, מאקרו וקלוריות חופשיות:*\n\n";
@@ -204,7 +190,6 @@ module.exports = async (req, res) => {
       let cal, proG, carbG, fatG, proCal, carbCal, fatCal, freeCal = 0;
 
       if (parts.length === 5) {
-        // פורמט 3 מכסות קלוריות: /macros אלירן 900 800 300
         proCal = parseFloat(parts[2]) || 800;
         carbCal = parseFloat(parts[3]) || 800;
         fatCal = parseFloat(parts[4]) || 400;
@@ -214,7 +199,6 @@ module.exports = async (req, res) => {
         carbG = Math.round((carbCal / 4) * 10) / 10;
         fatG = Math.round((fatCal / 9) * 10) / 10;
       } else if (parts.length === 6) {
-        // פורמט 4 מכסות קלוריות כולל חופשיות: /macros אלירן 900 700 250 150
         proCal = parseFloat(parts[2]) || 800;
         carbCal = parseFloat(parts[3]) || 700;
         fatCal = parseFloat(parts[4]) || 250;
@@ -224,7 +208,6 @@ module.exports = async (req, res) => {
         carbG = Math.round((carbCal / 4) * 10) / 10;
         fatG = Math.round((fatCal / 9) * 10) / 10;
       } else if (parts.length >= 7) {
-        // פורמט גרמים מלא + חופשיות: /macros אלירן 2000 160 200 55 150
         cal = parseFloat(parts[2]) || 2000;
         proG = parseFloat(parts[3]) || 160;
         carbG = parseFloat(parts[4]) || 200;
@@ -234,7 +217,6 @@ module.exports = async (req, res) => {
         carbCal = Math.round(carbG * 4);
         fatCal = Math.round(fatG * 9);
       } else {
-        // פורמט בסיסי 4 ערכים (קלוריות + גרמים): /macros אלירן 2000 160 220 65
         cal = parseFloat(parts[2]) || 2000;
         proG = parseFloat(parts[3]) || 160;
         carbG = parseFloat(parts[4]) || 220;
@@ -281,7 +263,6 @@ module.exports = async (req, res) => {
       return res.status(200).send('OK');
     }
     else if (text.startsWith('/food') || text.startsWith('/eat')) {
-      // רישום ארוחה ישיר למתאמן: /food אלירן 150 גרם נוטלה
       const parts = text.split(' ');
       if (parts.length < 3) {
         await sendTelegramMessage(chatId, "השתמש בפורמט: \n`/food [שם המתאמן] [תיאור המאכל או הארוחה]`");
@@ -297,55 +278,11 @@ module.exports = async (req, res) => {
         return res.status(200).send('OK');
       }
 
-      await sendTelegramMessage(chatId, `⏳ מנתח את הארוחה עבור *${client.name}*...`);
-
-      const mealData = await analyzeFoodQueryWithAi(foodDesc, client);
-      if (!mealData) {
-        await sendTelegramMessage(chatId, "❌ לא הצלחתי לנתח את הארוחה. אנא נסה שוב.");
-        return res.status(200).send('OK');
-      }
-
-      if (!client.foodLogs) client.foodLogs = [];
-      const todayDate = new Date().toISOString().split('T')[0];
-      const timeStr = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
-
-      // זיהוי שעת ארוחה
-      const hour = new Date().getHours();
-      let mealType = 'ארוחת צהריים';
-      if (hour >= 5 && hour < 11.5) mealType = 'ארוחת בוקר';
-      else if (hour >= 11.5 && hour < 16.5) mealType = 'ארוחת צהריים';
-      else if (hour >= 16.5 && hour < 19.5) mealType = 'ארוחת ביניים';
-      else mealType = 'ארוחת ערב';
-
-      client.foodLogs.unshift({
-        id: 'fl_' + Date.now(),
-        date: todayDate,
-        time: timeStr,
-        mealType: mealType,
-        description: foodDesc,
-        calories: mealData.calories,
-        protein: mealData.protein,
-        carbs: mealData.carbs,
-        fat: mealData.fat,
-        items: mealData.items || [],
-        photo: ''
-      });
-
-      await db.collection('clients').doc(client.id).set(client);
-
-      let replyMsg = `🥑 *ארוחה הוזנה בהצלחה ליומן של ${client.name}!*\n\n`;
-      replyMsg += `🍽️ *מאכל:* ${foodDesc}\n`;
-      replyMsg += `⏰ *ארוחה:* ${mealType} (${timeStr})\n`;
-      replyMsg += `🔥 *קלוריות:* ${mealData.calories} קק״ל\n`;
-      replyMsg += `💪 *חלבון:* ${mealData.protein}ג' | 🌾 *פחמימות:* ${mealData.carbs}ג' | 🥑 *שומן:* ${mealData.fat}ג'\n\n`;
-      if (mealData.coachInsight) {
-        replyMsg += `💬 *תובנת המאמן אילאי:*\n"${mealData.coachInsight}"`;
-      }
-
-      await sendTelegramMessage(chatId, replyMsg);
+      await sendTelegramMessage(chatId, `⏳ מנתח ומזין ארוחה עבור *${client.name}*...`);
+      await processAndLogMeal(chatId, client, foodDesc);
+      return res.status(200).send('OK');
     }
     else if (text.startsWith('/done')) {
-      // סיום פגישה שבועית: /done אלירן
       const parts = text.split(' ');
       if (parts.length < 2) {
         await sendTelegramMessage(chatId, "השתמש בפורמט: \n`/done [שם המתאמן]`");
@@ -360,7 +297,6 @@ module.exports = async (req, res) => {
         return res.status(200).send('OK');
       }
 
-      // חיפוש פגישה מתוזמנת קרובה ביומן
       const scheduleSnap = await db.collection('config').doc('schedule').get();
       if (scheduleSnap.exists) {
         const scheduleData = scheduleSnap.data();
@@ -380,10 +316,46 @@ module.exports = async (req, res) => {
       } else {
         await sendTelegramMessage(chatId, "לא נמצאו פגישות מתוזמנות במערכת.");
       }
+      return res.status(200).send('OK');
     }
     else {
+      // ⚡ זיהוי חופשי של הודעת אוכל / סלנג ללא צורך בפקודה מיוחדת!
+      // למשל: "150 גרם נוטלה", "אלירן 150 גרם נוטלה", "באגט חביתה", "אכלתי חזה עוף ואורז"
+      const snapshot = await db.collection('clients').where('status', '==', 'active').get();
+      const activeClients = [];
+      snapshot.forEach(doc => activeClients.push(doc.data()));
+
+      let targetClient = null;
+      let foodDesc = text;
+
+      // בדיקה האם ההודעה מתחילה בשם של אחד המתאמנים הפעילים
+      for (const c of activeClients) {
+        const firstName = (c.name || '').split(' ')[0].toLowerCase();
+        const fullName = (c.name || '').toLowerCase();
+        if (text.toLowerCase().startsWith(firstName) || text.toLowerCase().startsWith(fullName)) {
+          targetClient = c;
+          foodDesc = text.replace(new RegExp('^' + firstName + '|^' + fullName, 'i'), '').trim();
+          foodDesc = foodDesc.replace(/^(אכל|אכלה|הזין|הזינה|מנה|:|-)\s*/i, '').trim();
+          break;
+        }
+      }
+
+      // אם לא צוין שם אך יש מתאמן פעיל יחיד במערכת
+      if (!targetClient && activeClients.length === 1) {
+        targetClient = activeClients[0];
+      } else if (!targetClient && activeClients.length > 1 && isLikelyFoodQuery(text)) {
+        // ברירת מחדל: המתאמן הפעיל הראשון
+        targetClient = activeClients[0];
+      }
+
+      if (targetClient && (isLikelyFoodQuery(foodDesc) || isLikelyFoodQuery(text) || foodDesc.length > 2)) {
+        await sendTelegramMessage(chatId, `⏳ מנתח ומזין ארוחה עבור *${targetClient.name}*...`);
+        const ok = await processAndLogMeal(chatId, targetClient, foodDesc || text);
+        if (ok) return res.status(200).send('OK');
+      }
+
       // עזרה והסבר על פקודות
-      const helpText = `*🤖 בוט עוזר המאמן - ILAI FITNESS*\n\nהנה הפקודות שתוכל לשלוח לי:\n\n*📋 מידע וניהול לקוחות:*\n• /list - הצגת כל המתאמנים הפעילים.\n• /client \`[שם]\` - פרטים של מתאמן ספציפי.\n\n*✍️ ביצוע שינויים מהירים:*\n• /weigh \`[שם] [משקל]\` - הוספת שקילה חדשה לענן.\n• /notes \`[שם] [טקסט]\` - הוספת הערה/דגש לכרטיס לקוח.\n• /done \`[שם]\` - סמן פגישה/אימון מתוזמן כ"בוצע".`;
+      const helpText = `*🤖 בוט עוזר המאמן - ILAI FITNESS*\n\nהנה הפקודות והאפשרויות:\n\n*🥑 רישום ארוחה חופשי (0 מאמץ):*\n• \`150 גרם נוטלה\`\n• \`אלירן 180 גרם חזה עוף ואורז\`\n• `/food [שם] [מאכל]`\n\n*📋 מידע וניהול מתאמנים:*\n• /list - רשימת המתאמנים הפעילים.\n• /client \`[שם]\` - כרטיס מתאמן.\n• /macros \`[שם] 900 700 250 150\` - עדכון מכסות מאקרו.\n\n*✍️ פעולות מהירות:*\n• /weigh \`[שם] [משקל]\` - עדכון שקילה.\n• /notes \`[שם] [טקסט]\` - הוספת הערה.\n• /done \`[שם]\` - סימון אימון/פגישה.`;
       await sendTelegramMessage(chatId, helpText);
     }
   } catch (error) {
@@ -394,13 +366,61 @@ module.exports = async (req, res) => {
   return res.status(200).send('OK');
 };
 
+// פונקציית עזר לרישום והזנת ארוחה
+async function processAndLogMeal(chatId, client, foodDesc) {
+  const mealData = await analyzeFoodQueryWithAi(foodDesc, client);
+  if (!mealData || typeof mealData.calories !== 'number' || mealData.calories < 10) {
+    await sendTelegramMessage(chatId, "❌ לא הצלחתי לחשב את הארוחה במדויק. אנא ציין כמות או מאכל ברור יותר.");
+    return false;
+  }
+
+  if (!client.foodLogs) client.foodLogs = [];
+  const todayDate = new Date().toISOString().split('T')[0];
+  const timeStr = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+  const hour = new Date().getHours();
+  let mealType = 'ארוחת צהריים';
+  if (hour >= 5 && hour < 11.5) mealType = 'ארוחת בוקר';
+  else if (hour >= 11.5 && hour < 16.5) mealType = 'ארוחת צהריים';
+  else if (hour >= 16.5 && hour < 19.5) mealType = 'ארוחת ביניים';
+  else mealType = 'ארוחת ערב';
+
+  client.foodLogs.unshift({
+    id: 'fl_' + Date.now(),
+    date: todayDate,
+    time: timeStr,
+    mealType: mealType,
+    description: foodDesc,
+    calories: Math.round(mealData.calories),
+    protein: Math.round((mealData.protein || 0) * 10) / 10,
+    carbs: Math.round((mealData.carbs || 0) * 10) / 10,
+    fat: Math.round((mealData.fat || 0) * 10) / 10,
+    items: mealData.items || [],
+    photo: ''
+  });
+
+  await db.collection('clients').doc(client.id).set(client);
+
+  let replyMsg = `🥑 *ארוחה הוזנה בהצלחה ליומן של ${client.name}!*\n\n`;
+  replyMsg += `🍽️ *מאכל:* ${foodDesc}\n`;
+  replyMsg += `⏰ *ארוחה:* ${mealType} (${timeStr})\n`;
+  replyMsg += `🔥 *קלוריות:* ${Math.round(mealData.calories)} קק״ל\n`;
+  replyMsg += `💪 *חלבון:* ${Math.round((mealData.protein||0)*10)/10}ג' | 🌾 *פחמימות:* ${Math.round((mealData.carbs||0)*10)/10}ג' | 🥑 *שומן:* ${Math.round((mealData.fat||0)*10)/10}ג'\n\n`;
+  if (mealData.coachInsight) {
+    replyMsg += `💬 *תובנת המאמן אילאי:*\n"${mealData.coachInsight}"`;
+  }
+
+  await sendTelegramMessage(chatId, replyMsg);
+  return true;
+}
+
 // פונקציית עזר למציאת לקוח לפי שם חלקי
 async function findClientByName(queryName) {
   const snapshot = await db.collection('clients').get();
   let found = null;
   snapshot.forEach(doc => {
     const c = doc.data();
-    if (c.name.toLowerCase().includes(queryName)) {
+    if ((c.name || '').toLowerCase().includes(queryName)) {
       found = c;
     }
   });
@@ -427,8 +447,14 @@ async function sendTelegramMessage(chatId, text) {
 
 // בדיקה האם הודעה היא תיאור מאכל
 function isLikelyFoodQuery(t) {
-  const s = t.toLowerCase();
-  const foodKeywords = ['גרם', 'כף', 'כוס', 'נוטלה', 'חזה עוף', 'אורז', 'קוטג', 'ביצים', 'ביצה', 'טונה', 'לחם', 'פיתה', 'לאפה', 'שווארמה', 'סלמון', 'חלבון', 'שוקולד', 'אכלתי', 'בטטה', 'בננה', 'תפוח', 'שמן', 'טחינה', 'פיצה', 'המבורגר', 'שניצל', 'פסטה', 'יוגורט', 'קלוריות'];
+  const s = (t || '').toLowerCase();
+  const foodKeywords = [
+    'גרם', 'כף', 'כוס', 'נוטלה', 'חזה עוף', 'אורז', 'קוטג', 'ביצים', 'ביצה',
+    'טונה', 'לחם', 'פיתה', 'לאפה', 'שווארמה', 'סלמון', 'חלבון', 'שוקולד',
+    'אכלתי', 'בטטה', 'בננה', 'תפוח', 'שמן', 'טחינה', 'פיצה', 'המבורגר',
+    'שניצל', 'פסטה', 'יוגורט', 'קלוריות', 'באגט', 'בגט', 'חביתה', 'מיונז',
+    'פרו', 'סלט', 'טוסט', 'גבינה'
+  ];
   return foodKeywords.some(kw => s.includes(kw)) && !s.startsWith('/');
 }
 
@@ -501,18 +527,27 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
   ]
 }`;
 
-  const models = ['models/gemini-3.6-flash', 'models/gemini-flash-lite-latest', 'models/gemini-3.5-flash', 'models/gemini-flash-latest'];
+  const models = [
+    'models/gemini-flash-lite-latest',
+    'models/gemini-3.5-flash-lite',
+    'models/gemini-3.5-flash',
+    'models/gemini-flash-latest'
+  ];
+
   for (const m of models) {
     try {
       const resp = await axios.post(`https://generativelanguage.googleapis.com/v1beta/${m}:generateContent?key=${key}`, {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { response_mime_type: "application/json", temperature: 0.1 }
-      }, { timeout: 10000 });
+      }, { timeout: 8000 });
       const txt = resp.data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (txt) {
         const match = txt.match(/\{[\s\S]*\}/);
         if (match) {
-          return JSON.parse(match[0]);
+          const parsed = JSON.parse(match[0]);
+          if (parsed && typeof parsed.calories === 'number' && parsed.calories > 10) {
+            return parsed;
+          }
         }
       }
     } catch(e) {}
