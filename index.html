@@ -1095,79 +1095,140 @@
                             </div>
                         </div>
 
-                        <!-- מעקב מים וצעדים יומי (Daily Wellness Matrix) -->
+                        <!-- כפתור סגירת יום וציון יומי חגיגי -->
+                        <div class="bg-gradient-to-r from-[#1a0730] via-[#2d0c4f] to-[#1a0730] border-2 border-[#fbbf24]/50 rounded-3xl p-4 sm:p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-white">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 rounded-2xl bg-[#fbbf24]/20 text-[#fbbf24] border border-[#fbbf24]/30 shrink-0">
+                                    <i data-lucide="crown" class="w-6 h-6 text-[#fbbf24]"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm md:text-base font-black text-[#fbbf24] flex items-center gap-2">
+                                        <span>סגירת יום וציון יומי של אלופים</span>
+                                        <span class="text-[10px] bg-[#fbbf24] text-[#1a0730] px-2 py-0.5 rounded-full font-black">ציון חי: <span x-text="getLiveDailyScore(portalClient) + '%'"></span></span>
+                                    </h4>
+                                    <p class="text-[11px] text-[#ede3f5]">סיימת את משימות היום? לחץ לקבלת הציון המלא, חגיגת ניצחון והעלאת הרצף! 👑</p>
+                                </div>
+                            </div>
+                            <button type="button" @click="openDayCloseCelebration()" class="w-full sm:w-auto bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] hover:from-[#f59e0b] hover:to-[#d97706] text-[#1a0730] font-black px-6 py-3 rounded-2xl text-xs sm:text-sm shadow-xl flex items-center justify-center gap-2 transition hover:scale-105 active:scale-95 cursor-pointer shrink-0">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                <span>✨ סגור יום וקבל ציון יומי 👑</span>
+                            </button>
+                        </div>
+
+                        <!-- מעקב מים וצעדים יומי משודרג (Daily Wellness Matrix Pro) -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                            <!-- 1. מעקב שתיית מים -->
-                            <div class="bg-white border border-[#c9b7de] rounded-3xl p-4 md:p-5 shadow-lg space-y-3">
+                            <!-- 1. מעקב שתיית מים Pro -->
+                            <div class="bg-white border border-[#c9b7de] rounded-3xl p-4 md:p-5 shadow-lg space-y-3 relative overflow-hidden">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2.5">
                                         <div class="p-2 rounded-2xl bg-[#1a0730] text-[#fbbf24]">
                                             <i data-lucide="droplet" class="w-4 h-4 text-[#fbbf24]"></i>
                                         </div>
                                         <div>
-                                            <h4 class="text-xs md:text-sm font-black text-[#1a0730]">מעקב שתיית מים</h4>
+                                            <h4 class="text-xs md:text-sm font-black text-[#1a0730] flex items-center gap-1.5">
+                                                <span>מעקב שתיית מים</span>
+                                                <template x-if="(portalClient?.dailyWater || 0) >= (portalClient?.waterTarget || 3000)">
+                                                    <span class="text-[9px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold px-1.5 py-0.2 rounded-md">הושג! 🏆</span>
+                                                </template>
+                                            </h4>
                                             <p class="text-[10px] text-[#6f5888]" x-text="'יעד יומי: ' + (portalClient?.waterTarget || 3000) + ' מ״ל'"></p>
                                         </div>
                                     </div>
                                     <div class="text-left">
-                                        <span class="text-sm md:text-base font-black text-[#1a0730]" x-text="(portalClient?.dailyWater || 0) + ' מ״ל'"></span>
-                                        <span class="text-[9px] text-[#6f5888] block" x-text="Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></span>
+                                        <span class="text-sm md:text-base font-black text-[#1a0730]" x-text="(portalClient?.dailyWater || 0) + ' / ' + (portalClient?.waterTarget || 3000) + ' מ״ל'"></span>
+                                        <span class="text-[9px] text-[#6f5888] font-bold block" x-text="Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '% מהיעד'"></span>
                                     </div>
                                 </div>
 
-                                <!-- מד התקדמות מים -->
-                                <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-[#fbbf24] to-[#22c55e] transition-all duration-300 rounded-full"
-                                         :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></div>
+                                <!-- מד התקדמות מים חי -->
+                                <div class="space-y-1">
+                                    <div class="h-2.5 w-full bg-[#f0eae1] rounded-full overflow-hidden p-0.5 border border-[#ded0eb]">
+                                        <div class="h-full bg-gradient-to-r from-sky-400 via-[#38bdf8] to-[#22c55e] transition-all duration-500 rounded-full"
+                                             :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailyWater || 0) / (portalClient?.waterTarget || 3000)) * 100)) + '%'"></div>
+                                    </div>
+                                    <div class="flex items-center justify-between text-[10px] text-[#6f5888] font-semibold">
+                                        <span x-text="(portalClient?.dailyWater || 0) >= (portalClient?.waterTarget || 3000) ? '🎉 היעד היומי הושג במלואו!' : ('עוד ' + Math.ceil(Math.max(0, (portalClient?.waterTarget || 3000) - (portalClient?.dailyWater || 0)) / 250) + ' כוסות לסגירת היעד')"></span>
+                                        <span x-text="(portalClient?.waterTarget || 3000) + ' מ״ל'"></span>
+                                    </div>
                                 </div>
 
                                 <!-- כפתורי שתיית מים מהירים -->
-                                <div class="flex items-center gap-1.5 pt-1">
-                                    <button @click="addWater(250)" class="flex-1 bg-[#faf6fc] hover:bg-[#ede3f5] border border-[#c9b7de] text-[#1a0730] font-bold py-1.5 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
-                                        <span>+250 מ״ל 🥛</span>
+                                <div class="grid grid-cols-4 gap-1.5 pt-1">
+                                    <button @click="addWater(250)" class="bg-[#faf6fc] hover:bg-[#ede3f5] active:scale-95 border border-[#c9b7de] text-[#1a0730] font-black py-2 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                        <span>+250 🥛</span>
                                     </button>
-                                    <button @click="addWater(500)" class="flex-1 bg-[#faf6fc] hover:bg-[#ede3f5] border border-[#c9b7de] text-[#1a0730] font-bold py-1.5 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
-                                        <span>+500 מ״ל 🍶</span>
+                                    <button @click="addWater(500)" class="bg-[#faf6fc] hover:bg-[#ede3f5] active:scale-95 border border-[#c9b7de] text-[#1a0730] font-black py-2 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                        <span>+500 🍶</span>
                                     </button>
-                                    <button @click="resetWater()" class="bg-[#faf6fc] hover:bg-rose-50 border border-[#c9b7de] hover:border-rose-200 text-[#6f5888] hover:text-[#dc2626] p-1.5 rounded-xl text-[10px] transition cursor-pointer" title="איפוס מים">
+                                    <button @click="addWater(1000)" class="bg-[#faf6fc] hover:bg-[#ede3f5] active:scale-95 border border-[#c9b7de] text-[#1a0730] font-black py-2 rounded-xl text-[10px] sm:text-xs transition flex items-center justify-center gap-1 cursor-pointer">
+                                        <span>+1L 💧</span>
+                                    </button>
+                                    <button @click="resetWater()" class="bg-[#faf6fc] hover:bg-rose-50 active:scale-95 border border-[#c9b7de] hover:border-rose-200 text-[#6f5888] hover:text-[#dc2626] py-2 rounded-xl text-[10px] transition flex items-center justify-center cursor-pointer" title="איפוס מים">
                                         <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- 2. מעקב צעדים יומי -->
-                            <div class="bg-white border border-[#c9b7de] rounded-3xl p-4 md:p-5 shadow-lg space-y-3">
+                            <!-- 2. מעקב צעדים יומי Pro -->
+                            <div class="bg-white border border-[#c9b7de] rounded-3xl p-4 md:p-5 shadow-lg space-y-3 relative overflow-hidden">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2.5">
                                         <div class="p-2 rounded-2xl bg-[#1a0730] text-[#fbbf24]">
                                             <i data-lucide="footprints" class="w-4 h-4 text-[#fbbf24]"></i>
                                         </div>
                                         <div>
-                                            <h4 class="text-xs md:text-sm font-black text-[#1a0730]">מעקב צעדים יומי</h4>
-                                            <p class="text-[10px] text-[#6f5888]" x-text="'יעד יומי: ' + (portalClient?.stepsTarget || 10000) + ' צעדים'"></p>
+                                            <h4 class="text-xs md:text-sm font-black text-[#1a0730] flex items-center gap-1.5">
+                                                <span>מעקב צעדים יומי</span>
+                                                <template x-if="(portalClient?.dailySteps || 0) >= (portalClient?.stepsTarget || 10000)">
+                                                    <span class="text-[9px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold px-1.5 py-0.2 rounded-md">הושג! 🔥</span>
+                                                </template>
+                                            </h4>
+                                            <p class="text-[10px] text-[#6f5888]" x-text="'יעד יומי: ' + (portalClient?.stepsTarget || 10000).toLocaleString() + ' צעדים'"></p>
                                         </div>
                                     </div>
                                     <div class="text-left">
-                                        <span class="text-sm md:text-base font-black text-[#1a0730]" x-text="(portalClient?.dailySteps || 0) + ' 🚶'"></span>
-                                        <span class="text-[9px] text-[#6f5888] block" x-text="Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></span>
+                                        <span class="text-sm md:text-base font-black text-[#1a0730]" x-text="(portalClient?.dailySteps || 0).toLocaleString() + ' 🚶'"></span>
+                                        <span class="text-[9px] text-[#6f5888] font-bold block" x-text="Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '% מהיעד'"></span>
                                     </div>
                                 </div>
 
-                                <!-- מד התקדמות צעדים -->
-                                <div class="h-2 w-full bg-[#f0eae1] rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-amber-400 to-[#22c55e] transition-all duration-300 rounded-full"
+                                <!-- שורת המרות חיה (מרחק, שריפה, זמן הליכה) -->
+                                <div class="grid grid-cols-3 gap-1 py-1 px-2 text-center text-[10px] bg-[#faf6fc] border border-[#c9b7de] rounded-xl">
+                                    <div>
+                                        <span class="text-[#6f5888] block text-[8px] sm:text-[9px]">📍 מרחק</span>
+                                        <span class="font-black text-[#1a0730]" x-text="((portalClient?.dailySteps || 0) * 0.00075).toFixed(1) + ' ק״מ'"></span>
+                                    </div>
+                                    <div class="border-x border-[#ded0eb]">
+                                        <span class="text-[#6f5888] block text-[8px] sm:text-[9px]">🔥 שריפה</span>
+                                        <span class="font-black text-[#1a0730]" x-text="Math.round((portalClient?.dailySteps || 0) * 0.04) + ' קק״ל'"></span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[#6f5888] block text-[8px] sm:text-[9px]">⏱️ זמן משוער</span>
+                                        <span class="font-black text-[#1a0730]" x-text="Math.round((portalClient?.dailySteps || 0) / 100) + ' דק׳'"></span>
+                                    </div>
+                                </div>
+
+                                <!-- מד התקדמות צעדים חי -->
+                                <div class="h-2.5 w-full bg-[#f0eae1] rounded-full overflow-hidden p-0.5 border border-[#ded0eb]">
+                                    <div class="h-full bg-gradient-to-r from-amber-400 via-orange-400 to-[#22c55e] transition-all duration-500 rounded-full"
                                          :style="'width: ' + Math.min(100, Math.round(((portalClient?.dailySteps || 0) / (portalClient?.stepsTarget || 10000)) * 100)) + '%'"></div>
                                 </div>
 
-                                <!-- עדכון צעדים -->
+                                <!-- הוספה מהירה והזנה חופשית -->
                                 <div class="flex items-center gap-1.5 pt-1">
                                     <input type="number" 
                                            :value="portalClient?.dailySteps || ''" 
                                            @change="updateSteps($event.target.value)" 
-                                           placeholder="הזן כמות צעדים..." 
-                                           class="flex-1 bg-[#faf6fc] border border-[#c9b7de] rounded-xl px-2.5 py-1.5 text-xs text-[#1a0730] font-bold focus:outline-none focus:border-[#22c55e] text-center">
-                                    <button @click="updateSteps((portalClient?.dailySteps || 0) + 1000)" class="bg-[#faf6fc] hover:bg-[#ede3f5] border border-[#c9b7de] text-[#1a0730] font-bold px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs transition cursor-pointer">
+                                           placeholder="הזן צעדים..." 
+                                           class="w-24 sm:w-28 bg-[#faf6fc] border border-[#c9b7de] rounded-xl px-2.5 py-1.5 text-xs text-[#1a0730] font-bold focus:outline-none focus:border-[#22c55e] text-center">
+                                    <button @click="updateSteps((portalClient?.dailySteps || 0) + 1000)" class="flex-1 bg-[#faf6fc] hover:bg-[#ede3f5] active:scale-95 border border-[#c9b7de] text-[#1a0730] font-black py-1.5 rounded-xl text-[10px] sm:text-xs transition cursor-pointer">
                                         +1,000
+                                    </button>
+                                    <button @click="updateSteps((portalClient?.dailySteps || 0) + 2500)" class="flex-1 bg-[#faf6fc] hover:bg-[#ede3f5] active:scale-95 border border-[#c9b7de] text-[#1a0730] font-black py-1.5 rounded-xl text-[10px] sm:text-xs transition cursor-pointer">
+                                        +2,500
+                                    </button>
+                                    <button @click="updateSteps((portalClient?.dailySteps || 0) + 5000)" class="flex-1 bg-[#faf6fc] hover:bg-[#ede3f5] active:scale-95 border border-[#c9b7de] text-[#1a0730] font-black py-1.5 rounded-xl text-[10px] sm:text-xs transition cursor-pointer">
+                                        +5,000
                                     </button>
                                 </div>
                             </div>
@@ -3224,6 +3285,59 @@
                                             </div>
                                             <span class="text-[10px] text-[#6f5888] font-bold block" x-text="Math.min(100, Math.round(((currentClient?.dailySteps || 0) / (currentClient?.stepsTarget || 10000)) * 100)) + '% מהיעד'"></span>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <!-- מרכז תזכורות מהירות לוואטסאפ (WhatsApp Reminders Hub) -->
+                                <div class="bg-white border border-[#c9b7de] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+                                    <div class="flex items-center justify-between border-b border-[#c9b7de] pb-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="p-2 rounded-xl bg-[#25D366] text-white">
+                                                <i data-lucide="bell-ring" class="w-4 h-4"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-sm md:text-base font-black text-[#1a0730]">תזכורות יומיות מהירות לוואטסאפ 📲</h4>
+                                                <p class="text-[10px] text-[#6f5888]">שליחת הודעת מוטיבציה ותזכורת בלחיצה אחת ישירות למתאמן</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                        <a :href="getWhatsAppLink(currentClient, 'water')" target="_blank" class="bg-[#faf6fc] hover:bg-sky-50 hover:border-sky-300 border border-[#c9b7de] rounded-2xl p-3 text-center space-y-1 transition group cursor-pointer shadow-xs">
+                                            <div class="text-base group-hover:scale-110 transition">💧</div>
+                                            <span class="text-xs font-black text-[#1a0730] block">תזכורת מים</span>
+                                            <span class="text-[9px] text-[#6f5888] block">יעד 3,000 מ״ל</span>
+                                        </a>
+
+                                        <a :href="getWhatsAppLink(currentClient, 'steps')" target="_blank" class="bg-[#faf6fc] hover:bg-amber-50 hover:border-amber-300 border border-[#c9b7de] rounded-2xl p-3 text-center space-y-1 transition group cursor-pointer shadow-xs">
+                                            <div class="text-base group-hover:scale-110 transition">👣</div>
+                                            <span class="text-xs font-black text-[#1a0730] block">תזכורת צעדים</span>
+                                            <span class="text-[9px] text-[#6f5888] block">סגירת 10,000</span>
+                                        </a>
+
+                                        <a :href="getWhatsAppLink(currentClient, 'food_diary')" target="_blank" class="bg-[#faf6fc] hover:bg-emerald-50 hover:border-emerald-300 border border-[#c9b7de] rounded-2xl p-3 text-center space-y-1 transition group cursor-pointer shadow-xs">
+                                            <div class="text-base group-hover:scale-110 transition">🥗</div>
+                                            <span class="text-xs font-black text-[#1a0730] block">יומן תזונה</span>
+                                            <span class="text-[9px] text-[#6f5888] block">עדכון ארוחות</span>
+                                        </a>
+
+                                        <a :href="getWhatsAppLink(currentClient, 'day_close')" target="_blank" class="bg-[#faf6fc] hover:bg-purple-50 hover:border-purple-300 border border-[#c9b7de] rounded-2xl p-3 text-center space-y-1 transition group cursor-pointer shadow-xs">
+                                            <div class="text-base group-hover:scale-110 transition">🌙</div>
+                                            <span class="text-xs font-black text-[#1a0730] block">סגירת יום & ציון</span>
+                                            <span class="text-[9px] text-[#6f5888] block">שמירת רצף ימים</span>
+                                        </a>
+
+                                        <a :href="getWhatsAppLink(currentClient, 'weekend_reflection')" target="_blank" class="bg-[#faf6fc] hover:bg-indigo-50 hover:border-indigo-300 border border-[#c9b7de] rounded-2xl p-3 text-center space-y-1 transition group cursor-pointer shadow-xs">
+                                            <div class="text-base group-hover:scale-110 transition">📝</div>
+                                            <span class="text-xs font-black text-[#1a0730] block">שיקוף סופ״ש</span>
+                                            <span class="text-[9px] text-[#6f5888] block">שאלון שבועי</span>
+                                        </a>
+
+                                        <a :href="getWhatsAppLink(currentClient, 'weighin')" target="_blank" class="bg-[#faf6fc] hover:bg-rose-50 hover:border-rose-300 border border-[#c9b7de] rounded-2xl p-3 text-center space-y-1 transition group cursor-pointer shadow-xs">
+                                            <div class="text-base group-hover:scale-110 transition">⚖️</div>
+                                            <span class="text-xs font-black text-[#1a0730] block">שקילה שבועית</span>
+                                            <span class="text-[9px] text-[#6f5888] block">עדכון משקל</span>
+                                        </a>
                                     </div>
                                 </div>
 
@@ -6435,6 +6549,173 @@
                 </div>
             </div>
 
+            </div>
+        </div>
+    </div>
+
+
+    <!-- מודל סגירת יום וציון יומי חגיגי של אלופים (Day Close Celebration Modal) -->
+    <div x-show="openDayCloseCelebrationModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md no-print" x-cloak @click.self="openDayCloseCelebrationModal = false">
+        <div class="bg-gradient-to-br from-white via-[#faf6fc] to-[#f5effa] border-2 border-[#fbbf24] rounded-3xl p-6 sm:p-7 max-w-lg w-full max-h-[92vh] overflow-y-auto flex flex-col shadow-2xl space-y-5 animate-scale-up mx-2 text-[#1a0730] relative">
+            
+            <!-- סגירה -->
+            <button type="button" @click="openDayCloseCelebrationModal = false" class="absolute left-4 top-4 text-slate-400 hover:text-[#1a0730] p-1.5 rounded-full hover:bg-slate-100 transition cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- כותרת וסמל כתר חגיגי -->
+            <div class="text-center space-y-2 pt-2">
+                <div class="inline-flex p-3.5 rounded-3xl bg-gradient-to-br from-[#1a0730] to-[#2d0c4f] text-[#fbbf24] shadow-xl border-2 border-[#fbbf24]/50 animate-bounce">
+                    <i data-lucide="crown" class="w-8 h-8 text-[#fbbf24]"></i>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-[#1a0730] tracking-tight">סיכום וסגירת יום של אלופים 👑</h3>
+                <p class="text-xs text-[#6f5888] font-bold" x-text="'מתאמן: ' + (portalClient?.name || 'מתאמן') + ' | ' + formatDate(getTodayDate())"></p>
+            </div>
+
+            <!-- תצוגת ציון יומי ענקית ומרשימה -->
+            <div class="bg-gradient-to-br from-[#1a0730] to-[#2d0c4f] text-white p-5 rounded-3xl text-center space-y-2 shadow-xl border border-[#451675]">
+                <span class="text-[11px] font-black text-[#fbbf24] uppercase tracking-wider block">ציון ההתמדה היומי שלך</span>
+                <div class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#fbbf24] via-amber-300 to-[#4ade80]" x-text="getLiveDailyScore(portalClient) + '%'"></div>
+                <div class="flex items-center justify-center gap-1.5 text-xs font-bold text-[#ede3f5]">
+                    <span x-text="getLiveDailyScore(portalClient) >= 90 ? '🏆 יום מושלם ברמת אליטה!' : (getLiveDailyScore(portalClient) >= 75 ? '💪 עבודה מעולה והתמדה חזקה!' : '🚀 יום טוב, ממשיכים בכל הכוח!')"></span>
+                </div>
+            </div>
+
+            <!-- פירוט 5 עמודי התווך של היום -->
+            <div class="space-y-2 text-xs">
+                <h4 class="font-black text-[#1a0730] flex items-center gap-1.5 text-xs">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#22c55e]"></i>
+                    <span>פירוט מדדי הביצוע היומיים:</span>
+                </h4>
+
+                <div class="grid grid-cols-1 gap-2">
+                    <!-- 1. תזונה -->
+                    <div class="bg-white border border-[#c9b7de] rounded-2xl p-3 flex items-center justify-between shadow-xs">
+                        <div class="flex items-center gap-2">
+                            <span>🥗</span>
+                            <span class="font-bold text-[#1a0730]">עמידה ביעד התזונה:</span>
+                        </div>
+                        <span class="font-black text-xs" :class="scorecardNutrition === 'yes' ? 'text-emerald-600' : (scorecardNutrition === 'almost' ? 'text-amber-600' : 'text-rose-600')" x-text="scorecardNutrition === 'yes' ? '100% בול (35 נק׳) ✅' : (scorecardNutrition === 'almost' ? 'כמעט (25 נק׳) 👍' : 'חריגה (10 נק׳) ⚠️')"></span>
+                    </div>
+
+                    <!-- 2. שתיית מים -->
+                    <div class="bg-white border border-[#c9b7de] rounded-2xl p-3 flex items-center justify-between shadow-xs">
+                        <div class="flex items-center gap-2">
+                            <span>💧</span>
+                            <span class="font-bold text-[#1a0730]">שתיית מים:</span>
+                        </div>
+                        <div class="text-left">
+                            <span class="font-black text-xs text-[#1a0730]" x-text="(portalClient?.dailyWater || 0) + ' / ' + (portalClient?.waterTarget || 3000) + ' מ״ל'"></span>
+                            <span class="text-[10px] block" :class="(portalClient?.dailyWater || 0) >= (portalClient?.waterTarget || 3000) ? 'text-emerald-600 font-bold' : 'text-amber-600'" x-text="(portalClient?.dailyWater || 0) >= (portalClient?.waterTarget || 3000) ? 'הושג במלואו (20 נק׳)' : (Math.round(((portalClient?.dailyWater || 0)/(portalClient?.waterTarget || 3000))*20) + ' / 20 נק׳')"></span>
+                        </div>
+                    </div>
+
+                    <!-- 3. צעדים -->
+                    <div class="bg-white border border-[#c9b7de] rounded-2xl p-3 flex items-center justify-between shadow-xs">
+                        <div class="flex items-center gap-2">
+                            <span>👣</span>
+                            <span class="font-bold text-[#1a0730]">ספירת צעדים:</span>
+                        </div>
+                        <div class="text-left">
+                            <span class="font-black text-xs text-[#1a0730]" x-text="(portalClient?.dailySteps || 0).toLocaleString() + ' / ' + (portalClient?.stepsTarget || 10000).toLocaleString()"></span>
+                            <span class="text-[10px] block" :class="(portalClient?.dailySteps || 0) >= (portalClient?.stepsTarget || 10000) ? 'text-emerald-600 font-bold' : 'text-amber-600'" x-text="(portalClient?.dailySteps || 0) >= (portalClient?.stepsTarget || 10000) ? 'הושג במלואו (20 נק׳)' : (Math.round(((portalClient?.dailySteps || 0)/(portalClient?.stepsTarget || 10000))*20) + ' / 20 נק׳')"></span>
+                        </div>
+                    </div>
+
+                    <!-- 4. אימון -->
+                    <div class="bg-white border border-[#c9b7de] rounded-2xl p-3 flex items-center justify-between shadow-xs">
+                        <div class="flex items-center gap-2">
+                            <span>🏋️</span>
+                            <span class="font-bold text-[#1a0730]">ביצוע אימון:</span>
+                        </div>
+                        <span class="font-black text-xs" :class="scorecardWorkout === 'yes' ? 'text-emerald-600' : (scorecardWorkout === 'rest' ? 'text-sky-600' : 'text-slate-500')" x-text="scorecardWorkout === 'yes' ? 'התאמנתי (15 נק׳) 🏋️‍♂️' : (scorecardWorkout === 'rest' ? 'יום מנוחה (15 נק׳) 🧘' : 'דילגתי (0 נק׳) ❌')"></span>
+                    </div>
+
+                    <!-- 5. שינה ואנרגיה -->
+                    <div class="bg-white border border-[#c9b7de] rounded-2xl p-3 flex items-center justify-between shadow-xs">
+                        <div class="flex items-center gap-2">
+                            <span>😴</span>
+                            <span class="font-bold text-[#1a0730]">איכות שינה / אנרגיה:</span>
+                        </div>
+                        <span class="font-black text-xs text-amber-500" x-text="(scorecardSleep || 5) + ' / 5 כוכבים (' + ((scorecardSleep || 5) * 2) + ' נק׳) ⭐'"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- מד רצף ימים חם (Streak) -->
+            <div class="bg-amber-50 border border-amber-300 rounded-2xl p-3.5 flex items-center justify-between text-amber-900">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl animate-pulse">🔥</span>
+                    <div>
+                        <span class="text-xs font-black block">רצף ימי התמדה פעיל:</span>
+                        <span class="text-[10px] text-amber-700">כל יום של מעקב מקרב אותך לשיא אישי חדש!</span>
+                    </div>
+                </div>
+                <span class="text-base font-black text-[#a15c07]" x-text="((getClientStreak(portalClient) || 0) + 1) + ' ימים ברצף! 🚀'"></span>
+            </div>
+
+            <!-- משוב אישי מאילאי -->
+            <div class="bg-white border border-[#c9b7de] rounded-2xl p-3.5 space-y-1">
+                <span class="text-[10px] text-[#6f5888] font-bold block flex items-center gap-1">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
+                    <span>משוב המאמן אילאי:</span>
+                </span>
+                <p class="text-xs text-[#1a0730] font-semibold italic" x-text="getScoreCoachFeedback(getLiveDailyScore(portalClient))"></p>
+            </div>
+
+            <!-- כפתור אישור ונעילה -->
+            <div class="pt-1">
+                <button type="button" @click="submitDayClose()" class="w-full bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white font-black py-3.5 px-4 rounded-2xl text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2 transition hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+                    <i data-lucide="trophy" class="w-5 h-5"></i>
+                    <span>נעל יום וסגור בהצלחה 🏆</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל היסטוריית ציונים יומיים (Scorecard History Modal) -->
+    <div x-show="openScorecardHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openScorecardHistoryModal = false">
+        <div class="bg-white border border-[#c9b7de] rounded-3xl p-5 md:p-6 max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl space-y-4 animate-scale-up mx-2 text-[#1a0730]">
+            <div class="flex items-center justify-between border-b border-[#c9b7de] pb-3 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded-xl bg-[#1a0730] text-[#fbbf24]">
+                        <i data-lucide="history" class="w-5 h-5 text-[#fbbf24]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm md:text-base font-black text-[#1a0730]">היסטוריית ציונים יומיים 📜</h3>
+                        <p class="text-[10px] text-[#6f5888]">מעקב יומי של ציונים, הרגלים, מים וצעדים לאורך זמן</p>
+                    </div>
+                </div>
+                <button type="button" @click="openScorecardHistoryModal = false" class="text-slate-400 hover:text-[#1a0730] p-1 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-2.5 pr-1">
+                <template x-for="sc in getClientScorecardsList(portalClient)" :key="sc.id || sc.date">
+                    <div @click="setScorecardViewDate(sc.date); openScorecardHistoryModal = false;" class="bg-[#faf6fc] hover:bg-[#ede3f5] border border-[#c9b7de] rounded-2xl p-3 flex items-center justify-between transition cursor-pointer">
+                        <div class="space-y-0.5">
+                            <span class="text-xs font-black text-[#1a0730]" x-text="formatDate(sc.date)"></span>
+                            <div class="flex items-center gap-2 text-[10px] text-[#6f5888] font-semibold">
+                                <span x-text="'💧 ' + (sc.water || 0) + ' מ״ל'"></span>
+                                <span>•</span>
+                                <span x-text="'👣 ' + (sc.steps || 0).toLocaleString() + ' צעדים'"></span>
+                                <span>•</span>
+                                <span x-text="'😴 ' + (sc.sleep || 5) + '⭐'"></span>
+                            </div>
+                        </div>
+                        <div class="text-left flex items-center gap-2">
+                            <span class="text-sm font-black text-[#1a0730]" x-text="(sc.score || 0) + '%'"></span>
+                            <span class="text-xs" x-text="(sc.score || 0) >= 90 ? '🏆' : ((sc.score || 0) >= 75 ? '💪' : '⚡')"></span>
+                        </div>
+                    </div>
+                </template>
+                <template x-if="getClientScorecardsList(portalClient).length === 0">
+                    <div class="text-center py-8 text-xs text-[#6f5888]">
+                        <i data-lucide="calendar" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
+                        <span>טרם נשמרו ציונים יומיים. לחץ על 'סגור יום' כדי להתחיל את ההיסטוריה! 👑</span>
+                    </div>
+                </template>
             </div>
         </div>
     </div>
@@ -12926,18 +13207,57 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     alert(`שאלון הקליטה של ${client.name} עודכן ונשמר בהצלחה! 👑`);
                 },
 
-                // --- מתודות מעקב שתיית מים וצעדים ---
+                // --- מתודות מעקב שתיית מים וצעדים משודרגות ---
+                openDayCloseCelebrationModal: false,
+
+                openDayCloseCelebration() {
+                    this.openDayCloseCelebrationModal = true;
+                    setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 50);
+                },
+
+                submitDayClose() {
+                    this.autoSaveDailyScorecard(true);
+                    this.openDayCloseCelebrationModal = false;
+                    if (typeof confetti === 'function') {
+                        confetti({
+                            particleCount: 150,
+                            spread: 80,
+                            origin: { y: 0.5 }
+                        });
+                    }
+                    this.playVictorySound();
+                    alert('🎉 היום ננעל ונשמר בהצלחה ביומן האלופים שלך! המשך כך! 👑');
+                },
+
+                getScoreCoachFeedback(score) {
+                    if (score >= 95) return 'וואו, ביצוע מושלם של 100% מקצוענות! אין עליך, אתה בדרך המהירה ביותר להגשמת המטרה 👑';
+                    if (score >= 85) return 'עבודה מדהימה! עמדת כמעט בכל היעדים בכבוד רב. שמור על הקצב הזה גם מחר 💪';
+                    if (score >= 70) return 'יום טוב וסולידי! המשכיות ועקביות זה שם המשחק. מחר נסגור עוד קצת מים וצעדים 🚀';
+                    return 'יום של למידה! גם אם חרגת או לא הספקת, הכי חשוב שלא ויתרת והזנת את הנתונים. מחר מתחילים דף חדש בשיא הכוח! 🔥';
+                },
+
                 addWater(amount) {
                     const client = this.portalClient;
                     if (!client) return;
                     this.processMidnightRolloverForClient(client);
                     if (!client.dailyWater) client.dailyWater = 0;
+                    const prevWater = client.dailyWater;
+                    const target = client.waterTarget || 3000;
+
                     client.dailyWater = Math.max(0, client.dailyWater + amount);
                     client.lastTrackedDate = this.getTodayDate();
                     this.portalDailyWater = client.dailyWater;
                     this.saveClientToCloud(client);
                     this.saveData();
                     this.autoSaveDailyScorecard(false);
+
+                    // חגיגה בעת הגעה ליעד
+                    if (client.dailyWater >= target && prevWater < target) {
+                        if (typeof confetti === 'function') {
+                            confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+                        }
+                        this.playVictorySound();
+                    }
                 },
 
                 resetWater() {
@@ -12954,12 +13274,23 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const client = this.portalClient;
                     if (!client) return;
                     this.processMidnightRolloverForClient(client);
-                    client.dailySteps = parseInt(steps) || 0;
+                    const prevSteps = client.dailySteps || 0;
+                    const target = client.stepsTarget || 10000;
+
+                    client.dailySteps = Math.max(0, parseInt(steps) || 0);
                     client.lastTrackedDate = this.getTodayDate();
                     this.portalDailySteps = client.dailySteps;
                     this.saveClientToCloud(client);
                     this.saveData();
                     this.autoSaveDailyScorecard(false);
+
+                    // חגיגה בעת הגעה ליעד
+                    if (client.dailySteps >= target && prevSteps < target) {
+                        if (typeof confetti === 'function') {
+                            confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+                        }
+                        this.playVictorySound();
+                    }
                 },
 
                 // --- מתודות סטופר וטיימר מנוחה בין סטים ---

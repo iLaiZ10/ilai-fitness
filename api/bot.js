@@ -280,6 +280,102 @@ module.exports = async (req, res) => {
       await processAndLogMeal(chatId, client, foodDesc);
       return res.status(200).send('OK');
     }
+        else if (text.startsWith('/water') || text.startsWith('/drink')) {
+      const parts = text.split(' ');
+      let queryName = '';
+      let amountStr = '';
+      if (parts.length === 2) {
+        amountStr = parts[1];
+      } else if (parts.length >= 3) {
+        queryName = parts.slice(1, parts.length - 1).join(' ').toLowerCase();
+        amountStr = parts[parts.length - 1];
+      }
+      let client = null;
+      if (queryName) {
+        client = await findClientByName(queryName);
+      } else {
+        const snapshot = await db.collection('clients').where('status', '==', 'active').get();
+        const activeClients = [];
+        snapshot.forEach(doc => activeClients.push(doc.data()));
+        client = activeClients[0] || null;
+      }
+      if (!client) {
+        await sendTelegramMessage(chatId, '❌ לא נמצא מתאמן להזנת מים. השתמש בפורמט: `/water [שם] [כמות במ״ל]` או `/water 500`');
+        return res.status(200).send('OK');
+      }
+      const amount = parseWaterInput(amountStr || '500') || 500;
+      await processAndLogWater(chatId, client, amount);
+      return res.status(200).send('OK');
+    }
+    else if (text.startsWith('/steps') || text.startsWith('/step') || text.startsWith('/walk')) {
+      const parts = text.split(' ');
+      let queryName = '';
+      let stepsStr = '';
+      if (parts.length === 2) {
+        stepsStr = parts[1];
+      } else if (parts.length >= 3) {
+        queryName = parts.slice(1, parts.length - 1).join(' ').toLowerCase();
+        stepsStr = parts[parts.length - 1];
+      }
+      let client = null;
+      if (queryName) {
+        client = await findClientByName(queryName);
+      } else {
+        const snapshot = await db.collection('clients').where('status', '==', 'active').get();
+        const activeClients = [];
+        snapshot.forEach(doc => activeClients.push(doc.data()));
+        client = activeClients[0] || null;
+      }
+      if (!client) {
+        await sendTelegramMessage(chatId, '❌ לא נמצא מתאמן להזנת צעדים. השתמש בפורמט: `/steps [שם] [כמות צעדים]` או `/steps 8500`');
+        return res.status(200).send('OK');
+      }
+      const stepsCount = parseStepsInput(stepsStr || '10000') || 10000;
+      await processAndLogSteps(chatId, client, stepsCount);
+      return res.status(200).send('OK');
+    }
+    else if (text.startsWith('/remind') || text.startsWith('/reminder')) {
+      const parts = text.split(' ');
+      if (parts.length < 2) {
+        let helpRemind = '📲 *שליחת תזכורות וואטסאפ למתאמנים:*\n\n';
+        helpRemind += '💧 מים: `/remind [שם] water`\n';
+        helpRemind += '👣 צעדים: `/remind [שם] steps`\n';
+        helpRemind += '🥑 יומן תזונה: `/remind [שם] food`\n';
+        helpRemind += '🌙 סגירת יום: `/remind [שם] close`\n';
+        helpRemind += '📝 שיקוף סופ״ש: `/remind [שם] weekend`\n';
+        helpRemind += '⚖️ שקילה שבועית: `/remind [שם] weigh`';
+        await sendTelegramMessage(chatId, helpRemind);
+        return res.status(200).send('OK');
+      }
+      let type = 'water';
+      let queryName = '';
+      const lastPart = parts[parts.length - 1].toLowerCase();
+      if (['water', 'steps', 'food', 'close', 'weekend', 'weigh'].includes(lastPart)) {
+        type = lastPart;
+        queryName = parts.slice(1, parts.length - 1).join(' ').toLowerCase();
+      } else {
+        queryName = parts.slice(1).join(' ').toLowerCase();
+      }
+      let client = null;
+      if (queryName) {
+        client = await findClientByName(queryName);
+      } else {
+        const snapshot = await db.collection('clients').where('status', '==', 'active').get();
+        const activeClients = [];
+        snapshot.forEach(doc => activeClients.push(doc.data()));
+        client = activeClients[0] || null;
+      }
+      if (!client) {
+        await sendTelegramMessage(chatId, '❌ לא נמצא מתאמן בשם: ' + queryName);
+        return res.status(200).send('OK');
+      }
+      const remindData = buildReminderMessage(client, type);
+      let replyRemind = '📲 *הודעת תזכורת מוכנה עבור ' + client.name + ' (' + remindData.title + '):*\n\n';
+      replyRemind += '💬 *טקסט ההודעה:*\n"' + remindData.message + '"\n\n';
+      replyRemind += '🔗 [לחץ כאן לשליחה ישירה בוואטסאפ](' + remindData.link + ')';
+      await sendTelegramMessage(chatId, replyRemind);
+      return res.status(200).send('OK');
+    }
     else if (text.startsWith('/done')) {
       const parts = text.split(' ');
       if (parts.length < 2) {
@@ -325,6 +421,48 @@ module.exports = async (req, res) => {
       let targetClient = null;
       let foodDesc = text;
 
+            // בדיקה האם ההודעה היא עדכון מים
+      if (isWaterQuery(text)) {
+        let targetClient = null;
+        for (const c of activeClients) {
+          const firstName = (c.name || '').split(' ')[0].toLowerCase();
+          const fullName = (c.name || '').toLowerCase();
+          if (text.toLowerCase().includes(firstName) || text.toLowerCase().includes(fullName)) {
+            targetClient = c;
+            break;
+          }
+        }
+        if (!targetClient) targetClient = activeClients[0];
+        if (targetClient) {
+          const amount = parseWaterInput(text);
+          if (amount > 0) {
+            await processAndLogWater(chatId, targetClient, amount);
+            return res.status(200).send('OK');
+          }
+        }
+      }
+
+      // בדיקה האם ההודעה היא עדכון צעדים
+      if (isStepsQuery(text)) {
+        let targetClient = null;
+        for (const c of activeClients) {
+          const firstName = (c.name || '').split(' ')[0].toLowerCase();
+          const fullName = (c.name || '').toLowerCase();
+          if (text.toLowerCase().includes(firstName) || text.toLowerCase().includes(fullName)) {
+            targetClient = c;
+            break;
+          }
+        }
+        if (!targetClient) targetClient = activeClients[0];
+        if (targetClient) {
+          const stepsCount = parseStepsInput(text);
+          if (stepsCount > 0) {
+            await processAndLogSteps(chatId, targetClient, stepsCount);
+            return res.status(200).send('OK');
+          }
+        }
+      }
+
       // בדיקה האם ההודעה מתחילה בשם של אחד המתאמנים הפעילים
       for (const c of activeClients) {
         const firstName = (c.name || '').split(' ')[0].toLowerCase();
@@ -350,7 +488,12 @@ module.exports = async (req, res) => {
       }
 
       // עזרה והסבר על פקודות
-      const helpText = `*🤖 בוט עוזר המאמן - ILAI FITNESS*\n\nהנה הפקודות והאפשרויות:\n\n*🥑 רישום ארוחה חופשי (0 מאמץ):*\n• \`150 גרם נוטלה\`\n• \`אלירן 180 גרם חזה עוף ואורז\`\n• `/food [שם] [מאכל]`\n\n*📋 מידע וניהול מתאמנים:*\n• /list - רשימת המתאמנים הפעילים.\n• /client \`[שם]\` - כרטיס מתאמן.\n• /macros \`[שם] 900 700 250 150\` - עדכון מכסות מאקרו.\n\n*✍️ פעולות מהירות:*\n• /weigh \`[שם] [משקל]\` - עדכון שקילה.\n• /notes \`[שם] [טקסט]\` - הוספת הערה.\n• /done \`[שם]\` - סימון אימון/פגישה.`;
+            // עזרה והסבר על פקודות
+      let helpText = '*🤖 בוט עוזר המאמן - ILAI FITNESS*\n\n';
+      helpText += '*🥑 רישום ארוחה חופשי (0 מאמץ):*\n• `150 גרם נוטלה`\n• `אלירן 180 גרם חזה עוף ואורז`\n• /food `[שם] [מאכל]`\n\n';
+      helpText += '*💧 מעקב שתיית מים וצעדים חי:*\n• `שתיתי 500 מ״ל מים` / `+500 מים` / /water `500`\n• `עשיתי 8500 צעדים` / /steps `8500`\n\n';
+      helpText += '*📲 תזכורות מהירות לוואטסאפ:*\n• /remind `[שם] water/steps/food/close/weekend`\n\n';
+      helpText += '*📋 ניהול ועדכונים:*\n• /list - רשימת המתאמנים הפעילים.\n• /client `[שם]` - כרטיס מתאמן.\n• /macros `[שם] 900 700 250 150` - עדכון מאקרו.\n• /weigh `[שם] [משקל]` - שקילה.\n• /notes `[שם] [טקסט]` - הערה.\n• /done `[שם]` - סימון אימון/פגישה.';
       await sendTelegramMessage(chatId, helpText);
     }
   } catch (error) {
@@ -534,4 +677,142 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
     } catch(e) {}
   }
   return null;
+}
+
+// --- פונקציות עזר למעקב מים, צעדים ותזכורות ---
+
+function parseWaterInput(text) {
+  const t = (text || '').trim();
+  let amount = 0;
+  if (/חצי\s*ליטר/i.test(t)) {
+    amount = 500;
+  } else if (/שני\s*ליטר|2\s*ליטר/i.test(t)) {
+    amount = 2000;
+  } else if (/ליטר\s*וחצי|1\.5\s*ליטר/i.test(t)) {
+    amount = 1500;
+  } else if (/ליטר/i.test(t) && !/חצי/.test(t)) {
+    amount = 1000;
+  } else {
+    const match = t.match(/(\d+)\s*(מ״ל|מל|ml|כוסות|כוס)?/i);
+    if (match) {
+      const num = parseInt(match[1]);
+      if (t.includes('כוס')) amount = num * 250;
+      else amount = num;
+    }
+  }
+  return amount;
+}
+
+function parseStepsInput(text) {
+  const t = (text || '').trim();
+  const match = t.match(/(\d[\d,.]*)/);
+  if (match) {
+    const cleanNum = match[1].replace(/,/g, '');
+    return parseInt(cleanNum) || 0;
+  }
+  return 0;
+}
+
+function isWaterQuery(text) {
+  const s = (text || '').toLowerCase().trim();
+  if (s.startsWith('/water') || s.startsWith('/drink')) return true;
+  if (/^(שתיתי|שתית|מים|\+?\d+\s*מ״ל\s*מים|\+?\d+\s*מים)/.test(s) && (s.includes('מים') || s.includes('מ״ל') || s.includes('ליטר') || s.includes('כוס'))) return true;
+  return false;
+}
+
+function isStepsQuery(text) {
+  const s = (text || '').toLowerCase().trim();
+  if (s.startsWith('/steps') || s.startsWith('/step') || s.startsWith('/walk')) return true;
+  if (/^(הלכתי|עשיתי|צעדתי|צעדים|\+?\d+\s*צעדים)/.test(s) && (s.includes('צעדים') || s.includes('צעד') || s.includes('הליכה'))) return true;
+  return false;
+}
+
+async function processAndLogWater(chatId, client, amount) {
+  const todayDate = new Date().toISOString().split('T')[0];
+  if (client.lastTrackedDate !== todayDate) {
+    client.dailyWater = 0;
+    client.dailySteps = 0;
+    client.lastTrackedDate = todayDate;
+  }
+  client.dailyWater = (client.dailyWater || 0) + amount;
+  const target = client.waterTarget || 3000;
+  const pct = Math.min(100, Math.round((client.dailyWater / target) * 100));
+  const remaining = Math.max(0, target - client.dailyWater);
+  const remainingGlasses = Math.ceil(remaining / 250);
+  await db.collection('clients').doc(client.id).set(client);
+  let reply = '💧 *שתיית מים עודכנה בהצלחה עבור ' + client.name + '!*\n\n';
+  reply += '➕ *התווספו:* +' + amount + ' מ״ל\n';
+  reply += '📊 *סה״כ להיום:* ' + client.dailyWater + ' / ' + target + ' מ״ל (' + pct + '% מהיעד)\n\n';
+  if (client.dailyWater >= target) {
+    reply += '🎉 *אלוף! היעד היומי של שתיית המים הושג במלואו! 🏆*';
+  } else {
+    reply += '🎯 נותרו עוד ' + remaining + ' מ״ל (כ-' + remainingGlasses + ' כוסות) כדי לסגור את היעד!';
+  }
+  await sendTelegramMessage(chatId, reply);
+}
+
+async function processAndLogSteps(chatId, client, stepsCount) {
+  const todayDate = new Date().toISOString().split('T')[0];
+  if (client.lastTrackedDate !== todayDate) {
+    client.dailyWater = 0;
+    client.dailySteps = 0;
+    client.lastTrackedDate = todayDate;
+  }
+  client.dailySteps = stepsCount;
+  const target = client.stepsTarget || 10000;
+  const pct = Math.min(100, Math.round((client.dailySteps / target) * 100));
+  const km = (client.dailySteps * 0.00075).toFixed(1);
+  const burnedKcal = Math.round(client.dailySteps * 0.04);
+  const activeMinutes = Math.round(client.dailySteps / 100);
+  await db.collection('clients').doc(client.id).set(client);
+  let reply = '👣 *ספירת צעדים עודכנה בהצלחה עבור ' + client.name + '!*\n\n';
+  reply += '🚶 *צעדים היום:* ' + client.dailySteps.toLocaleString() + ' / ' + target.toLocaleString() + ' (' + pct + '% מהיעד)\n';
+  reply += '📍 *מרחק משוער:* ' + km + ' ק״מ\n';
+  reply += '🔥 *שריפת אנרגיה:* ~' + burnedKcal + ' קק״ל\n';
+  reply += '⏱️ *זמן הליכה משוער:* ~' + activeMinutes + ' דקות\n\n';
+  if (client.dailySteps >= target) {
+    reply += '👑 *ניצחון! עמדת ביעד הצעדים היומי בהצלחה מוחצת! 🔥*';
+  } else {
+    const remSteps = target - client.dailySteps;
+    reply += '💪 נשארו עוד ' + remSteps.toLocaleString() + ' צעדים ליעד!';
+  }
+  await sendTelegramMessage(chatId, reply);
+}
+
+function buildReminderMessage(client, type) {
+  const name = client.name;
+  const phone = (client.phone || '').replace(/\D/g, '').replace(/^0/, '');
+  let message = '';
+  let title = '';
+  switch (type) {
+    case 'water':
+      title = '💧 תזכורת שתיית מים';
+      message = 'היי ' + name + ', תזכורת קטנה לשתות מים! 💧 כמה מים שתית עד עכשיו? שתף אותי או עדכן באפליקציה כדי שנגיע יחד ליעד היומי! 💪';
+      break;
+    case 'steps':
+      title = '👣 תזכורת צעדים ותנועה';
+      message = 'היי ' + name + ' 🚶‍♂️ איך הולך עם הצעדים היום? צא לעוד סיבוב קצר של 15 דקות כדי לסגור את היעד היומי. יאללה נותנים בראש! 🔥';
+      break;
+    case 'food':
+      title = '🥑 תזכורת יומן תזונה';
+      message = 'היי ' + name + ' 🥗 תזכורת קלה לעדכן את הארוחות שלך במחשבון או לשלוח לי כאן. מעקב עקבי = תוצאות מהירות ובטוחות! 🚀';
+      break;
+    case 'close':
+      title = '🌙 תזכורת סגירת יום וציון';
+      message = 'היי ' + name + ' ערב טוב! 🌙 אל תשכח להיכנס לאפליקציה וללחוץ על \'סגירת יום\' כדי לקבל את הציון היומי שלך ולשמור על רצף הימים! 👑';
+      break;
+    case 'weekend':
+      title = '📝 תזכורת שיקוף סופ״ש';
+      message = 'היי ' + name + ' שבת שלום! ☀️ תזכורת למלא את שיקוף הסופ״ש והשקילה באפליקציה כדי שנוכל לסכם שבוע מנצח ולדייק את השבוע הבא! 🏆';
+      break;
+    case 'weigh':
+      title = '⚖️ תזכורת שקילה שבועית';
+      message = 'היי ' + name + ', בוקר טוב! ☀️ הגיע הזמן לשקילה ומדדים השבועיים שלנו. אשמח שתעדכן אותי בהקדם כדי שנוכל לעקוב ולוודא שאנחנו לגמרי בכיוון הנכון! 💪';
+      break;
+    default:
+      title = '💪 הודעת מעקב כללית';
+      message = 'היי ' + name + ', מה קורה? רציתי לראות איך הולך היום ואיך אני יכול לעזור ולדייק אותך כדי שנמשיך הכי חזק שיש!';
+  }
+  const link = 'https://wa.me/972' + phone + '?text=' + encodeURIComponent(message);
+  return { title, message, link };
 }
