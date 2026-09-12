@@ -58,14 +58,13 @@ module.exports = async (req, res) => {
 
   // 3. בדיקה אם מסד הנתונים מחובר
   if (!db) {
-    await sendTelegramMessage(chatId, "❌ שגיאה: Firebase אינו מוגדר או מחובר כראוי בשרת. אנא הגדר את המשתנה `FIREBASE_SERVICE_ACCOUNT` ב-Vercel.");
+    await sendTelegramMessage(chatId, "❌ שגיאה: Firebase אינו מוגדר או מחובר כראוי בשרת. אנא הגדר את המשתנה \`FIREBASE_SERVICE_ACCOUNT\` ב-Vercel.");
     return res.status(200).send('No DB');
   }
 
   // 4. פענוח פקודות והודעות
   try {
     if (text === '/list') {
-      // רשימת לקוחות
       const snapshot = await db.collection('clients').where('status', '==', 'active').get();
       if (snapshot.empty) {
         await sendTelegramMessage(chatId, "אין כרגע מתאמנים פעילים בליווי.");
@@ -109,7 +108,6 @@ module.exports = async (req, res) => {
       await sendTelegramMessage(chatId, clientCard);
     }
     else if (text.startsWith('/weigh')) {
-      // עדכון שקילה: /weigh אלירן 85.2
       const parts = text.split(' ');
       if (parts.length < 3) {
         await sendTelegramMessage(chatId, "השתמש בפורמט: \n`/weigh [שם המתאמן] [משקל]`");
@@ -319,8 +317,7 @@ module.exports = async (req, res) => {
       return res.status(200).send('OK');
     }
     else {
-      // ⚡ זיהוי חופשי של הודעת אוכל / סלנג ללא צורך בפקודה מיוחדת!
-      // למשל: "150 גרם נוטלה", "אלירן 150 גרם נוטלה", "באגט חביתה", "אכלתי חזה עוף ואורז"
+      // ⚡ זיהוי חופשי של הודעת אוכל ורישום ישיר ללא צורך בפקודות!
       const snapshot = await db.collection('clients').where('status', '==', 'active').get();
       const activeClients = [];
       snapshot.forEach(doc => activeClients.push(doc.data()));
@@ -340,11 +337,9 @@ module.exports = async (req, res) => {
         }
       }
 
-      // אם לא צוין שם אך יש מתאמן פעיל יחיד במערכת
       if (!targetClient && activeClients.length === 1) {
         targetClient = activeClients[0];
       } else if (!targetClient && activeClients.length > 1 && isLikelyFoodQuery(text)) {
-        // ברירת מחדל: המתאמן הפעיל הראשון
         targetClient = activeClients[0];
       }
 
@@ -453,7 +448,7 @@ function isLikelyFoodQuery(t) {
     'טונה', 'לחם', 'פיתה', 'לאפה', 'שווארמה', 'סלמון', 'חלבון', 'שוקולד',
     'אכלתי', 'בטטה', 'בננה', 'תפוח', 'שמן', 'טחינה', 'פיצה', 'המבורגר',
     'שניצל', 'פסטה', 'יוגורט', 'קלוריות', 'באגט', 'בגט', 'חביתה', 'מיונז',
-    'פרו', 'סלט', 'טוסט', 'גבינה'
+    'פרו', 'סלט', 'טוסט', 'גבינה', 'אוכל', 'ארוחה', 'עוגה', 'קפה', 'נשנוש'
   ];
   return foodKeywords.some(kw => s.includes(kw)) && !s.startsWith('/');
 }
@@ -464,46 +459,35 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
   
   const targetCal = client?.macroCalculated?.targetCalories || client?.targetCalories || 2000;
   const targetPro = client?.macroCalculated?.targetProtein || client?.targetProtein || 140;
-  const targetCarb = client?.macroCalculated?.targetCarbs || client?.targetCarbs || 200;
-  const targetFat = client?.macroCalculated?.targetFat || client?.targetFat || 60;
-  
-  const targetProCal = client?.macroCalculated?.targetProteinCal || client?.targetProteinCal || Math.round(targetPro * 4);
-  const targetCarbCal = client?.macroCalculated?.targetCarbsCal || client?.targetCarbsCal || Math.round(targetCarb * 4);
-  const targetFatCal = client?.macroCalculated?.targetFatCal || client?.targetFatCal || Math.round(targetFat * 9);
-  const targetFreeCal = client?.macroCalculated?.targetFreeCal !== undefined ? client?.macroCalculated?.targetFreeCal : (client?.targetFreeCal || 0);
-  
   const clientGoal = client?.goal || 'חיטוב ועיצוב הגוף';
 
   const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר האישי והבוט הרשמי של המאמן אילאי).
-תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית או סלנג ישראלי, לחשב את סך הקלוריות והמאקרו (חלבון×4, פחמימה×4, שומן×9), ולהתאים את הכיסוי למכסות הקלוריות היומיות ותקציב הקלוריות החופשיות של המתאמן.
+תפקידך: לנתח ישירות דרך ה-API כל מאכל, כמות, תיאור חופשי בעברית, סלנג יומיומי או צילום צלחת, לחשב במדויק את הקלוריות והמאקרו המלאים (כולל לחמים, שמנים, ממרחים ורטבים), ולהחזיר משוב פשוט, נגיש, מעודד וסופר-מובן גם לאנשים שלא מבינים כלום בקלוריות ובמאקרו!
 
-פרופיל מכסות קלוריות ויעדים:
-- סך יעד קלורי: ${targetCal} קק״ל
-- מכסת חלבון: ${targetProCal} קק״ל (${targetPro} גרם)
-- מכסת פחמימות: ${targetCarbCal} קק״ל (${targetCarb} גרם)
-- מכסת שומן: ${targetFatCal} קק״ל (${targetFat} גרם)
-- תקציב קלוריות חופשיות (פינוק / גמיש): ${targetFreeCal} קק״ל
+פרופיל מתאמן:
+- יעד קלורי יומי: ${targetCal} קק״ל
+- יעד חלבון: ${targetPro} גרם
 - מטרה: ${clientGoal}
 
 תיאור המנה: "${foodQuery}"
 
-כללי כיול תזונתי מדויק לישראל:
-- באגט לבן/צרפתי: באגט שלם = 500-550 קלוריות, 18ג חלבון, 105ג פחמימה. חצי באגט = 250-275 קלוריות.
-- כריך / באגט חביתה (באגט + 2 ביצים + מיונז + ירקות): כ-720-750 קלוריות (34ג חלבון, 107ג פחמימה, 17ג שומן).
-- חביתה מ-2 ביצים: 160-180 קלוריות (כולל שמן טיגון), 14ג חלבון, 12ג שומן.
-- מריחה של מיונז לייט (15ג): 40-45 קלוריות. מיונז רגיל: 95-100 קלוריות.
-- נוטלה / ממרח שוקולד: 539 קל', 6.3ג' חלבון, 57.5ג' פחמימה, 30.9ג' שומן ל-100 גרם (150 גרם נוטלה = 809 קל', 9.5ג' חלבון, 86ג' פחמימה, 46.4ג' שומן).
-- שווארמה בלאפה עם טחינה וסלטים: 1050 קל', 65ג' חלבון (260 קל'), 110ג' פחמימה (440 קל'), 39ג' שומן (351 קל').
-- חזה עוף: 165 קל', 31ג' חלבון ל-100ג'.
-- סלמון אפוי: 206 קל', 22.1ג' חלבון ל-100ג'.
-- ביצה L: 75 קל', 6.8ג' חלבון.
-- אורז מבושל: 130 קל'/100ג' (כוס מבושלת 160ג' = 208 קל').
-- פיתה רגילה: 255 קל'. פיתה קלה: 99 קל'. לאפה: 480 קל'.
-- שמן זית: 88 קל' לכף (10ג'). טחינה גולמית: 96 קל' לכף (15ג').
+דגשים מיוחדים לדיוק מלא והנגשה למתאמנים:
+1. חשב את הערכים האמיתיים המלאים בישראל:
+   - באגט שלם לבן/צרפתי = 520 קלוריות, 18ג חלבון, 105ג פחמימה. חצי באגט = 260 קלוריות.
+   - כריך / באגט חביתה (באגט + 2 ביצים + מיונז + ירקות) = 740-760 קלוריות (34ג חלבון, 105ג פחמימה, 17ג שומן).
+   - חביתה מ-2 ביצים = 170 קלוריות (כולל שמן טיגון), 14ג חלבון, 12ג שומן.
+   - מריחה של מיונז לייט (15ג) = 40 קלוריות. מיונז רגיל = 100 קלוריות.
+   - שווארמה בלאפה עם טחינה וסלטים = 1050 קלוריות, 65ג חלבון, 110ג פחמימה, 39ג שומן.
+   - 150 גרם נוטלה = 809 קלוריות, 9.5ג חלבון, 86ג פחמימה, 46.4ג שומן.
+   - חזה עוף צלוי = 165 קל', 31ג חלבון ל-100ג.
+   - סלמון אפוי = 206 קל', 22.1ג חלבון ל-100ג.
+   - אורז מבושל = 130 קל'/100ג. פיתה רגילה = 255 קל'. לאפה = 480 קל'.
 
-משפט התובנה של המאמן אילאי (coachInsight):
-כתוב בלשון דיבור חיה, אותנטית, אנרגטית, תומכת ומקצועית של המאמן אילאי.
-התייחס במדויק לחלוקה הקלורית מכל מאקרו בארוחה הזו (חלבון, פחמימה, שומן), כמה קלוריות כוסו מתוך כל מכסה קלורית יומית, כמה קלוריות נותרו להיום בכל אחת מהמכסות (או אם נוצרה חריגה), האם נוצלו קלוריות מתקציב הקלוריות החופשיות (אם מדובר בפינוק/ממתק/נשנוש), ותן טיפ מנצח ודגש פרקטי מה לאכול בהמשך היום כדי לסגור את היעדים בצורה מושלמת!
+2. משפט התובנה של המאמן אילאי (coachInsight):
+   - כתוב בשפה חמה, נגישה, ישירה, מעודדת ואותנטית של המאמן אילאי.
+   - בלי מונחים טכניים מסובכים.
+   - תסביר בפשטות: האם זו מנה טובה לחלבון? כמה קלוריות זה לקח מהיום? ומה לעשות / לאכול בארוחה הבאה בצורה הכי קלה ליישום!
+   - אם מדובר בפינוק/חריגה: הסבר ברוגע ובפשטות איך לאזן בקלות בהמשך היום.
 
 החזר אך ורק JSON תקני ומדויק:
 {
@@ -511,18 +495,15 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
   "protein": סך חלבון בגרמים,
   "carbs": סך פחמימות בגרמים,
   "fat": סך שומן בגרמים,
-  "proteinCal": קלוריות מחלבון כמספר,
-  "carbsCal": קלוריות מפחמימה כמספר,
-  "fatCal": קלוריות משומן כמספר,
-  "coachInsight": "משפט תובנה, פירגון והנחיה אישית ממוקדת מכסות ותקציב חופשי מהמאמן אילאי",
+  "coachInsight": "משפט תובנה נגיש, מעודד ומעשי מאילאי במילים פשוטות",
   "items": [
     {
-      "name": "שם המאכל וכמות מוערכת בעברית",
+      "name": "שם המאכל בשפה ברורה (למשל: 'באגט שלם', 'חביתה מ-2 ביצים')",
       "cal": קלוריות כמספר,
       "pro": חלבון בגרם,
       "carb": פחמימות בגרם,
       "fat": שומן בגרם,
-      "swap": "הצעת תחליף שווה ערך איכותי ובריא יותר"
+      "swap": "טיפ פשוט או תחליף קליל"
     }
   ]
 }`;
@@ -538,7 +519,7 @@ async function analyzeFoodQueryWithAi(foodQuery, client = null) {
     try {
       const resp = await axios.post(`https://generativelanguage.googleapis.com/v1beta/${m}:generateContent?key=${key}`, {
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { response_mime_type: "application/json", temperature: 0.1 }
+        generationConfig: { response_mime_type: "application/json", temperature: 0.15 }
       }, { timeout: 8000 });
       const txt = resp.data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (txt) {

@@ -12192,6 +12192,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     }
 
                     this.isAiAnalyzing = true;
+                    this.aiAnalyzedMeal = null;
 
                     // זיהוי חכם של סוג הארוחה לפי שעת היום
                     if (!this.portalMealType) {
@@ -12203,22 +12204,12 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     const targetPro = client.macroCalculated?.targetProtein || client.targetProtein || 140;
                     const targetCarb = parseFloat(client.macroCalculated?.targetCarbs || client.targetCarbs) || 220;
                     const targetFat = parseFloat(client.macroCalculated?.targetFat || client.targetFat) || 65;
-
-                    const targetProCal = client.macroCalculated?.targetProteinCal || client.targetProteinCal || Math.round(targetPro * 4);
-                    const targetCarbCal = client.macroCalculated?.targetCarbsCal || client.targetCarbsCal || Math.round(targetCarb * 4);
-                    const targetFatCal = client.macroCalculated?.targetFatCal || client.targetFatCal || Math.round(targetFat * 9);
-                    
-                    const explicitFree = parseFloat(client.macroCalculated?.targetFreeCal !== undefined ? client.macroCalculated.targetFreeCal : client.targetFreeCal);
-                    const targetFreeCal = !isNaN(explicitFree) ? explicitFree : Math.max(0, targetCal - (targetProCal + targetCarbCal + targetFatCal));
-
                     const clientGoal = client.goal || "חיטוב ועיצוב הגוף";
-                    const todayCals = this.getTodayConsumedCalories(client);
-                    const remainingCal = Math.max(0, targetCal - todayCals);
 
-                    // ⚡ 1. בדיקת מטמון חכם למענה מיידי
+                    // ⚡ בדיקת מטמון AI (גרסה 7 לתוצאות מדויקות בלבד)
                     if (rawQuery && !this.portalMealPhoto) {
                         try {
-                            const cacheKey = "ilai_meal_v6_" + rawQuery.toLowerCase();
+                            const cacheKey = "ilai_meal_v7_" + rawQuery.toLowerCase();
                             const cached = localStorage.getItem(cacheKey);
                             if (cached) {
                                 const parsedCached = JSON.parse(cached);
@@ -12230,9 +12221,6 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                 }
                             }
                         } catch(e) {}
-
-                        // ⚡ 2. הרצה מקומית מיידית ב-0ms לתצוגה חיה ומהירה ללא שום השהייה!
-                        this.runLocalFoodAnalysis();
                     }
 
                     const clientGoalsObj = {
@@ -12240,16 +12228,12 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         targetProtein: targetPro,
                         targetCarbs: targetCarb,
                         targetFat: targetFat,
-                        targetProteinCal: targetProCal,
-                        targetCarbsCal: targetCarbCal,
-                        targetFatCal: targetFatCal,
-                        targetFreeCal: targetFreeCal,
                         goal: clientGoal
                     };
 
                     let parsedResult = null;
 
-                    // ⚡ 3. ניסיון פנייה ישיר דרך שרת ה-API של Vercel (אמין, מהיר ומדויק)
+                    // 1. קריאה ישירה וטהורה לשרת ה-API של Vercel
                     try {
                         const isVision = Boolean(this.portalMealPhoto && this.portalMealPhoto.startsWith("data:image"));
                         const apiPayload = {
@@ -12272,40 +12256,28 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             }
                         }
                     } catch(errServer) {
-                        console.warn('Server endpoint /api/analyze-food unavailable, trying direct Gemini:', errServer);
+                        console.warn('Server endpoint /api/analyze-food unavailable, trying direct Gemini API:', errServer);
                     }
 
-                    // ⚡ 4. אם השרת לא זמין (למשל ריצה מקומית), פנייה ישירה ל-Gemini API
+                    // 2. אם רץ מקומית / אופליין חלקי - פנייה ישירה מול ה-Gemini API
                     if (!parsedResult) {
                         const apiKey = this.getEffectiveGeminiKey();
                         if (apiKey) {
                             try {
                                 const isVision = Boolean(this.portalMealPhoto && this.portalMealPhoto.startsWith("data:image"));
                                 const prompt = `אתה דיאטן קליני בכיר ומומחה תזונת ספורט ישראלי (העוזר האישי והבוט הרשמי של המאמן אילאי).
-תפקידך לנתח בדיוק מירבי כל מאכל, כמות, תיאור בעברית, סלנג ישראלי או צילום צלחת, לחשב את סך הקלוריות והמאקרו המדויק (כולל לחמים, באגטים, שמנים, ממרחים וכל המרכיבים), ולהתאים את הכיסוי למכסות הקלוריות של המתאמן.
+תפקידך: לנתח ישירות דרך ה-API כל מאכל, כמות, תיאור חופשי בעברית, סלנג יומיומי או צילום צלחת, לחשב במדויק את הקלוריות והמאקרו המלאים (כולל לחמים, שמנים, ממרחים ורטבים), ולהחזיר משוב פשוט, נגיש, מעודד וסופר-מובן גם לאנשים שלא מבינים כלום בקלוריות ובמאקרו!
 
-פרופיל מכסות קלוריות ויעדים של המתאמן:
-- סך יעד קלורי: ${targetCal} קק״ל (נצרכו: ${todayCals}, נותרו: ${remainingCal})
-- מכסת חלבון: ${targetProCal} קק״ל (${targetPro} גרם)
-- מכסת פחמימות: ${targetCarbCal} קק״ל (${targetCarb} גרם)
-- מכסת שומן: ${targetFatCal} קק״ל (${targetFat} גרם)
-- תקציב קלוריות חופשיות: ${targetFreeCal} קק״ל
-- מטרת ליווי: ${clientGoal}
+פרופיל מתאמן:
+- יעד קלורי יומי: ${targetCal} קק״ל
+- יעד חלבון: ${targetPro} גרם
+- מטרה: ${clientGoal}
 
 תיאור המנה: "${rawQuery || (this.portalMealPhoto ? "צלחת שצולמה בתמונה" : "")}"
 
-דגשי כיול תזונתי מדויק לישראל (הערך תמיד את המנה המלאה כולל הלחם והשמנים!):
-- באגט לבן/צרפתי: באגט שלם = 500-550 קלוריות, 18ג חלבון, 105ג פחמימה. חצי באגט = 250-275 קלוריות.
-- כריך / באגט חביתה (באגט שלם + 2 ביצים + מיונז + ירקות): כ-720-750 קלוריות (34ג חלבון, 107ג פחמימה, 17ג שומן).
-- חביתה מ-2 ביצים: 160-180 קלוריות (כולל שמן טיגון), 14ג חלבון, 12ג שומן.
-- מריחה של מיונז לייט (15ג): 40-45 קלוריות. מיונז רגיל: 95-100 קלוריות.
-- שווארמה בלאפה עם טחינה וסלטים: 1050 קלוריות, 65ג חלבון, 110ג פחמימה, 39ג שומן.
-- נוטלה: 539 קל'/100ג (150 גרם נוטלה = 809 קלוריות, 9.5ג חלבון, 86ג פחמימה, 46.4ג שומן).
-- חזה עוף: 165 קל', 31ג חלבון ל-100ג. סלמון: 206 קל', 22ג חלבון ל-100ג.
-- אורז מבושל: 130 קל'/100ג (כוס מבושלת = 208 קל'). פיתה רגילה: 255 קל'. לאפה: 480 קל'.
-
-משפט התובנה של המאמן אילאי (coachInsight):
-כתוב בלשון דיבור חיה, אותנטית, תומכת ומקצועית של המאמן אילאי עם כיסוי מכסות והנחיה להמשך היום!
+דגשים מיוחדים לדיוק מלא והנגשה למתאמנים:
+1. ערכים אמיתיים בישראל: באגט שלם = 520 קל', חצי באגט = 260 קל', באגט חביתה (2 ביצים + מיונז) = 740-760 קל', לאפה שווארמה = 1050 קל', 150 גרם נוטלה = 809 קל', חזה עוף 180ג = 297 קל', אורז כוס = 208 קל', פיתה = 255 קל'.
+2. משפט התובנה (coachInsight): כתוב בשפה חמה, נגישה, ישירה ומעודדת של המאמן אילאי. בלי מונחים טכניים מסובכים. תסביר בפשטות: האם זו מנה טובה לחלבון? כמה קלוריות זה לקח מהיום? ומה לעשות / לאכול בארוחה הבאה בצורה הכי קלה ליישום!
 
 החזר אך ורק JSON תקני ומדויק:
 {
@@ -12316,15 +12288,15 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
   "proteinCal": קלוריות מחלבון,
   "carbsCal": קלוריות מפחמימה,
   "fatCal": קלוריות משומן,
-  "coachInsight": "משפט תובנה ופירגון מקצועי מהמאמן אילאי",
+  "coachInsight": "משפט תובנה נגיש, מעודד ומעשי מאילאי במילים פשוטות",
   "items": [
     {
-      "name": "שם המאכל וכמות מוערכת בעברית (למשל: 'באגט שלם', 'חביתה מ-2 ביצים')",
-      "cal": קלוריות כמספר,
+      "name": "שם המאכל בשפה ברורה (למשל: 'באגט שלם', 'חביתה מ-2 ביצים')",
+      "cal": קלוריות,
       "pro": חלבון בגרם,
       "carb": פחמימות בגרם,
       "fat": שומן בגרם,
-      "swap": "הצעת תחליף איכותי"
+      "swap": "טיפ פשוט או תחליף קליל"
     }
   ]
 }`;
@@ -12340,7 +12312,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                                     contents: [{ parts }],
                                     generationConfig: {
                                         response_mime_type: 'application/json',
-                                        temperature: 0.1
+                                        temperature: 0.15
                                     }
                                 };
 
@@ -12380,7 +12352,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                         }
                     }
 
-                    // ⚡ 5. תוצאה מוכנה או חישוב מקומי
+                    // 3. הצגת תוצאת ה-AI בפורמט נגיש ואינטואיטיבי
                     if (parsedResult) {
                         const parsed = parsedResult;
                         const totalCal = Math.round(parsed.calories || 0);
@@ -12401,7 +12373,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                             proteinCal: proCal,
                             carbsCal: carbCal,
                             fatCal: fatCal,
-                            coachInsight: parsed.coachInsight || `ארוחה מעולה המכילה ${totalPro} גרם חלבון! נותרו לך עוד ${Math.max(0, remainingCal - totalCal)} קלוריות להיום.`,
+                            coachInsight: parsed.coachInsight || `ארוחה מעולה המכילה ${totalPro} גרם חלבון! נותרו לך עוד ${Math.max(0, targetCal - totalCal)} קלוריות להיום.`,
                             pProtein: Math.round((proCal / sumCal) * 100),
                             pCarbs: Math.round((carbCal / sumCal) * 100),
                             pFat: Math.max(0, 100 - Math.round((proCal / sumCal) * 100) - Math.round((carbCal / sumCal) * 100)),
@@ -12419,10 +12391,11 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                         if (rawQuery && !this.portalMealPhoto) {
                             try {
-                                localStorage.setItem("ilai_meal_v6_" + rawQuery.toLowerCase(), JSON.stringify(analyzedResult));
+                                localStorage.setItem("ilai_meal_v7_" + rawQuery.toLowerCase(), JSON.stringify(analyzedResult));
                             } catch(e) {}
                         }
-                    } else if (!this.aiAnalyzedMeal) {
+                    } else {
+                        // אם אין חיבור רשת כלל, fallback רגוע
                         this.runLocalFoodAnalysis();
                     }
 
