@@ -527,6 +527,30 @@
                 
                 <!-- צד שמאל (RTL): כפתורי פעולה מרווחים, אלגנטיים ומאווררים -->
                 <div class="flex items-center gap-3 md:gap-5">
+                    <!-- אינדיקטור סנכרון ענן חי בזמן אמת למאמן -->
+                    <div class="hidden sm:flex items-center gap-2 bg-[#f5effa] border border-[#ded0eb] px-3.5 py-1.5 rounded-2xl text-xs font-bold shadow-2xs">
+                        <template x-if="isCloudSynced">
+                            <div class="flex items-center gap-2 text-[#1a0730]">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#16a34a] animate-pulse"></span>
+                                <span>מסונכרן לענן בזמן אמת</span>
+                                <span class="text-[10px] text-[#6f5888] font-normal" x-text="'(' + (lastCloudSyncTimestamp || 'פעיל') + ')'"></span>
+                            </div>
+                        </template>
+                        <template x-if="!isCloudSynced">
+                            <div class="flex items-center gap-2 text-[#dc2626]">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#dc2626]"></span>
+                                <span>מצב מקומי (לא מקוון)</span>
+                            </div>
+                        </template>
+                        <button type="button" 
+                                @click="forceRefreshCloudData(false)" 
+                                class="p-1 rounded-lg hover:bg-white text-[#1a0730] hover:text-[#16a34a] transition cursor-pointer" 
+                                :class="isCloudSyncing ? 'animate-spin' : ''"
+                                title="רענן וסנכרן נתונים מהענן כעת">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+
                     <!-- כפתור שאלון קליטה -->
                     <button 
                         type="button"
@@ -7654,6 +7678,8 @@
 
                 // פורטל מתאמן אישי
                 portalClientId: null,
+                isCloudSyncing: false,
+                lastCloudSyncTimestamp: '',
                 portalActiveSubTab: 'home',
                 portalSelectedWorkoutDayIdx: 0,
                 portalScorecardViewDate: '',
@@ -9340,13 +9366,27 @@
                     
                     const params = new URLSearchParams(window.location.search);
                     const portalParamId = params.get('clientId') || params.get('client') || params.get('c');
+                    let savedPortalId = null;
+                    try {
+                        savedPortalId = localStorage.getItem('il_fitness_portal_client_id');
+                    } catch(e) {}
+
                     if (params.get('intake') === 'true') {
                         this.activeTab = 'intake';
                         this.isCoachAuthenticated = false;
                     } else if (params.get('portal') === 'true' || portalParamId) {
                         this.activeTab = 'portal';
-                        this.portalClientId = portalParamId || (this.clients[0]?.id || null);
+                        this.portalClientId = portalParamId || savedPortalId || (this.clients[0]?.id || null);
+                        if (this.portalClientId) {
+                            try { localStorage.setItem('il_fitness_portal_client_id', this.portalClientId); } catch(e) {}
+                        }
                         this.selectedClientId = this.portalClientId;
+                        this.isCoachAuthenticated = false;
+                    } else if (savedPortalId && !localStorage.getItem('ilaico_coach_auth')) {
+                        // אם המתאמן שמר לאחרונה את האפליקציה בטלפון, נפתח לו מיד את הפורטל שלו
+                        this.activeTab = 'portal';
+                        this.portalClientId = savedPortalId;
+                        this.selectedClientId = savedPortalId;
                         this.isCoachAuthenticated = false;
                     } else {
                         // מסך הנעילה נדרש. קודם לכן שורה זו קבעה isCoachAuthenticated = true,
@@ -9366,10 +9406,56 @@
                     setInterval(() => {
                         this.checkAndProcessMidnightRollover();
                     }, 60000);
+
+                    // סנכרון אוטומטי ברקע בעת חזרה לחלון/טאב הדפדפן
+                    window.addEventListener('focus', () => {
+                        if (this.db && this.isCloudSynced) {
+                            this.forceRefreshCloudData(true);
+                        }
+                    });
+                    document.addEventListener('visibilitychange', () => {
+                        if (!document.hidden && this.db && this.isCloudSynced) {
+                            this.forceRefreshCloudData(true);
+                        }
+                    });
                     
                     setTimeout(() => {
                         if (window.lucide) window.lucide.createIcons();
                     }, 100);
+                },
+
+                // רענון וסנכרון ענן מיידי ויזואלי למאמן
+                async forceRefreshCloudData(isSilent = false) {
+                    if (!this.db) {
+                        this.loadFirebaseConfig();
+                    }
+                    if (!this.db) {
+                        if (!isSilent) alert("חיבור הענן אינו פעיל כעת. בדוק את הגדרות הפרויקט בטאב הגדרות.");
+                        return;
+                    }
+                    this.isCloudSyncing = true;
+                    try {
+                        const snapshot = await this.db.collection("clients").get();
+                        const cloudClients = [];
+                        snapshot.forEach(doc => {
+                            const data = doc.data();
+                            if (data && data.id) cloudClients.push(data);
+                        });
+                        if (cloudClients.length > 0) {
+                            this.clients = cloudClients;
+                            this.isCloudSynced = true;
+                            this.lastCloudSyncTimestamp = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                        }
+                        this.isCloudSyncing = false;
+                        if (!isSilent) {
+                            if (typeof confetti === 'function') confetti({ particleCount: 40, spread: 50, origin: { y: 0.2 } });
+                        }
+                        setTimeout(() => { if (typeof window !== 'undefined' && window.lucide) window.lucide.createIcons(); }, 50);
+                    } catch(err) {
+                        console.error("Force refresh cloud error:", err);
+                        this.isCloudSyncing = false;
+                        if (!isSilent) alert("שגיאה בסנכרון מהענן: " + err.message);
+                    }
                 },
 
                 // טעינת הגדרות Firebase
