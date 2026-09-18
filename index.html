@@ -9261,91 +9261,12 @@
 
                         const cloudClients = [];
                         const todayStr = this.getTodayDate();
-
                         snapshot.forEach(doc => {
                             const cloudClient = doc.data();
                             if (!cloudClient || !cloudClient.id) return;
-                            
-                            // 1. גיבוי מקומי לפי מזהה מתאמן
-                            let localFoodLogs = [];
-                            try {
-                                const stored = localStorage.getItem('il_fitness_foodlogs_' + cloudClient.id);
-                                if (stored) localFoodLogs = JSON.parse(stored) || [];
-                            } catch(e) {}
-
-                            // 2. מתאמן נוכחי בזיכרון המקומי
-                            const localClient = this.clients && this.clients.find(c => c.id === cloudClient.id);
-                            if (localClient && localClient.foodLogs) {
-                                const storedIds = new Set(localFoodLogs.map(l => l.id));
-                                localClient.foodLogs.forEach(l => {
-                                    if (l && l.id && !storedIds.has(l.id)) localFoodLogs.unshift(l);
-                                });
-                            }
-
-                            // 3. מיזוג ארוחות מוגן למניעת היעלמות (Union by ID)
-                            if (localFoodLogs.length > 0) {
-                                const cloudFoodIds = new Set((cloudClient.foodLogs || []).map(l => l && l.id));
-                                const missingInCloud = localFoodLogs.filter(l => l && l.id && !cloudFoodIds.has(l.id));
-                                if (missingInCloud.length > 0) {
-                                    cloudClient.foodLogs = [...missingInCloud, ...(cloudClient.foodLogs || [])];
-                                    setTimeout(() => { this.saveClientToCloud(cloudClient); }, 150);
-                                }
-                            }
-
-                            // 4. מיזוג שיקופים שבועיים (Union by ID)
-                            if (localClient && localClient.reflectionLogs && localClient.reflectionLogs.length > 0) {
-                                const cloudRefIds = new Set((cloudClient.reflectionLogs || []).map(r => r && r.id));
-                                const freshRef = localClient.reflectionLogs.filter(r => r && r.id && !cloudRefIds.has(r.id));
-                                if (freshRef.length > 0) {
-                                    cloudClient.reflectionLogs = [...freshRef, ...(cloudClient.reflectionLogs || [])];
-                                }
-                            }
-
-                            // 5. מיזוג יומני אימון (Union by ID / Date+Day)
-                            if (localClient && localClient.workoutLogs && localClient.workoutLogs.length > 0) {
-                                const cloudWlKeys = new Set((cloudClient.workoutLogs || []).map(w => w && (w.id || (w.date + '_' + (w.dayName || '')))));
-                                const freshWl = localClient.workoutLogs.filter(w => w && !cloudWlKeys.has(w.id || (w.date + '_' + (w.dayName || ''))));
-                                if (freshWl.length > 0) {
-                                    cloudClient.workoutLogs = [...freshWl, ...(cloudClient.workoutLogs || [])];
-                                }
-                            }
-
-                            // 6. מיזוג דיווחי שקילה (Union by Date)
-                            if (localClient && localClient.checkins && localClient.checkins.length > 0) {
-                                const cloudCheckinDates = new Set((cloudClient.checkins || []).map(k => k && k.date));
-                                const freshCheckins = localClient.checkins.filter(k => k && k.date && !cloudCheckinDates.has(k.date));
-                                if (freshCheckins.length > 0) {
-                                    cloudClient.checkins = [...(cloudClient.checkins || []), ...freshCheckins];
-                                    cloudClient.checkins.sort((a, b) => new Date(a.date) - new Date(b.date));
-                                }
-                            }
-
-                            // 7. מיזוג דיווחים יומיים / צ'ק ליסט (Scorecards)
-                            if (localClient && localClient.dailyScorecards && localClient.dailyScorecards.length > 0) {
-                                const cloudScorecardDates = new Set((cloudClient.dailyScorecards || []).map(s => s && s.date));
-                                const freshScorecards = localClient.dailyScorecards.filter(s => s && s.date && !cloudScorecardDates.has(s.date));
-                                if (freshScorecards.length > 0) {
-                                    cloudClient.dailyScorecards = [...freshScorecards, ...(cloudClient.dailyScorecards || [])];
-                                }
-                            }
-
-                            // 8. הגנה על מים וצעדים מפני דריסה במידה ונוספו מקומית
-                            if (localClient && localClient.lastTrackedDate === todayStr) {
-                                if (cloudClient.lastTrackedDate === todayStr) {
-                                    cloudClient.dailyWater = Math.max(localClient.dailyWater || 0, cloudClient.dailyWater || 0);
-                                    cloudClient.dailySteps = Math.max(localClient.dailySteps || 0, cloudClient.dailySteps || 0);
-                                } else if ((localClient.dailyWater || 0) > 0 || (localClient.dailySteps || 0) > 0) {
-                                    cloudClient.dailyWater = localClient.dailyWater || 0;
-                                    cloudClient.dailySteps = localClient.dailySteps || 0;
-                                    cloudClient.lastTrackedDate = todayStr;
-                                }
-                            }
-
-                            // 9. גיבוי בטוח ב-localStorage
                             try {
                                 localStorage.setItem('il_fitness_client_' + cloudClient.id, JSON.stringify(cloudClient));
                             } catch(e) {}
-
                             cloudClients.push(cloudClient);
                         });
                         this.clients = cloudClients;
