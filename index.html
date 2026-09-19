@@ -897,7 +897,7 @@
 
                             <!-- סטטוס סנכרון וקשר עם אילאי -->
                             <div class="flex items-center gap-2 self-end sm:self-center">
-                                <div class="flex items-center gap-1.5 bg-[#0f041d]/80 border border-[#ede9fe] px-3 py-1.5 rounded-xl text-[11px] font-bold text-[#1e1b4b]">
+                                <div class="flex items-center gap-1.5 bg-white/80 border border-[#ede9fe] px-3 py-1.5 rounded-xl text-[11px] font-bold text-[#1e1b4b]">
                                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                                     <span>מסונכרן לענן ✓</span>
                                 </div>
@@ -912,28 +912,28 @@
                         <div class="mt-4 pt-3.5 border-t border-[#ede9fe]/60 grid grid-cols-4 gap-1.5 text-center text-xs font-bold">
                             <button type="button" 
                                     @click="portalActiveSubTab = 'home'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'home' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-[#0f041d]/60 text-slate-300 hover:text-white hover:bg-[#7c3aed]'"
+                                    :class="portalActiveSubTab === 'home' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white/60 text-[#6b7280] hover:text-white hover:bg-[#7c3aed]'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                                 <span>ראשי</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'workouts' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-[#0f041d]/60 text-slate-300 hover:text-white hover:bg-[#7c3aed]'"
+                                    :class="portalActiveSubTab === 'workouts' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white/60 text-[#6b7280] hover:text-white hover:bg-[#7c3aed]'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="dumbbell" class="w-4 h-4"></i>
                                 <span>אימונים</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'nutrition'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-[#0f041d]/60 text-slate-300 hover:text-white hover:bg-[#7c3aed]'"
+                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white/60 text-[#6b7280] hover:text-white hover:bg-[#7c3aed]'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="utensils" class="w-4 h-4"></i>
                                 <span>תזונה</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'progress'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'progress' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-[#0f041d]/60 text-slate-300 hover:text-white hover:bg-[#7c3aed]'"
+                                    :class="portalActiveSubTab === 'progress' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white/60 text-[#6b7280] hover:text-white hover:bg-[#7c3aed]'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="trending-up" class="w-4 h-4"></i>
                                 <span>התקדמות</span>
@@ -1022,10 +1022,10 @@
                                 </div>
 
                                 <div class="flex items-center justify-between gap-1.5 text-[11px] font-bold">
-                                    <button type="button" @click="addWater(250)" class="flex-1 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-sky-300 rounded-lg transition cursor-pointer">+250 מ״ל</button>
-                                    <button type="button" @click="addWater(500)" class="flex-1 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-sky-300 rounded-lg transition cursor-pointer">+500 מ״ל</button>
-                                    <button type="button" @click="addWater(1000)" class="flex-1 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-sky-300 rounded-lg transition cursor-pointer">+1 ליטר</button>
-                                    <button type="button" @click="resetWater()" class="p-1.5 bg-[#0f041d] hover:bg-red-900/40 border border-[#ede9fe] text-[#6d28d9] hover:text-red-300 rounded-lg transition cursor-pointer" title="איפוס"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i></button>
+                                    <button type="button" @click="addWater(250)" class="flex-1 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-sky-300 rounded-lg transition cursor-pointer">+250 מ״ל</button>
+                                    <button type="button" @click="addWater(500)" class="flex-1 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-sky-300 rounded-lg transition cursor-pointer">+500 מ״ל</button>
+                                    <button type="button" @click="addWater(1000)" class="flex-1 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-sky-300 rounded-lg transition cursor-pointer">+1 ליטר</button>
+                                    <button type="button" @click="resetWater()" class="p-1.5 bg-white hover:bg-red-900/40 border border-[#ede9fe] text-[#6d28d9] hover:text-red-300 rounded-lg transition cursor-pointer" title="איפוס"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i></button>
                                 </div>
                             </div>
 
@@ -1046,9 +1046,9 @@
                                 </div>
 
                                 <div class="flex items-center justify-between gap-1.5 text-[11px] font-bold">
-                                    <button type="button" @click="updateSteps((portalClient?.dailySteps || 0) + 1000)" class="flex-1 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-emerald-300 rounded-lg transition cursor-pointer">+1,000</button>
-                                    <button type="button" @click="updateSteps((portalClient?.dailySteps || 0) + 2500)" class="flex-1 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-emerald-300 rounded-lg transition cursor-pointer">+2,500</button>
-                                    <button type="button" @click="updateSteps((portalClient?.dailySteps || 0) + 5000)" class="flex-1 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-emerald-300 rounded-lg transition cursor-pointer">+5,000</button>
+                                    <button type="button" @click="updateSteps((portalClient?.dailySteps || 0) + 1000)" class="flex-1 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-emerald-300 rounded-lg transition cursor-pointer">+1,000</button>
+                                    <button type="button" @click="updateSteps((portalClient?.dailySteps || 0) + 2500)" class="flex-1 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-emerald-300 rounded-lg transition cursor-pointer">+2,500</button>
+                                    <button type="button" @click="updateSteps((portalClient?.dailySteps || 0) + 5000)" class="flex-1 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-emerald-300 rounded-lg transition cursor-pointer">+5,000</button>
                                 </div>
                             </div>
                         </div>
@@ -1066,7 +1066,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-bold">
                                 <!-- משימת אימון -->
                                 <div @click="scorecardWorkout = (scorecardWorkout === 'yes' ? 'no' : 'yes'); autoSaveDailyScorecard(false)"
-                                     :class="scorecardWorkout === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-[#0f041d]/70 border-[#ede9fe] text-[#6d28d9]'"
+                                     :class="scorecardWorkout === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-white/70 border-[#ede9fe] text-[#6d28d9]'"
                                      class="p-3 rounded-xl border flex items-center justify-between cursor-pointer transition">
                                     <div class="flex items-center gap-2.5">
                                         <i data-lucide="dumbbell" class="w-4 h-4"></i>
@@ -1079,7 +1079,7 @@
 
                                 <!-- משימת קלוריות -->
                                 <div @click="scorecardNutrition = (scorecardNutrition === 'yes' ? 'no' : 'yes'); autoSaveDailyScorecard(false)"
-                                     :class="scorecardNutrition === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-[#0f041d]/70 border-[#ede9fe] text-[#6d28d9]'"
+                                     :class="scorecardNutrition === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-white/70 border-[#ede9fe] text-[#6d28d9]'"
                                      class="p-3 rounded-xl border flex items-center justify-between cursor-pointer transition">
                                     <div class="flex items-center gap-2.5">
                                         <i data-lucide="flame" class="w-4 h-4"></i>
@@ -1092,7 +1092,7 @@
 
                                 <!-- משימת חלבון -->
                                 <div @click="scorecardProtein = (scorecardProtein === 'yes' ? 'no' : 'yes'); autoSaveDailyScorecard(false)"
-                                     :class="scorecardProtein === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-[#0f041d]/70 border-[#ede9fe] text-[#6d28d9]'"
+                                     :class="scorecardProtein === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-white/70 border-[#ede9fe] text-[#6d28d9]'"
                                      class="p-3 rounded-xl border flex items-center justify-between cursor-pointer transition">
                                     <div class="flex items-center gap-2.5">
                                         <i data-lucide="beef" class="w-4 h-4"></i>
@@ -1105,7 +1105,7 @@
 
                                 <!-- משימת מים -->
                                 <div @click="scorecardWater = (scorecardWater === 'yes' ? 'no' : 'yes'); autoSaveDailyScorecard(false)"
-                                     :class="scorecardWater === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-[#0f041d]/70 border-[#ede9fe] text-[#6d28d9]'"
+                                     :class="scorecardWater === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-white/70 border-[#ede9fe] text-[#6d28d9]'"
                                      class="p-3 rounded-xl border flex items-center justify-between cursor-pointer transition">
                                     <div class="flex items-center gap-2.5">
                                         <i data-lucide="droplet" class="w-4 h-4"></i>
@@ -1118,7 +1118,7 @@
 
                                 <!-- משימת צעדים -->
                                 <div @click="scorecardSteps = (scorecardSteps === 'yes' ? 'no' : 'yes'); autoSaveDailyScorecard(false)"
-                                     :class="scorecardSteps === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-[#0f041d]/70 border-[#ede9fe] text-[#6d28d9]'"
+                                     :class="scorecardSteps === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-white/70 border-[#ede9fe] text-[#6d28d9]'"
                                      class="p-3 rounded-xl border flex items-center justify-between cursor-pointer transition">
                                     <div class="flex items-center gap-2.5">
                                         <i data-lucide="footprints" class="w-4 h-4"></i>
@@ -1131,7 +1131,7 @@
 
                                 <!-- משימת שינה והתאוששות -->
                                 <div @click="scorecardSleep = (scorecardSleep === 'yes' ? 'no' : 'yes'); autoSaveDailyScorecard(false)"
-                                     :class="scorecardSleep === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-[#0f041d]/70 border-[#ede9fe] text-[#6d28d9]'"
+                                     :class="scorecardSleep === 'yes' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-300' : 'bg-white/70 border-[#ede9fe] text-[#6d28d9]'"
                                      class="p-3 rounded-xl border flex items-center justify-between cursor-pointer transition">
                                     <div class="flex items-center gap-2.5">
                                         <i data-lucide="moon" class="w-4 h-4"></i>
@@ -1162,7 +1162,7 @@
                                 <template x-for="(day, dayIdx) in portalClient.workoutPlan.days" :key="dayIdx">
                                     <button type="button" 
                                             @click="portalSelectedWorkoutDayIdx = dayIdx; initLiveWorkout(portalClient, dayIdx); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                            :class="portalSelectedWorkoutDayIdx === dayIdx ? 'bg-[#fbbf24] text-[#1e1b4b] font-black shadow-md' : 'bg-transparent text-slate-300 hover:text-white'"
+                                            :class="portalSelectedWorkoutDayIdx === dayIdx ? 'bg-[#fbbf24] text-[#1e1b4b] font-black shadow-md' : 'bg-transparent text-[#6b7280] hover:text-white'"
                                             class="flex-1 min-w-[90px] py-2 px-2 rounded-xl text-xs transition text-center cursor-pointer whitespace-nowrap">
                                         <span x-text="day.name || day.dayName || ('אימון ' + (dayIdx + 1))"></span>
                                     </button>
@@ -1183,13 +1183,13 @@
                             </div>
 
                             <div class="flex items-center gap-1.5">
-                                <button type="button" @click="startRestTimer(60)" class="px-2.5 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-[#1e1b4b] rounded-xl text-xs font-bold transition cursor-pointer">60s</button>
-                                <button type="button" @click="startRestTimer(90)" class="px-2.5 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-[#1e1b4b] rounded-xl text-xs font-bold transition cursor-pointer">90s</button>
-                                <button type="button" @click="addRestTime(30)" class="px-2.5 py-1.5 bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-[#fbbf24] rounded-xl text-xs font-bold transition cursor-pointer">+30s</button>
+                                <button type="button" @click="startRestTimer(60)" class="px-2.5 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] rounded-xl text-xs font-bold transition cursor-pointer">60s</button>
+                                <button type="button" @click="startRestTimer(90)" class="px-2.5 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] rounded-xl text-xs font-bold transition cursor-pointer">90s</button>
+                                <button type="button" @click="addRestTime(30)" class="px-2.5 py-1.5 bg-white hover:bg-white border border-[#ede9fe] text-[#fbbf24] rounded-xl text-xs font-bold transition cursor-pointer">+30s</button>
                                 <button type="button" @click="toggleRestTimer()" class="p-1.5 bg-[#fbbf24] text-[#1e1b4b] rounded-xl text-xs font-black transition cursor-pointer">
                                     <i :data-lucide="isRestTimerRunning ? 'pause' : 'play'" class="w-4 h-4"></i>
                                 </button>
-                                <button type="button" @click="stopRestTimer()" class="p-1.5 bg-[#0f041d] hover:bg-red-900/40 border border-[#ede9fe] text-[#6d28d9] hover:text-red-300 rounded-xl transition cursor-pointer" title="איפוס">
+                                <button type="button" @click="stopRestTimer()" class="p-1.5 bg-white hover:bg-red-900/40 border border-[#ede9fe] text-[#6d28d9] hover:text-red-300 rounded-xl transition cursor-pointer" title="איפוס">
                                     <i data-lucide="square" class="w-4 h-4"></i>
                                 </button>
                             </div>
@@ -1257,7 +1257,7 @@
                                                             <tr class="border-b border-[#ede9fe]/40 transition" :class="setItem.done ? 'bg-emerald-950/30' : ''">
                                                                 <!-- מספר סט -->
                                                                 <td class="py-2 px-1 text-center font-black text-[#1e1b4b] text-xs">
-                                                                    <span class="w-6 h-6 rounded-lg inline-flex items-center justify-center font-bold text-xs" :class="setItem.done ? 'bg-emerald-500 text-[#1e1b4b]' : 'bg-[#0f041d] text-[#6d28d9] border border-[#ede9fe]'" x-text="setItem.setNum"></span>
+                                                                    <span class="w-6 h-6 rounded-lg inline-flex items-center justify-center font-bold text-xs" :class="setItem.done ? 'bg-emerald-500 text-[#1e1b4b]' : 'bg-white text-[#6d28d9] border border-[#ede9fe]'" x-text="setItem.setNum"></span>
                                                                 </td>
 
                                                                 <!-- יעד מאמן -->
@@ -1340,15 +1340,15 @@
 
                             <!-- 3 כרטיסי קלוריות (יעד, נאכל, נותר) -->
                             <div class="grid grid-cols-3 gap-2.5 text-center">
-                                <div class="bg-[#0f041d]/80 border border-[#ede9fe] p-3 rounded-2xl">
+                                <div class="bg-white/80 border border-[#ede9fe] p-3 rounded-2xl">
                                     <span class="text-[10px] text-[#6d28d9] font-bold block">נאכל היום</span>
                                     <span class="text-base sm:text-lg font-black text-[#1e1b4b]" x-text="getTodayConsumedCalories(portalClient)"></span>
                                 </div>
-                                <div class="bg-[#2a0f4a] border border-[#fbbf24]/40 p-3 rounded-2xl">
+                                <div class="bg-white border border-[#fbbf24]/40 p-3 rounded-2xl">
                                     <span class="text-[10px] text-[#fbbf24] font-bold block">נותר לאכול</span>
                                     <span class="text-base sm:text-lg font-black" :class="getRemainingCalories(portalClient) >= 0 ? 'text-[#fbbf24]' : 'text-red-400'" x-text="getRemainingCalories(portalClient)"></span>
                                 </div>
-                                <div class="bg-[#0f041d]/80 border border-[#ede9fe] p-3 rounded-2xl">
+                                <div class="bg-white/80 border border-[#ede9fe] p-3 rounded-2xl">
                                     <span class="text-[10px] text-[#6d28d9] font-bold block">יעד קלוריות</span>
                                     <span class="text-base sm:text-lg font-black text-[#1e1b4b]" x-text="(portalClient?.macroCalculated?.targetCalories || portalClient?.caloriesTarget || 2000)"></span>
                                 </div>
@@ -1410,10 +1410,10 @@
 
                             <!-- בחירת סוג ארוחה מראש (בוקר, צהריים, ערב, ביניים) -->
                             <div class="grid grid-cols-4 gap-1.5 text-center text-xs font-bold">
-                                <button type="button" @click="portalMealType = 'ארוחת בוקר'" :class="portalMealType === 'ארוחת בוקר' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'bg-[#0f041d] text-slate-300 border border-[#ede9fe]'" class="py-2 rounded-xl transition cursor-pointer">בוקר</button>
-                                <button type="button" @click="portalMealType = 'ארוחת צהריים'" :class="portalMealType === 'ארוחת צהריים' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'bg-[#0f041d] text-slate-300 border border-[#ede9fe]'" class="py-2 rounded-xl transition cursor-pointer">צהריים</button>
-                                <button type="button" @click="portalMealType = 'ארוחת ערב'" :class="portalMealType === 'ארוחת ערב' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'bg-[#0f041d] text-slate-300 border border-[#ede9fe]'" class="py-2 rounded-xl transition cursor-pointer">ערב</button>
-                                <button type="button" @click="portalMealType = 'ארוחת ביניים'" :class="portalMealType === 'ארוחת ביניים' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'bg-[#0f041d] text-slate-300 border border-[#ede9fe]'" class="py-2 rounded-xl transition cursor-pointer">ביניים</button>
+                                <button type="button" @click="portalMealType = 'ארוחת בוקר'" :class="portalMealType === 'ארוחת בוקר' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'bg-white text-[#6b7280] border border-[#ede9fe]'" class="py-2 rounded-xl transition cursor-pointer">בוקר</button>
+                                <button type="button" @click="portalMealType = 'ארוחת צהריים'" :class="portalMealType === 'ארוחת צהריים' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'bg-white text-[#6b7280] border border-[#ede9fe]'" class="py-2 rounded-xl transition cursor-pointer">צהריים</button>
+                                <button type="button" @click="portalMealType = 'ארוחת ערב'" :class="portalMealType === 'ארוחת ערב' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'bg-white text-[#6b7280] border border-[#ede9fe]'" class="py-2 rounded-xl transition cursor-pointer">ערב</button>
+                                <button type="button" @click="portalMealType = 'ארוחת ביניים'" :class="portalMealType === 'ארוחת ביניים' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'bg-white text-[#6b7280] border border-[#ede9fe]'" class="py-2 rounded-xl transition cursor-pointer">ביניים</button>
                             </div>
 
                             <!-- תיבת חיפוש וטקסט חופשי -->
@@ -1440,7 +1440,7 @@
                                 <!-- כפתורי פעולה מהירה: צילום, הקלטה, מאגר, הוספה מהירה -->
                                 <div class="flex items-center justify-between gap-1.5 flex-wrap text-xs font-bold pt-1">
                                     <!-- צילום צלחת -->
-                                    <label class="flex-1 min-w-[120px] bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-[#1e1b4b] py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition">
+                                    <label class="flex-1 min-w-[120px] bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition">
                                         <i data-lucide="camera" class="w-4 h-4 text-emerald-400"></i>
                                         <span>צילום צלחת</span>
                                         <input type="file" accept="image/*" @change="handleMealPhotoUpload($event)" class="hidden" />
@@ -1449,7 +1449,7 @@
                                     <!-- הקלטה קולית -->
                                     <button type="button" 
                                             @click="toggleVoiceRecording()"
-                                            :class="isVoiceRecording ? 'bg-red-500 text-[#1e1b4b] animate-pulse' : 'bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-[#1e1b4b]'"
+                                            :class="isVoiceRecording ? 'bg-red-500 text-[#1e1b4b] animate-pulse' : 'bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b]'"
                                             class="flex-1 min-w-[120px] py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition">
                                         <i data-lucide="mic" class="w-4 h-4 text-[#fbbf24]"></i>
                                         <span x-text="isVoiceRecording ? 'מקליט... דבר עכשיו' : 'הקלטה קולית'"></span>
@@ -1458,7 +1458,7 @@
                                     <!-- הוספה מהירה -->
                                     <button type="button" 
                                             @click="openQuickAddCalorieModal = true; quickAddMealType = portalMealType; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                            class="flex-1 min-w-[120px] bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-[#1e1b4b] py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition">
+                                            class="flex-1 min-w-[120px] bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition">
                                         <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
                                         <span>הוספה מהירה</span>
                                     </button>
@@ -1466,7 +1466,7 @@
                                     <!-- מאגר ישראלי -->
                                     <button type="button" 
                                             @click="openFoodSearchModal = true; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                            class="flex-1 min-w-[120px] bg-[#0f041d] hover:bg-white border border-[#ede9fe] text-[#1e1b4b] py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition">
+                                            class="flex-1 min-w-[120px] bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition">
                                         <i data-lucide="book-open" class="w-4 h-4 text-sky-400"></i>
                                         <span>מאגר מאכלים</span>
                                     </button>
@@ -1475,7 +1475,7 @@
 
                             <!-- הצגת תמונה שצולמה -->
                             <template x-if="portalMealPhoto">
-                                <div class="bg-[#0f041d] border border-[#ede9fe] p-3 rounded-2xl flex items-center justify-between">
+                                <div class="bg-white border border-[#ede9fe] p-3 rounded-2xl flex items-center justify-between">
                                     <div class="flex items-center gap-3">
                                         <img :src="portalMealPhoto" class="w-14 h-14 object-cover rounded-xl border border-emerald-500" />
                                         <span class="text-xs font-bold text-[#1e1b4b]">תמונת צלחת צורפה</span>
@@ -1499,15 +1499,15 @@
 
                                     <!-- מאקרו של התוצאה -->
                                     <div class="grid grid-cols-3 gap-2 text-center text-xs font-black">
-                                        <div class="bg-[#0f041d] p-2 rounded-xl border border-[#ede9fe]">
+                                        <div class="bg-white p-2 rounded-xl border border-[#ede9fe]">
                                             <span class="text-[10px] text-emerald-400 font-bold block">חלבון</span>
                                             <span class="text-[#1e1b4b]" x-text="aiAnalyzedMeal.protein + ' גרם'"></span>
                                         </div>
-                                        <div class="bg-[#0f041d] p-2 rounded-xl border border-[#ede9fe]">
+                                        <div class="bg-white p-2 rounded-xl border border-[#ede9fe]">
                                             <span class="text-[10px] text-sky-400 font-bold block">פחמימות</span>
                                             <span class="text-[#1e1b4b]" x-text="aiAnalyzedMeal.carbs + ' גרם'"></span>
                                         </div>
-                                        <div class="bg-[#0f041d] p-2 rounded-xl border border-[#ede9fe]">
+                                        <div class="bg-white p-2 rounded-xl border border-[#ede9fe]">
                                             <span class="text-[10px] text-amber-400 font-bold block">שומן</span>
                                             <span class="text-[#1e1b4b]" x-text="aiAnalyzedMeal.fat + ' גרם'"></span>
                                         </div>
@@ -1549,7 +1549,7 @@
                                         <span class="font-black text-xs sm:text-sm text-[#1e1b4b]" x-text="mCategory.label"></span>
                                         
                                         <!-- סיכום קלוריות ומאקרו לארוחה זו -->
-                                        <div class="text-[11px] font-bold text-[#6d28d9] bg-[#0f041d] px-2.5 py-1 rounded-xl border border-[#ede9fe]">
+                                        <div class="text-[11px] font-bold text-[#6d28d9] bg-white px-2.5 py-1 rounded-xl border border-[#ede9fe]">
                                             <span class="text-[#fbbf24] font-black" x-text="getMealTypeSummary(portalClient, mCategory.type).calories + ' קק״ל'"></span>
                                             <span class="text-slate-500 mx-1">|</span>
                                             <span class="text-emerald-400" x-text="'ח: ' + getMealTypeSummary(portalClient, mCategory.type).protein + 'g'"></span>
@@ -1565,7 +1565,7 @@
                                         </template>
 
                                         <template x-for="log in getTodayMealLogsByType(portalClient, mCategory.type)" :key="log.id">
-                                            <div class="bg-[#0f041d] border border-[#ede9fe] rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-sm">
+                                            <div class="bg-white border border-[#ede9fe] rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-sm">
                                                 <div class="flex items-center gap-3">
                                                     <!-- תמונה (אם קיימת) -->
                                                     <template x-if="log.photo">
@@ -1601,9 +1601,9 @@
                         
                         <!-- סרגל מעבר בין שיקוף, שקילה ודרייב -->
                         <div class="bg-white/90 border border-[#ede9fe]/80 p-1 rounded-2xl grid grid-cols-3 gap-1 text-center text-xs font-bold">
-                            <button type="button" @click="portalJournalSection = 'reflection'" :class="portalJournalSection === 'reflection' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'text-slate-300 hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">שיקוף שבועי</button>
-                            <button type="button" @click="portalJournalSection = 'checkin'" :class="portalJournalSection === 'checkin' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'text-slate-300 hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">שקילה ומדדים</button>
-                            <button type="button" @click="portalJournalSection = 'drive'" :class="portalJournalSection === 'drive' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'text-slate-300 hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">תמונות ו-Drive</button>
+                            <button type="button" @click="portalJournalSection = 'reflection'" :class="portalJournalSection === 'reflection' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">שיקוף שבועי</button>
+                            <button type="button" @click="portalJournalSection = 'checkin'" :class="portalJournalSection === 'checkin' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">שקילה ומדדים</button>
+                            <button type="button" @click="portalJournalSection = 'drive'" :class="portalJournalSection === 'drive' ? 'bg-[#fbbf24] text-[#1e1b4b] font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">תמונות ו-Drive</button>
                         </div>
 
                         <!-- 1. שיקוף שבועי (Weekly Reflection) -->
@@ -1633,11 +1633,11 @@
                                             <span :class="ref.reviewed ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/40' : 'bg-amber-950/60 text-amber-300 border-amber-500/40'" class="text-[10px] px-2.5 py-0.5 rounded-full font-bold border" x-text="ref.reviewed ? 'נבדק ע״י אילאי ✓' : 'ממתין למשוב ⏳'"></span>
                                         </div>
 
-                                        <p class="text-xs text-[#1e1b4b] whitespace-pre-line bg-[#0f041d] p-3 rounded-xl border border-[#ede9fe]" x-text="ref.text"></p>
+                                        <p class="text-xs text-[#1e1b4b] whitespace-pre-line bg-white p-3 rounded-xl border border-[#ede9fe]" x-text="ref.text"></p>
 
                                         <!-- משוב המאמן אילאי -->
                                         <template x-if="ref.coachFeedback">
-                                            <div class="bg-[#2a0f4a] border border-[#fbbf24]/40 p-3.5 rounded-xl space-y-1 text-xs">
+                                            <div class="bg-white border border-[#fbbf24]/40 p-3.5 rounded-xl space-y-1 text-xs">
                                                 <span class="font-black text-[#fbbf24] block">משוב מאילאי:</span>
                                                 <p class="text-[#1e1b4b] whitespace-pre-line" x-text="ref.coachFeedback"></p>
                                             </div>
@@ -1655,7 +1655,7 @@
                                     <span class="text-[10px] text-[#6d28d9] font-bold block">משקל התחלתי</span>
                                     <span class="text-base sm:text-lg font-black text-[#1e1b4b]" x-text="(portalClient?.startWeight || '-') + ' ק״ג'"></span>
                                 </div>
-                                <div class="bg-[#2a0f4a] border border-[#fbbf24]/40 p-3 rounded-2xl">
+                                <div class="bg-white border border-[#fbbf24]/40 p-3 rounded-2xl">
                                     <span class="text-[10px] text-[#fbbf24] font-bold block">משקל נוכחי</span>
                                     <span class="text-base sm:text-lg font-black text-[#fbbf24]" x-text="(portalClient?.checkins?.length > 0 ? portalClient.checkins[portalClient.checkins.length - 1].weight : (portalClient?.startWeight || '-')) + ' ק״ג'"></span>
                                 </div>
@@ -2184,7 +2184,7 @@
                                         </div>
                                         <div class="flex items-center gap-1.5">
                                             <button @click="activeTab = 'portal'; portalClientId = client.id; setTimeout(() => window.lucide.createIcons(), 50)" class="bg-[#7c3aed] text-[#fbbf24] px-2 py-1 rounded-lg font-bold text-[10px]">אפליקציה</button>
-                                            <button @click="selectClient(client.id)" class="bg-[#2a0f4a] border border-[#fbbf24]/40 text-[#fbbf24] px-2 py-1 rounded-lg font-bold text-[10px]">כרטיס</button>
+                                            <button @click="selectClient(client.id)" class="bg-white border border-[#fbbf24]/40 text-[#fbbf24] px-2 py-1 rounded-lg font-bold text-[10px]">כרטיס</button>
                                         </div>
                                     </div>
                                 </div>
@@ -2228,7 +2228,7 @@
                                     <i data-lucide="copy" class="w-3.5 h-3.5 text-[#fbbf24]"></i>
                                     <span>העתק קישור לשאלון</span>
                                 </button>
-                                <button @click="openImportIntakeModal = true" class="flex-1 sm:flex-initial bg-[#2a0f4a] border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-white font-bold px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5">
+                                <button @click="openImportIntakeModal = true" class="flex-1 sm:flex-initial bg-white border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-white font-bold px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5">
                                     <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                                     <span>ייבא שאלון טקסט</span>
                                 </button>
@@ -3308,7 +3308,7 @@
                                                 class="p-3.5 rounded-2xl border text-right transition cursor-pointer flex flex-col justify-between gap-2.5 shadow-2xs">
                                             <div class="flex items-center justify-between">
                                                 <span class="w-6 h-6 rounded-lg text-[11px] font-black flex items-center justify-center"
-                                                      :class="coachSelectedWorkoutDayIdx === dIdx ? 'bg-[#381061] text-[#fbbf24]' : 'bg-[#2a0f4a] border border-[#fbbf24]/40 text-[#fbbf24]'"
+                                                      :class="coachSelectedWorkoutDayIdx === dIdx ? 'bg-[#381061] text-[#fbbf24]' : 'bg-white border border-[#fbbf24]/40 text-[#fbbf24]'"
                                                       x-text="dIdx + 1"></span>
                                                 <span class="text-[10px] font-bold"
                                                       :class="coachSelectedWorkoutDayIdx === dIdx ? 'text-[#fbbf24]' : 'text-[#6d28d9]'"
@@ -3354,7 +3354,7 @@
                                                            x-model="currentClient.workoutPlan.days[coachSelectedWorkoutDayIdx].name" 
                                                            @input="saveData()" 
                                                            placeholder="שם יום האימון (למשל: אימון A - חזה ויד אחורית)" 
-                                                           class="bg-[#2a0f4a] border border-[#fbbf24]/40 text-[#fbbf24] px-3.5 py-2 rounded-xl text-xs md:text-sm font-black focus:outline-none focus:border-[#22c55e] w-full sm:w-80 shadow-xs">
+                                                           class="bg-white border border-[#fbbf24]/40 text-[#fbbf24] px-3.5 py-2 rounded-xl text-xs md:text-sm font-black focus:outline-none focus:border-[#22c55e] w-full sm:w-80 shadow-xs">
                                                 </div>
                                                 <span class="text-[10px] font-bold text-[#6d28d9] bg-white border border-[#ede9fe] px-2.5 py-1 rounded-xl whitespace-nowrap" x-text="(currentClient.workoutPlan.days[coachSelectedWorkoutDayIdx].exercises?.length || 0) + ' תרגילים'"></span>
                                             </div>
@@ -3845,7 +3845,7 @@
                                             <input type="date" 
                                                    :value="getCoachSelectedDate(currentClient)" 
                                                    @change="setCoachFoodLogDate($event.target.value)" 
-                                                   class="bg-[#2a0f4a] border border-[#fbbf24]/40 text-[#fbbf24] text-[11px] font-bold rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[#22c55e] cursor-pointer">
+                                                   class="bg-white border border-[#fbbf24]/40 text-[#fbbf24] text-[11px] font-bold rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[#22c55e] cursor-pointer">
                                         </div>
                                     </div>
 
@@ -4851,7 +4851,7 @@
                             </div>
 
                             <!-- תגית סטטוס ענן חיה -->
-                            <div class="flex items-center gap-2 bg-[#130024] border border-[#381061] p-2.5 rounded-2xl shrink-0">
+                            <div class="flex items-center gap-2 bg-white border border-[#381061] p-2.5 rounded-2xl shrink-0">
                                 <div class="w-3 h-3 rounded-full" :class="isCloudSynced ? 'bg-[#fbbf24] animate-ping' : 'bg-slate-400'"></div>
                                 <div>
                                     <span class="text-[11px] font-black block" :class="isCloudSynced ? 'text-[#fbbf24]' : 'text-[#6d28d9]'" x-text="isCloudSynced ? 'מחובר לענן ב-Firebase' : 'מצב מקומי (Offline)'"></span>
@@ -5849,9 +5849,9 @@
                         <div>
                             <label class="block text-[10px] font-bold text-[#6d28d9] mb-1">משקל כולל להרמה (ק״ג):</label>
                             <div class="flex items-center gap-1">
-                                <button type="button" @click="plateTargetWeight = Math.max(plateBarWeight, (parseFloat(plateTargetWeight) || 0) - 2.5)" class="w-8 h-8 rounded-xl bg-[#2a0f4a] border border-[#fbbf24]/40 text-[#fbbf24] font-black hover:bg-white cursor-pointer">-</button>
+                                <button type="button" @click="plateTargetWeight = Math.max(plateBarWeight, (parseFloat(plateTargetWeight) || 0) - 2.5)" class="w-8 h-8 rounded-xl bg-white border border-[#fbbf24]/40 text-[#fbbf24] font-black hover:bg-white cursor-pointer">-</button>
                                 <input type="number" step="0.5" x-model.number="plateTargetWeight" placeholder="80" class="w-full bg-white border border-[#ede9fe] rounded-xl px-2 py-1.5 text-sm font-black text-[#1e1b4b] text-center focus:outline-none focus:border-[#22c55e]">
-                                <button type="button" @click="plateTargetWeight = (parseFloat(plateTargetWeight) || 0) + 2.5" class="w-8 h-8 rounded-xl bg-[#2a0f4a] border border-[#fbbf24]/40 text-[#fbbf24] font-black hover:bg-white cursor-pointer">+</button>
+                                <button type="button" @click="plateTargetWeight = (parseFloat(plateTargetWeight) || 0) + 2.5" class="w-8 h-8 rounded-xl bg-white border border-[#fbbf24]/40 text-[#fbbf24] font-black hover:bg-white cursor-pointer">+</button>
                             </div>
                         </div>
                         <div>
@@ -6515,7 +6515,7 @@
                 </div>
 
                 <div class="pt-3 border-t border-[#ede9fe] flex justify-end gap-2 shrink-0">
-                    <button type="button" @click="openEditIntakeModal = false" class="bg-[#2a0f4a] border border-[#fbbf24]/40 text-[#fbbf24] font-bold px-4 py-2 rounded-xl text-xs">ביטול</button>
+                    <button type="button" @click="openEditIntakeModal = false" class="bg-white border border-[#fbbf24]/40 text-[#fbbf24] font-bold px-4 py-2 rounded-xl text-xs">ביטול</button>
                     <button type="submit" class="bg-[#7c3aed] hover:bg-[#7c3aed] text-[#fbbf24] font-black px-6 py-2 rounded-xl text-xs transition border border-[#ede9fe] shadow-md shadow-[#7c3aed]/20">
                         <span>שמור עדכון שאלון 👑</span>
                     </button>
