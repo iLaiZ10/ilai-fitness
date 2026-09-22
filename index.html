@@ -9066,11 +9066,30 @@
                         this.cloudSaveTimers[client.id] = setTimeout(() => {
                             try {
                                 const sanitized = this.sanitizeForFirestore(client);
-                                if (sanitized && sanitized.foodLogs && sanitized.foodLogs.length > 25) {
-                                    sanitized.foodLogs.slice(25).forEach(l => {
-                                        if (l && l.photo && l.photo.length > 300) {
-                                            l.photo = '';
-                                        }
+                                
+                                // --- GARBAGE COLLECTOR: מניעת פיצוץ מסד הנתונים (מגבלת 1MB) ---
+                                const pruneOldData = (arr, days) => {
+                                    if (!arr || !Array.isArray(arr)) return [];
+                                    const cutoffDate = new Date();
+                                    cutoffDate.setDate(cutoffDate.getDate() - days);
+                                    return arr.filter(item => {
+                                        if (!item.date && !item.timestamp) return true;
+                                        const dateStr = item.date || item.timestamp;
+                                        const itemDate = new Date(dateStr);
+                                        return isNaN(itemDate) ? true : itemDate >= cutoffDate;
+                                    });
+                                };
+                                
+                                // שמירת נתונים ל-45 עד 90 ימים אחרונים בלבד
+                                sanitized.foodLogs = pruneOldData(sanitized.foodLogs, 45);
+                                sanitized.workoutLogs = pruneOldData(sanitized.workoutLogs, 60);
+                                sanitized.checkins = pruneOldData(sanitized.checkins, 90);
+                                sanitized.reflectionLogs = pruneOldData(sanitized.reflectionLogs, 90);
+
+                                // מחיקת תמונות כבדות מאוד ישנות
+                                if (sanitized.foodLogs && sanitized.foodLogs.length > 20) {
+                                    sanitized.foodLogs.slice(20).forEach(l => {
+                                        if (l && l.photo && l.photo.length > 300) l.photo = '';
                                     });
                                 }
                                 
