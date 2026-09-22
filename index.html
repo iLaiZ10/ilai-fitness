@@ -9052,7 +9052,6 @@
                 saveClientToCloud(client) {
                     if (!client || !client.id) return;
                     
-                    // 1. גיבוי מקומי מהיר ומוגן לפי מזהה מתאמן
                     try {
                         if (client.foodLogs && client.foodLogs.length > 0) {
                             localStorage.setItem('il_fitness_foodlogs_' + client.id, JSON.stringify(client.foodLogs));
@@ -9060,23 +9059,38 @@
                         localStorage.setItem('il_fitness_client_' + client.id, JSON.stringify(client));
                     } catch(e) {}
 
-                    // 2. שמירה מסונכרנת לענן Firebase עם מניעת חריגת מגבלת נפח ומיזוג בטוח
                     if (this.isCloudSynced && this.db) {
-                        try {
-                            const sanitized = this.sanitizeForFirestore(client);
-                            if (sanitized && sanitized.foodLogs && sanitized.foodLogs.length > 25) {
-                                sanitized.foodLogs.slice(25).forEach(l => {
-                                    if (l && l.photo && l.photo.length > 300) {
-                                        l.photo = '';
+                        if (!this.cloudSaveTimers) this.cloudSaveTimers = {};
+                        if (this.cloudSaveTimers[client.id]) clearTimeout(this.cloudSaveTimers[client.id]);
+                        
+                        this.cloudSaveTimers[client.id] = setTimeout(() => {
+                            try {
+                                const sanitized = this.sanitizeForFirestore(client);
+                                if (sanitized && sanitized.foodLogs && sanitized.foodLogs.length > 25) {
+                                    sanitized.foodLogs.slice(25).forEach(l => {
+                                        if (l && l.photo && l.photo.length > 300) {
+                                            l.photo = '';
+                                        }
+                                    });
+                                }
+                                
+                                let payload = sanitized;
+                                // מניעת דריסת נתונים צולבת: מתאמן ישמור רק את השדות שלו
+                                if (this.activeTab === 'portal') {
+                                    payload = {};
+                                    const traineeFields = ['foodLogs', 'workoutLogs', 'dailyScorecards', 'reflectionLogs', 'checkins', 'dailyWater', 'dailySteps', 'lastTrackedDate', 'streakDays', 'needsAttention'];
+                                    for (const f of traineeFields) {
+                                        if (sanitized[f] !== undefined) payload[f] = sanitized[f];
                                     }
+                                }
+                                
+                                this.db.collection("clients").doc(client.id).set(payload, { merge: true }).catch(err => {
+                                    console.warn("Cloud saveClient error:", err);
                                 });
+                            } catch(err) {
+                                console.warn("Serialization error in saveClientToCloud:", err);
                             }
-                            this.db.collection("clients").doc(client.id).set(sanitized, { merge: true }).catch(err => {
-                                console.warn("Cloud saveClient error:", err);
-                            });
-                        } catch(err) {
-                            console.warn("Serialization error in saveClientToCloud:", err);
-                        }
+                        }, 1200);
                     }
                 },
 
