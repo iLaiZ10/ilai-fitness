@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl" class="h-full bg-slate-950">
+<html lang="he" dir="rtl" class="h-full bg-[#f8f7ff]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -138,6 +138,8 @@
             width: 100%;
             max-width: 100vw;
             -webkit-tap-highlight-color: transparent;
+            background-color: #f8f7ff;
+            color: #1e1b4b;
         }
 
         input, select, textarea, button {
@@ -150,7 +152,7 @@
             }
         }
         
-        /* עיצוב נקי - לבן + סגול + זהב */
+        /* Typography & Base */
         body {
             background-color: #f8f7ff;
             color: #1e1b4b;
@@ -158,30 +160,38 @@
             letter-spacing: -0.01em;
         }
 
-        /* כרטיסים לבנים עם צל עדין */
-        .bg-slate-900:not(.card-forest) {
+        /* Pure White Elevated Cards */
+        .card-clean, .bg-white {
+            background-color: #ffffff !important;
+        }
+
+        /* Slate & Dark Neutralizers: Ensure zero dark backgrounds bleed into cards */
+        .bg-white:not(.card-forest), 
+        .bg-[#f8f7ff]:not(html):not(body),
+        .bg-white {
             background-color: #ffffff !important;
             border-color: #ede9fe !important;
-        }
-        .bg-slate-950 {
-            background-color: #f8f7ff !important;
+            color: #1e1b4b !important;
         }
 
-        /* טקסט ברירת מחדל */
+        .border-[#ede9fe], .border-[#ede9fe], .border-slate-600 {
+            border-color: #ede9fe !important;
+        }
+
+        /* Readable Text Utilities */
         .text-slate-500 { color: #6b7280 !important; }
-        .text-slate-400 { color: #9ca3af !important; }
-        .text-[#5b21b6] { color: #1e1b4b !important; }
-        .text-[#4c1d7a] { color: #1e1b4b !important; }
+        .text-slate-400 { color: #64748b !important; }
+        .text-slate-300 { color: #475569 !important; }
+        .text-slate-200 { color: #1e1b4b !important; }
+        .text-slate-100 { color: #1e1b4b !important; }
+        .text-[#5b21b6], .text-[#4c1d7a] { color: #1e1b4b !important; }
 
-        /* כרטיסים בהירים */
-        .bg-white { background-color: #ffffff !important; }
-
-        /* גבולות עדינים */
+        /* Subtle Luxury Borders */
         .border-[#ede9fe], .border-[#c4b5fd], .border-[#ddd6fe] {
             border-color: #ede9fe !important;
         }
 
-        /* תגיות זהב */
+        /* Luxury Gold Accents */
         .bg-amber-50, .bg-amber-100 {
             background-color: #fffbeb !important;
             border-color: #fde68a !important;
@@ -192,45 +202,61 @@
             font-weight: 700;
         }
 
-        /* כפתורי זהב */
+        /* Buttons: Gold Luxury */
         .btn-gold {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: #1e1b4b;
-            font-weight: 900;
-            border: none;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+            color: #1e1b4b !important;
+            font-weight: 900 !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3) !important;
         }
         .btn-gold:hover {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.45) !important;
         }
 
-        /* כפתורי סגול */
+        /* Buttons: Deep Royal Violet */
         .btn-royal {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: #ffffff;
-            font-weight: 900;
-            border: none;
-            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35);
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+            color: #ffffff !important;
+            font-weight: 900 !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35) !important;
         }
         .btn-royal:hover {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45) !important;
         }
 
-        /* כרטיסים מורמים עם צל עדין */
+        /* Subtle Smooth Shadows for Cards */
         .rounded-3xl, .rounded-2xl {
-            box-shadow: 0 2px 12px rgba(124, 58, 237, 0.08), 0 1px 3px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 20px -2px rgba(124, 58, 237, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
         }
-        /* ביטול צל ב-print */
+        
         @media print {
             .rounded-3xl, .rounded-2xl { box-shadow: none !important; }
         }
-        /* ביטול לאלמנטים שלא צריכים צל */
+        
         button.rounded-2xl, button.rounded-3xl,
         input.rounded-2xl, input.rounded-3xl,
         select.rounded-2xl, select.rounded-3xl {
             box-shadow: none;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8f7ff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ddd6fe;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c4b5fd;
         }
     </style>
 </head>
@@ -243,7 +269,7 @@
                 <!-- ================= עמוד 1: תוכנית אימונים ================= -->
                 <div class="page-break">
                     <!-- לוגו וכותרת -->
-                    <div class="flex justify-between items-center border-b-2 border-[#240a3e] pb-4 mb-6">
+                    <div class="flex justify-between items-center border-b-2 border-[#ede9fe] pb-4 mb-6">
                         <div>
                             <h1 class="text-3xl font-extrabold text-[#1e1b4b] tracking-wider">IlaiCo</h1>
                             <p class="text-sm text-gray-500 font-semibold">ליווי אונליין ואימונים אישיים</p>
@@ -305,7 +331,7 @@
 
                         <template x-for="(day, dayIdx) in (printClient.workoutPlan?.days || [])" :key="dayIdx">
                             <div class="mb-6 avoid-break">
-                                <h4 class="text-md font-bold text-[#1e1b4b] bg-[#240a3e] px-3 py-1.5 rounded mb-2 inline-block" x-text="'יום אימון: ' + day.name"></h4>
+                                <h4 class="text-md font-bold text-[#1e1b4b] bg-white px-3 py-1.5 rounded mb-2 inline-block" x-text="'יום אימון: ' + day.name"></h4>
                                 <table class="w-full text-right border-collapse border border-gray-300 text-xs">
                                     <thead>
                                         <tr class="bg-white">
@@ -346,7 +372,7 @@
                 <template x-if="printClient.mealPlan && printClient.mealPlan.meals && printClient.mealPlan.meals.length > 0">
                     <div>
                         <!-- כותרת עמוד 2 -->
-                        <div class="flex justify-between items-center border-b-2 border-[#240a3e] pb-4 mb-6 mt-8">
+                        <div class="flex justify-between items-center border-b-2 border-[#ede9fe] pb-4 mb-6 mt-8">
                             <div>
                                 <h1 class="text-3xl font-extrabold text-[#1e1b4b] tracking-wider">IlaiCo</h1>
                                 <p class="text-sm text-gray-500 font-semibold">תוכנית תזונה מותאמת אישית</p>
@@ -361,7 +387,7 @@
                         <div class="space-y-6">
                             <template x-for="(meal, mIdx) in printClient.mealPlan.meals" :key="mIdx">
                                 <div class="avoid-break border border-[#ede9fe] rounded-lg p-4 bg-white/50">
-                                    <h4 class="text-sm font-bold text-[#1e1b4b] bg-[#240a3e] px-3 py-1.5 rounded mb-3 inline-block" x-text="meal.name"></h4>
+                                    <h4 class="text-sm font-bold text-[#1e1b4b] bg-white px-3 py-1.5 rounded mb-3 inline-block" x-text="meal.name"></h4>
                                     
                                     <table class="w-full text-right border-collapse text-xs">
                                         <thead>
@@ -411,18 +437,18 @@
     <div class="flex flex-col md:flex-row h-full no-print">
         
         <!-- סרגל צד (Sidebar) - Desktop -->
-        <aside x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="hidden md:flex w-64 bg-[#7c3aed] border-l border-[#ede9fe] flex-col shrink-0 text-[#faf6fc]" x-cloak>
+        <aside x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="hidden md:flex w-64 bg-white border-l border-[#ede9fe] flex-col shrink-0 text-[#1e1b4b] shadow-sm" x-cloak>
             <!-- לוגו מותג -->
-            <div class="p-5 border-b border-[#381061] flex flex-col items-center justify-center">
+            <div class="p-5 border-b border-[#ede9fe] flex flex-col items-center justify-center bg-[#faf5ff]/50">
                 <img src="data:image/png;base64,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" alt="ILAI Fitness - שינוי שמחזיק" class="h-14 w-auto object-contain drop-shadow-md">
-                <span class="text-[10px] text-purple-200 font-bold tracking-widest mt-2">מערכת ניהול מאמן</span>
+                <span class="text-[10px] text-[#7c3aed] font-extrabold tracking-widest mt-2 bg-[#ede9fe]/80 px-2.5 py-0.5 rounded-full">מערכת ניהול מאמן</span>
             </div>
 
             <!-- ניווט טאבים -->
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <button 
                     @click="activeTab = 'dashboard'; selectedClientId = null"
-                    :class="activeTab === 'dashboard' ? 'bg-[#381061] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#100021]/40' : 'text-purple-200 hover:bg-[#250942] hover:text-[#faf6fc] font-semibold'"
+                    :class="activeTab === 'dashboard' ? 'bg-[#f5f3ff] text-[#7c3aed] font-black border-r-4 border-[#fbbf24] shadow-xs' : 'text-[#6b7280] hover:bg-[#faf5ff] hover:text-[#7c3aed] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>לוח בקרה</span>
@@ -430,7 +456,7 @@
                 
                 <button 
                     @click="activeTab = 'clients'; selectedClientId = null"
-                    :class="activeTab === 'clients' ? 'bg-[#381061] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#100021]/40' : 'text-purple-200 hover:bg-[#250942] hover:text-[#faf6fc] font-semibold'"
+                    :class="activeTab === 'clients' ? 'bg-[#f5f3ff] text-[#7c3aed] font-black border-r-4 border-[#fbbf24] shadow-xs' : 'text-[#6b7280] hover:bg-[#faf5ff] hover:text-[#7c3aed] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="users" class="w-5 h-5"></i>
                     <span>רשימת מתאמנים</span>
@@ -438,7 +464,7 @@
 
                 <button 
                     @click="activeTab = 'schedule'; selectedClientId = null"
-                    :class="activeTab === 'schedule' ? 'bg-[#381061] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#100021]/40' : 'text-purple-200 hover:bg-[#250942] hover:text-[#faf6fc] font-semibold'"
+                    :class="activeTab === 'schedule' ? 'bg-[#f5f3ff] text-[#7c3aed] font-black border-r-4 border-[#fbbf24] shadow-xs' : 'text-[#6b7280] hover:bg-[#faf5ff] hover:text-[#7c3aed] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="calendar-days" class="w-5 h-5"></i>
                     <span>יומן שבועי</span>
@@ -446,7 +472,7 @@
 
                 <button 
                     @click="activeTab = 'finances'; selectedClientId = null"
-                    :class="activeTab === 'finances' ? 'bg-[#381061] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#100021]/40' : 'text-purple-200 hover:bg-[#250942] hover:text-[#faf6fc] font-semibold'"
+                    :class="activeTab === 'finances' ? 'bg-[#f5f3ff] text-[#7c3aed] font-black border-r-4 border-[#fbbf24] shadow-xs' : 'text-[#6b7280] hover:bg-[#faf5ff] hover:text-[#7c3aed] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
                     <span>מעקב פיננסי</span>
@@ -454,57 +480,57 @@
 
                 <button 
                     @click="activeTab = 'settings'; selectedClientId = null"
-                    :class="activeTab === 'settings' ? 'bg-[#381061] text-[#fbbf24] font-black border-r-4 border-[#fbbf24] shadow-lg shadow-[#100021]/40' : 'text-purple-200 hover:bg-[#250942] hover:text-[#faf6fc] font-semibold'"
+                    :class="activeTab === 'settings' ? 'bg-[#f5f3ff] text-[#7c3aed] font-black border-r-4 border-[#fbbf24] shadow-xs' : 'text-[#6b7280] hover:bg-[#faf5ff] hover:text-[#7c3aed] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="settings" class="w-5 h-5"></i>
                     <span>הגדרות וסנכרון</span>
                 </button>
             </nav>
 
-            <div class="p-4 border-t border-[#ede9fe] flex items-center justify-between bg-white/60">
+            <div class="p-4 border-t border-[#ede9fe] flex items-center justify-between bg-[#f8f7ff]">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-[#381061] border border-[#fbbf24]/40 text-[#fbbf24] flex items-center justify-center font-black text-sm">א</div>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#7c3aed] to-[#8b5cf6] border border-[#fbbf24]/50 text-[#fbbf24] flex items-center justify-center font-black text-sm shadow-xs">א</div>
                     <div class="flex flex-col">
-                        <span class="text-sm font-bold text-[#faf6fc]">אילאי מאמן</span>
+                        <span class="text-sm font-black text-[#1e1b4b]">אילאי מאמן</span>
                         <span class="text-[10px] text-[#fbbf24] font-semibold">CRM מחובר</span>
                     </div>
                 </div>
-                <button @click="logoutCoach()" class="text-purple-200 hover:text-rose-400 p-1.5 rounded-lg transition" title="התנתק">
+                <button @click="logoutCoach()" class="text-[#9ca3af] hover:text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg transition" title="התנתק">
                     <i data-lucide="log-out" class="w-4 h-4"></i>
                 </button>
             </div>
         </aside>
 
         <!-- סרגל ניווט תחתון לנייד (Mobile Bottom Nav) -->
-        <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#7c3aed]/95 backdrop-blur-md border-t border-[#381061] flex items-center justify-around z-50 shadow-2xl text-purple-200" x-cloak>
-            <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-[#fbbf24] font-black' : 'text-purple-200'" class="flex flex-col items-center justify-center flex-1 py-1">
+        <div x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-[#ede9fe] flex items-center justify-around z-50 shadow-lg text-[#6b7280]" x-cloak>
+            <button @click="activeTab = 'dashboard'; selectedClientId = null" :class="activeTab === 'dashboard' ? 'text-[#7c3aed] font-black' : 'text-[#6b7280]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">לוח בקרה</span>
             </button>
-            <button @click="activeTab = 'clients'; selectedClientId = null" :class="activeTab === 'clients' ? 'text-[#fbbf24] font-black' : 'text-purple-200'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'clients'; selectedClientId = null" :class="activeTab === 'clients' ? 'text-[#7c3aed] font-black' : 'text-[#6b7280]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="users" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">מתאמנים</span>
             </button>
-            <button @click="activeTab = 'schedule'; selectedClientId = null" :class="activeTab === 'schedule' ? 'text-[#fbbf24] font-black' : 'text-purple-200'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'schedule'; selectedClientId = null" :class="activeTab === 'schedule' ? 'text-[#7c3aed] font-black' : 'text-[#6b7280]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="calendar-days" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">יומן</span>
             </button>
-            <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'text-[#fbbf24] font-black' : 'text-purple-200'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'finances'; selectedClientId = null" :class="activeTab === 'finances' ? 'text-[#7c3aed] font-black' : 'text-[#6b7280]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="credit-card" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">פיננסים</span>
             </button>
-            <button @click="activeTab = 'settings'; selectedClientId = null" :class="activeTab === 'settings' ? 'text-[#fbbf24] font-black' : 'text-purple-200'" class="flex flex-col items-center justify-center flex-1 py-1">
+            <button @click="activeTab = 'settings'; selectedClientId = null" :class="activeTab === 'settings' ? 'text-[#7c3aed] font-black' : 'text-[#6b7280]'" class="flex flex-col items-center justify-center flex-1 py-1">
                 <i data-lucide="settings" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">הגדרות</span>
             </button>
-            <button @click="logoutCoach()" class="flex flex-col items-center justify-center flex-1 py-1 text-purple-200 hover:text-rose-400">
+            <button @click="logoutCoach()" class="flex flex-col items-center justify-center flex-1 py-1 text-[#9ca3af] hover:text-rose-500">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
                 <span class="text-[9px] mt-0.5 font-bold">התנתק</span>
             </button>
         </div>
 
         <!-- אזור התוכן המרכזי -->
-        <main class="flex-1 bg-slate-950 overflow-y-auto flex flex-col pb-20 md:pb-0">
+        <main class="flex-1 bg-[#f8f7ff] overflow-y-auto flex flex-col pb-20 md:pb-0">
             
             <!-- סרגל עליון (Top Header) - מרווח, יוקרתי ומאוורר -->
             <header x-show="activeTab !== 'intake' && activeTab !== 'portal' && isCoachAuthenticated" 
@@ -656,7 +682,7 @@
                                 <span :class="intakeStep >= 2 ? 'text-[#fbbf24]' : ''">2. כושר ותזונה</span>
                                 <span :class="intakeStep >= 3 ? 'text-[#fbbf24]' : ''">3. מנטלי ובריאות</span>
                             </div>
-                            <div class="h-1.5 w-full bg-slate-900 border border-slate-800 rounded-full overflow-hidden">
+                            <div class="h-1.5 w-full bg-white border border-[#ede9fe] rounded-full overflow-hidden">
                                 <div class="h-full bg-gradient-to-r from-[#8b5cf6] to-[#fbbf24] transition-all duration-300" :style="'width: ' + (intakeStep === 1 ? '33.3%' : (intakeStep === 2 ? '66.6%' : '100%'))"></div>
                             </div>
                         </div>
@@ -683,44 +709,44 @@
 
                     <!-- טופס ההזנה -->
                     <template x-if="!intakeSuccess">
-                        <form @submit.prevent="submitIntakeForm()" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-5 text-xs md:text-sm">
+                        <form @submit.prevent="submitIntakeForm()" class="bg-white border border-[#ede9fe] rounded-3xl p-6 md:p-8 shadow-2xl space-y-5 text-xs md:text-sm">
                             
                             <!-- שלב 1: פרטים אישיים ואורח חיים -->
                             <div x-show="intakeStep === 1" class="space-y-4">
                                 <div class="space-y-1">
                                     <label class="block text-[10px] font-bold text-[#6d28d9]">שם מלא *</label>
-                                    <input type="text" x-model="newIntake.name" required placeholder="ישראל ישראלי" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                    <input type="text" x-model="newIntake.name" required placeholder="ישראל ישראלי" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">מספר טלפון *</label>
-                                        <input type="tel" x-model="newIntake.phone" required placeholder="0501234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold text-left">
+                                        <input type="tel" x-model="newIntake.phone" required placeholder="0501234567" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold text-left">
                                     </div>
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">אימייל (אופציונלי)</label>
-                                        <input type="email" x-model="newIntake.email" placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold text-left">
+                                        <input type="email" x-model="newIntake.email" placeholder="name@example.com" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold text-left">
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-3 gap-3">
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">גיל</label>
-                                        <input type="number" x-model="newIntake.age" placeholder="למשל: 25" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <input type="number" x-model="newIntake.age" placeholder="למשל: 25" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                     </div>
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">גובה (ס"מ)</label>
-                                        <input type="number" x-model="newIntake.height" placeholder="למשל: 175" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <input type="number" x-model="newIntake.height" placeholder="למשל: 175" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                     </div>
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">שעות שינה</label>
-                                        <input type="number" x-model="newIntake.sleepHours" placeholder="למשל: 7" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <input type="number" x-model="newIntake.sleepHours" placeholder="למשל: 7" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                     </div>
                                 </div>
 
                                 <div class="space-y-1">
                                     <label class="block text-[10px] font-bold text-[#6d28d9]">רמת פעילות יומיומית</label>
-                                    <select x-model="newIntake.activityLevel" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                    <select x-model="newIntake.activityLevel" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                         <option value="יושבני (עבודה משרדית, מעט תנועה)">יושבני (עבודה משרדית, מעט תנועה)</option>
                                         <option value="פעילות קלה (עמידה ממושכת, הליכה קלה)">פעילות קלה (עמידה ממושכת, הליכה קלה)</option>
                                         <option value="פעילות בינונית (תנועה מרובה, עבודה פיזית קלה)">פעילות בינונית (תנועה מרובה, עבודה פיזית קלה)</option>
@@ -741,18 +767,18 @@
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">משקל נוכחי (ק"ג)</label>
-                                        <input type="number" step="0.1" x-model="newIntake.startWeight" placeholder="למשל: 80" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <input type="number" step="0.1" x-model="newIntake.startWeight" placeholder="למשל: 80" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                     </div>
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">מטרה עיקרית</label>
-                                        <input type="text" x-model="newIntake.goal" placeholder="חיטוב, מסה, שיפור כושר..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <input type="text" x-model="newIntake.goal" placeholder="חיטוב, מסה, שיפור כושר..." class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">ניסיון ספורטיבי</label>
-                                        <select x-model="newIntake.experience" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <select x-model="newIntake.experience" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                             <option value="מתחיל (ללא ניסיון או פחות מחצי שנה)">מתחיל (פחות מחצי שנה)</option>
                                             <option value="בינוני (חצי שנה עד שנתיים)">בינוני (חצי שנה עד שנתיים)</option>
                                             <option value="מתקדם (מעל שנתיים של אימון עקבי)">מתקדם (מעל שנתיים)</option>
@@ -760,7 +786,7 @@
                                     </div>
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">מיקום אימונים</label>
-                                        <select x-model="newIntake.trainingLocation" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <select x-model="newIntake.trainingLocation" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                             <option value="חדר כושר">חדר כושר</option>
                                             <option value="בית">בית (משקל גוף/ציוד קל)</option>
                                             <option value="פארק / באוויר הפתוח">פארק / באוויר הפתוח</option>
@@ -768,7 +794,7 @@
                                     </div>
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">אימונים בשבוע</label>
-                                        <select x-model="newIntake.weeklyWorkouts" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <select x-model="newIntake.weeklyWorkouts" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                             <option value="2 אימונים בשבוע">2 אימונים בשבוע</option>
                                             <option value="3 אימונים בשבוע">3 אימונים בשבוע</option>
                                             <option value="4 אימונים בשבוע">4 אימונים בשבוע</option>
@@ -781,7 +807,7 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">העדפה תזונתית</label>
-                                        <select x-model="newIntake.dietPreference" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <select x-model="newIntake.dietPreference" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                             <option value="ללא מגבלות">ללא מגבלות (אוכל הכל)</option>
                                             <option value="כשר">כשר</option>
                                             <option value="צמחוני">צמחוני</option>
@@ -792,21 +818,21 @@
                                     </div>
                                     <div class="space-y-1">
                                         <label class="block text-[10px] font-bold text-[#6d28d9]">מספר ארוחות ביום</label>
-                                        <input type="text" x-model="newIntake.mealsPerDay" placeholder="למשל: 3 ארוחות גדולות וביניים" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                        <input type="text" x-model="newIntake.mealsPerDay" placeholder="למשל: 3 ארוחות גדולות וביניים" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                     </div>
                                 </div>
 
                                 <div class="space-y-1">
                                     <label class="block text-[10px] font-bold text-[#6d28d9]">מאכלים שאתה שונא או אלרגי אליהם</label>
-                                    <input type="text" x-model="newIntake.hatedFoods" placeholder="למשל: כוסברה, טונה, בצל חי..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
+                                    <input type="text" x-model="newIntake.hatedFoods" placeholder="למשל: כוסברה, טונה, בצל חי..." class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold">
                                 </div>
 
                                 <div class="flex justify-between pt-2">
-                                    <button type="button" @click="intakeStep = 1; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-slate-950 border border-slate-800 text-slate-350 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
+                                    <button type="button" @click="intakeStep = 1; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-[#f8f7ff] border border-[#ede9fe] text-slate-350 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
                                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                                         <span>חזור</span>
                                     </button>
-                                    <button type="button" @click="intakeStep = 3; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-white hover:bg-[#240a3e] text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                    <button type="button" @click="intakeStep = 3; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-white hover:bg-white text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
                                         <span>המשך לשלב הבא</span>
                                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
                                     </button>
@@ -817,23 +843,23 @@
                             <div x-show="intakeStep === 3" class="space-y-4" x-cloak>
                                 <div class="space-y-1">
                                     <label class="block text-[10px] font-bold text-[#6d28d9]">מצב בריאותי, פציעות או הערות מיוחדות</label>
-                                    <textarea x-model="newIntake.notes" placeholder="פרט כאן רגישויות, בעיות גב/ברכיים, העדפות תזונה וכדומה..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold resize-none h-20"></textarea>
+                                    <textarea x-model="newIntake.notes" placeholder="פרט כאן רגישויות, בעיות גב/ברכיים, העדפות תזונה וכדומה..." class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold resize-none h-20"></textarea>
                                 </div>
 
                                 <div class="space-y-1">
                                     <label class="block text-[10px] font-bold text-[#6d28d9]">למה דווקא עכשיו החלטת לעשות שינוי? (מוטיבציה) *</label>
-                                    <textarea x-model="newIntake.motivation" required placeholder="מה מניע אותך להתחיל את התהליך עכשיו?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold resize-none h-20"></textarea>
+                                    <textarea x-model="newIntake.motivation" required placeholder="מה מניע אותך להתחיל את התהליך עכשיו?" class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold resize-none h-20"></textarea>
                                 </div>
 
                                 <div class="space-y-1">
                                     <label class="block text-[10px] font-bold text-[#6d28d9]">מה האתגר/הקושי הכי גדול שלך כיום בתזונה או באימונים? *</label>
-                                    <textarea x-model="newIntake.biggestChallenge" required placeholder="מתוקים, חוסר זמן, התמדה, קושי לתכנן ארוחות..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold resize-none h-20"></textarea>
+                                    <textarea x-model="newIntake.biggestChallenge" required placeholder="מתוקים, חוסר זמן, התמדה, קושי לתכנן ארוחות..." class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl px-3 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-xs font-semibold resize-none h-20"></textarea>
                                 </div>
 
                                 <!-- הסכמה לתנאי שימוש, הצהרת בריאות ומדיניות פרטיות (עמידה בחוק) -->
-                                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2">
+                                <div class="bg-[#f8f7ff] border border-[#ede9fe] rounded-2xl p-4 space-y-2">
                                     <label class="flex items-start gap-2.5 cursor-pointer">
-                                        <input type="checkbox" x-model="newIntake.privacyConsent" required class="mt-1 w-4 h-4 rounded text-[#a15c07] bg-slate-900 border-slate-700 focus:ring-emerald-500 cursor-pointer">
+                                        <input type="checkbox" x-model="newIntake.privacyConsent" required class="mt-1 w-4 h-4 rounded text-[#a15c07] bg-white border-[#ede9fe] focus:ring-emerald-500 cursor-pointer">
                                         <span class="text-[11px] text-[#6d28d9] font-semibold leading-relaxed">
                                             קראתי ואני מאשר את 
                                             <button type="button" @click="openPrivacyModal = true" class="text-[#a15c07] font-bold underline hover:text-[#a15c07]">הצהרת הבריאות, תנאי השימוש ומדיניות הפרטיות</button> 
@@ -843,11 +869,11 @@
                                 </div>
 
                                 <div class="flex justify-between pt-2">
-                                    <button type="button" @click="intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-slate-950 border border-slate-800 text-slate-355 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
+                                    <button type="button" @click="intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50);" class="bg-[#f8f7ff] border border-[#ede9fe] text-slate-355 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
                                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                                         <span>חזור</span>
                                     </button>
-                                    <button type="submit" class="bg-white hover:bg-[#240a3e] text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
+                                    <button type="submit" class="bg-white hover:bg-white text-slate-950 font-black px-6 py-2.5 rounded-xl transition shadow-lg text-xs flex items-center gap-1.5 cursor-pointer">
                                         <i data-lucide="send" class="w-4 h-4"></i>
                                         <span>שלח שאלון קליטה</span>
                                     </button>
@@ -912,28 +938,28 @@
                         <div class="mt-4 pt-3.5 border-t border-[#ede9fe]/60 grid grid-cols-4 gap-1.5 text-center text-xs font-bold">
                             <button type="button" 
                                     @click="portalActiveSubTab = 'home'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'home' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white/60 text-[#6b7280] hover:text-white hover:bg-[#7c3aed]'"
+                                    :class="portalActiveSubTab === 'home' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white text-[#1e1b4b] hover:bg-[#ede9fe] border border-[#ede9fe]/80 font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                                 <span>ראשי</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'workouts' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white/60 text-[#6b7280] hover:text-white hover:bg-[#7c3aed]'"
+                                    :class="portalActiveSubTab === 'workouts' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white text-[#1e1b4b] hover:bg-[#ede9fe] border border-[#ede9fe]/80 font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="dumbbell" class="w-4 h-4"></i>
                                 <span>אימונים</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'nutrition'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white/60 text-[#6b7280] hover:text-white hover:bg-[#7c3aed]'"
+                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white text-[#1e1b4b] hover:bg-[#ede9fe] border border-[#ede9fe]/80 font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="utensils" class="w-4 h-4"></i>
                                 <span>תזונה</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'progress'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'progress' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white/60 text-[#6b7280] hover:text-white hover:bg-[#7c3aed]'"
+                                    :class="portalActiveSubTab === 'progress' ? 'bg-[#fbbf24] text-[#1e1b4b] shadow-md font-black' : 'bg-white text-[#1e1b4b] hover:bg-[#ede9fe] border border-[#ede9fe]/80 font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="trending-up" class="w-4 h-4"></i>
                                 <span>התקדמות</span>
@@ -1773,7 +1799,7 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
+                        <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
                                 <span class="text-[#5c4075] text-[10px] md:text-xs font-black block mb-1">פעילים בליווי</span>
                                 <span class="text-xl md:text-3xl font-black text-[#1e1b4b]" x-text="getActiveClientsCount()"></span>
@@ -1783,7 +1809,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
+                        <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
                                 <span class="text-[#5c4075] text-[10px] md:text-xs font-black block mb-1">הכנסה חודשית</span>
                                 <span class="text-xl md:text-3xl font-black text-[#1e1b4b]" x-text="getExpectedMonthlyRevenue() + ' ₪'"></span>
@@ -1793,7 +1819,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
+                        <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
                                 <span class="text-[#5c4075] text-[10px] md:text-xs font-black block mb-1">פגישות שבוצעו</span>
                                 <span class="text-xl md:text-3xl font-black text-[#1e1b4b]" x-text="getCompletedPersonalSessions() + ' / ' + getActiveClientsCount()"></span>
@@ -1803,7 +1829,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
+                        <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 md:p-6 flex items-center justify-between shadow-xl">
                             <div>
                                 <span class="text-[#5c4075] text-[10px] md:text-xs font-black block mb-1">בנפילה / קושי</span>
                                 <span class="text-xl md:text-3xl font-black text-red-400" x-text="getNeedsAttentionCount()"></span>
@@ -1818,7 +1844,7 @@
                     <div class="bg-white border-2 border-[#ede9fe] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#ede9fe] pb-3.5">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#8b5cf6] to-[#381061] text-[#fbbf24] flex items-center justify-center shadow-md shadow-[#7c3aed]/20 shrink-0">
+                                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#8b5cf6] to-[#7c3aed] text-[#fbbf24] flex items-center justify-center shadow-md shadow-[#7c3aed]/20 shrink-0">
                                     <i data-lucide="zap" class="w-5 h-5"></i>
                                 </div>
                                 <div>
@@ -1895,8 +1921,8 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- מתאמנים הדורשים יחס מיוחד -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[350px] md:h-[400px]">
-                            <div class="p-4 md:p-6 border-b border-slate-800 flex justify-between items-center">
+                        <div class="bg-white border border-[#ede9fe] rounded-2xl shadow-xl flex flex-col h-[350px] md:h-[400px]">
+                            <div class="p-4 md:p-6 border-b border-[#ede9fe] flex justify-between items-center">
                                 <h3 class="font-black text-sm md:text-base text-[#1e1b4b] flex items-center gap-2">
                                     <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
                                     <span>צריכים יחס מיוחד (נפילה/קושי)</span>
@@ -1905,14 +1931,14 @@
                             </div>
                             <div class="flex-1 p-4 md:p-6 overflow-y-auto space-y-4">
                                 <template x-for="client in getAttentionClients()" :key="client.id">
-                                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-slate-700 transition">
+                                    <div class="bg-[#f8f7ff] border border-[#ede9fe] rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-[#ede9fe] transition">
                                         <div class="space-y-1">
                                             <button @click="selectClient(client.id)" class="text-xs md:text-sm font-bold text-[#1e1b4b] hover:text-[#a15c07] text-right block" x-text="client.name"></button>
                                             <span class="text-[10px] text-red-400 bg-red-950/40 px-1.5 py-0.5 rounded border border-red-900/40 block truncate max-w-[180px] md:max-w-xs" x-text="getLastNote(client) || 'סומן ללא פירוט'"></span>
                                         </div>
                                         <div class="flex items-center gap-1.5">
-                                            <button @click="selectClient(client.id)" class="text-[10px] md:text-xs text-[#6d28d9] px-2 py-1 rounded bg-slate-900 border border-slate-800">כרטיס</button>
-                                            <a :href="getWhatsAppLink(client, 'attention')" target="_blank" class="bg-[#240a3e] text-[#1e1b4b] p-1.5 rounded">
+                                            <button @click="selectClient(client.id)" class="text-[10px] md:text-xs text-[#6d28d9] px-2 py-1 rounded bg-white border border-[#ede9fe]">כרטיס</button>
+                                            <a :href="getWhatsAppLink(client, 'attention')" target="_blank" class="bg-white text-[#1e1b4b] p-1.5 rounded">
                                                 <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                                             </a>
                                         </div>
@@ -1920,7 +1946,7 @@
                                 </template>
                                 <template x-if="getAttentionClients().length === 0">
                                     <div class="h-full flex flex-col items-center justify-center text-slate-500 italic text-xs">
-                                        <i data-lucide="check-circle" class="w-8 h-8 text-[#240a3e]/30 mb-2"></i>
+                                        <i data-lucide="check-circle" class="w-8 h-8 text-[#7c3aed]/30 mb-2"></i>
                                         <span>כל המתאמנים במסלול תקין!</span>
                                     </div>
                                 </template>
@@ -1928,8 +1954,8 @@
                         </div>
 
                         <!-- משימות ליווי להיום -->
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[350px] md:h-[400px]">
-                            <div class="p-4 md:p-6 border-b border-slate-800">
+                        <div class="bg-white border border-[#ede9fe] rounded-2xl shadow-xl flex flex-col h-[350px] md:h-[400px]">
+                            <div class="p-4 md:p-6 border-b border-[#ede9fe]">
                                 <h3 class="font-black text-sm md:text-base text-[#1e1b4b] flex items-center gap-2">
                                     <i data-lucide="calendar" class="w-5 h-5 text-[#a15c07]"></i>
                                     <span>משימות ופגישות קרובות</span>
@@ -1937,7 +1963,7 @@
                             </div>
                             <div class="flex-1 p-4 md:p-6 overflow-y-auto space-y-4">
                                 <template x-for="task in getUpcomingTasks()" :key="task.id">
-                                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-slate-700 transition">
+                                    <div class="bg-[#f8f7ff] border border-[#ede9fe] rounded-xl p-3 md:p-4 flex items-center justify-between hover:border-[#ede9fe] transition">
                                         <div class="space-y-1">
                                             <button @click="selectClient(task.id)" class="text-xs md:text-sm font-bold text-[#1e1b4b] hover:text-[#a15c07] text-right block" x-text="task.name"></button>
                                             <span class="text-[10px] block max-w-[180px] md:max-w-xs truncate" :class="task.type === 'zoom' ? 'text-[#fbbf24]' : 'text-amber-400'" x-text="task.desc"></span>
@@ -1946,13 +1972,13 @@
                                             <template x-if="task.type === 'zoom'">
                                                 <button @click="markPersonalSessionDone(task.id)" class="bg-white hover:bg-[#7c3aed] hover:text-[#a15c07] text-[#1e1b4b] border border-[#ede9fe] text-[10px] font-bold px-2.5 py-1 rounded-xl transition cursor-pointer">בוצע</button>
                                             </template>
-                                            <button @click="selectClient(task.id)" class="text-[10px] text-[#6d28d9] px-2 py-1 rounded bg-slate-900 border border-slate-800">לכרטיס</button>
+                                            <button @click="selectClient(task.id)" class="text-[10px] text-[#6d28d9] px-2 py-1 rounded bg-white border border-[#ede9fe]">לכרטיס</button>
                                         </div>
                                     </div>
                                 </template>
                                 <template x-if="getUpcomingTasks().length === 0">
                                     <div class="h-full flex flex-col items-center justify-center text-slate-500 italic text-xs">
-                                        <i data-lucide="coffee" class="w-8 h-8 text-[#240a3e]/30 mb-2"></i>
+                                        <i data-lucide="coffee" class="w-8 h-8 text-[#7c3aed]/30 mb-2"></i>
                                         <span>אין משימות להיום.</span>
                                     </div>
                                 </template>
@@ -2077,7 +2103,7 @@
                                                 <div class="inline-flex flex-col items-center">
                                                     <span class="font-black text-[#1e1b4b] text-xs" x-text="getClientCurrentWeight(client) + (getClientCurrentWeight(client) !== '-' ? ' ק״ג' : '')"></span>
                                                     <template x-if="getClientWeightChange(client) !== null">
-                                                        <span :class="getClientWeightChange(client) < 0 ? 'text-[#240a3e] bg-white' : 'text-amber-600 bg-amber-50'" class="text-[9px] font-extrabold px-1.5 py-0.2 rounded mt-0.5" x-text="(getClientWeightChange(client) > 0 ? '+' : '') + getClientWeightChange(client) + ' ק״ג'"></span>
+                                                        <span :class="getClientWeightChange(client) < 0 ? 'text-[#7c3aed] bg-white' : 'text-amber-600 bg-amber-50'" class="text-[9px] font-extrabold px-1.5 py-0.2 rounded mt-0.5" x-text="(getClientWeightChange(client) > 0 ? '+' : '') + getClientWeightChange(client) + ' ק״ג'"></span>
                                                     </template>
                                                 </div>
                                             </td>
@@ -2196,20 +2222,20 @@
                 <!-- 2. טאב רשימת מתאמנים -->
                 <div x-show="isCoachAuthenticated && (activeTab === 'clients' && !selectedClientId)" x-cloak class="space-y-6">
                     <!-- חיפוש ופילטרים -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col gap-4 shadow-xl">
+                    <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 md:p-6 flex flex-col gap-4 shadow-xl">
                         <div class="flex flex-col md:flex-row gap-4 justify-between items-center w-full">
                             <div class="relative w-full md:w-96">
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
                                     <i data-lucide="search" class="w-5 h-5"></i>
                                 </span>
-                                <input type="text" x-model="searchQuery" placeholder="חיפוש מתאמן..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pr-10 pl-4 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-sm">
+                                <input type="text" x-model="searchQuery" placeholder="חיפוש מתאמן..." class="w-full bg-[#f8f7ff] border border-[#ede9fe] rounded-xl pr-10 pl-4 py-2 text-[#1e1b4b] focus:outline-none focus:border-[#ede9fe] text-sm">
                             </div>
 
                             <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none w-full md:w-auto">
-                                <button @click="statusFilter = 'all'" :class="statusFilter === 'all' ? 'bg-[#240a3e] text-[#1e1b4b]' : 'bg-slate-950 text-[#6d28d9] border-slate-800'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">הכל</button>
-                                <button @click="statusFilter = 'active'" :class="statusFilter === 'active' ? 'bg-[#240a3e] text-[#1e1b4b]' : 'bg-slate-950 text-[#6d28d9] border-slate-800'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">פעילים</button>
-                                <button @click="statusFilter = 'paused'" :class="statusFilter === 'paused' ? 'bg-[#240a3e] text-[#1e1b4b]' : 'bg-slate-950 text-[#6d28d9] border-slate-800'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">מושהים</button>
-                                <button @click="statusFilter = 'completed'" :class="statusFilter === 'completed' ? 'bg-[#240a3e] text-[#1e1b4b]' : 'bg-slate-950 text-[#6d28d9] border-slate-800'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">סיימו</button>
+                                <button @click="statusFilter = 'all'" :class="statusFilter === 'all' ? 'bg-white text-[#1e1b4b]' : 'bg-[#f8f7ff] text-[#6d28d9] border-[#ede9fe]'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">הכל</button>
+                                <button @click="statusFilter = 'active'" :class="statusFilter === 'active' ? 'bg-white text-[#1e1b4b]' : 'bg-[#f8f7ff] text-[#6d28d9] border-[#ede9fe]'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">פעילים</button>
+                                <button @click="statusFilter = 'paused'" :class="statusFilter === 'paused' ? 'bg-white text-[#1e1b4b]' : 'bg-[#f8f7ff] text-[#6d28d9] border-[#ede9fe]'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">מושהים</button>
+                                <button @click="statusFilter = 'completed'" :class="statusFilter === 'completed' ? 'bg-white text-[#1e1b4b]' : 'bg-[#f8f7ff] text-[#6d28d9] border-[#ede9fe]'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">סיימו</button>
                             </div>
                         </div>
 
@@ -2271,7 +2297,7 @@
                                             <span :class="getPersonalSessionClass(client.personalSessionStatus)" class="text-xs px-2.5 py-1 rounded-full font-bold border inline-block" x-text="getPersonalSessionLabel(client.personalSessionStatus)"></span>
                                         </td>
                                         <td class="py-4 px-6 text-center">
-                                            <span :class="client.status === 'active' ? 'bg-emerald-950/70 text-emerald-300 border-emerald-500/50' : 'bg-slate-800 text-[#6d28d9] border-slate-600'" class="text-xs px-3 py-1 rounded-full border font-black inline-block" x-text="client.status === 'active' ? 'פעיל' : 'מושהה'"></span>
+                                            <span :class="client.status === 'active' ? 'bg-emerald-950/70 text-emerald-300 border-emerald-500/50' : 'bg-white text-[#6d28d9] border-slate-600'" class="text-xs px-3 py-1 rounded-full border font-black inline-block" x-text="client.status === 'active' ? 'פעיל' : 'מושהה'"></span>
                                         </td>
                                         <td class="py-4 px-6 text-left">
                                             <div class="flex items-center justify-end gap-2">
@@ -2302,7 +2328,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="grid grid-cols-2 gap-2 text-[11px] text-[#6d28d9] pt-2 border-t border-slate-800/60">
+                                <div class="grid grid-cols-2 gap-2 text-[11px] text-[#6d28d9] pt-2 border-t border-[#ede9fe]/60">
                                     <div>
                                         <span class="text-[9px] text-slate-500 block">טלפון:</span>
                                         <span x-text="client.phone"></span>
@@ -2313,7 +2339,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex justify-between items-center pt-2 border-t border-slate-800/60 text-xs">
+                                <div class="flex justify-between items-center pt-2 border-t border-[#ede9fe]/60 text-xs">
                                     <div>
                                         <span class="text-[9px] text-slate-500 block">מפגש השבוע:</span>
                                         <span :class="getPersonalSessionClass(client.personalSessionStatus)" class="px-1.5 py-0.5 rounded text-[9px] border inline-block mt-0.5" x-text="getPersonalSessionLabel(client.personalSessionStatus)"></span>
@@ -2330,16 +2356,16 @@
 
                 <!-- 3. טאב יומן שבועי -->
                 <div x-show="isCoachAuthenticated && (activeTab === 'schedule')" x-cloak class="space-y-6">
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
+                    <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
                         <div class="flex items-center gap-4 justify-between w-full md:w-auto">
                             <h3 class="text-sm md:text-xl font-black text-[#1e1b4b]">יומן אימונים ושיחות</h3>
-                            <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
-                                <button @click="weekOffset--" class="p-2 hover:bg-slate-800 text-[#6d28d9]"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+                            <div class="flex items-center bg-[#f8f7ff] border border-[#ede9fe] rounded-xl overflow-hidden">
+                                <button @click="weekOffset--" class="p-2 hover:bg-white text-[#6d28d9]"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
                                 <span class="px-3 py-1.5 text-[10px] md:text-xs font-bold text-[#1e1b4b]" x-text="getWeekRangeLabel()"></span>
-                                <button @click="weekOffset++" class="p-2 hover:bg-slate-800 text-[#6d28d9]"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
+                                <button @click="weekOffset++" class="p-2 hover:bg-white text-[#6d28d9]"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
                             </div>
                         </div>
-                        <button @click="openAddEventModal = true" class="w-full md:w-auto bg-white hover:bg-[#240a3e] text-slate-950 font-bold px-4 py-2 rounded-xl text-xs md:text-sm flex items-center justify-center gap-1.5 shadow-lg">
+                        <button @click="openAddEventModal = true" class="w-full md:w-auto bg-white hover:bg-white text-slate-950 font-bold px-4 py-2 rounded-xl text-xs md:text-sm flex items-center justify-center gap-1.5 shadow-lg">
                             <i data-lucide="calendar-plus" class="w-4 h-4"></i>
                             <span>קבע פגישה חדשה</span>
                         </button>
@@ -2347,24 +2373,24 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
                         <template x-for="day in getCurrentWeekDays()" :key="day.date">
-                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col min-h-[140px] md:min-h-[300px] shadow-xl">
-                                <div class="border-b border-slate-800 pb-2 mb-3 flex justify-between items-center">
+                            <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 flex flex-col min-h-[140px] md:min-h-[300px] shadow-xl">
+                                <div class="border-b border-[#ede9fe] pb-2 mb-3 flex justify-between items-center">
                                     <span class="font-black text-[#1e1b4b] text-xs md:text-sm" x-text="day.name"></span>
                                     <span class="text-[10px] text-slate-500 font-bold" x-text="day.formatted"></span>
                                 </div>
                                 
                                 <div class="flex-1 space-y-2 overflow-y-auto max-h-[300px]">
                                     <template x-for="event in getEventsForDate(day.date)" :key="event.id">
-                                        <div :class="event.status === 'completed' ? 'border-[#ede9fe] bg-[#240a3e]/20' : (event.status === 'cancelled' ? 'border-red-950 bg-red-950/10 opacity-60' : 'border-slate-800 bg-slate-950')"
-                                             class="border rounded-xl p-2.5 text-[10px] md:text-xs space-y-2 relative group hover:border-slate-700 transition">
+                                        <div :class="event.status === 'completed' ? 'border-[#ede9fe] bg-white/20' : (event.status === 'cancelled' ? 'border-red-950 bg-red-950/10 opacity-60' : 'border-[#ede9fe] bg-[#f8f7ff]')"
+                                             class="border rounded-xl p-2.5 text-[10px] md:text-xs space-y-2 relative group hover:border-[#ede9fe] transition">
                                             <div class="flex justify-between items-start">
                                                 <span class="font-bold text-[#1e1b4b]" x-text="event.clientName"></span>
                                                 <span class="text-[9px] text-[#6d28d9] font-semibold" x-text="event.time"></span>
                                             </div>
                                             <div class="flex items-center gap-1">
-                                                <span :class="event.type === 'zoom' ? 'bg-[#240a3e]/40 text-[#fbbf24] border-[#ede9fe]/50' : 'bg-amber-950/40 text-amber-400 border-amber-900/50'" class="px-1 py-0.5 rounded text-[8px] border" x-text="event.type === 'zoom' ? 'זום' : '1:1'"></span>
+                                                <span :class="event.type === 'zoom' ? 'bg-white/40 text-[#fbbf24] border-[#ede9fe]/50' : 'bg-amber-950/40 text-amber-400 border-amber-900/50'" class="px-1 py-0.5 rounded text-[8px] border" x-text="event.type === 'zoom' ? 'זום' : '1:1'"></span>
                                             </div>
-                                            <div class="flex items-center justify-end gap-1.5 border-t border-slate-800/40 pt-1.5">
+                                            <div class="flex items-center justify-end gap-1.5 border-t border-[#ede9fe]/40 pt-1.5">
                                                 <button @click="changeEventStatus(event.id, 'completed')" class="text-[#a15c07]" title="בוצע"><i data-lucide="check" class="w-3 h-3"></i></button>
                                                 <button @click="changeEventStatus(event.id, 'cancelled')" class="text-red-400" title="בוטל"><i data-lucide="ban" class="w-3 h-3"></i></button>
                                                 <button @click="deleteEvent(event.id)" class="text-slate-500 hover:text-red-400" title="מחק"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
@@ -2402,7 +2428,7 @@
                                     <div class="flex items-center gap-2.5 flex-wrap">
                                         <h3 class="text-xl md:text-3xl font-black text-[#1e1b4b] tracking-tight" x-text="currentClient?.name"></h3>
                                         <span class="text-[10px] bg-[#7c3aed] text-[#fbbf24] border border-[#fbbf24]/30 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 shadow-xs">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-[#240a3e] animate-pulse"></span>
+                                            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                                             <span>VIP ליווי אישי</span>
                                         </span>
                                         <button type="button"
@@ -2652,7 +2678,7 @@
                                             <!-- חלבון -->
                                             <div class="bg-white p-3 rounded-xl border border-[#ede9fe] shadow-sm space-y-1">
                                                 <span class="text-[10px] text-[#6d28d9] block font-bold">🥩 חלבון</span>
-                                                <div class="font-black text-sm text-[#240a3e]" x-text="(currentClient?.targetProteinCal || Math.round((currentClient?.targetProtein||160)*4)) + ' קק״ל'"></div>
+                                                <div class="font-black text-sm text-[#7c3aed]" x-text="(currentClient?.targetProteinCal || Math.round((currentClient?.targetProtein||160)*4)) + ' קק״ל'"></div>
                                                 <div class="text-[10px] text-[#6d28d9] font-bold" x-text="'(' + (currentClient?.targetProtein || currentClient?.macroCalculated?.targetProtein || 160) + ' גרם)'"></div>
                                                 <div class="text-[9px] text-[#15803d] font-bold pt-0.5" x-text="'נצרך: ' + Math.round((getTodayConsumedProtein(currentClient)||0)*4) + ' קק״ל (' + (getTodayConsumedProtein(currentClient)||0) + 'ג')'"></div>
                                             </div>
@@ -2720,7 +2746,7 @@
                                         <!-- צעדים -->
                                         <div class="bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] p-3.5 rounded-2xl space-y-2 text-center">
                                             <div class="flex items-center justify-center gap-1.5 text-xs font-black text-[#1e1b4b]">
-                                                <i data-lucide="footprints" class="w-4 h-4 text-[#240a3e]"></i>
+                                                <i data-lucide="footprints" class="w-4 h-4 text-[#7c3aed]"></i>
                                                 <span>צעדים היום</span>
                                             </div>
                                             <div class="text-base font-black text-[#1e1b4b]" x-text="(currentClient?.dailySteps || 0) + ' / ' + (currentClient?.stepsTarget || 10000)"></div>
@@ -2843,11 +2869,11 @@
                                     <div class="bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] p-3.5 rounded-2xl space-y-2">
                                         <div class="flex items-center justify-between text-xs">
                                             <span class="font-black text-[#1e1b4b] flex items-center gap-1.5">
-                                                <i data-lucide="table" class="w-3.5 h-3.5 text-[#240a3e]"></i>
+                                                <i data-lucide="table" class="w-3.5 h-3.5 text-[#7c3aed]"></i>
                                                 <span>טבלת מעקב / תוכנית (Google Sheets):</span>
                                             </span>
                                             <template x-if="currentClient?.googleSheetsUrl">
-                                                <a :href="currentClient?.googleSheetsUrl" target="_blank" class="text-[10px] text-[#240a3e] font-bold hover:underline flex items-center gap-1">
+                                                <a :href="currentClient?.googleSheetsUrl" target="_blank" class="text-[10px] text-[#7c3aed] font-bold hover:underline flex items-center gap-1">
                                                     <span>פתח טבלה</span>
                                                     <i data-lucide="external-link" class="w-3 h-3"></i>
                                                 </a>
@@ -3155,13 +3181,13 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
-                                    <button type="button" @click="openExerciseLibraryForDay(0, null)" class="bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] text-[#1e1b4b] px-3.5 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="book-open" class="w-4 h-4 text-[#240a3e]"></i><span>ספריית תרגילים (137)</span></button>
+                                    <button type="button" @click="openExerciseLibraryForDay(0, null)" class="bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] text-[#1e1b4b] px-3.5 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="book-open" class="w-4 h-4 text-[#7c3aed]"></i><span>ספריית תרגילים (137)</span></button>
                                     <button type="button" @click="addWorkoutDay()" class="bg-[#7c3aed] hover:bg-[#7c3aed] text-[#fbbf24] px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 transition shadow-md shadow-[#7c3aed]/20 cursor-pointer">
                                         <i data-lucide="plus-circle" class="w-4 h-4 text-[#fbbf24]"></i>
                                         <span>+ הוסף יום אימון חדש</span>
                                     </button>
                                     <button type="button" @click="openOneRmModal = true; setTimeout(() => window.lucide?.createIcons(), 50)" class="bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] text-[#1e1b4b] px-3.5 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer">
-                                        <i data-lucide="calculator" class="w-4 h-4 text-[#240a3e]"></i>
+                                        <i data-lucide="calculator" class="w-4 h-4 text-[#7c3aed]"></i>
                                         <span>מחשבון 1RM</span>
                                     </button>
                                     <button type="button" @click="printWorkout(currentClient)" class="bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] text-[#1e1b4b] px-3.5 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer">
@@ -3184,7 +3210,7 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
-                                        <button type="button" @click="openBlockArchiveModal = true; newBlockNameInput = 'בלוק ' + ((currentClient.workoutPlan?.archivedBlocks?.length || 0) + 2) + ': כוח והיפרטרופיה';" class="bg-gradient-to-r from-[#240a3e] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
+                                        <button type="button" @click="openBlockArchiveModal = true; newBlockNameInput = 'בלוק ' + ((currentClient.workoutPlan?.archivedBlocks?.length || 0) + 2) + ': כוח והיפרטרופיה';" class="bg-gradient-to-r from-[#7c3aed] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
                                             <i data-lucide="archive" class="w-3.5 h-3.5"></i>
                                             <span>סגור בלוק והתחל חדש 🚀</span>
                                         </button>
@@ -3257,7 +3283,7 @@
                                 <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3">
                                     <div class="flex items-center gap-2.5">
                                         <div class="p-2 rounded-xl bg-white/10 text-[#a15c07]">
-                                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-[#240a3e]"></i>
+                                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-[#7c3aed]"></i>
                                         </div>
                                         <div>
                                             <h4 class="text-xs md:text-sm font-black text-[#1e1b4b]">נפח סטים שבועי לפי קבוצת שריר 📊</h4>
@@ -3288,7 +3314,7 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                                        <button type="button" @click="saveWorkoutPlanWithToast()" class="bg-gradient-to-r from-[#240a3e] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-emerald-600/20 cursor-pointer">
+                                        <button type="button" @click="saveWorkoutPlanWithToast()" class="bg-gradient-to-r from-[#7c3aed] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-emerald-600/20 cursor-pointer">
                                             <i data-lucide="save" class="w-3.5 h-3.5"></i>
                                             <span>💾 שמור שינויים בבלוק</span>
                                         </button>
@@ -3308,7 +3334,7 @@
                                                 class="p-3.5 rounded-2xl border text-right transition cursor-pointer flex flex-col justify-between gap-2.5 shadow-2xs">
                                             <div class="flex items-center justify-between">
                                                 <span class="w-6 h-6 rounded-lg text-[11px] font-black flex items-center justify-center"
-                                                      :class="coachSelectedWorkoutDayIdx === dIdx ? 'bg-[#381061] text-[#fbbf24]' : 'bg-white border border-[#fbbf24]/40 text-[#fbbf24]'"
+                                                      :class="coachSelectedWorkoutDayIdx === dIdx ? 'bg-[#7c3aed] text-[#fbbf24]' : 'bg-white border border-[#fbbf24]/40 text-[#fbbf24]'"
                                                       x-text="dIdx + 1"></span>
                                                 <span class="text-[10px] font-bold"
                                                       :class="coachSelectedWorkoutDayIdx === dIdx ? 'text-[#fbbf24]' : 'text-[#6d28d9]'"
@@ -3320,7 +3346,7 @@
 
                                     <!-- כפתור הוספת יום בתוך הגריד -->
                                     <button type="button" @click="addWorkoutDay()" class="p-3.5 rounded-2xl border-2 border-dashed border-[#ede9fe] hover:border-[#22c55e] hover:bg-white/30 text-[#6d28d9] hover:text-[#1e1b4b] transition cursor-pointer flex flex-col items-center justify-center gap-1.5 text-center min-h-[80px]">
-                                        <i data-lucide="plus-circle" class="w-5 h-5 text-[#240a3e]"></i>
+                                        <i data-lucide="plus-circle" class="w-5 h-5 text-[#7c3aed]"></i>
                                         <span class="text-xs font-black">+ הוסף יום אימון</span>
                                     </button>
                                 </div>
@@ -3330,7 +3356,7 @@
                             <div class="space-y-6">
                                 <template x-if="!currentClient?.workoutPlan?.days || currentClient.workoutPlan.days.length === 0">
                                     <div class="bg-white border-2 border-dashed border-[#ede9fe] rounded-3xl p-8 text-center space-y-3">
-                                        <div class="w-12 h-12 rounded-2xl bg-white text-[#240a3e] flex items-center justify-center mx-auto">
+                                        <div class="w-12 h-12 rounded-2xl bg-white text-[#7c3aed] flex items-center justify-center mx-auto">
                                             <i data-lucide="plus-circle" class="w-6 h-6"></i>
                                         </div>
                                         <h4 class="text-sm font-bold text-[#1e1b4b]">טרם נבנו ימי אימון לבלוק זה</h4>
@@ -3359,7 +3385,7 @@
                                                 <span class="text-[10px] font-bold text-[#6d28d9] bg-white border border-[#ede9fe] px-2.5 py-1 rounded-xl whitespace-nowrap" x-text="(currentClient.workoutPlan.days[coachSelectedWorkoutDayIdx].exercises?.length || 0) + ' תרגילים'"></span>
                                             </div>
                                             <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
-                                                <button type="button" @click="saveWorkoutPlanWithToast()" class="bg-gradient-to-r from-[#240a3e] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
+                                                <button type="button" @click="saveWorkoutPlanWithToast()" class="bg-gradient-to-r from-[#7c3aed] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
                                                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                                     <span>שמור יום זה</span>
                                                 </button>
@@ -3434,7 +3460,7 @@
                                                     <!-- שורה 2: דגשי ביצוע והנחיות למתאמן -->
                                                     <div>
                                                         <div class="flex items-center gap-2 bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] rounded-xl px-3 py-1.5">
-                                                            <i data-lucide="info" class="w-3.5 h-3.5 text-[#240a3e] shrink-0"></i>
+                                                            <i data-lucide="info" class="w-3.5 h-3.5 text-[#7c3aed] shrink-0"></i>
                                                             <input type="text" 
                                                                    x-model="ex.notes" 
                                                                    @input="saveData()" 
@@ -3447,7 +3473,7 @@
                                                     <div class="bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] rounded-xl p-3 space-y-2.5">
                                                         <div class="flex items-center justify-between border-b border-[#ede9fe] pb-2">
                                                             <span class="text-xs font-black text-[#1e1b4b] flex items-center gap-1.5">
-                                                                <i data-lucide="layers" class="w-3.5 h-3.5 text-[#240a3e]"></i>
+                                                                <i data-lucide="layers" class="w-3.5 h-3.5 text-[#7c3aed]"></i>
                                                                 <span>פירוט סטים, חזרות ומשקלי יעד 🎯</span>
                                                             </span>
                                                             <span class="text-[10px] text-[#6d28d9] font-bold" x-text="(ex.setsDetail ? ex.setsDetail.length : (ex.sets || 3)) + ' סטים מוגדרים'"></span>
@@ -3510,7 +3536,7 @@
                                                         <!-- כפתורי פעולה לסטים -->
                                                         <div class="flex items-center gap-2 pt-1">
                                                             <button type="button" @click="addExerciseSet(coachSelectedWorkoutDayIdx, exIdx)" class="text-xs font-black text-[#1e1b4b] hover:text-[#a15c07] bg-white border border-[#ede9fe] hover:border-[#ede9fe] px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition cursor-pointer shadow-2xs">
-                                                                <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-[#240a3e]"></i>
+                                                                <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-[#7c3aed]"></i>
                                                                 <span>+ הוסף סט (Set)</span>
                                                             </button>
                                                         </div>
@@ -3523,7 +3549,7 @@
                                         <div class="pt-3 border-t border-[#ede9fe] flex flex-col sm:flex-row items-center justify-between gap-3">
                                             <div class="flex items-center gap-2 w-full sm:w-auto">
                                                 <button type="button" @click="addExercise(coachSelectedWorkoutDayIdx)" class="flex-1 sm:flex-none bg-white hover:bg-white border-2 border-dashed border-[#ede9fe] hover:border-[#22c55e] text-[#1e1b4b] hover:text-[#a15c07] font-black py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs">
-                                                    <i data-lucide="plus-circle" class="w-4 h-4 text-[#240a3e]"></i>
+                                                    <i data-lucide="plus-circle" class="w-4 h-4 text-[#7c3aed]"></i>
                                                     <span>+ הוסף תרגיל ידני</span>
                                                 </button>
                                                 <button type="button" @click="openExerciseLibraryForDay(coachSelectedWorkoutDayIdx, null)" class="flex-1 sm:flex-none bg-[#7c3aed] hover:bg-[#7c3aed] text-[#fbbf24] font-black py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs">
@@ -3532,7 +3558,7 @@
                                                 </button>
                                             </div>
 
-                                            <button type="button" @click="saveWorkoutPlanWithToast()" class="w-full sm:w-auto bg-gradient-to-r from-[#240a3e] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black py-2.5 px-6 rounded-2xl text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-600/20 cursor-pointer">
+                                            <button type="button" @click="saveWorkoutPlanWithToast()" class="w-full sm:w-auto bg-gradient-to-r from-[#7c3aed] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black py-2.5 px-6 rounded-2xl text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-600/20 cursor-pointer">
                                                 <i data-lucide="save" class="w-4 h-4"></i>
                                                 <span>💾 שמור שינויים בבלוק</span>
                                             </button>
@@ -3606,12 +3632,12 @@
 
 <!-- טאב 4: מחולל תפריטי תזונה -->
                         <div x-show="detailSubTab === 'mealplan'" x-cloak class="space-y-6">
-                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
+                            <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
                                 <div class="flex flex-col gap-2 w-full md:w-auto text-xs">
                                     <h4 class="font-bold text-[#1e1b4b]">מחולל תפריט תזונה מפורט</h4>
                                     <div class="flex items-center gap-1.5 mt-1">
                                         <span class="text-[#6d28d9] text-[10px]">טען תבנית תפריט:</span>
-                                        <select @change="applyMealPlanTemplateToClient($event.target.value)" class="bg-slate-950 border border-slate-800 rounded-lg p-1 text-[10px] text-[#6d28d9] focus:outline-none">
+                                        <select @change="applyMealPlanTemplateToClient($event.target.value)" class="bg-[#f8f7ff] border border-[#ede9fe] rounded-lg p-1 text-[10px] text-[#6d28d9] focus:outline-none">
                                             <option value="">-- בחר תבנית --</option>
                                             <template x-for="temp in mealPlanTemplates" :key="temp.name">
                                                 <option :value="temp.name" x-text="temp.name"></option>
@@ -3620,11 +3646,11 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                                    <button @click="saveCurrentMealPlanAsTemplate()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-[#1e1b4b] px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                                    <button @click="saveCurrentMealPlanAsTemplate()" class="flex-1 md:flex-none justify-center bg-[#f8f7ff] border border-[#ede9fe] text-[#1e1b4b] px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="save" class="w-3.5 h-3.5"></i>
                                         <span>שמור תבנית</span>
                                     </button>
-                                    <button @click="addMeal()" class="flex-1 md:flex-none justify-center bg-slate-950 border border-slate-800 text-[#1e1b4b] px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                                    <button @click="addMeal()" class="flex-1 md:flex-none justify-center bg-[#f8f7ff] border border-[#ede9fe] text-[#1e1b4b] px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                         <span>הוסף ארוחה</span>
                                     </button>
@@ -3698,19 +3724,19 @@
                                 </button>
                             </div>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
+                                <div class="bg-white border border-[#ede9fe] rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">קלוריות</span>
                                     <span class="text-sm font-black text-[#a15c07]" x-text="getMealPlanSum(currentClient, 'calories') + ' / ' + (currentClient?.macroCalculated?.targetCalories || 0)"></span>
                                 </div>
-                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
+                                <div class="bg-white border border-[#ede9fe] rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">חלבון</span>
                                     <span class="text-sm font-black text-[#a15c07]" x-text="getMealPlanSum(currentClient, 'protein') + ' / ' + (currentClient?.macroCalculated?.targetProtein || 0) + ' גרם'"></span>
                                 </div>
-                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
+                                <div class="bg-white border border-[#ede9fe] rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">פחמימה</span>
                                     <span class="text-sm font-black text-[#a15c07]" x-text="getMealPlanSum(currentClient, 'carbs') + ' / ' + (currentClient?.macroCalculated?.targetCarbs || 0) + ' גרם'"></span>
                                 </div>
-                                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 text-center">
+                                <div class="bg-white border border-[#ede9fe] rounded-2xl p-3 text-center">
                                     <span class="text-[9px] text-slate-500 block">שומן</span>
                                     <span class="text-sm font-black text-[#a15c07]" x-text="getMealPlanSum(currentClient, 'fat') + ' / ' + (currentClient?.macroCalculated?.targetFat || 0) + ' גרם'"></span>
                                 </div>
@@ -3850,7 +3876,7 @@
                                     </div>
 
                                     <!-- כרטיס מדד קלוריות ומאקרו לתאריך הנבחר מול יעדי המאמן - סגול יוקרתי קריא עם זהב ושמנת -->
-                                    <div class="bg-[#240a3e] text-[#1e1b4b] p-5 md:p-6 rounded-3xl border-2 border-[#ede9fe] shadow-xl space-y-4">
+                                    <div class="bg-white text-[#1e1b4b] p-5 md:p-6 rounded-3xl border-2 border-[#ede9fe] shadow-xl space-y-4">
                                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#ede9fe] pb-3">
                                             <div class="flex items-center gap-2.5">
                                                 <div class="w-8 h-8 rounded-xl bg-white border border-[#5c2494] text-[#fbbf24] flex items-center justify-center shadow-xs">
@@ -3996,7 +4022,7 @@
                                             <div class="bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] rounded-2xl p-4 space-y-3 shadow-sm">
                                                 <div class="flex items-center justify-between border-b border-[#ede9fe] pb-2 flex-wrap gap-2">
                                                     <div class="flex items-center gap-2">
-                                                        <i data-lucide="calendar" class="w-4 h-4 text-[#240a3e]"></i>
+                                                        <i data-lucide="calendar" class="w-4 h-4 text-[#7c3aed]"></i>
                                                         <span class="font-black text-xs md:text-sm text-[#1e1b4b]" x-text="formatDate(dayData.date)"></span>
                                                         <span class="text-[10px] bg-white border border-[#ede9fe] px-2 py-0.5 rounded-md font-bold text-[#6d28d9]" x-text="dayData.count + ' פריטים'"></span>
                                                     </div>
@@ -4064,7 +4090,7 @@
                                 </div>
                                 <div class="bg-white border border-[#ede9fe] p-4 rounded-3xl shadow-md text-center space-y-1">
                                     <span class="text-[10px] text-[#6d28d9] font-bold block">סך שינוי כולל</span>
-                                    <span class="text-base sm:text-xl font-black" :class="getWeightChangeTotal(currentClient) <= 0 ? 'text-[#240a3e]' : 'text-[#6d28d9]'" x-text="getWeightChangeTotal(currentClient) + ' ק״ג'"></span>
+                                    <span class="text-base sm:text-xl font-black" :class="getWeightChangeTotal(currentClient) <= 0 ? 'text-[#7c3aed]' : 'text-[#6d28d9]'" x-text="getWeightChangeTotal(currentClient) + ' ק״ג'"></span>
                                 </div>
                             </div>
 
@@ -4168,7 +4194,7 @@
                                                     <td class="p-3 font-bold text-[#1e1b4b]" x-text="formatDate(ch.date)"></td>
                                                     <td class="p-3 font-black text-[#1e1b4b]" x-text="ch.weight + ' ק״ג'"></td>
                                                     <td class="p-3 font-bold">
-                                                        <span :class="getWeightDiffFromPrev(currentClient, cIdx) <= 0 ? 'text-[#240a3e]' : 'text-rose-500'" 
+                                                        <span :class="getWeightDiffFromPrev(currentClient, cIdx) <= 0 ? 'text-[#7c3aed]' : 'text-rose-500'" 
                                                               x-text="getWeightDiffFromPrev(currentClient, cIdx) + ' ק״ג'"></span>
                                                     </td>
                                                     <td class="p-3 text-[#6d28d9]" x-text="ch.waist ? (ch.waist + ' ס״מ') : '-'"></td>
@@ -4260,21 +4286,21 @@
 
 
                         <div x-show="detailSubTab === 'payments'" x-cloak class="space-y-6">
-                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-xl">
-                                <h4 class="text-xs md:text-sm font-bold text-[#1e1b4b] border-b border-slate-800 pb-2 mb-4">מעקב תשלומים (מסלול 3 חודשים)</h4>
+                            <div class="bg-white border border-[#ede9fe] rounded-2xl p-4 md:p-6 shadow-xl">
+                                <h4 class="text-xs md:text-sm font-bold text-[#1e1b4b] border-b border-[#ede9fe] pb-2 mb-4">מעקב תשלומים (מסלול 3 חודשים)</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <template x-for="(payment, pIdx) in (currentClient?.payments || [])" :key="pIdx">
-                                        <div :class="payment.status === 'paid' ? 'border-[#ede9fe]/50 bg-[#240a3e]/20' : 'border-slate-800 bg-slate-950'" class="border rounded-2xl p-4 flex flex-col justify-between h-36 shadow-sm">
+                                        <div :class="payment.status === 'paid' ? 'border-[#ede9fe]/50 bg-white/20' : 'border-[#ede9fe] bg-[#f8f7ff]'" class="border rounded-2xl p-4 flex flex-col justify-between h-36 shadow-sm">
                                             <div class="flex justify-between items-start">
                                                 <div>
                                                     <span class="text-[9px] text-[#6d28d9] font-bold block" x-text="'חודש מס׳ ' + payment.month"></span>
                                                     <span class="text-xl font-black text-[#1e1b4b] mt-1 block">250 ₪</span>
                                                 </div>
-                                                <span :class="payment.status === 'paid' ? 'bg-[#240a3e] text-[#fbbf24]' : 'bg-amber-950 text-amber-400'" class="text-[9px] px-2 py-0.5 rounded-full font-bold border" x-text="payment.status === 'paid' ? 'שולם' : 'ממתין'"></span>
+                                                <span :class="payment.status === 'paid' ? 'bg-white text-[#fbbf24]' : 'bg-amber-950 text-amber-400'" class="text-[9px] px-2 py-0.5 rounded-full font-bold border" x-text="payment.status === 'paid' ? 'שולם' : 'ממתין'"></span>
                                             </div>
-                                            <div class="mt-3 flex items-center justify-between border-t border-slate-800/40 pt-2.5">
+                                            <div class="mt-3 flex items-center justify-between border-t border-[#ede9fe]/40 pt-2.5">
                                                 <span class="text-[10px] text-slate-500" x-text="'תאריך יעד: ' + getPaymentDueDate(currentClient?.startDate, payment.month)"></span>
-                                                <button @click="togglePaymentStatus(pIdx)" :class="payment.status === 'paid' ? 'bg-slate-900 text-slate-450' : 'bg-white text-slate-950'" class="text-[10px] font-bold px-2 py-1 rounded-lg border border-slate-800 transition" x-text="payment.status === 'paid' ? 'סמן כממתין' : 'סמן כשולם'"></button>
+                                                <button @click="togglePaymentStatus(pIdx)" :class="payment.status === 'paid' ? 'bg-white text-slate-450' : 'bg-white text-slate-950'" class="text-[10px] font-bold px-2 py-1 rounded-lg border border-[#ede9fe] transition" x-text="payment.status === 'paid' ? 'סמן כממתין' : 'סמן כשולם'"></button>
                                             </div>
                                         </div>
                                     </template>
@@ -4291,8 +4317,8 @@
                 <div x-show="isCoachAuthenticated && (activeTab === 'finances')" x-cloak class="space-y-6 animate-fade-in text-[#1e1b4b]">
                     
                     <!-- כותרת ראשית ופעולות מהירות -->
-                    <div class="bg-gradient-to-r from-[#8b5cf6] via-[#7c3aed] to-[#7c3aed] border border-[#381061] rounded-3xl p-5 md:p-7 shadow-2xl text-[#1e1b4b] relative overflow-hidden">
-                        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-[#240a3e]/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="bg-gradient-to-r from-[#8b5cf6] via-[#7c3aed] to-[#7c3aed] border border-[#ede9fe] rounded-3xl p-5 md:p-7 shadow-2xl text-[#1e1b4b] relative overflow-hidden">
+                        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
                         <div class="absolute right-10 -top-10 w-48 h-48 bg-[#fbbf24]/10 rounded-full blur-2xl pointer-events-none"></div>
                         
                         <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -4310,7 +4336,7 @@
                             
                             <!-- כפתורי פעולה מהירים -->
                             <div class="flex items-center gap-2 flex-wrap shrink-0">
-                                <button type="button" @click="tempGoalInput = financeMonthlyGoal; openGoalEditModal = true" class="bg-[#381061] hover:bg-[#1b5e50] text-[#fbbf24] border border-[#fbbf24]/30 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm">
+                                <button type="button" @click="tempGoalInput = financeMonthlyGoal; openGoalEditModal = true" class="bg-[#7c3aed] hover:bg-[#1b5e50] text-[#fbbf24] border border-[#fbbf24]/30 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm">
                                     <i data-lucide="target" class="w-3.5 h-3.5"></i>
                                     <span>הגדר יעד חודשי</span>
                                 </button>
@@ -4349,7 +4375,7 @@
                             </div>
                             <div>
                                 <div class="text-lg md:text-2xl font-black text-[#a15c07]" x-text="getTotalRevenueCollected() + ' ₪'"></div>
-                                <span class="text-[10px] text-[#240a3e] font-bold mt-0.5 block">מנויים + הכנסות חיצוניות</span>
+                                <span class="text-[10px] text-[#7c3aed] font-bold mt-0.5 block">מנויים + הכנסות חיצוניות</span>
                             </div>
                         </div>
 
@@ -4454,14 +4480,14 @@
                             <div class="flex items-center justify-end gap-3 text-xs mb-2">
                                 <template x-if="financeChartMode === 'net'">
                                     <span class="flex items-center gap-1.5 text-[11px] font-bold text-[#1e1b4b] bg-white px-2.5 py-1 rounded-full border border-[#ede9fe]">
-                                        <span class="w-2 h-2 rounded-full bg-[#240a3e]"></span>
+                                        <span class="w-2 h-2 rounded-full bg-white"></span>
                                         <span>רווח נקי (₪)</span>
                                     </span>
                                 </template>
                                 <template x-if="financeChartMode === 'compare'">
                                     <div class="flex items-center gap-2">
                                         <span class="flex items-center gap-1.5 text-[11px] font-bold text-[#1e1b4b] bg-white px-2.5 py-1 rounded-full border border-[#ede9fe]">
-                                            <span class="w-2 h-2 rounded-full bg-[#240a3e]"></span>
+                                            <span class="w-2 h-2 rounded-full bg-white"></span>
                                             <span>הכנסות (₪)</span>
                                         </span>
                                         <span class="flex items-center gap-1.5 text-[11px] font-bold text-rose-800 bg-white px-2.5 py-1 rounded-full border border-[#ede9fe]">
@@ -4558,7 +4584,7 @@
                                         <span>בעלי חוב</span>
                                         <span class="bg-amber-100 text-amber-900 text-[9px] px-1.5 py-0.2 rounded-full font-black" x-text="getClientsWithDebtCount()"></span>
                                     </button>
-                                    <button type="button" @click="financeClientFilter = 'paid_only'" :class="financeClientFilter === 'paid_only' ? 'bg-[#240a3e] text-[#1e1b4b] font-black' : 'text-[#1e1b4b] font-bold'" class="text-[11px] px-2.5 py-1 rounded-lg transition cursor-pointer">
+                                    <button type="button" @click="financeClientFilter = 'paid_only'" :class="financeClientFilter === 'paid_only' ? 'bg-white text-[#1e1b4b] font-black' : 'text-[#1e1b4b] font-bold'" class="text-[11px] px-2.5 py-1 rounded-lg transition cursor-pointer">
                                         שילמו הכל ✓
                                     </button>
                                 </div>
@@ -4584,7 +4610,7 @@
                                             <!-- שם המתאמן -->
                                             <td class="py-3 px-5">
                                                 <div class="flex items-center gap-2.5">
-                                                    <div class="w-8 h-8 rounded-full bg-[#7c3aed] text-[#fbbf24] font-black text-xs flex items-center justify-center border border-[#381061] shrink-0" x-text="client.name.charAt(0)"></div>
+                                                    <div class="w-8 h-8 rounded-full bg-[#7c3aed] text-[#fbbf24] font-black text-xs flex items-center justify-center border border-[#ede9fe] shrink-0" x-text="client.name.charAt(0)"></div>
                                                     <div>
                                                         <button type="button" @click="selectClient(client.id)" class="text-xs font-black text-[#1e1b4b] hover:text-[#a15c07] transition cursor-pointer text-right block" x-text="client.name"></button>
                                                         <span class="text-[10px] text-[#6d28d9] block" x-text="(client.pricePerMonth || 250) + ' ₪ / חודש'"></span>
@@ -4678,7 +4704,7 @@
                                             <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i>
                                             <span>הוצאת עסק (-)</span>
                                         </button>
-                                        <button type="button" @click="newTransaction.type = 'income'" :class="newTransaction.type === 'income' ? 'bg-[#240a3e] text-[#1e1b4b] font-black border-[#ede9fe] shadow-sm' : 'bg-white text-[#1e1b4b] font-bold border-[#ede9fe]'" class="border p-2 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1">
+                                        <button type="button" @click="newTransaction.type = 'income'" :class="newTransaction.type === 'income' ? 'bg-white text-[#1e1b4b] font-black border-[#ede9fe] shadow-sm' : 'bg-white text-[#1e1b4b] font-bold border-[#ede9fe]'" class="border p-2 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1">
                                             <i data-lucide="arrow-up-left" class="w-3.5 h-3.5"></i>
                                             <span>הכנסה (+)</span>
                                         </button>
@@ -4833,7 +4859,7 @@
                 <div x-show="isCoachAuthenticated && (activeTab === 'settings')" x-cloak class="space-y-6 animate-fade-in text-[#1e1b4b]">
                     
                     <!-- כותרת ראשית של הגדרות -->
-                    <div class="bg-gradient-to-r from-[#8b5cf6] via-[#7c3aed] to-[#7c3aed] border border-[#381061] rounded-3xl p-5 md:p-7 shadow-2xl text-[#1e1b4b] relative overflow-hidden">
+                    <div class="bg-gradient-to-r from-[#8b5cf6] via-[#7c3aed] to-[#7c3aed] border border-[#ede9fe] rounded-3xl p-5 md:p-7 shadow-2xl text-[#1e1b4b] relative overflow-hidden">
                         <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-[#fbbf24]/10 rounded-full blur-3xl pointer-events-none"></div>
                         <div class="absolute right-10 -top-10 w-48 h-48 bg-[#d8b4fe]/10 rounded-full blur-2xl pointer-events-none"></div>
                         
@@ -4851,7 +4877,7 @@
                             </div>
 
                             <!-- תגית סטטוס ענן חיה -->
-                            <div class="flex items-center gap-2 bg-white border border-[#381061] p-2.5 rounded-2xl shrink-0">
+                            <div class="flex items-center gap-2 bg-white border border-[#ede9fe] p-2.5 rounded-2xl shrink-0">
                                 <div class="w-3 h-3 rounded-full" :class="isCloudSynced ? 'bg-[#fbbf24] animate-ping' : 'bg-slate-400'"></div>
                                 <div>
                                     <span class="text-[11px] font-black block" :class="isCloudSynced ? 'text-[#fbbf24]' : 'text-[#6d28d9]'" x-text="isCloudSynced ? 'מחובר לענן ב-Firebase' : 'מצב מקומי (Offline)'"></span>
@@ -4882,7 +4908,7 @@
                                         <span>בדוק חיבור ענן ⚡</span>
                                     </button>
                                     <button type="button" @click="forceCloudPushAll()" class="bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] text-[#1e1b4b] font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer flex items-center gap-1" title="סנכרן את כל הנתונים המקומיים לענן">
-                                        <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-[#240a3e]"></i>
+                                        <i data-lucide="upload-cloud" class="w-3.5 h-3.5 text-[#7c3aed]"></i>
                                         <span>סנכרן הכל לענן</span>
                                     </button>
                                 </div>
@@ -5000,7 +5026,7 @@
                                         <span class="text-xs font-black text-[#1e1b4b] block">הישאר מחובר במכשיר זה 📱</span>
                                         <span class="text-[10px] text-[#6d28d9]">כניסה ישירה ל-CRM בריענון דף ללא צורך בהקשת קוד חוזרת</span>
                                     </div>
-                                    <button type="button" @click="togglePersistentAuth()" :class="isPersistentAuthEnabled ? 'bg-[#7c3aed] text-[#fbbf24] border-[#381061]' : 'bg-slate-200 text-slate-600 border-slate-300'" class="px-3 py-1.5 rounded-xl text-xs font-black border transition cursor-pointer">
+                                    <button type="button" @click="togglePersistentAuth()" :class="isPersistentAuthEnabled ? 'bg-[#7c3aed] text-[#fbbf24] border-[#ede9fe]' : 'bg-slate-200 text-slate-600 border-slate-300'" class="px-3 py-1.5 rounded-xl text-xs font-black border transition cursor-pointer">
                                         <span x-text="isPersistentAuthEnabled ? 'פעיל ✓' : 'כבוי ✕'"></span>
                                     </button>
                                 </div>
@@ -5098,7 +5124,7 @@
     </datalist>
 
         <!-- מודל עדכון יעד הכנסה חודשי (Goal Edit Modal) -->
-    <div x-show="openGoalEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openGoalEditModal = false">
+    <div x-show="openGoalEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openGoalEditModal = false">
         <div class="bg-white border-2 border-[#ede9fe] rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl space-y-6 animate-scale-up mx-2 text-[#1e1b4b] relative overflow-hidden">
             <div class="absolute -left-10 -bottom-10 w-36 h-36 bg-[#fbbf24]/15 rounded-full blur-2xl pointer-events-none"></div>
             
@@ -5157,7 +5183,7 @@
     </div>
 
     <!-- מודל עריכת / הוספת דיווח יומי למאמן בלבד -->
-    <div x-show="openCoachScorecardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openCoachScorecardModal = false">
+    <div x-show="openCoachScorecardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openCoachScorecardModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5261,7 +5287,7 @@
     </div>
 
     <!-- מודל סיכום וחגיגת סיום אימון -->
-    <div x-show="openWorkoutFinishModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md no-print" x-cloak @click.self="openWorkoutFinishModal = false">
+    <div x-show="openWorkoutFinishModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/85 backdrop-blur-md no-print" x-cloak @click.self="openWorkoutFinishModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 animate-scale-up text-center mx-2">
             <div class="w-16 h-16 rounded-3xl bg-[#7c3aed] text-[#fbbf24] flex items-center justify-center mx-auto text-3xl shadow-xl shadow-[#7c3aed]/20 border border-[#ede9fe]">
                 🏆
@@ -5327,7 +5353,7 @@
     </div>
 
     <!-- מודל היכל תגי הצלחה והישגים -->
-    <div x-show="openBadgesModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBadgesModal = false">
+    <div x-show="openBadgesModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openBadgesModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5377,7 +5403,7 @@
     </div>
 
     <!-- מודל תצוגת תמונת ארוחה מוגדלת (Photo Lightbox) -->
-    <div x-show="previewMealPhotoModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md no-print" x-cloak @click.self="previewMealPhotoModal = false">
+    <div x-show="previewMealPhotoModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#f8f7ff]/90 backdrop-blur-md no-print" x-cloak @click.self="previewMealPhotoModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-4 md:p-5 max-w-2xl w-full shadow-2xl space-y-4 animate-scale-up flex flex-col text-[#1e1b4b] max-h-[95vh]">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
@@ -5402,7 +5428,7 @@
     </div>
 
     <!-- מודל מחולל סיכום חודשי אישי לוואטסאפ -->
-    <div x-show="openMonthlySummaryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openMonthlySummaryModal = false">
+    <div x-show="openMonthlySummaryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openMonthlySummaryModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5441,7 +5467,7 @@
 
     <!-- מודל מחשבון משקלי עבודה ו-1RM -->
     <!-- מודל סגירת בלוק ופתיחת בלוק אימונים חדש (Block Archive Modal) -->
-    <div x-show="openBlockArchiveModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBlockArchiveModal = false">
+    <div x-show="openBlockArchiveModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openBlockArchiveModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-scale-up mx-2">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3">
                 <div class="flex items-center gap-2.5">
@@ -5486,7 +5512,7 @@
                 <button type="button" @click="openBlockArchiveModal = false" class="bg-white hover:bg-white border border-[#ede9fe] text-[#1e1b4b] font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">
                     ביטול
                 </button>
-                <button type="button" @click="archiveCurrentBlock()" class="bg-gradient-to-r from-[#240a3e] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black px-5 py-2 rounded-xl text-xs transition shadow-md shadow-emerald-600/20 cursor-pointer">
+                <button type="button" @click="archiveCurrentBlock()" class="bg-gradient-to-r from-[#7c3aed] to-[#7c3aed] hover:from-emerald-700 hover:to-emerald-800 text-[#1e1b4b] font-black px-5 py-2 rounded-xl text-xs transition shadow-md shadow-emerald-600/20 cursor-pointer">
                     אשר ופתח בלוק חדש 👑
                 </button>
             </div>
@@ -5494,7 +5520,7 @@
     </div>
 
     <!-- מודל היסטוריית בלוקים קודמים (Block History Modal) -->
-    <div x-show="openBlockHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openBlockHistoryModal = false">
+    <div x-show="openBlockHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openBlockHistoryModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-2xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[85vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
@@ -5558,7 +5584,7 @@
     </div>
 
     <!-- מודל ספריית מזונות ישראלית מורחבת (Israeli Food Library Modal) -->
-    <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openFoodLibraryModal = false">
+    <div x-show="openFoodLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openFoodLibraryModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-4xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5 shrink-0">
@@ -5646,7 +5672,7 @@
     </div>
 
     <!-- מודל ספריית תרגילים מורחבת (137+ תרגילים לפי קטגוריות) -->
-    <div x-show="openExerciseLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openExerciseLibraryModal = false">
+    <div x-show="openExerciseLibraryModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openExerciseLibraryModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-4xl w-full shadow-2xl space-y-4 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             
             <!-- כותרת וסגירה -->
@@ -5753,7 +5779,7 @@
         </div>
     </div>
 
-    <div x-show="openOneRmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openOneRmModal = false">
+    <div x-show="openOneRmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openOneRmModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5825,7 +5851,7 @@
     </div>
 
     <!-- מודל מחשבון פלטות למוט אולימפי (Barbell Plate Calculator) -->
-    <div x-show="openPlateCalculatorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openPlateCalculatorModal = false">
+    <div x-show="openPlateCalculatorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openPlateCalculatorModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -5901,11 +5927,11 @@
                                     <span class="w-8 h-8 rounded-xl font-black text-xs flex items-center justify-center border"
                                           :class="{
                                               'bg-red-500 text-[#1e1b4b] border-red-600': p.plate === 25,
-                                              'bg-[#240a3e] text-[#1e1b4b] border-[#ede9fe]': p.plate === 20,
+                                              'bg-white text-[#1e1b4b] border-[#ede9fe]': p.plate === 20,
                                               'bg-amber-400 text-slate-900 border-amber-500': p.plate === 15,
-                                              'bg-[#240a3e] text-[#1e1b4b] border-[#240a3e]': p.plate === 10,
+                                              'bg-white text-[#1e1b4b] border-[#ede9fe]': p.plate === 10,
                                               'bg-white text-slate-800 border-slate-300': p.plate === 5,
-                                              'bg-slate-800 text-[#1e1b4b] border-slate-950': p.plate === 2.5,
+                                              'bg-white text-[#1e1b4b] border-slate-950': p.plate === 2.5,
                                               'bg-slate-300 text-slate-900 border-slate-400': p.plate === 1.25
                                           }"
                                           x-text="p.plate"></span>
@@ -5933,7 +5959,7 @@
     </div>
 
     <!-- מודל הוספה מהירה של קלוריות ומאקרו (Quick Add Calorie Modal) -->
-    <div x-show="openQuickAddCalorieModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openQuickAddCalorieModal = false">
+    <div x-show="openQuickAddCalorieModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openQuickAddCalorieModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-md w-full shadow-2xl space-y-4 animate-scale-up mx-2 text-[#1e1b4b]">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3">
                 <div class="flex items-center gap-2.5">
@@ -5999,7 +6025,7 @@
 
 
     <!-- מודל סגירת יום וציון יומי חגיגי של אלופים (Day Close Celebration Modal) -->
-    <div x-show="openDayCloseCelebrationModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md no-print" x-cloak @click.self="openDayCloseCelebrationModal = false">
+    <div x-show="openDayCloseCelebrationModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/85 backdrop-blur-md no-print" x-cloak @click.self="openDayCloseCelebrationModal = false">
         <div class="bg-gradient-to-br from-white via-[#faf6fc] to-[#f5effa] border-2 border-[#fbbf24] rounded-3xl p-6 sm:p-7 max-w-lg w-full max-h-[92vh] overflow-y-auto flex flex-col shadow-2xl space-y-5 animate-scale-up mx-2 text-[#1e1b4b] relative">
             
             <!-- סגירה -->
@@ -6118,7 +6144,7 @@
     </div>
 
     <!-- מודל היסטוריית ציונים יומיים (Scorecard History Modal) -->
-    <div x-show="openScorecardHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openScorecardHistoryModal = false">
+    <div x-show="openScorecardHistoryModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openScorecardHistoryModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl space-y-4 animate-scale-up mx-2 text-[#1e1b4b]">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
@@ -6165,7 +6191,7 @@
     </div>
 
     <!-- מודל חיפוש מזונות ישיר במאגר (המחשבון של אילאי) -->
-    <div x-show="openFoodSearchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openFoodSearchModal = false">
+    <div x-show="openFoodSearchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openFoodSearchModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl space-y-4 animate-scale-up mx-2 text-[#1e1b4b]">
             <!-- כותרת המודל -->
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3 shrink-0">
@@ -6339,7 +6365,7 @@
     </div>
 
     <!-- מודל 0: שליחת שאלון קליטה מורחב למתאמן חדש -->
-    <div x-show="openSendIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openSendIntakeModal = false">
+    <div x-show="openSendIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openSendIntakeModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5">
                 <div class="flex items-center gap-3">
@@ -6397,7 +6423,7 @@
     </div>
 
     <!-- מודל עריכת ומילוי שאלון קליטה למתאמן קיים -->
-    <div x-show="openEditIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm no-print" x-cloak @click.self="openEditIntakeModal = false">
+    <div x-show="openEditIntakeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/80 backdrop-blur-sm no-print" x-cloak @click.self="openEditIntakeModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-6 max-w-2xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -6529,7 +6555,7 @@
         <div class="bg-white border border-[#ede9fe] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openAddClientModal = false">
             <div class="p-4 md:p-6 border-b border-[#ede9fe] flex justify-between items-center bg-white">
                 <h3 class="text-sm md:text-lg font-black text-[#1e1b4b] flex items-center gap-2">
-                    <i data-lucide="user-plus" class="w-4 h-4 md:w-5 md:h-5 text-[#240a3e]"></i>
+                    <i data-lucide="user-plus" class="w-4 h-4 md:w-5 md:h-5 text-[#7c3aed]"></i>
                     <span>הוספת מתאמן חדש לליווי</span>
                 </h3>
                 <button @click="openAddClientModal = false" class="text-[#6d28d9] hover:text-[#1e1b4b]"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
@@ -6592,7 +6618,7 @@
         <div class="bg-white border border-[#ede9fe] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openEditModal = false">
             <div class="p-4 md:p-6 border-b border-[#ede9fe] flex justify-between items-center bg-white">
                 <h3 class="text-sm md:text-lg font-black text-[#1e1b4b] flex items-center gap-2">
-                    <i data-lucide="edit-3" class="w-4 h-4 md:w-5 md:h-5 text-[#240a3e]"></i>
+                    <i data-lucide="edit-3" class="w-4 h-4 md:w-5 md:h-5 text-[#7c3aed]"></i>
                     <span>עריכת פרטי מתאמן</span>
                 </h3>
                 <button @click="openEditModal = false" class="text-[#6d28d9] hover:text-[#1e1b4b]"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
@@ -6691,7 +6717,7 @@
         <div class="bg-white border border-[#ede9fe] w-full max-w-md rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openAddEventModal = false">
             <div class="p-4 md:p-6 border-b border-[#ede9fe] flex justify-between items-center bg-white">
                 <h3 class="text-sm md:text-lg font-black text-[#1e1b4b] flex items-center gap-2">
-                    <i data-lucide="calendar-plus" class="w-4 h-4 md:w-5 md:h-5 text-[#240a3e]"></i>
+                    <i data-lucide="calendar-plus" class="w-4 h-4 md:w-5 md:h-5 text-[#7c3aed]"></i>
                     <span>קביעת פגישה ביומן</span>
                 </h3>
                 <button @click="openAddEventModal = false" class="text-[#6d28d9] hover:text-[#1e1b4b]"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
@@ -6740,7 +6766,7 @@
         <div class="bg-white border border-[#ede9fe] w-full max-w-lg rounded-3xl shadow-2xl flex flex-col mx-4 overflow-hidden" @click.away="openImportIntakeModal = false">
             <div class="p-4 md:p-6 border-b border-[#ede9fe] flex justify-between items-center bg-white">
                 <h3 class="text-sm md:text-lg font-black text-[#1e1b4b] flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-4 h-4 md:w-5 md:h-5 text-[#240a3e]"></i>
+                    <i data-lucide="file-text" class="w-4 h-4 md:w-5 md:h-5 text-[#7c3aed]"></i>
                     <span>ייבוא שאלון קליטה מוואטסאפ</span>
                 </h3>
                 <button @click="openImportIntakeModal = false" class="text-[#6d28d9] hover:text-[#1e1b4b]"><i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i></button>
@@ -6918,7 +6944,7 @@
     </div>
 
     <!-- מודל מדיניות פרטיות, תנאי שימוש והצהרת בריאות -->
-    <div x-show="openPrivacyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm no-print" x-cloak @click.self="openPrivacyModal = false">
+    <div x-show="openPrivacyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#f8f7ff]/85 backdrop-blur-sm no-print" x-cloak @click.self="openPrivacyModal = false">
         <div class="bg-white border border-[#ede9fe] rounded-3xl p-5 md:p-7 max-w-2xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col text-[#1e1b4b]">
             <div class="flex items-center justify-between border-b border-[#ede9fe] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
@@ -6939,7 +6965,7 @@
                 <!-- 1. הצהרת בריאות וכשירות גופנית -->
                 <div class="bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] p-4 rounded-2xl space-y-2">
                     <h4 class="font-extrabold text-xs text-[#1e1b4b] flex items-center gap-1.5 border-b border-[#ede9fe] pb-1.5">
-                        <i data-lucide="activity" class="w-4 h-4 text-[#240a3e]"></i>
+                        <i data-lucide="activity" class="w-4 h-4 text-[#7c3aed]"></i>
                         <span>1. הצהרת בריאות וכשירות לפעילות גופנית (חוק הספורט)</span>
                     </h4>
                     <p>המתאמן/ת מצהיר/ה בזאת כי הוא/היא כשיר/ה מבחינה גופנית ובריאותית להשתתף בתוכנית אימונים ותזונה, אינו/אינה סובל/ת ממחלות לב, לחץ דם, בעיות נשימה, פציעות אורתופדיות מגבילות או כל מגבלה רפואית אחרת המונעת פעילות גופנית מאומצת.</p>
@@ -14030,7 +14056,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     return this.formatDate(date);
                 },
                 getPersonalSessionLabel(status) { return status === 'completed' ? 'בוצע' : (status === 'scheduled' ? 'נקבע' : 'ממתין'); },
-                getPersonalSessionClass(status) { return status === 'completed' ? 'bg-[#240a3e]/60 text-[#fbbf24] border-[#ede9fe]' : (status === 'scheduled' ? 'bg-[#240a3e]/60 text-[#fbbf24] border-[#ede9fe]' : 'bg-slate-950 text-[#6d28d9] border-slate-800'); },
+                getPersonalSessionClass(status) { return status === 'completed' ? 'bg-white/60 text-[#fbbf24] border-[#ede9fe]' : (status === 'scheduled' ? 'bg-white/60 text-[#fbbf24] border-[#ede9fe]' : 'bg-[#f8f7ff] text-[#6d28d9] border-[#ede9fe]'); },
                 
                 getChartDataPoints() {
                     const client = this.currentClient;
@@ -14576,7 +14602,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                 <!-- כרטיס הסבר וסך קלוריות כולל -->
                 <div class="bg-white border border-[#ede9fe] text-[#1e1b4b] focus:border-[#fbbf24] p-3.5 rounded-2xl flex items-center justify-between gap-3">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-10 h-10 rounded-xl bg-[#240a3e] text-[#fbbf24] flex items-center justify-center font-black text-base shrink-0 shadow-sm">🔥</div>
+                        <div class="w-10 h-10 rounded-xl bg-white text-[#fbbf24] flex items-center justify-center font-black text-base shrink-0 shadow-sm">🔥</div>
                         <div>
                             <span class="text-[10px] text-[#6d28d9] font-bold block">סך יעד קלורי יומי מחושב</span>
                             <span class="text-base font-black text-[#1e1b4b]" x-text="editingMacroCalories + ' קק״ל / יום'"></span>
@@ -14590,7 +14616,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
 
                 <!-- סרגל אחוזים ויזואלי 4 צבעים: חלבון, פחמימה, שומן, חופשיות -->
                 <div class="w-full h-3 bg-[#e6dcef] rounded-full overflow-hidden flex shadow-inner">
-                    <div class="bg-[#240a3e] h-full transition-all duration-300" :style="'width: ' + Math.round(((editingMacroProteinCal||0)/(editingMacroCalories||1))*100) + '%'" title="חלבון"></div>
+                    <div class="bg-white h-full transition-all duration-300" :style="'width: ' + Math.round(((editingMacroProteinCal||0)/(editingMacroCalories||1))*100) + '%'" title="חלבון"></div>
                     <div class="bg-[#fbbf24] h-full transition-all duration-300" :style="'width: ' + Math.round(((editingMacroCarbsCal||0)/(editingMacroCalories||1))*100) + '%'" title="פחמימה"></div>
                     <div class="bg-[#dc2626] h-full transition-all duration-300" :style="'width: ' + Math.round(((editingMacroFatCal||0)/(editingMacroCalories||1))*100) + '%'" title="שומן"></div>
                     <div class="bg-[#7c3aed] h-full transition-all duration-300" :style="'width: ' + Math.round(((editingMacroFreeCal||0)/(editingMacroCalories||1))*100) + '%'" title="קלוריות חופשיות"></div>
@@ -14619,7 +14645,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                     <div class="bg-white p-3 rounded-2xl border border-[#ede9fe] flex items-center justify-between gap-3">
                         <div class="w-1/3">
                             <span class="text-xs font-black text-[#1e1b4b] flex items-center gap-1.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-[#240a3e] shrink-0"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-white shrink-0"></span>
                                 <span>🥩 חלבון</span>
                             </span>
                             <span class="text-[9px] text-[#6d28d9] font-bold block" x-text="Math.round(((editingMacroProteinCal||0)/(editingMacroCalories||1))*100) + '% מסך הקלוריות'"></span>
