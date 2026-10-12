@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl" class="h-full bg-[#EFF6FF]">
+<html lang="he" dir="rtl" class="h-full bg-[#f8fafc]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -105,7 +105,7 @@
             });
         }
     </script>
-    <meta name="theme-color" content="#1E40AF">
+    <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ILAICO">
@@ -138,8 +138,8 @@
             width: 100%;
             max-width: 100vw;
             -webkit-tap-highlight-color: transparent;
-            background-color: #EFF6FF;
-            color: #172554;
+            background-color: #f8fafc;
+            color: #0f172a;
         }
 
         input, select, textarea, button {
@@ -152,111 +152,104 @@
             }
         }
         
-        /* Typography & Palette */
+        /* Clean Standard Typography */
         body {
-            background-color: #EFF6FF;
-            color: #172554;
+            background-color: #f8fafc;
+            color: #0f172a;
             font-family: 'Assistant', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
             letter-spacing: -0.01em;
         }
 
-        /* High Contrast Card Surfaces */
+        /* Clean White Cards with crisp standard border */
         .card-clean, .bg-white {
             background-color: #ffffff !important;
-            border-color: #BFDBFE !important;
+            border-color: #e2e8f0 !important;
         }
 
-        /* Border definition: crisp, defined separator */
-        .border-slate-800, .border-slate-700, .border-slate-600, .border-[#DBEAFE] {
-            border-color: #BFDBFE !important;
+        /* Standard neutral borders */
+        .border-slate-800, .border-slate-700, .border-slate-600, .border-[#DBEAFE], .border-[#BFDBFE] {
+            border-color: #e2e8f0 !important;
         }
 
-        /* Card Elevations - crisp shadow to lift card off #EFF6FF background */
+        /* Standard Cards: Crisp, clean light shadow */
         .rounded-3xl, .rounded-2xl {
-            box-shadow: 0 4px 16px -1px rgba(30, 64, 175, 0.08), 0 2px 5px -1px rgba(23, 37, 84, 0.05);
-            border-color: #BFDBFE !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+            border-color: #e2e8f0 !important;
         }
 
-        /* Slate & Dark Neutralizers: map cleanly to palette */
+        /* Neutralize legacy dark or tinted card classes */
         .bg-slate-900:not(.card-forest), 
         .bg-slate-950:not(html):not(body),
         .bg-slate-900 {
             background-color: #ffffff !important;
-            border-color: #BFDBFE !important;
-            color: #172554 !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
         }
 
-        /* High-Contrast Readable Text */
-        .text-slate-500 { color: #334155 !important; font-weight: 600; }
-        .text-slate-400 { color: #475569 !important; }
-        .text-slate-300 { color: #1E40AF !important; }
-        .text-slate-200, .text-slate-100 { color: #172554 !important; }
-        .text-[#172554] { color: #172554 !important; }
-        .text-[#5b21b6], .text-[#4c1d7a], .text-[#1E40AF] { color: #1E40AF !important; }
+        /* High-Contrast Generic Text Colors */
+        .text-[#172554], .text-slate-900, .text-slate-950 { color: #0f172a !important; }
+        .text-slate-500 { color: #64748b !important; }
+        .text-slate-400 { color: #94a3b8 !important; }
+        .text-slate-300 { color: #475569 !important; }
+        .text-slate-200, .text-slate-100 { color: #0f172a !important; }
+        .text-[#1E40AF], .text-[#5b21b6], .text-[#4c1d7a] { color: #2563eb !important; }
 
-        /* Accent Surfaces (#DBEAFE) with defined border */
-        .bg-surface-accent, .bg-[#DBEAFE] {
-            background-color: #DBEAFE !important;
-            border-color: #93C5FD !important;
-            color: #172554 !important;
+        /* Standard Surface Accents (#f1f5f9) */
+        .bg-surface-accent, .bg-[#DBEAFE], .bg-[#EFF6FF] {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
         }
 
-        /* Buttons: Primary Navy Action */
+        /* Buttons: Standard Professional Blue Action */
         .btn-royal, .btn-primary {
-            background: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%) !important;
+            background: #2563eb !important;
             color: #ffffff !important;
-            font-weight: 900 !important;
+            font-weight: 700 !important;
             border: none !important;
-            box-shadow: 0 4px 14px rgba(30, 64, 175, 0.3) !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
         }
         .btn-royal:hover, .btn-primary:hover {
-            background: linear-gradient(135deg, #1D4ED8 0%, #172554 100%) !important;
-            box-shadow: 0 6px 18px rgba(30, 64, 175, 0.4) !important;
+            background: #1d4ed8 !important;
         }
 
-        /* Buttons: Secondary Bright Blue */
+        /* Buttons: Secondary Gray / Clean White */
         .btn-gold, .btn-secondary {
-            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%) !important;
-            color: #ffffff !important;
-            font-weight: 900 !important;
-            border: none !important;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3) !important;
+            background: #ffffff !important;
+            color: #0f172a !important;
+            font-weight: 700 !important;
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
         }
         .btn-gold:hover, .btn-secondary:hover {
-            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
-            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4) !important;
+            background: #f8fafc !important;
         }
 
-        /* CRITICAL: Enforce pure white text on any blue background or gradient */
-        .bg-\[\#1E40AF\],
-        .bg-\[\#3B82F6\],
+        /* Enforce pure white text on solid blue buttons & banners */
+        .bg-[#1E40AF],
+        .bg-[#3B82F6],
         .bg-blue-600,
         .bg-blue-700,
-        .bg-blue-800,
-        .bg-blue-900,
         [class*="bg-[#1E40AF]"],
-        [class*="bg-[#3B82F6]"],
-        [class*="from-[#1E40AF]"],
-        [class*="from-[#3B82F6]"] {
+        [class*="bg-[#3B82F6]"] {
             color: #ffffff !important;
         }
 
-        .bg-\[\#1E40AF\] *,
-        .bg-\[\#3B82F6\] *,
-        [class*="from-[#1E40AF]"] *:not(.text-emerald-400):not(.text-sky-300):not(.text-amber-300):not(.text-red-400),
-        [class*="from-[#3B82F6]"] *:not(.text-emerald-400):not(.text-sky-300):not(.text-amber-300):not(.text-red-400) {
+        .bg-[#1E40AF] *,
+        .bg-[#3B82F6] * {
             color: inherit;
         }
 
-        /* Input fields: pure white background with strong crisp border and clear focus ring */
+        /* Clean standard input fields */
         input:not([type="checkbox"]):not([type="radio"]), select, textarea {
             background-color: #ffffff !important;
-            border-color: #BFDBFE !important;
-            color: #172554 !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
+            border-radius: 0.75rem !important;
         }
         input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
-            border-color: #2563EB !important;
-            outline: 2px solid rgba(37, 99, 235, 0.2) !important;
+            border-color: #2563eb !important;
+            outline: 2px solid rgba(37, 99, 235, 0.15) !important;
         }
 
         @media print {
@@ -269,20 +262,20 @@
             box-shadow: none;
         }
 
-        /* Scrollbars */
+        /* Simple Subtle Scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #EFF6FF;
+            background: #f8fafc;
         }
         ::-webkit-scrollbar-thumb {
-            background: #93C5FD;
+            background: #cbd5e1;
             border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #60A5FA;
+            background: #94a3b8;
         }
     </style>
 </head>
@@ -474,7 +467,7 @@
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <button 
                     @click="activeTab = 'dashboard'; selectedClientId = null"
-                    :class="activeTab === 'dashboard' ? 'bg-[#DBEAFE] text-[#1E40AF] font-black border-r-4 border-[#3B82F6] shadow-xs' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
+                    :class="activeTab === 'dashboard' ? 'bg-[#eff6ff] text-[#2563eb] font-bold border-r-4 border-[#2563eb]' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>לוח בקרה</span>
@@ -482,7 +475,7 @@
                 
                 <button 
                     @click="activeTab = 'clients'; selectedClientId = null"
-                    :class="activeTab === 'clients' ? 'bg-[#DBEAFE] text-[#1E40AF] font-black border-r-4 border-[#3B82F6] shadow-xs' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
+                    :class="activeTab === 'clients' ? 'bg-[#eff6ff] text-[#2563eb] font-bold border-r-4 border-[#2563eb]' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="users" class="w-5 h-5"></i>
                     <span>רשימת מתאמנים</span>
@@ -490,7 +483,7 @@
 
                 <button 
                     @click="activeTab = 'schedule'; selectedClientId = null"
-                    :class="activeTab === 'schedule' ? 'bg-[#DBEAFE] text-[#1E40AF] font-black border-r-4 border-[#3B82F6] shadow-xs' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
+                    :class="activeTab === 'schedule' ? 'bg-[#eff6ff] text-[#2563eb] font-bold border-r-4 border-[#2563eb]' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="calendar-days" class="w-5 h-5"></i>
                     <span>יומן שבועי</span>
@@ -498,7 +491,7 @@
 
                 <button 
                     @click="activeTab = 'finances'; selectedClientId = null"
-                    :class="activeTab === 'finances' ? 'bg-[#DBEAFE] text-[#1E40AF] font-black border-r-4 border-[#3B82F6] shadow-xs' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
+                    :class="activeTab === 'finances' ? 'bg-[#eff6ff] text-[#2563eb] font-bold border-r-4 border-[#2563eb]' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
                     <span>מעקב פיננסי</span>
@@ -506,7 +499,7 @@
 
                 <button 
                     @click="activeTab = 'settings'; selectedClientId = null"
-                    :class="activeTab === 'settings' ? 'bg-[#DBEAFE] text-[#1E40AF] font-black border-r-4 border-[#3B82F6] shadow-xs' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
+                    :class="activeTab === 'settings' ? 'bg-[#eff6ff] text-[#2563eb] font-bold border-r-4 border-[#2563eb]' : 'text-[#6b7280] hover:bg-[#EFF6FF] hover:text-[#1E40AF] font-bold'"
                     class="w-full flex items-center px-4 py-3 rounded-xl transition text-sm gap-3">
                     <i data-lucide="settings" class="w-5 h-5"></i>
                     <span>הגדרות וסנכרון</span>
@@ -926,31 +919,31 @@
                     </div>
 
                     <!-- Header: כרטיס פרופיל יוקרתי ברמת Progress Coach -->
-                    <div class="bg-gradient-to-br from-[#3B82F6] via-[#1E40AF] to-[#1E40AF] border border-[#DBEAFE]/80 p-4 sm:p-5 rounded-3xl shadow-2xl relative overflow-hidden">
+                    <div class="bg-white border-2 border-[#e2e8f0] p-4 sm:p-5 rounded-3xl shadow-sm relative overflow-hidden">
                         <div class="absolute -top-12 -left-12 w-36 h-36 bg-[#3B82F6]/10 rounded-full blur-3xl pointer-events-none"></div>
                         <div class="absolute -bottom-12 -right-12 w-36 h-36 bg-[#a855f7]/15 rounded-full blur-3xl pointer-events-none"></div>
 
                         <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <!-- פרטי מתאמן -->
                             <div class="flex items-center gap-3.5">
-                                <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-white/20 border-2 border-white/40 text-white font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg shrink-0 backdrop-blur-xs">
+                                <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#2563eb] text-white font-black text-xl sm:text-2xl flex items-center justify-center shadow-sm shrink-0">
                                     <span x-text="(portalClient?.name || 'מתאמן').charAt(0)"></span>
                                 </div>
                                 <div>
                                     <div class="flex items-center gap-2 flex-wrap">
-                                        <h2 class="text-lg sm:text-xl font-black text-white" x-text="'היי, ' + (portalClient?.name || 'מתאמן')"></h2>
-                                        <span class="text-[10px] bg-white/20 text-white font-extrabold px-2.5 py-0.5 rounded-full border border-white/30 backdrop-blur-xs">
+                                        <h2 class="text-lg sm:text-xl font-black text-[#0f172a]" x-text="'היי, ' + (portalClient?.name || 'מתאמן')"></h2>
+                                        <span class="text-[10px] bg-[#eff6ff] text-[#2563eb] font-extrabold px-2.5 py-0.5 rounded-full border border-[#bfdbfe]">
                                             ליווי אישי
                                         </span>
                                     </div>
-                                    <p class="text-xs text-blue-100 font-medium mt-0.5" x-text="portalClient?.goal ? 'יעד: ' + portalClient.goal : 'אפליקציית האימונים והתזונה שלך'"></p>
+                                    <p class="text-xs text-[#64748b] font-medium mt-0.5" x-text="portalClient?.goal ? 'יעד: ' + portalClient.goal : 'אפליקציית האימונים והתזונה שלך'"></p>
                                 </div>
                             </div>
 
                             <!-- סטטוס סנכרון וקשר עם אילאי -->
                             <div class="flex items-center gap-2 self-end sm:self-center">
-                                <div class="flex items-center gap-1.5 bg-white/20 border border-white/30 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white backdrop-blur-xs">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <div class="flex items-center gap-1.5 bg-[#f8fafc] border border-[#e2e8f0] px-3 py-1.5 rounded-xl text-[11px] font-bold text-[#0f172a]">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                     <span>מסונכרן לענן ✓</span>
                                 </div>
                                 <a :href="'https://wa.me/' + cleanPhone(portalClient?.coachPhone || '0501234567')" target="_blank" class="bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/40 text-[#25D366] px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition">
@@ -964,28 +957,28 @@
                         <div class="mt-4 pt-3.5 border-t border-[#DBEAFE]/60 grid grid-cols-4 gap-1.5 text-center text-xs font-bold">
                             <button type="button" 
                                     @click="portalActiveSubTab = 'home'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'home' ? 'bg-[#1E40AF] text-white shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#EFF6FF] border-2 border-[#BFDBFE] font-black'"
+                                    :class="portalActiveSubTab === 'home' ? 'bg-[#2563eb] text-white shadow-xs font-black' : 'bg-white text-[#475569] hover:bg-[#f8fafc] hover:text-[#0f172a] border border-[#cbd5e1] font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                                 <span>ראשי</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'workouts' ? 'bg-[#1E40AF] text-white shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#EFF6FF] border-2 border-[#BFDBFE] font-black'"
+                                    :class="portalActiveSubTab === 'workouts' ? 'bg-[#2563eb] text-white shadow-xs font-black' : 'bg-white text-[#475569] hover:bg-[#f8fafc] hover:text-[#0f172a] border border-[#cbd5e1] font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="dumbbell" class="w-4 h-4"></i>
                                 <span>אימונים</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'nutrition'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-[#1E40AF] text-white shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#EFF6FF] border-2 border-[#BFDBFE] font-black'"
+                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-[#2563eb] text-white shadow-xs font-black' : 'bg-white text-[#475569] hover:bg-[#f8fafc] hover:text-[#0f172a] border border-[#cbd5e1] font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="utensils" class="w-4 h-4"></i>
                                 <span>תזונה</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'progress'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'progress' ? 'bg-[#1E40AF] text-white shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#EFF6FF] border-2 border-[#BFDBFE] font-black'"
+                                    :class="portalActiveSubTab === 'progress' ? 'bg-[#2563eb] text-white shadow-xs font-black' : 'bg-white text-[#475569] hover:bg-[#f8fafc] hover:text-[#0f172a] border border-[#cbd5e1] font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="trending-up" class="w-4 h-4"></i>
                                 <span>התקדמות</span>
@@ -1392,15 +1385,15 @@
 
                             <!-- 3 כרטיסי קלוריות (יעד, נאכל, נותר) -->
                             <div class="grid grid-cols-3 gap-2.5 text-center">
-                                <div class="bg-[#EFF6FF] border-2 border-[#BFDBFE] p-3 rounded-2xl shadow-xs">
+                                <div class="bg-[#f8fafc] border border-[#e2e8f0] p-3 rounded-2xl shadow-xs">
                                     <span class="text-[10px] text-[#1E40AF] font-bold block">נאכל היום</span>
                                     <span class="text-base sm:text-lg font-black text-[#172554]" x-text="getTodayConsumedCalories(portalClient)"></span>
                                 </div>
-                                <div class="bg-[#EFF6FF] border-2 border-[#3B82F6] p-3 rounded-2xl shadow-xs">
+                                <div class="bg-[#eff6ff] border border-[#93c5fd] p-3 rounded-2xl shadow-xs">
                                     <span class="text-[10px] text-[#3B82F6] font-bold block">נותר לאכול</span>
                                     <span class="text-base sm:text-lg font-black" :class="getRemainingCalories(portalClient) >= 0 ? 'text-[#1E40AF]' : 'text-red-500'" x-text="getRemainingCalories(portalClient)"></span>
                                 </div>
-                                <div class="bg-[#EFF6FF] border-2 border-[#BFDBFE] p-3 rounded-2xl shadow-xs">
+                                <div class="bg-[#f8fafc] border border-[#e2e8f0] p-3 rounded-2xl shadow-xs">
                                     <span class="text-[10px] text-[#1E40AF] font-bold block">יעד קלוריות</span>
                                     <span class="text-base sm:text-lg font-black text-[#172554]" x-text="(portalClient?.macroCalculated?.targetCalories || portalClient?.caloriesTarget || 2000)"></span>
                                 </div>
@@ -1462,10 +1455,10 @@
 
                             <!-- בחירת סוג ארוחה מראש (בוקר, צהריים, ערב, ביניים) -->
                             <div class="grid grid-cols-4 gap-1.5 text-center text-xs font-bold">
-                                <button type="button" @click="portalMealType = 'ארוחת בוקר'" :class="portalMealType === 'ארוחת בוקר' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#172554] border-2 border-[#BFDBFE] font-bold'" class="py-2 rounded-xl transition cursor-pointer">בוקר</button>
-                                <button type="button" @click="portalMealType = 'ארוחת צהריים'" :class="portalMealType === 'ארוחת צהריים' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#172554] border-2 border-[#BFDBFE] font-bold'" class="py-2 rounded-xl transition cursor-pointer">צהריים</button>
-                                <button type="button" @click="portalMealType = 'ארוחת ערב'" :class="portalMealType === 'ארוחת ערב' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#172554] border-2 border-[#BFDBFE] font-bold'" class="py-2 rounded-xl transition cursor-pointer">ערב</button>
-                                <button type="button" @click="portalMealType = 'ארוחת ביניים'" :class="portalMealType === 'ארוחת ביניים' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#172554] border-2 border-[#BFDBFE] font-bold'" class="py-2 rounded-xl transition cursor-pointer">ביניים</button>
+                                <button type="button" @click="portalMealType = 'ארוחת בוקר'" :class="portalMealType === 'ארוחת בוקר' ? 'bg-[#2563eb] text-white shadow-xs font-black' : 'bg-white text-[#475569] hover:bg-[#f8fafc] border border-[#cbd5e1] font-bold'" class="py-2 rounded-xl transition cursor-pointer">בוקר</button>
+                                <button type="button" @click="portalMealType = 'ארוחת צהריים'" :class="portalMealType === 'ארוחת צהריים' ? 'bg-[#2563eb] text-white shadow-xs font-black' : 'bg-white text-[#475569] hover:bg-[#f8fafc] border border-[#cbd5e1] font-bold'" class="py-2 rounded-xl transition cursor-pointer">צהריים</button>
+                                <button type="button" @click="portalMealType = 'ארוחת ערב'" :class="portalMealType === 'ארוחת ערב' ? 'bg-[#2563eb] text-white shadow-xs font-black' : 'bg-white text-[#475569] hover:bg-[#f8fafc] border border-[#cbd5e1] font-bold'" class="py-2 rounded-xl transition cursor-pointer">ערב</button>
+                                <button type="button" @click="portalMealType = 'ארוחת ביניים'" :class="portalMealType === 'ארוחת ביניים' ? 'bg-[#2563eb] text-white shadow-xs font-black' : 'bg-white text-[#475569] hover:bg-[#f8fafc] border border-[#cbd5e1] font-bold'" class="py-2 rounded-xl transition cursor-pointer">ביניים</button>
                             </div>
 
                             <!-- תיבת חיפוש וטקסט חופשי -->
@@ -1492,7 +1485,7 @@
                                 <!-- כפתורי פעולה מהירה: צילום, הקלטה, מאגר, הוספה מהירה -->
                                 <div class="flex items-center justify-between gap-1.5 flex-wrap text-xs font-bold pt-1">
                                     <!-- צילום צלחת -->
-                                    <label class="flex-1 min-w-[120px] bg-[#EFF6FF] hover:bg-[#DBEAFE] border-2 border-[#BFDBFE] text-[#172554] font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow-xs">
+                                    <label class="flex-1 min-w-[120px] bg-white hover:bg-[#f8fafc] border border-[#cbd5e1] text-[#172554] font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow-xs">
                                         <i data-lucide="camera" class="w-4 h-4 text-emerald-400"></i>
                                         <span>צילום צלחת</span>
                                         <input type="file" accept="image/*" @change="handleMealPhotoUpload($event)" class="hidden" />
@@ -1510,7 +1503,7 @@
                                     <!-- הוספה מהירה -->
                                     <button type="button" 
                                             @click="openQuickAddCalorieModal = true; quickAddMealType = portalMealType; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                            class="flex-1 min-w-[120px] bg-[#EFF6FF] hover:bg-[#DBEAFE] border-2 border-[#BFDBFE] text-[#172554] font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow-xs">
+                                            class="flex-1 min-w-[120px] bg-white hover:bg-[#f8fafc] border border-[#cbd5e1] text-[#172554] font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow-xs">
                                         <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
                                         <span>הוספה מהירה</span>
                                     </button>
@@ -1518,7 +1511,7 @@
                                     <!-- מאגר ישראלי -->
                                     <button type="button" 
                                             @click="openFoodSearchModal = true; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                            class="flex-1 min-w-[120px] bg-[#EFF6FF] hover:bg-[#DBEAFE] border-2 border-[#BFDBFE] text-[#172554] font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow-xs">
+                                            class="flex-1 min-w-[120px] bg-white hover:bg-[#f8fafc] border border-[#cbd5e1] text-[#172554] font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow-xs">
                                         <i data-lucide="book-open" class="w-4 h-4 text-sky-400"></i>
                                         <span>מאגר מאכלים</span>
                                     </button>
@@ -1707,7 +1700,7 @@
                                     <span class="text-[10px] text-[#1E40AF] font-bold block">משקל התחלתי</span>
                                     <span class="text-base sm:text-lg font-black text-[#172554]" x-text="(portalClient?.startWeight || '-') + ' ק״ג'"></span>
                                 </div>
-                                <div class="bg-[#EFF6FF] border-2 border-[#3B82F6] p-3 rounded-2xl shadow-xs">
+                                <div class="bg-[#eff6ff] border border-[#93c5fd] p-3 rounded-2xl shadow-xs">
                                     <span class="text-[10px] text-[#3B82F6] font-bold block">משקל נוכחי</span>
                                     <span class="text-base sm:text-lg font-black text-[#3B82F6]" x-text="(portalClient?.checkins?.length > 0 ? portalClient.checkins[portalClient.checkins.length - 1].weight : (portalClient?.startWeight || '-')) + ' ק״ג'"></span>
                                 </div>
@@ -1758,15 +1751,15 @@
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
                         <!-- מעקב פיננסי -->
                         <div @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
-                             class="bg-gradient-to-br from-[#3B82F6] via-[#1E40AF] to-[#1E40AF] border-2 border-[#DBEAFE] hover:border-[#3B82F6] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group text-white">
+                             class="bg-white border border-[#e2e8f0] hover:border-[#cbd5e1] p-4 md:p-5 rounded-3xl shadow-xs cursor-pointer transition transform hover:-translate-y-0.5 group text-[#0f172a]">
                             <div class="flex items-center justify-between mb-3">
                                 <span class="bg-[#3B82F6]/20 text-[#1E40AF] border border-[#3B82F6]/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">חדש • 2.0</span>
                                 <div class="w-9 h-9 rounded-2xl bg-[#3B82F6]/20 border border-[#3B82F6]/30 flex items-center justify-center text-[#1E40AF] group-hover:scale-110 transition">
                                     <i data-lucide="credit-card" class="w-5 h-5"></i>
                                 </div>
                             </div>
-                            <h4 class="text-sm md:text-base font-black text-white transition">מעקב פיננסי וגבייה</h4>
-                            <p class="text-[11px] text-blue-100 mt-0.5 font-medium">יעדים, הכנסות מנויים ותזרים</p>
+                            <h4 class="text-sm md:text-base font-black text-[#0f172a] group-hover:text-[#2563eb] transition">מעקב פיננסי וגבייה</h4>
+                            <p class="text-[11px] text-[#64748b] mt-0.5 font-medium">יעדים, הכנסות מנויים ותזרים</p>
                             <div class="mt-3 flex items-center gap-1 text-[11px] font-black text-[#1E40AF]">
                                 <span>פתח מעקב מלא</span>
                                 <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
@@ -1775,15 +1768,15 @@
 
                         <!-- הגדרות וסנכרון ענן -->
                         <div @click="activeTab = 'settings'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
-                             class="bg-gradient-to-br from-[#3B82F6] via-[#1E40AF] to-[#1E40AF] border-2 border-[#DBEAFE] hover:border-[#3B82F6] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group text-white">
+                             class="bg-white border border-[#e2e8f0] hover:border-[#cbd5e1] p-4 md:p-5 rounded-3xl shadow-xs cursor-pointer transition transform hover:-translate-y-0.5 group text-[#0f172a]">
                             <div class="flex items-center justify-between mb-3">
                                 <span class="bg-[#3B82F6]/20 text-[#1E40AF] border border-[#3B82F6]/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Firebase Cloud</span>
                                 <div class="w-9 h-9 rounded-2xl bg-[#3B82F6]/20 border border-[#3B82F6]/30 flex items-center justify-center text-[#1E40AF] group-hover:scale-110 transition">
                                     <i data-lucide="settings" class="w-5 h-5"></i>
                                 </div>
                             </div>
-                            <h4 class="text-sm md:text-base font-black text-white transition">הגדרות וסנכרון ענן</h4>
-                            <p class="text-[11px] text-blue-100 mt-0.5 font-medium">חיבור Firebase, גיבויים ואבטחה</p>
+                            <h4 class="text-sm md:text-base font-black text-[#0f172a] group-hover:text-[#2563eb] transition">הגדרות וסנכרון ענן</h4>
+                            <p class="text-[11px] text-[#64748b] mt-0.5 font-medium">חיבור Firebase, גיבויים ואבטחה</p>
                             <div class="mt-3 flex items-center gap-1 text-[11px] font-black text-[#1E40AF]">
                                 <span>הגדר סנכרון ענן</span>
                                 <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
