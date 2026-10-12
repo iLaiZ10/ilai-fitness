@@ -248,6 +248,35 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #93C5FD;
         }
+    
+        /* CRITICAL: Enforce pure white text on any blue background or gradient */
+        .bg-\[\#1E40AF\],
+        .bg-\[\#3B82F6\],
+        .bg-blue-600,
+        .bg-blue-700,
+        .bg-blue-800,
+        .bg-blue-900,
+        [class*="bg-[#1E40AF]"],
+        [class*="bg-[#3B82F6]"],
+        [class*="from-[#1E40AF]"],
+        [class*="from-[#3B82F6]"] {
+            color: #ffffff !important;
+        }
+
+        .bg-\[\#1E40AF\] *,
+        .bg-\[\#3B82F6\] *,
+        [class*="from-[#1E40AF]"] *:not(.text-emerald-400):not(.text-sky-300):not(.text-amber-300):not(.text-red-400),
+        [class*="from-[#3B82F6]"] *:not(.text-emerald-400):not(.text-sky-300):not(.text-amber-300):not(.text-red-400) {
+            color: inherit;
+        }
+
+        /* Ensure specific badges on blue banners stand out */
+        .badge-on-blue {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            border-color: rgba(255, 255, 255, 0.35) !important;
+        }
+
     </style>
 </head>
 <body class="h-full text-[#172554] bg-[#EFF6FF] flex flex-col font-sans" x-data="fitnessApp()" x-init="initApp()">
@@ -567,7 +596,7 @@
                     <button 
                         type="button"
                         @click="openSendIntakeForClient(null)" 
-                        class="bg-white hover:bg-[#1E40AF] text-[#172554] hover:text-[#a15c07] border-2 border-[#DBEAFE] hover:border-[#DBEAFE] font-black px-4 md:px-5 py-2.5 rounded-2xl text-xs md:text-sm flex items-center gap-2.5 transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer group">
+                        class="bg-white hover:bg-[#1E40AF] text-white hover:text-[#a15c07] border-2 border-[#DBEAFE] hover:border-[#DBEAFE] font-black px-4 md:px-5 py-2.5 rounded-2xl text-xs md:text-sm flex items-center gap-2.5 transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer group">
                         <div class="w-6 h-6 rounded-lg bg-[#1E40AF]/10 group-hover:bg-[#3B82F6]/20 flex items-center justify-center transition">
                             <i data-lucide="send" class="w-3.5 h-3.5 text-[#1E40AF] group-hover:text-[#a15c07]"></i>
                         </div>
@@ -578,7 +607,7 @@
                     <button 
                         type="button"
                         @click="openAddClientModal = true" 
-                        class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] font-black px-5 md:px-6 py-2.5 rounded-2xl text-xs md:text-sm flex items-center gap-2.5 transition-all duration-200 shadow-md shadow-amber-500/20 border border-[#1D4ED8]/30 cursor-pointer transform hover:-translate-y-0.5">
+                        class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white font-black px-5 md:px-6 py-2.5 rounded-2xl text-xs md:text-sm flex items-center gap-2.5 transition-all duration-200 shadow-md shadow-amber-500/20 border border-[#1D4ED8]/30 cursor-pointer transform hover:-translate-y-0.5">
                         <i data-lucide="user-plus" class="w-4 h-4 text-[#172554]"></i>
                         <span>מתאמן חדש</span>
                     </button>
@@ -643,7 +672,7 @@
                                 </div>
                             </template>
 
-                            <button type="submit" class="w-full bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] font-black py-3 rounded-2xl text-sm shadow-lg shadow-[#3B82F6]/20 transition flex items-center justify-center gap-2">
+                            <button type="submit" class="w-full bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white font-black py-3 rounded-2xl text-sm shadow-lg shadow-[#3B82F6]/20 transition flex items-center justify-center gap-2">
                                 <i data-lucide="unlock" class="w-4 h-4"></i>
                                 <span>התחבר למערכת</span>
                             </button>
@@ -681,7 +710,7 @@
                     <!-- מסך הצלחה -->
                     <template x-if="intakeSuccess">
                         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-8 text-center space-y-6 shadow-2xl animate-fade-in">
-                            <div class="w-16 h-16 bg-[#1E40AF] text-[#3B82F6] rounded-full flex items-center justify-center mx-auto shadow-lg shadow-[#1E40AF]/20">
+                            <div class="w-16 h-16 bg-[#1E40AF] text-white rounded-full flex items-center justify-center mx-auto shadow-lg shadow-[#1E40AF]/20">
                                 <i data-lucide="check" class="w-8 h-8"></i>
                             </div>
                             <div class="space-y-2">
@@ -689,7 +718,7 @@
                                 <p class="text-xs text-[#1E40AF] leading-relaxed max-w-md mx-auto">הפרטים שלך נקלטו בהצלחה במערכת הליווי של אילאי. התוכנית המותאמת אישית שלך מתחילה עכשיו!</p>
                             </div>
                             <div class="pt-2">
-                                <a :href="'https://wa.me/972509172005?text=' + encodeURIComponent('היי אילאי! סיימתי כרגע למלא את שאלון הקליטה המורחב באפליקציה 💪')" target="_blank" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] shadow-md font-black py-3.5 px-6 rounded-2xl text-xs inline-flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition">
+                                <a :href="'https://wa.me/972509172005?text=' + encodeURIComponent('היי אילאי! סיימתי כרגע למלא את שאלון הקליטה המורחב באפליקציה 💪')" target="_blank" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white shadow-md font-black py-3.5 px-6 rounded-2xl text-xs inline-flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition">
                                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                                     <span>עדכן את אילאי בוואטסאפ שסיימת 👑</span>
                                 </a>
@@ -745,7 +774,7 @@
                                 </div>
 
                                 <div class="flex justify-end pt-2">
-                                    <button type="button" @click="if (newIntake.name && newIntake.phone) { intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50); } else { alert('אנא מלא שם מלא ומספר טלפון!') }" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] font-black px-6 py-2.5 rounded-2xl transition shadow-md text-xs flex items-center gap-1.5 cursor-pointer">
+                                    <button type="button" @click="if (newIntake.name && newIntake.phone) { intakeStep = 2; setTimeout(() => window.lucide.createIcons(), 50); } else { alert('אנא מלא שם מלא ומספר טלפון!') }" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white font-black px-6 py-2.5 rounded-2xl transition shadow-md text-xs flex items-center gap-1.5 cursor-pointer">
                                         <span>המשך לשלב הבא</span>
                                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
                                     </button>
@@ -897,23 +926,23 @@
                         <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <!-- פרטי מתאמן -->
                             <div class="flex items-center gap-3.5">
-                                <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#1E40AF] border-2 border-[#3B82F6]/40 text-[#3B82F6] font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg shrink-0">
+                                <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-white/20 border-2 border-white/40 text-white font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg shrink-0 backdrop-blur-xs">
                                     <span x-text="(portalClient?.name || 'מתאמן').charAt(0)"></span>
                                 </div>
                                 <div>
                                     <div class="flex items-center gap-2 flex-wrap">
-                                        <h2 class="text-lg sm:text-xl font-black text-[#172554]" x-text="'היי, ' + (portalClient?.name || 'מתאמן')"></h2>
-                                        <span class="text-[10px] bg-white/80 text-[#3B82F6] font-extrabold px-2.5 py-0.5 rounded-full border border-[#3B82F6]/30">
+                                        <h2 class="text-lg sm:text-xl font-black text-white" x-text="'היי, ' + (portalClient?.name || 'מתאמן')"></h2>
+                                        <span class="text-[10px] bg-white/20 text-white font-extrabold px-2.5 py-0.5 rounded-full border border-white/30 backdrop-blur-xs">
                                             ליווי אישי
                                         </span>
                                     </div>
-                                    <p class="text-xs text-[#1E40AF] font-medium mt-0.5" x-text="portalClient?.goal ? 'יעד: ' + portalClient.goal : 'אפליקציית האימונים והתזונה שלך'"></p>
+                                    <p class="text-xs text-blue-100 font-medium mt-0.5" x-text="portalClient?.goal ? 'יעד: ' + portalClient.goal : 'אפליקציית האימונים והתזונה שלך'"></p>
                                 </div>
                             </div>
 
                             <!-- סטטוס סנכרון וקשר עם אילאי -->
                             <div class="flex items-center gap-2 self-end sm:self-center">
-                                <div class="flex items-center gap-1.5 bg-white/80 border border-[#DBEAFE] px-3 py-1.5 rounded-xl text-[11px] font-bold text-[#172554]">
+                                <div class="flex items-center gap-1.5 bg-white/20 border border-white/30 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white backdrop-blur-xs">
                                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                                     <span>מסונכרן לענן ✓</span>
                                 </div>
@@ -928,28 +957,28 @@
                         <div class="mt-4 pt-3.5 border-t border-[#DBEAFE]/60 grid grid-cols-4 gap-1.5 text-center text-xs font-bold">
                             <button type="button" 
                                     @click="portalActiveSubTab = 'home'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'home' ? 'bg-[#3B82F6] text-[#172554] shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#DBEAFE] border border-[#DBEAFE]/80 font-bold'"
+                                    :class="portalActiveSubTab === 'home' ? 'bg-[#1E40AF] text-white shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#DBEAFE] border border-[#DBEAFE] font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                                 <span>ראשי</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'workouts' ? 'bg-[#3B82F6] text-[#172554] shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#DBEAFE] border border-[#DBEAFE]/80 font-bold'"
+                                    :class="portalActiveSubTab === 'workouts' ? 'bg-[#1E40AF] text-white shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#DBEAFE] border border-[#DBEAFE] font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="dumbbell" class="w-4 h-4"></i>
                                 <span>אימונים</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'nutrition'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-[#3B82F6] text-[#172554] shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#DBEAFE] border border-[#DBEAFE]/80 font-bold'"
+                                    :class="portalActiveSubTab === 'nutrition' ? 'bg-[#1E40AF] text-white shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#DBEAFE] border border-[#DBEAFE] font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="utensils" class="w-4 h-4"></i>
                                 <span>תזונה</span>
                             </button>
                             <button type="button" 
                                     @click="portalActiveSubTab = 'progress'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                    :class="portalActiveSubTab === 'progress' ? 'bg-[#3B82F6] text-[#172554] shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#DBEAFE] border border-[#DBEAFE]/80 font-bold'"
+                                    :class="portalActiveSubTab === 'progress' ? 'bg-[#1E40AF] text-white shadow-md font-black' : 'bg-white text-[#172554] hover:bg-[#DBEAFE] border border-[#DBEAFE] font-bold'"
                                     class="py-2.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
                                 <i data-lucide="trending-up" class="w-4 h-4"></i>
                                 <span>התקדמות</span>
@@ -992,7 +1021,7 @@
                         <div class="bg-gradient-to-r from-[#3B82F6] via-[#1E40AF] to-[#1E40AF] border border-[#3B82F6]/40 p-4 sm:p-5 rounded-2xl shadow-xl space-y-3">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2.5">
-                                    <div class="w-9 h-9 rounded-xl bg-[#3B82F6] text-[#172554] flex items-center justify-center font-black">
+                                    <div class="w-9 h-9 rounded-xl bg-[#3B82F6] text-white flex items-center justify-center font-black">
                                         <i data-lucide="dumbbell" class="w-5 h-5"></i>
                                     </div>
                                     <div>
@@ -1012,7 +1041,7 @@
                                 </div>
                                 <button type="button" 
                                         @click="portalActiveSubTab = 'workouts'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                        class="bg-[#3B82F6] hover:bg-[#1E40AF] text-[#172554] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition transform hover:scale-105 cursor-pointer">
+                                        class="bg-[#3B82F6] hover:bg-[#1E40AF] text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition transform hover:scale-105 cursor-pointer">
                                     <span>פתח אימון בחדר כושר</span>
                                     <i data-lucide="chevron-left" class="w-4 h-4"></i>
                                 </button>
@@ -1162,7 +1191,7 @@
 
                         <!-- כפתור סגירת יום רשמית -->
                         <div class="text-center pt-1">
-                            <button type="button" @click="openDayCloseCelebration()" class="w-full bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] font-black py-3.5 px-5 rounded-2xl text-sm shadow-xl flex items-center justify-center gap-2 transition transform hover:-translate-y-0.5 cursor-pointer">
+                            <button type="button" @click="openDayCloseCelebration()" class="w-full bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white font-black py-3.5 px-5 rounded-2xl text-sm shadow-xl flex items-center justify-center gap-2 transition transform hover:-translate-y-0.5 cursor-pointer">
                                 <i data-lucide="check-check" class="w-5 h-5"></i>
                                 <span>סגירת יום רשמית ושמירת דיווח יומי</span>
                             </button>
@@ -1178,7 +1207,7 @@
                                 <template x-for="(day, dayIdx) in portalClient.workoutPlan.days" :key="dayIdx">
                                     <button type="button" 
                                             @click="portalSelectedWorkoutDayIdx = dayIdx; initLiveWorkout(portalClient, dayIdx); setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                            :class="portalSelectedWorkoutDayIdx === dayIdx ? 'bg-[#3B82F6] text-[#172554] font-black shadow-md' : 'bg-transparent text-[#6b7280] hover:text-white'"
+                                            :class="portalSelectedWorkoutDayIdx === dayIdx ? 'bg-[#3B82F6] text-white font-black shadow-md' : 'bg-transparent text-[#6b7280] hover:text-white'"
                                             class="flex-1 min-w-[90px] py-2 px-2 rounded-xl text-xs transition text-center cursor-pointer whitespace-nowrap">
                                         <span x-text="day.name || day.dayName || ('אימון ' + (dayIdx + 1))"></span>
                                     </button>
@@ -1202,7 +1231,7 @@
                                 <button type="button" @click="startRestTimer(60)" class="px-2.5 py-1.5 bg-white hover:bg-white border border-[#DBEAFE] text-[#172554] rounded-xl text-xs font-bold transition cursor-pointer">60s</button>
                                 <button type="button" @click="startRestTimer(90)" class="px-2.5 py-1.5 bg-white hover:bg-white border border-[#DBEAFE] text-[#172554] rounded-xl text-xs font-bold transition cursor-pointer">90s</button>
                                 <button type="button" @click="addRestTime(30)" class="px-2.5 py-1.5 bg-white hover:bg-white border border-[#DBEAFE] text-[#3B82F6] rounded-xl text-xs font-bold transition cursor-pointer">+30s</button>
-                                <button type="button" @click="toggleRestTimer()" class="p-1.5 bg-[#3B82F6] text-[#172554] rounded-xl text-xs font-black transition cursor-pointer">
+                                <button type="button" @click="toggleRestTimer()" class="p-1.5 bg-[#3B82F6] text-white rounded-xl text-xs font-black transition cursor-pointer">
                                     <i :data-lucide="isRestTimerRunning ? 'pause' : 'play'" class="w-4 h-4"></i>
                                 </button>
                                 <button type="button" @click="stopRestTimer()" class="p-1.5 bg-white hover:bg-red-900/40 border border-[#DBEAFE] text-[#1E40AF] hover:text-red-300 rounded-xl transition cursor-pointer" title="איפוס">
@@ -1224,7 +1253,7 @@
                                             <!-- כותרת תרגיל, מנוחה ווידאו -->
                                             <div class="flex items-center justify-between border-b border-[#DBEAFE]/60 pb-2.5 flex-wrap gap-2">
                                                 <div class="flex items-center gap-2.5">
-                                                    <span class="w-7 h-7 rounded-xl bg-[#3B82F6] text-[#172554] font-black text-xs flex items-center justify-center" x-text="exIdx + 1"></span>
+                                                    <span class="w-7 h-7 rounded-xl bg-[#3B82F6] text-white font-black text-xs flex items-center justify-center" x-text="exIdx + 1"></span>
                                                     <div>
                                                         <h4 class="text-sm font-black text-[#172554]" x-text="ex.name"></h4>
                                                         <div class="flex items-center gap-2 text-[11px] text-[#1E40AF] mt-0.5">
@@ -1414,7 +1443,7 @@
                         <div class="bg-white/95 border border-[#3B82F6]/40 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
                             <div class="flex items-center justify-between border-b border-[#DBEAFE]/60 pb-3">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-8 h-8 rounded-xl bg-[#3B82F6] text-[#172554] flex items-center justify-center font-black">
+                                    <div class="w-8 h-8 rounded-xl bg-[#3B82F6] text-white flex items-center justify-center font-black">
                                         <i data-lucide="sparkles" class="w-4 h-4"></i>
                                     </div>
                                     <div>
@@ -1445,7 +1474,7 @@
                                     <button type="button" 
                                             @click="analyzeFoodWithAi()" 
                                             :disabled="isAiAnalyzing"
-                                            class="absolute left-2 top-2 bottom-2 bg-[#3B82F6] hover:bg-[#1E40AF] text-[#172554] font-black px-4 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer disabled:opacity-50">
+                                            class="absolute left-2 top-2 bottom-2 bg-[#3B82F6] hover:bg-[#1E40AF] text-white font-black px-4 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer disabled:opacity-50">
                                         <span x-show="!isAiAnalyzing">חשב</span>
                                         <span x-show="isAiAnalyzing" class="flex items-center gap-1">
                                             <span class="w-3 h-3 border-2 border-[#DBEAFE] border-t-transparent rounded-full animate-spin"></span>
@@ -1617,9 +1646,9 @@
                         
                         <!-- סרגל מעבר בין שיקוף, שקילה ודרייב -->
                         <div class="bg-white/90 border border-[#DBEAFE]/80 p-1 rounded-2xl grid grid-cols-3 gap-1 text-center text-xs font-bold">
-                            <button type="button" @click="portalJournalSection = 'reflection'" :class="portalJournalSection === 'reflection' ? 'bg-[#3B82F6] text-[#172554] font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">שיקוף שבועי</button>
-                            <button type="button" @click="portalJournalSection = 'checkin'" :class="portalJournalSection === 'checkin' ? 'bg-[#3B82F6] text-[#172554] font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">שקילה ומדדים</button>
-                            <button type="button" @click="portalJournalSection = 'drive'" :class="portalJournalSection === 'drive' ? 'bg-[#3B82F6] text-[#172554] font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">תמונות ו-Drive</button>
+                            <button type="button" @click="portalJournalSection = 'reflection'" :class="portalJournalSection === 'reflection' ? 'bg-[#3B82F6] text-white font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">שיקוף שבועי</button>
+                            <button type="button" @click="portalJournalSection = 'checkin'" :class="portalJournalSection === 'checkin' ? 'bg-[#3B82F6] text-white font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">שקילה ומדדים</button>
+                            <button type="button" @click="portalJournalSection = 'drive'" :class="portalJournalSection === 'drive' ? 'bg-[#3B82F6] text-white font-black' : 'text-[#6b7280] hover:text-white'" class="py-2 rounded-xl transition cursor-pointer">תמונות ו-Drive</button>
                         </div>
 
                         <!-- 1. שיקוף שבועי (Weekly Reflection) -->
@@ -1633,7 +1662,7 @@
                                 <div class="space-y-2.5">
                                     <textarea x-model="portalWeeklyReflectionText" rows="4" class="w-full bg-white border border-[#DBEAFE] focus:border-[#3B82F6] text-[#172554] p-3 rounded-2xl text-xs sm:text-sm font-medium outline-none placeholder-[#9ca3af]" placeholder="כתוב כאן את השיקוף שלך..."></textarea>
                                     
-                                    <button type="button" @click="savePortalReflection()" class="w-full bg-[#3B82F6] hover:bg-[#1E40AF] text-[#172554] font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition cursor-pointer">
+                                    <button type="button" @click="savePortalReflection()" class="w-full bg-[#3B82F6] hover:bg-[#1E40AF] text-white font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition cursor-pointer">
                                         <i data-lucide="send" class="w-4 h-4"></i>
                                         <span>שלח שיקוף לאילאי</span>
                                     </button>
@@ -1700,7 +1729,7 @@
                                 <h3 class="text-sm font-black text-[#172554]">תיקיית תמונות ומעקב</h3>
                                 <p class="text-xs text-[#1E40AF]">תמונות התקדמות נשמרות בצורה מאובטחת בתיקייה האישית שלך</p>
                                 <template x-if="portalClient?.googleDriveUrl">
-                                    <a :href="portalClient.googleDriveUrl" target="_blank" class="inline-flex items-center gap-2 bg-[#3B82F6] text-[#172554] font-black py-2.5 px-5 rounded-xl text-xs shadow-lg">
+                                    <a :href="portalClient.googleDriveUrl" target="_blank" class="inline-flex items-center gap-2 bg-[#3B82F6] text-white font-black py-2.5 px-5 rounded-xl text-xs shadow-lg">
                                         <span>פתח תיקיית Drive</span>
                                         <i data-lucide="external-link" class="w-4 h-4"></i>
                                     </a>
@@ -1722,15 +1751,15 @@
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
                         <!-- מעקב פיננסי -->
                         <div @click="activeTab = 'finances'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
-                             class="bg-gradient-to-br from-[#3B82F6] via-[#1E40AF] to-[#1E40AF] border-2 border-[#DBEAFE] hover:border-[#3B82F6] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group text-[#172554]">
+                             class="bg-gradient-to-br from-[#3B82F6] via-[#1E40AF] to-[#1E40AF] border-2 border-[#DBEAFE] hover:border-[#3B82F6] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group text-white">
                             <div class="flex items-center justify-between mb-3">
                                 <span class="bg-[#3B82F6]/20 text-[#a15c07] border border-[#3B82F6]/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">חדש • 2.0</span>
                                 <div class="w-9 h-9 rounded-2xl bg-[#3B82F6]/20 border border-[#3B82F6]/30 flex items-center justify-center text-[#a15c07] group-hover:scale-110 transition">
                                     <i data-lucide="credit-card" class="w-5 h-5"></i>
                                 </div>
                             </div>
-                            <h4 class="text-sm md:text-base font-black text-[#172554] group-hover:text-[#a15c07] transition">מעקב פיננסי וגבייה</h4>
-                            <p class="text-[11px] text-[#1E40AF] mt-0.5 font-medium">יעדים, הכנסות מנויים ותזרים</p>
+                            <h4 class="text-sm md:text-base font-black text-white transition">מעקב פיננסי וגבייה</h4>
+                            <p class="text-[11px] text-blue-100 mt-0.5 font-medium">יעדים, הכנסות מנויים ותזרים</p>
                             <div class="mt-3 flex items-center gap-1 text-[11px] font-black text-[#a15c07]">
                                 <span>פתח מעקב מלא</span>
                                 <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
@@ -1739,15 +1768,15 @@
 
                         <!-- הגדרות וסנכרון ענן -->
                         <div @click="activeTab = 'settings'; selectedClientId = null; setTimeout(() => window.lucide && window.lucide.createIcons(), 50);" 
-                             class="bg-gradient-to-br from-[#3B82F6] via-[#1E40AF] to-[#1E40AF] border-2 border-[#DBEAFE] hover:border-[#3B82F6] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group text-[#172554]">
+                             class="bg-gradient-to-br from-[#3B82F6] via-[#1E40AF] to-[#1E40AF] border-2 border-[#DBEAFE] hover:border-[#3B82F6] p-4 md:p-5 rounded-3xl shadow-xl cursor-pointer transition transform hover:-translate-y-0.5 group text-white">
                             <div class="flex items-center justify-between mb-3">
                                 <span class="bg-[#3B82F6]/20 text-[#a15c07] border border-[#3B82F6]/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Firebase Cloud</span>
                                 <div class="w-9 h-9 rounded-2xl bg-[#3B82F6]/20 border border-[#3B82F6]/30 flex items-center justify-center text-[#a15c07] group-hover:scale-110 transition">
                                     <i data-lucide="settings" class="w-5 h-5"></i>
                                 </div>
                             </div>
-                            <h4 class="text-sm md:text-base font-black text-[#172554] group-hover:text-[#a15c07] transition">הגדרות וסנכרון ענן</h4>
-                            <p class="text-[11px] text-[#1E40AF] mt-0.5 font-medium">חיבור Firebase, גיבויים ואבטחה</p>
+                            <h4 class="text-sm md:text-base font-black text-white transition">הגדרות וסנכרון ענן</h4>
+                            <p class="text-[11px] text-blue-100 mt-0.5 font-medium">חיבור Firebase, גיבויים ואבטחה</p>
                             <div class="mt-3 flex items-center gap-1 text-[11px] font-black text-[#a15c07]">
                                 <span>הגדר סנכרון ענן</span>
                                 <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
@@ -1850,7 +1879,7 @@
                             </div>
                             <button type="button" 
                                     @click="forceRefreshCloudData(false)" 
-                                    class="bg-white hover:bg-[#1E40AF] text-[#172554] hover:text-[#3B82F6] border border-[#DBEAFE] px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 self-end sm:self-auto cursor-pointer shadow-2xs">
+                                    class="bg-white hover:bg-[#1E40AF] text-white hover:text-[#3B82F6] border border-[#DBEAFE] px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 self-end sm:self-auto cursor-pointer shadow-2xs">
                                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5" :class="isCloudSyncing ? 'animate-spin' : ''"></i>
                                 <span>רענן פיד ענן 🔄</span>
                             </button>
@@ -2007,7 +2036,7 @@
                                             <span class="font-bold text-xs text-[#172554] block" x-text="client.name"></span>
                                             <span class="text-[10px] text-[#1E40AF] block" x-text="'טלפון: ' + client.phone"></span>
                                         </div>
-                                        <a :href="getFridayReflectionWhatsAppLink(client)" target="_blank" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] shadow-md px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm shadow-emerald-600/20 transition cursor-pointer">
+                                        <a :href="getFridayReflectionWhatsAppLink(client)" target="_blank" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white shadow-md px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm shadow-emerald-600/20 transition cursor-pointer">
                                             <i data-lucide="send" class="w-3.5 h-3.5"></i>
                                             <span>שלח תזכורת</span>
                                         </a>
@@ -2028,7 +2057,7 @@
                     <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-xl space-y-5">
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#DBEAFE] pb-4">
                             <div class="flex items-center gap-3">
-                                <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                                <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                                     <i data-lucide="activity" class="w-5 h-5"></i>
                                 </div>
                                 <div>
@@ -2080,7 +2109,7 @@
                                             <!-- שם המתאמן -->
                                             <td class="py-3.5 px-3">
                                                 <div class="flex items-center gap-2.5">
-                                                    <div class="w-8 h-8 rounded-full bg-[#1E40AF] text-[#3B82F6] font-bold text-xs flex items-center justify-center shrink-0 shadow-sm" x-text="client.name ? client.name.charAt(0) : 'מ'"></div>
+                                                    <div class="w-8 h-8 rounded-full bg-[#1E40AF] text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm" x-text="client.name ? client.name.charAt(0) : 'מ'"></div>
                                                     <div>
                                                         <button @click="selectClient(client.id)" class="font-extrabold text-[#172554] hover:text-[#15803d] text-xs transition text-right block" x-text="client.name"></button>
                                                         <span class="text-[10px] text-[#1E40AF] block" x-text="client.goal || 'חיטוב ועלייה במסה'"></span>
@@ -2147,14 +2176,14 @@
                                             <!-- פעולות -->
                                             <td class="py-3.5 px-3 text-left">
                                                 <div class="flex items-center justify-end gap-1.5">
-                                                    <button @click="activeTab = 'portal'; portalClientId = client.id; setTimeout(() => window.lucide.createIcons(), 50)" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition" title="פתח אפליקציית מתאמן">
+                                                    <button @click="activeTab = 'portal'; portalClientId = client.id; setTimeout(() => window.lucide.createIcons(), 50)" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition" title="פתח אפליקציית מתאמן">
                                                         <i data-lucide="smartphone" class="w-3 h-3 text-[#a15c07]"></i>
                                                         <span>אפליקציה</span>
                                                     </button>
                                                     <button @click="selectClient(client.id)" class="bg-white hover:bg-white border border-[#DBEAFE] text-[#172554] px-2.5 py-1 rounded-lg text-[10px] font-bold transition">
                                                         כרטיס
                                                     </button>
-                                                    <a :href="getWhatsAppLink(client, 'weighin')" target="_blank" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] p-1.5 rounded-xl transition cursor-pointer shadow-2xs" title="וואטסאפ">
+                                                    <a :href="getWhatsAppLink(client, 'weighin')" target="_blank" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white p-1.5 rounded-xl transition cursor-pointer shadow-2xs" title="וואטסאפ">
                                                         <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
                                                     </a>
                                                 </div>
@@ -2199,7 +2228,7 @@
                                             </template>
                                         </div>
                                         <div class="flex items-center gap-1.5">
-                                            <button @click="activeTab = 'portal'; portalClientId = client.id; setTimeout(() => window.lucide.createIcons(), 50)" class="bg-[#1E40AF] text-[#3B82F6] px-2 py-1 rounded-lg font-bold text-[10px]">אפליקציה</button>
+                                            <button @click="activeTab = 'portal'; portalClientId = client.id; setTimeout(() => window.lucide.createIcons(), 50)" class="bg-[#1E40AF] text-white px-2 py-1 rounded-lg font-bold text-[10px]">אפליקציה</button>
                                             <button @click="selectClient(client.id)" class="bg-white border border-[#3B82F6]/40 text-[#3B82F6] px-2 py-1 rounded-lg font-bold text-[10px]">כרטיס</button>
                                         </div>
                                     </div>
@@ -2236,11 +2265,11 @@
                                 <span>שלח קישור ישיר לוואטסאפ של מתאמן חדש — המערכת תיצור את הכרטיס שלו אוטומטית כשיסיים!</span>
                             </div>
                             <div class="flex items-center gap-2 w-full sm:w-auto flex-wrap">
-                                <button @click="openSendIntakeForClient(null)" class="flex-1 sm:flex-initial bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] shadow-md font-black px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20">
+                                <button @click="openSendIntakeForClient(null)" class="flex-1 sm:flex-initial bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white shadow-md font-black px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20">
                                     <i data-lucide="send" class="w-3.5 h-3.5 text-[#172554]"></i>
                                     <span>שלח שאלון בוואטסאפ 🚀</span>
                                 </button>
-                                <button @click="copyIntakeLink()" class="flex-1 sm:flex-initial bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-bold px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 border border-[#DBEAFE]">
+                                <button @click="copyIntakeLink()" class="flex-1 sm:flex-initial bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-bold px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 border border-[#DBEAFE]">
                                     <i data-lucide="copy" class="w-3.5 h-3.5 text-[#3B82F6]"></i>
                                     <span>העתק קישור לשאלון</span>
                                 </button>
@@ -2291,7 +2320,7 @@
                                         </td>
                                         <td class="py-4 px-6 text-left">
                                             <div class="flex items-center justify-end gap-2">
-                                                <button @click="selectClient(client.id)" class="text-xs bg-[#3B82F6] hover:bg-[#1E40AF] text-[#172554] font-black px-4 py-1.5 rounded-xl shadow-md transition transform hover:scale-105 cursor-pointer">ניהול</button>
+                                                <button @click="selectClient(client.id)" class="text-xs bg-[#3B82F6] hover:bg-[#1E40AF] text-white font-black px-4 py-1.5 rounded-xl shadow-md transition transform hover:scale-105 cursor-pointer">ניהול</button>
                                                 <button @click="deleteClient(client.id)" class="text-rose-400 hover:text-[#172554] hover:bg-rose-600 bg-rose-950/50 border border-rose-500/30 p-2 rounded-xl transition cursor-pointer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                                             </div>
                                         </td>
@@ -2334,7 +2363,7 @@
                                         <span class="text-[9px] text-slate-500 block">מפגש השבוע:</span>
                                         <span :class="getPersonalSessionClass(client.personalSessionStatus)" class="px-1.5 py-0.5 rounded text-[9px] border inline-block mt-0.5" x-text="getPersonalSessionLabel(client.personalSessionStatus)"></span>
                                     </div>
-                                    <button @click="selectClient(client.id)" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] text-[#172554] px-4 py-1.5 rounded-xl font-black text-xs shadow-md">ניהול מתאמן</button>
+                                    <button @click="selectClient(client.id)" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] text-white px-4 py-1.5 rounded-xl font-black text-xs shadow-md">ניהול מתאמן</button>
                                 </div>
                             </div>
                         </template>
@@ -2410,14 +2439,14 @@
                                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                                 </button>
                                 
-                                <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-[#1E40AF] text-[#3B82F6] font-black text-xl md:text-2xl flex items-center justify-center shadow-md shrink-0 border-2 border-white">
+                                <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-[#1E40AF] text-white font-black text-xl md:text-2xl flex items-center justify-center shadow-md shrink-0 border-2 border-white">
                                     <span x-text="(currentClient?.name || 'מתאמן').slice(0, 2)"></span>
                                 </div>
                                 
                                 <div class="space-y-1.5">
                                     <div class="flex items-center gap-2.5 flex-wrap">
                                         <h3 class="text-xl md:text-3xl font-black text-[#172554] tracking-tight" x-text="currentClient?.name"></h3>
-                                        <span class="text-[10px] bg-[#1E40AF] text-[#3B82F6] border border-[#3B82F6]/30 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 shadow-xs">
+                                        <span class="text-[10px] bg-[#1E40AF] text-white border border-[#3B82F6]/30 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 shadow-xs">
                                             <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                                             <span>VIP ליווי אישי</span>
                                         </span>
@@ -2453,14 +2482,14 @@
                             <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                                 <button type="button" 
                                         @click="openMonthlySummary(currentClient)" 
-                                        class="flex-1 sm:flex-none justify-center bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] px-4 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-2 transition shadow-md shadow-[#3B82F6]/20 cursor-pointer">
+                                        class="flex-1 sm:flex-none justify-center bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white px-4 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-2 transition shadow-md shadow-[#3B82F6]/20 cursor-pointer">
                                     <i data-lucide="sparkles" class="w-4 h-4"></i>
                                     <span>✨ סיכום וואטסאפ</span>
                                 </button>
                                 
                                 <button type="button" 
                                         @click="activeTab = 'portal'; portalClientId = currentClient.id; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                        class="flex-1 sm:flex-none justify-center bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] px-4 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-2 transition border border-[#DBEAFE] shadow-md shadow-[#1E40AF]/20 cursor-pointer">
+                                        class="flex-1 sm:flex-none justify-center bg-[#1E40AF] hover:bg-[#1E40AF] text-white px-4 py-2.5 rounded-2xl text-xs md:text-sm font-black flex items-center gap-2 transition border border-[#DBEAFE] shadow-md shadow-[#1E40AF]/20 cursor-pointer">
                                     <i data-lucide="smartphone" class="w-4 h-4"></i>
                                     <span>👁️ אפליקציית מתאמן</span>
                                 </button>
@@ -2513,31 +2542,31 @@
                     <!-- סרגל לשוניות משנה (Navigation Subtabs) -->
                     <div class="flex border-b border-[#DBEAFE] gap-1 overflow-x-auto pb-1 scrollbar-none whitespace-nowrap flex-nowrap bg-white p-1.5 rounded-2xl shadow-sm border border-[#DBEAFE]">
                         <button @click="detailSubTab = 'profile'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                :class="detailSubTab === 'profile' ? 'bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20' : 'text-[#1E40AF] hover:bg-white hover:text-[#172554]'" 
+                                :class="detailSubTab === 'profile' ? 'bg-[#1E40AF] text-white shadow-md' : 'text-[#1E40AF] hover:bg-[#DBEAFE] font-bold'" 
                                 class="px-4 py-2.5 rounded-xl font-black text-xs md:text-sm transition flex-shrink-0 flex items-center gap-2 cursor-pointer">
                             <i data-lucide="user" class="w-4 h-4"></i>
                             <span>👤 פרופיל & קליטה</span>
                         </button>
                         <button @click="detailSubTab = 'workout'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                :class="detailSubTab === 'workout' ? 'bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20' : 'text-[#1E40AF] hover:bg-white hover:text-[#172554]'" 
+                                :class="detailSubTab === 'workout' ? 'bg-[#1E40AF] text-white shadow-md' : 'text-[#1E40AF] hover:bg-[#DBEAFE] font-bold'" 
                                 class="px-4 py-2.5 rounded-xl font-black text-xs md:text-sm transition flex-shrink-0 flex items-center gap-2 cursor-pointer">
                             <i data-lucide="dumbbell" class="w-4 h-4"></i>
                             <span>🏋️ תוכנית אימונים & ביצועים</span>
                         </button>
                         <button @click="detailSubTab = 'mealplan'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                :class="detailSubTab === 'mealplan' ? 'bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20' : 'text-[#1E40AF] hover:bg-white hover:text-[#172554]'" 
+                                :class="detailSubTab === 'mealplan' ? 'bg-[#1E40AF] text-white shadow-md' : 'text-[#1E40AF] hover:bg-[#DBEAFE] font-bold'" 
                                 class="px-4 py-2.5 rounded-xl font-black text-xs md:text-sm transition flex-shrink-0 flex items-center gap-2 cursor-pointer">
                             <i data-lucide="utensils" class="w-4 h-4"></i>
                             <span>🥗 תזונה & תמונות ארוחות</span>
                         </button>
                         <button @click="detailSubTab = 'checkins'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                :class="detailSubTab === 'checkins' ? 'bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20' : 'text-[#1E40AF] hover:bg-white hover:text-[#172554]'" 
+                                :class="detailSubTab === 'checkins' ? 'bg-[#1E40AF] text-white shadow-md' : 'text-[#1E40AF] hover:bg-[#DBEAFE] font-bold'" 
                                 class="px-4 py-2.5 rounded-xl font-black text-xs md:text-sm transition flex-shrink-0 flex items-center gap-2 cursor-pointer">
                             <i data-lucide="line-chart" class="w-4 h-4"></i>
                             <span>📊 מדדים, דוחות ושיקוף</span>
                         </button>
                         <button @click="detailSubTab = 'payments'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" 
-                                :class="detailSubTab === 'payments' ? 'bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20' : 'text-[#1E40AF] hover:bg-white hover:text-[#172554]'" 
+                                :class="detailSubTab === 'payments' ? 'bg-[#1E40AF] text-white shadow-md shadow-[#1E40AF]/20' : 'text-[#1E40AF] hover:bg-white hover:text-[#172554]'" 
                                 class="px-4 py-2.5 rounded-xl font-black text-xs md:text-sm transition flex-shrink-0 flex items-center gap-2 cursor-pointer">
                             <i data-lucide="credit-card" class="w-4 h-4"></i>
                             <span>💳 תשלומים & גבייה</span>
@@ -2583,7 +2612,7 @@
                                                     </template>
                                                 </div>
                                             </div>
-                                            <button type="button" @click="detailSubTab = 'workout'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="text-[10px] bg-[#3B82F6] text-[#172554] px-2.5 py-1 rounded-xl font-black shrink-0 hover:bg-[#4ade80] transition cursor-pointer">
+                                            <button type="button" @click="detailSubTab = 'workout'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="text-[10px] bg-[#3B82F6] text-white px-2.5 py-1 rounded-xl font-black shrink-0 hover:bg-[#4ade80] transition cursor-pointer">
                                                 לאימונים
                                             </button>
                                         </div>
@@ -2597,7 +2626,7 @@
                                                     <span class="text-[11px] text-[#3B82F6] font-black" x-text="getCoachDayTotals(currentClient, getTodayDate()).mealsCount + ' פריטים • ' + getCoachDayTotals(currentClient, getTodayDate()).calories + ' קק״ל (ח: ' + getCoachDayTotals(currentClient, getTodayDate()).protein + 'ג)'"></span>
                                                 </div>
                                             </div>
-                                            <button type="button" @click="detailSubTab = 'mealplan'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="text-[10px] bg-[#3B82F6] text-[#172554] px-2.5 py-1 rounded-xl font-black shrink-0 hover:bg-[#4ade80] transition cursor-pointer">
+                                            <button type="button" @click="detailSubTab = 'mealplan'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="text-[10px] bg-[#3B82F6] text-white px-2.5 py-1 rounded-xl font-black shrink-0 hover:bg-[#4ade80] transition cursor-pointer">
                                                 לתזונה
                                             </button>
                                         </div>
@@ -2657,7 +2686,7 @@
                                             </span>
                                             <div class="flex items-center gap-2">
                                                 <span class="text-[11px] font-black bg-white text-[#172554] border border-[#DBEAFE] px-2.5 py-0.5 rounded-full" x-text="(currentClient?.targetCalories || currentClient?.macroCalculated?.targetCalories || 2200) + ' קק״ל / יום'"></span>
-                                                <button type="button" @click="openMacroModal(currentClient)" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] px-3 py-1 rounded-xl text-xs font-black shadow-sm transition flex items-center gap-1 cursor-pointer">
+                                                <button type="button" @click="openMacroModal(currentClient)" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white px-3 py-1 rounded-xl text-xs font-black shadow-sm transition flex items-center gap-1 cursor-pointer">
                                                     <i data-lucide="edit-3" class="w-3.5 h-3.5 text-[#3B82F6]"></i>
                                                     <span>ערוך יעדים 🎯</span>
                                                 </button>
@@ -2939,7 +2968,7 @@
                                 <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-xl space-y-4" x-data="{ openFullIntake: false }">
                                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DBEAFE] pb-3.5">
                                         <div class="flex items-center gap-3">
-                                            <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20">
+                                            <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white shadow-md shadow-[#1E40AF]/20">
                                                 <i data-lucide="clipboard-list" class="w-5 h-5"></i>
                                             </div>
                                             <div>
@@ -2952,7 +2981,7 @@
                                                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                                 <span>ערוך שאלון ✏️</span>
                                             </button>
-                                            <button type="button" @click="openFullIntake = !openFullIntake; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+                                            <button type="button" @click="openFullIntake = !openFullIntake; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                                 <i :data-lucide="openFullIntake ? 'chevron-up' : 'chevron-down'" class="w-3.5 h-3.5"></i>
                                                 <span x-text="openFullIntake ? 'סגור פירוט מלא' : 'הצג שאלון מלא 👁️'"></span>
                                             </button>
@@ -3021,7 +3050,7 @@
                                 <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DBEAFE] pb-3.5">
                                         <div class="flex items-center gap-3">
-                                            <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20">
+                                            <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white shadow-md shadow-[#1E40AF]/20">
                                                 <i data-lucide="award" class="w-5 h-5"></i>
                                             </div>
                                             <div>
@@ -3031,7 +3060,7 @@
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <span class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] text-[#172554] px-3 py-1 rounded-xl text-xs font-black" x-text="getClientScorecardsList(currentClient).length + ' דיווחים'"></span>
-                                            <button type="button" @click="openCoachScorecardEditor()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+                                            <button type="button" @click="openCoachScorecardEditor()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                                 <span>+ דיווח חדש</span>
                                             </button>
@@ -3159,7 +3188,7 @@
                             <!-- סרגל כלים עליון ובלוק אימונים שבועי -->
                             <div class="bg-gradient-to-br from-[#f5effa] via-[#f7f2e7] to-[#ede3d1] border-2 border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="p-3 rounded-2xl bg-[#1E40AF] text-[#3B82F6] shadow-sm">
+                                    <div class="p-3 rounded-2xl bg-[#1E40AF] text-white shadow-sm">
                                         <i data-lucide="dumbbell" class="w-6 h-6 text-[#3B82F6]"></i>
                                     </div>
                                     <div>
@@ -3172,7 +3201,7 @@
                                 </div>
                                 <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
                                     <button type="button" @click="openExerciseLibraryForDay(0, null)" class="bg-white hover:bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] text-[#172554] px-3.5 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="book-open" class="w-4 h-4 text-[#1E40AF]"></i><span>ספריית תרגילים (137)</span></button>
-                                    <button type="button" @click="addWorkoutDay()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 transition shadow-md shadow-[#1E40AF]/20 cursor-pointer">
+                                    <button type="button" @click="addWorkoutDay()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 transition shadow-md shadow-[#1E40AF]/20 cursor-pointer">
                                         <i data-lucide="plus-circle" class="w-4 h-4 text-[#3B82F6]"></i>
                                         <span>+ הוסף יום אימון חדש</span>
                                     </button>
@@ -3191,7 +3220,7 @@
                             <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-sm space-y-4">
                                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#DBEAFE] pb-3">
                                     <div class="flex items-center gap-2.5">
-                                        <div class="p-2 rounded-xl bg-[#1E40AF] text-[#3B82F6]">
+                                        <div class="p-2 rounded-xl bg-[#1E40AF] text-white">
                                             <i data-lucide="layers" class="w-4 h-4 text-[#3B82F6]"></i>
                                         </div>
                                         <div>
@@ -3200,7 +3229,7 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
-                                        <button type="button" @click="openBlockArchiveModal = true; newBlockNameInput = 'בלוק ' + ((currentClient.workoutPlan?.archivedBlocks?.length || 0) + 2) + ': כוח והיפרטרופיה';" class="bg-gradient-to-r from-[#1E40AF] to-[#1E40AF] hover:from-emerald-700 hover:to-emerald-800 text-[#172554] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
+                                        <button type="button" @click="openBlockArchiveModal = true; newBlockNameInput = 'בלוק ' + ((currentClient.workoutPlan?.archivedBlocks?.length || 0) + 2) + ': כוח והיפרטרופיה';" class="bg-gradient-to-r from-[#1E40AF] to-[#1E40AF] hover:from-emerald-700 hover:to-emerald-800 text-white font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
                                             <i data-lucide="archive" class="w-3.5 h-3.5"></i>
                                             <span>סגור בלוק והתחל חדש 🚀</span>
                                         </button>
@@ -3251,7 +3280,7 @@
                                             <p class="text-[10px] text-[#1E40AF]">מעקב שיאי משקל וחזרות מתועדים</p>
                                         </div>
                                     </div>
-                                    <button type="button" @click="openUpdatePrModal('', '', '')" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+                                    <button type="button" @click="openUpdatePrModal('', '', '')" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                         <span>הזן שיא חדש</span>
                                     </button>
@@ -3295,7 +3324,7 @@
                             <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-sm space-y-4">
                                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#DBEAFE] pb-3">
                                     <div class="flex items-center gap-2.5">
-                                        <div class="p-2 rounded-xl bg-[#1E40AF] text-[#3B82F6]">
+                                        <div class="p-2 rounded-xl bg-[#1E40AF] text-white">
                                             <i data-lucide="layout-grid" class="w-4 h-4 text-[#3B82F6]"></i>
                                         </div>
                                         <div>
@@ -3304,11 +3333,11 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                                        <button type="button" @click="saveWorkoutPlanWithToast()" class="bg-gradient-to-r from-[#1E40AF] to-[#1E40AF] hover:from-emerald-700 hover:to-emerald-800 text-[#172554] font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-emerald-600/20 cursor-pointer">
+                                        <button type="button" @click="saveWorkoutPlanWithToast()" class="bg-gradient-to-r from-[#1E40AF] to-[#1E40AF] hover:from-emerald-700 hover:to-emerald-800 text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-emerald-600/20 cursor-pointer">
                                             <i data-lucide="save" class="w-3.5 h-3.5"></i>
                                             <span>💾 שמור שינויים בבלוק</span>
                                         </button>
-                                        <button type="button" @click="addWorkoutDay()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs">
+                                        <button type="button" @click="addWorkoutDay()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs">
                                             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                             <span>+ הוסף יום</span>
                                         </button>
@@ -3320,11 +3349,11 @@
                                     <template x-for="(d, dIdx) in (currentClient?.workoutPlan?.days || [])" :key="dIdx">
                                         <button type="button" 
                                                 @click="coachSelectedWorkoutDayIdx = dIdx; setTimeout(() => window.lucide?.createIcons(), 50)"
-                                                :class="coachSelectedWorkoutDayIdx === dIdx ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE] shadow-md ring-2 ring-emerald-500/40' : 'bg-white hover:bg-[#ede3f5] text-[#172554] border-[#DBEAFE]'"
+                                                :class="coachSelectedWorkoutDayIdx === dIdx ? 'bg-[#1E40AF] text-white border-[#DBEAFE] shadow-md ring-2 ring-emerald-500/40' : 'bg-white hover:bg-[#ede3f5] text-[#172554] border-[#DBEAFE]'"
                                                 class="p-3.5 rounded-2xl border text-right transition cursor-pointer flex flex-col justify-between gap-2.5 shadow-2xs">
                                             <div class="flex items-center justify-between">
                                                 <span class="w-6 h-6 rounded-lg text-[11px] font-black flex items-center justify-center"
-                                                      :class="coachSelectedWorkoutDayIdx === dIdx ? 'bg-[#1E40AF] text-[#3B82F6]' : 'bg-white border border-[#3B82F6]/40 text-[#3B82F6]'"
+                                                      :class="coachSelectedWorkoutDayIdx === dIdx ? 'bg-[#1E40AF] text-white font-bold' : 'bg-white border border-[#DBEAFE] text-[#1E40AF]'"
                                                       x-text="dIdx + 1"></span>
                                                 <span class="text-[10px] font-bold"
                                                       :class="coachSelectedWorkoutDayIdx === dIdx ? 'text-[#3B82F6]' : 'text-[#1E40AF]'"
@@ -3351,7 +3380,7 @@
                                         </div>
                                         <h4 class="text-sm font-bold text-[#172554]">טרם נבנו ימי אימון לבלוק זה</h4>
                                         <p class="text-xs text-[#1E40AF]">לחץ על הכפתור למטה כדי להוסיף את יום האימון הראשון (למשל: אימון A - חזה וגב)</p>
-                                        <button type="button" @click="addWorkoutDay()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] px-4 py-2 rounded-2xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md">
+                                        <button type="button" @click="addWorkoutDay()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white px-4 py-2 rounded-2xl text-xs font-black inline-flex items-center gap-2 cursor-pointer shadow-md">
                                             <i data-lucide="plus" class="w-4 h-4"></i>
                                             <span>הוסף יום אימון ראשון</span>
                                         </button>
@@ -3364,7 +3393,7 @@
                                         <!-- כותרת יום האימון הנבחר וכפתורי ניהול יום -->
                                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#DBEAFE] pb-4">
                                             <div class="flex items-center gap-3 w-full sm:w-auto">
-                                                <div class="w-8 h-8 rounded-xl bg-[#1E40AF] text-[#3B82F6] font-black text-xs flex items-center justify-center shadow-xs" x-text="coachSelectedWorkoutDayIdx + 1"></div>
+                                                <div class="w-8 h-8 rounded-xl bg-[#1E40AF] text-white font-black text-xs flex items-center justify-center shadow-xs" x-text="coachSelectedWorkoutDayIdx + 1"></div>
                                                 <div class="flex-1 sm:flex-none">
                                                     <input type="text" 
                                                            x-model="currentClient.workoutPlan.days[coachSelectedWorkoutDayIdx].name" 
@@ -3375,7 +3404,7 @@
                                                 <span class="text-[10px] font-bold text-[#1E40AF] bg-white border border-[#DBEAFE] px-2.5 py-1 rounded-xl whitespace-nowrap" x-text="(currentClient.workoutPlan.days[coachSelectedWorkoutDayIdx].exercises?.length || 0) + ' תרגילים'"></span>
                                             </div>
                                             <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
-                                                <button type="button" @click="saveWorkoutPlanWithToast()" class="bg-gradient-to-r from-[#1E40AF] to-[#1E40AF] hover:from-emerald-700 hover:to-emerald-800 text-[#172554] font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
+                                                <button type="button" @click="saveWorkoutPlanWithToast()" class="bg-gradient-to-r from-[#1E40AF] to-[#1E40AF] hover:from-emerald-700 hover:to-emerald-800 text-white font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
                                                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                                     <span>שמור יום זה</span>
                                                 </button>
@@ -3542,7 +3571,7 @@
                                                     <i data-lucide="plus-circle" class="w-4 h-4 text-[#1E40AF]"></i>
                                                     <span>+ הוסף תרגיל ידני</span>
                                                 </button>
-                                                <button type="button" @click="openExerciseLibraryForDay(coachSelectedWorkoutDayIdx, null)" class="flex-1 sm:flex-none bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs">
+                                                <button type="button" @click="openExerciseLibraryForDay(coachSelectedWorkoutDayIdx, null)" class="flex-1 sm:flex-none bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs">
                                                     <i data-lucide="search" class="w-4 h-4"></i>
                                                     <span>בחר מספריית 137 תרגילים 📚</span>
                                                 </button>
@@ -3561,7 +3590,7 @@
                             <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-sm space-y-4">
                                 <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3">
                                     <div class="flex items-center gap-2.5">
-                                        <div class="p-2 rounded-xl bg-[#1E40AF] text-[#3B82F6]">
+                                        <div class="p-2 rounded-xl bg-[#1E40AF] text-white">
                                             <i data-lucide="history" class="w-4 h-4 text-[#3B82F6]"></i>
                                         </div>
                                         <div>
@@ -3587,7 +3616,7 @@
                                                     <span class="text-[10px] text-[#1E40AF] bg-white border border-[#DBEAFE] px-2 py-0.5 rounded-lg font-bold" x-text="formatDate(wLog.date)"></span>
                                                 </div>
                                                 <div class="flex items-center gap-2">
-                                                    <span class="text-[11px] font-black bg-[#1E40AF] text-[#3B82F6] px-2.5 py-1 rounded-xl" x-text="'נפח: ' + (wLog.totalVolume ? Number(wLog.totalVolume).toLocaleString() : 0) + ' ק״ג'"></span>
+                                                    <span class="text-[11px] font-black bg-[#1E40AF] text-white px-2.5 py-1 rounded-xl" x-text="'נפח: ' + (wLog.totalVolume ? Number(wLog.totalVolume).toLocaleString() : 0) + ' ק״ג'"></span>
                                                     <span class="text-[11px] font-bold text-[#a15c07] bg-white border border-[#DBEAFE] px-2.5 py-1 rounded-xl" x-text="(wLog.completedSets || 0) + ' סטים'"></span>
                                                 </div>
                                             </div>
@@ -3686,7 +3715,7 @@
                                         </template>
                                         
                                         <div class="flex items-center gap-2 w-full sm:w-auto" x-show="!currentClient?.mealPlanPdfUrl">
-                                            <button @click="setMealPlanPdfLink()" class="w-full sm:w-auto bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg cursor-pointer">
+                                            <button @click="setMealPlanPdfLink()" class="w-full sm:w-auto bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg cursor-pointer">
                                                 <i data-lucide="link" class="w-4 h-4 text-[#3B82F6]"></i>
                                                 <span>הדבק קישור לתפריט PDF</span>
                                             </button>
@@ -3708,7 +3737,7 @@
                                     <i data-lucide="pie-chart" class="w-4 h-4 text-[#15803d]"></i>
                                     <span>השוואת תפריט מול יעדי מאקרו שהוגדרו:</span>
                                 </h4>
-                                <button type="button" @click="openMacroModal(currentClient)" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] px-3 py-1.5 rounded-xl text-xs font-black shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                                <button type="button" @click="openMacroModal(currentClient)" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white px-3 py-1.5 rounded-xl text-xs font-black shadow-sm transition flex items-center gap-1.5 cursor-pointer">
                                     <i data-lucide="target" class="w-3.5 h-3.5 text-[#3B82F6]"></i>
                                     <span>ערוך יעדי מאקרו 🎯</span>
                                 </button>
@@ -3805,7 +3834,7 @@
                                 <!-- כותרת וסרגל בקרה -->
                                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#DBEAFE] pb-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                                        <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                                             <i data-lucide="utensils" class="w-5 h-5 text-[#3B82F6]"></i>
                                         </div>
                                         <div>
@@ -3821,14 +3850,14 @@
                                     <div class="flex items-center gap-2 self-end md:self-auto">
                                         <button type="button" 
                                                 @click="coachFoodLogViewMode = 'daily'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
-                                                :class="coachFoodLogViewMode === 'daily' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] hover:text-[#172554] font-bold'"
+                                                :class="coachFoodLogViewMode === 'daily' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] hover:text-[#172554] font-bold'"
                                                 class="border border-[#DBEAFE] px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                                             <span>תצוגת יום נבחר 📅</span>
                                         </button>
                                         <button type="button" 
                                                 @click="coachFoodLogViewMode = 'timeline'; setTimeout(() => window.lucide && window.lucide.createIcons(), 50)"
-                                                :class="coachFoodLogViewMode === 'timeline' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] hover:text-[#172554] font-bold'"
+                                                :class="coachFoodLogViewMode === 'timeline' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] hover:text-[#172554] font-bold'"
                                                 class="border border-[#DBEAFE] px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
                                             <i data-lucide="history" class="w-3.5 h-3.5"></i>
                                             <span>כל ההיסטוריה 📜</span>
@@ -3844,7 +3873,7 @@
                                             <template x-for="day in getPastDatesList(7)" :key="day.date">
                                                 <button type="button" 
                                                         @click="setCoachFoodLogDate(day.date)"
-                                                        :class="(getCoachSelectedDate(currentClient) === day.date) ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE] shadow-sm' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'"
+                                                        :class="(getCoachSelectedDate(currentClient) === day.date) ? 'bg-[#1E40AF] text-white border-[#DBEAFE] shadow-sm' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'"
                                                         class="px-3 py-1.5 rounded-xl border shrink-0 transition flex items-center gap-1.5 cursor-pointer">
                                                     <template x-if="getCoachDayTotals(currentClient, day.date).mealsCount > 0">
                                                         <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
@@ -4032,7 +4061,7 @@
                                                     <template x-for="log in dayData.logs" :key="log.id">
                                                         <div class="bg-white border border-[#DBEAFE] rounded-xl p-3 space-y-2 shadow-xs">
                                                             <div class="flex items-center justify-between text-[10px] font-bold border-b border-[#DBEAFE]/60 pb-1.5">
-                                                                <span class="bg-[#1E40AF] text-[#3B82F6] px-2 py-0.5 rounded-lg" x-text="log.mealType || 'ארוחה'"></span>
+                                                                <span class="bg-[#1E40AF] text-white px-2 py-0.5 rounded-lg" x-text="log.mealType || 'ארוחה'"></span>
                                                                 <span class="text-[#1E40AF]" x-text="log.time || ''"></span>
                                                             </div>
 
@@ -4138,7 +4167,7 @@
                                     </div>
                                     
                                     <div class="col-span-2 sm:col-span-3 lg:col-span-1 flex items-end">
-                                        <button type="submit" class="w-full bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-md shadow-[#1E40AF]/20 cursor-pointer">
+                                        <button type="submit" class="w-full bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-md shadow-[#1E40AF]/20 cursor-pointer">
                                             <i data-lucide="plus" class="w-4 h-4"></i>
                                             <span>שמור שקילה</span>
                                         </button>
@@ -4451,10 +4480,10 @@
                             
                             <!-- בורר תצוגת גרף -->
                             <div class="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-[#DBEAFE] self-start sm:self-auto">
-                                <button type="button" @click="financeChartMode = 'net'" :class="financeChartMode === 'net' ? 'bg-[#1E40AF] text-[#3B82F6] font-black shadow-sm' : 'text-[#1E40AF] hover:text-[#172554] font-bold'" class="text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
+                                <button type="button" @click="financeChartMode = 'net'" :class="financeChartMode === 'net' ? 'bg-[#1E40AF] text-white font-black shadow-sm' : 'text-[#1E40AF] hover:text-[#172554] font-bold'" class="text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
                                     רווח נקי
                                 </button>
-                                <button type="button" @click="financeChartMode = 'compare'" :class="financeChartMode === 'compare' ? 'bg-[#1E40AF] text-[#3B82F6] font-black shadow-sm' : 'text-[#1E40AF] hover:text-[#172554] font-bold'" class="text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
+                                <button type="button" @click="financeChartMode = 'compare'" :class="financeChartMode === 'compare' ? 'bg-[#1E40AF] text-white font-black shadow-sm' : 'text-[#1E40AF] hover:text-[#172554] font-bold'" class="text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
                                     הכנסות מול הוצאות
                                 </button>
                             </div>
@@ -4496,7 +4525,7 @@
                                     <template x-for="item in getMonthlyFinancialData()" :key="item.name">
                                         <div class="flex flex-col items-center justify-end h-full group cursor-pointer relative" style="width: 14%;">
                                             <div class="mb-2 transition-all duration-300 transform group-hover:-translate-y-1">
-                                                <span :class="item.value > 0 ? 'bg-[#1E40AF] text-[#3B82F6] font-black border border-[#DBEAFE] shadow-md' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] font-bold'"
+                                                <span :class="item.value > 0 ? 'bg-[#1E40AF] text-white font-black border border-[#DBEAFE] shadow-md' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] font-bold'"
                                                       class="text-[10px] sm:text-xs px-2 py-0.5 rounded-lg whitespace-nowrap block text-center"
                                                       x-text="item.value + ' ₪'">
                                                 </span>
@@ -4567,7 +4596,7 @@
                                     <input type="text" x-model="financeClientSearch" placeholder="חיפוש מתאמן..." class="w-full bg-white border border-[#DBEAFE] rounded-xl pr-8 pl-3 py-1.5 text-xs text-[#172554] font-medium focus:outline-none focus:border-[#22c55e]">
                                 </div>
                                 <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-[#DBEAFE]">
-                                    <button type="button" @click="financeClientFilter = 'all'" :class="financeClientFilter === 'all' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'text-[#1E40AF] font-bold'" class="text-[11px] px-2.5 py-1 rounded-lg transition cursor-pointer">
+                                    <button type="button" @click="financeClientFilter = 'all'" :class="financeClientFilter === 'all' ? 'bg-[#1E40AF] text-white font-black' : 'text-[#1E40AF] font-bold'" class="text-[11px] px-2.5 py-1 rounded-lg transition cursor-pointer">
                                         הכל (<span x-text="clients.length"></span>)
                                     </button>
                                     <button type="button" @click="financeClientFilter = 'debt_only'" :class="financeClientFilter === 'debt_only' ? 'bg-amber-600 text-[#172554] font-black' : 'text-amber-800 font-bold'" class="text-[11px] px-2.5 py-1 rounded-lg transition cursor-pointer flex items-center gap-1">
@@ -4600,7 +4629,7 @@
                                             <!-- שם המתאמן -->
                                             <td class="py-3 px-5">
                                                 <div class="flex items-center gap-2.5">
-                                                    <div class="w-8 h-8 rounded-full bg-[#1E40AF] text-[#3B82F6] font-black text-xs flex items-center justify-center border border-[#DBEAFE] shrink-0" x-text="client.name.charAt(0)"></div>
+                                                    <div class="w-8 h-8 rounded-full bg-[#1E40AF] text-white font-black text-xs flex items-center justify-center border border-[#DBEAFE] shrink-0" x-text="client.name.charAt(0)"></div>
                                                     <div>
                                                         <button type="button" @click="selectClient(client.id)" class="text-xs font-black text-[#172554] hover:text-[#a15c07] transition cursor-pointer text-right block" x-text="client.name"></button>
                                                         <span class="text-[10px] text-[#1E40AF] block" x-text="(client.pricePerMonth || 250) + ' ₪ / חודש'"></span>
@@ -4746,7 +4775,7 @@
                                     <input type="text" x-model="newTransaction.description" required placeholder="למשל: רכישת רצועות התנגדות, שיווק אינסטגרם..." class="w-full bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] rounded-xl p-2.5 text-[#172554] font-medium focus:outline-none focus:border-[#22c55e]">
                                 </div>
 
-                                <button type="submit" class="w-full bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black py-3 rounded-xl transition shadow-md mt-2 cursor-pointer flex items-center justify-center gap-1.5">
+                                <button type="submit" class="w-full bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black py-3 rounded-xl transition shadow-md mt-2 cursor-pointer flex items-center justify-center gap-1.5">
                                     <i data-lucide="check" class="w-4 h-4"></i>
                                     <span>שמור תנועה במערכת</span>
                                 </button>
@@ -4883,7 +4912,7 @@
                         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-xl space-y-5 lg:col-span-2 relative overflow-hidden" x-data="{ showKeysDetails: false }">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DBEAFE] pb-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="p-3 rounded-2xl bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20">
+                                    <div class="p-3 rounded-2xl bg-[#1E40AF] text-white shadow-md shadow-[#1E40AF]/20">
                                         <i data-lucide="cloud" class="w-6 h-6 text-[#3B82F6]"></i>
                                     </div>
                                     <div>
@@ -4893,7 +4922,7 @@
                                 </div>
 
                                 <div class="flex items-center gap-2">
-                                    <button type="button" @click="testFirebaseConnection()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow-sm">
+                                    <button type="button" @click="testFirebaseConnection()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow-sm">
                                         <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-[#3B82F6]"></i>
                                         <span>בדוק חיבור ענן ⚡</span>
                                     </button>
@@ -4962,7 +4991,7 @@
                                 </div>
                                 
                                 <div class="flex flex-wrap items-center gap-3 pt-2 text-xs">
-                                    <button @click="saveFirebaseConfig()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-5 py-2.5 rounded-xl shadow-md transition cursor-pointer">
+                                    <button @click="saveFirebaseConfig()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-5 py-2.5 rounded-xl shadow-md transition cursor-pointer">
                                         <span>שמור מפתחות והפעל סנכרון ☁️</span>
                                     </button>
                                     <button @click="clearFirebaseConfig()" x-show="isCloudSynced" class="bg-white border border-rose-200 text-rose-700 font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">
@@ -4988,7 +5017,7 @@
                         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3">
                                 <div class="flex items-center gap-2.5">
-                                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                                         <i data-lucide="lock" class="w-5 h-5 text-[#3B82F6]"></i>
                                     </div>
                                     <div>
@@ -5004,7 +5033,7 @@
                                     <label class="block text-[10px] font-bold text-[#1E40AF] mb-1">קוד גישה נוכחי למאמן (4 ספרות):</label>
                                     <div class="flex items-center gap-2">
                                         <input type="text" maxlength="6" x-model="coachPinSetting" class="w-32 bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] rounded-xl p-2.5 text-center text-base font-black text-[#172554] tracking-widest focus:outline-none focus:border-[#3B82F6]">
-                                        <button type="button" @click="saveCoachPinSetting()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-4 py-2.5 rounded-xl text-xs transition cursor-pointer shadow-md">
+                                        <button type="button" @click="saveCoachPinSetting()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-4 py-2.5 rounded-xl text-xs transition cursor-pointer shadow-md">
                                             עדכן קוד ✓
                                         </button>
                                     </div>
@@ -5016,7 +5045,7 @@
                                         <span class="text-xs font-black text-[#172554] block">הישאר מחובר במכשיר זה 📱</span>
                                         <span class="text-[10px] text-[#1E40AF]">כניסה ישירה ל-CRM בריענון דף ללא צורך בהקשת קוד חוזרת</span>
                                     </div>
-                                    <button type="button" @click="togglePersistentAuth()" :class="isPersistentAuthEnabled ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-slate-200 text-slate-600 border-slate-300'" class="px-3 py-1.5 rounded-xl text-xs font-black border transition cursor-pointer">
+                                    <button type="button" @click="togglePersistentAuth()" :class="isPersistentAuthEnabled ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-slate-200 text-slate-600 border-slate-300'" class="px-3 py-1.5 rounded-xl text-xs font-black border transition cursor-pointer">
                                         <span x-text="isPersistentAuthEnabled ? 'פעיל ✓' : 'כבוי ✕'"></span>
                                     </button>
                                 </div>
@@ -5027,7 +5056,7 @@
                         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
                             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3">
                                 <div class="flex items-center gap-2.5">
-                                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                                         <i data-lucide="sparkles" class="w-5 h-5 text-[#3B82F6]"></i>
                                     </div>
                                     <div>
@@ -5044,7 +5073,7 @@
                                 <label class="block text-[10px] font-bold text-[#1E40AF]">Google Gemini API Key:</label>
                                 <div class="flex items-center gap-2">
                                     <input type="password" x-model="geminiApiKeyInput" placeholder="הדבק מפתח (AIzaSy...)" class="w-full bg-white border border-[#DBEAFE] focus:border-[#3B82F6] rounded-xl p-2.5 text-xs text-[#172554] font-mono focus:outline-none focus:border-[#3B82F6]">
-                                    <button type="button" @click="saveGeminiApiKey()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-4 py-2.5 rounded-xl text-xs whitespace-nowrap transition cursor-pointer shadow-md">
+                                    <button type="button" @click="saveGeminiApiKey()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-4 py-2.5 rounded-xl text-xs whitespace-nowrap transition cursor-pointer shadow-md">
                                         שמור ✨
                                     </button>
                                     <template x-if="geminiApiKey">
@@ -5068,7 +5097,7 @@
                             <p class="text-xs text-[#1E40AF]">הורדת קובץ גיבוי מלא של כל נתוני המאמן למחשב (JSON) או שחזור מקובץ קודם.</p>
                             
                             <div class="flex items-center gap-3 text-xs flex-wrap pt-1">
-                                <button type="button" @click="exportDatabase()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                                <button type="button" @click="exportDatabase()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
                                     <i data-lucide="download" class="w-3.5 h-3.5 text-[#3B82F6]"></i>
                                     <span>ייצא קובץ גיבוי (JSON)</span>
                                 </button>
@@ -5120,7 +5149,7 @@
             
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-4">
                 <div class="flex items-center gap-3">
-                    <div class="p-3 rounded-2xl bg-[#1E40AF] text-[#3B82F6] shadow-md shadow-[#1E40AF]/20">
+                    <div class="p-3 rounded-2xl bg-[#1E40AF] text-white shadow-md shadow-[#1E40AF]/20">
                         <i data-lucide="target" class="w-6 h-6 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -5153,10 +5182,10 @@
                 <div class="space-y-1.5">
                     <span class="text-[11px] font-bold text-[#5c4075] block">בחירה מהירה:</span>
                     <div class="grid grid-cols-4 gap-2">
-                        <button type="button" @click="tempGoalInput = 10000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 10000 ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'">10,000 ₪</button>
-                        <button type="button" @click="tempGoalInput = 15000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 15000 ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'">15,000 ₪</button>
-                        <button type="button" @click="tempGoalInput = 20000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 20000 ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'">20,000 ₪</button>
-                        <button type="button" @click="tempGoalInput = 30000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 30000 ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'">30,000 ₪</button>
+                        <button type="button" @click="tempGoalInput = 10000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 10000 ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'">10,000 ₪</button>
+                        <button type="button" @click="tempGoalInput = 15000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 15000 ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'">15,000 ₪</button>
+                        <button type="button" @click="tempGoalInput = 20000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 20000 ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'">20,000 ₪</button>
+                        <button type="button" @click="tempGoalInput = 30000" class="py-2 rounded-xl text-xs font-black border transition cursor-pointer" :class="tempGoalInput == 30000 ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'">30,000 ₪</button>
                     </div>
                 </div>
 
@@ -5177,7 +5206,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="edit-3" class="w-5 h-5 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -5201,13 +5230,13 @@
                 <div class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] p-3 rounded-2xl space-y-2">
                     <span class="font-black text-[#172554] block">1. עמידה ביעד התזונה והקלוריות:</span>
                     <div class="grid grid-cols-3 gap-1.5 font-bold text-[11px]">
-                        <button type="button" @click="coachEditingScorecard.nutrition = 'yes'" :class="coachEditingScorecard.nutrition === 'yes' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                        <button type="button" @click="coachEditingScorecard.nutrition = 'yes'" :class="coachEditingScorecard.nutrition === 'yes' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
                             100% בול ✅
                         </button>
-                        <button type="button" @click="coachEditingScorecard.nutrition = 'almost'" :class="coachEditingScorecard.nutrition === 'almost' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                        <button type="button" @click="coachEditingScorecard.nutrition = 'almost'" :class="coachEditingScorecard.nutrition === 'almost' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
                             כמעט (~80%) 👍
                         </button>
-                        <button type="button" @click="coachEditingScorecard.nutrition = 'no'" :class="coachEditingScorecard.nutrition === 'no' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                        <button type="button" @click="coachEditingScorecard.nutrition = 'no'" :class="coachEditingScorecard.nutrition === 'no' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
                             חרגתי ⚠️
                         </button>
                     </div>
@@ -5217,13 +5246,13 @@
                 <div class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] p-3 rounded-2xl space-y-2">
                     <span class="font-black text-[#172554] block">2. ביצוע אימון יומי:</span>
                     <div class="grid grid-cols-3 gap-1.5 font-bold text-[11px]">
-                        <button type="button" @click="coachEditingScorecard.workout = 'yes'" :class="coachEditingScorecard.workout === 'yes' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                        <button type="button" @click="coachEditingScorecard.workout = 'yes'" :class="coachEditingScorecard.workout === 'yes' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
                             התאמן 🏋️‍♂️
                         </button>
-                        <button type="button" @click="coachEditingScorecard.workout = 'rest'" :class="coachEditingScorecard.workout === 'rest' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                        <button type="button" @click="coachEditingScorecard.workout = 'rest'" :class="coachEditingScorecard.workout === 'rest' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
                             יום מנוחה 🧘
                         </button>
-                        <button type="button" @click="coachEditingScorecard.workout = 'no'" :class="coachEditingScorecard.workout === 'no' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
+                        <button type="button" @click="coachEditingScorecard.workout = 'no'" :class="coachEditingScorecard.workout === 'no' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#172554] border-[#DBEAFE]'" class="py-2 rounded-xl border text-center transition cursor-pointer">
                             דילג ❌
                         </button>
                     </div>
@@ -5268,7 +5297,7 @@
                     <button type="button" @click="openCoachScorecardModal = false" class="bg-white hover:bg-white text-[#172554] font-bold px-4 py-2.5 rounded-xl text-xs transition cursor-pointer">
                         ביטול
                     </button>
-                    <button type="submit" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] shadow-md font-black px-6 py-2.5 rounded-xl text-xs transition shadow-md shadow-emerald-500/20 cursor-pointer">
+                    <button type="submit" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white shadow-md font-black px-6 py-2.5 rounded-xl text-xs transition shadow-md shadow-emerald-500/20 cursor-pointer">
                         שמור דיווח ב-CRM 💾
                     </button>
                 </div>
@@ -5279,7 +5308,7 @@
     <!-- מודל סיכום וחגיגת סיום אימון -->
     <div x-show="openWorkoutFinishModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#EFF6FF]/85 backdrop-blur-md no-print" x-cloak @click.self="openWorkoutFinishModal = false">
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 animate-scale-up text-center mx-2">
-            <div class="w-16 h-16 rounded-3xl bg-[#1E40AF] text-[#3B82F6] flex items-center justify-center mx-auto text-3xl shadow-xl shadow-[#1E40AF]/20 border border-[#DBEAFE]">
+            <div class="w-16 h-16 rounded-3xl bg-[#1E40AF] text-white flex items-center justify-center mx-auto text-3xl shadow-xl shadow-[#1E40AF]/20 border border-[#DBEAFE]">
                 🏆
             </div>
             <div>
@@ -5302,7 +5331,7 @@
                 👑 הנתונים סונכרנו לענן ונשמרו ישירות למאמן אילאי! יעד האימון היומי סומן כהושלם.
             </div>
 
-            <button type="button" @click="openWorkoutFinishModal = false" class="w-full bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black py-3 rounded-2xl text-xs md:text-sm transition border border-[#DBEAFE] shadow-lg shadow-[#1E40AF]/20 cursor-pointer">
+            <button type="button" @click="openWorkoutFinishModal = false" class="w-full bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black py-3 rounded-2xl text-xs md:text-sm transition border border-[#DBEAFE] shadow-lg shadow-[#1E40AF]/20 cursor-pointer">
                 סגור וחזור ללוח 🚀
             </button>
         </div>
@@ -5318,7 +5347,7 @@
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 -translate-y-8"
          class="fixed top-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none no-print" x-cloak>
-        <div class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] border-2 border-[#3B82F6] text-[#172554] px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3">
+        <div class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] border-2 border-[#3B82F6] text-white px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3">
             <div class="w-8 h-8 rounded-xl bg-white text-[#172554] flex items-center justify-center font-black">
                 <i data-lucide="check" class="w-5 h-5"></i>
             </div>
@@ -5347,7 +5376,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="award" class="w-5 h-5"></i>
                     </div>
                     <div>
@@ -5385,7 +5414,7 @@
             </div>
 
             <div class="pt-3 border-t border-[#DBEAFE] flex justify-end shrink-0">
-                <button type="button" @click="openBadgesModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
+                <button type="button" @click="openBadgesModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
                     סגור היכל תגים
                 </button>
             </div>
@@ -5397,7 +5426,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-4 md:p-5 max-w-2xl w-full shadow-2xl space-y-4 animate-scale-up flex flex-col text-[#172554] max-h-[95vh]">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <div class="p-2 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="camera" class="w-4 h-4"></i>
                     </div>
                     <h3 class="text-xs sm:text-sm font-black text-[#172554]" x-text="previewMealPhotoTitle || 'תמונת ארוחה 📸'"></h3>
@@ -5410,7 +5439,7 @@
                 <img :src="previewMealPhotoUrl" class="max-h-[65vh] w-auto object-contain rounded-xl" alt="תמונת ארוחה מוגדלת" />
             </div>
             <div class="pt-2 flex justify-end shrink-0">
-                <button type="button" @click="previewMealPhotoModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl text-xs transition cursor-pointer shadow-md">
+                <button type="button" @click="previewMealPhotoModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl text-xs transition cursor-pointer shadow-md">
                     סגור
                 </button>
             </div>
@@ -5422,7 +5451,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="sparkles" class="w-5 h-5 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -5447,7 +5476,7 @@
                     <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                     <span>העתק סיכום ללוח</span>
                 </button>
-                <a :href="getSendMonthlySummaryWhatsAppLink()" target="_blank" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] shadow-md font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-emerald-500/20 cursor-pointer">
+                <a :href="getSendMonthlySummaryWhatsAppLink()" target="_blank" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white shadow-md font-black px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-emerald-500/20 cursor-pointer">
                     <i data-lucide="send" class="w-3.5 h-3.5"></i>
                     <span>שלח עכשיו בוואטסאפ 🚀</span>
                 </a>
@@ -5502,7 +5531,7 @@
                 <button type="button" @click="openBlockArchiveModal = false" class="bg-white hover:bg-white border border-[#DBEAFE] text-[#172554] font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">
                     ביטול
                 </button>
-                <button type="button" @click="archiveCurrentBlock()" class="bg-gradient-to-r from-[#1E40AF] to-[#1E40AF] hover:from-emerald-700 hover:to-emerald-800 text-[#172554] font-black px-5 py-2 rounded-xl text-xs transition shadow-md shadow-emerald-600/20 cursor-pointer">
+                <button type="button" @click="archiveCurrentBlock()" class="bg-gradient-to-r from-[#1E40AF] to-[#1E40AF] hover:from-emerald-700 hover:to-emerald-800 text-white font-black px-5 py-2 rounded-xl text-xs transition shadow-md shadow-emerald-600/20 cursor-pointer">
                     אשר ופתח בלוק חדש 👑
                 </button>
             </div>
@@ -5566,7 +5595,7 @@
             </div>
 
             <div class="pt-3 border-t border-[#DBEAFE] flex justify-end shrink-0">
-                <button type="button" @click="openBlockHistoryModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
+                <button type="button" @click="openBlockHistoryModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
                     סגור היסטוריה
                 </button>
             </div>
@@ -5579,7 +5608,7 @@
             
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="utensils" class="w-5 h-5 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -5605,19 +5634,19 @@
                 </div>
 
                 <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-                    <button type="button" @click="foodLibraryCategory = 'all'" :class="foodLibraryCategory === 'all' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="foodLibraryCategory = 'all'" :class="foodLibraryCategory === 'all' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         הכל (<span x-text="foodLibrary.length"></span>)
                     </button>
-                    <button type="button" @click="foodLibraryCategory = 'protein'" :class="foodLibraryCategory === 'protein' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="foodLibraryCategory = 'protein'" :class="foodLibraryCategory === 'protein' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         חלבונים 🍗
                     </button>
-                    <button type="button" @click="foodLibraryCategory = 'carb'" :class="foodLibraryCategory === 'carb' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="foodLibraryCategory = 'carb'" :class="foodLibraryCategory === 'carb' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         פחמימות 🍚
                     </button>
-                    <button type="button" @click="foodLibraryCategory = 'fat'" :class="foodLibraryCategory === 'fat' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="foodLibraryCategory = 'fat'" :class="foodLibraryCategory === 'fat' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         שומנים בריאים 🥑
                     </button>
-                    <button type="button" @click="foodLibraryCategory = 'veg'" :class="foodLibraryCategory === 'veg' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="foodLibraryCategory = 'veg'" :class="foodLibraryCategory === 'veg' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         ירקות ומשקאות 🥗
                     </button>
                 </div>
@@ -5643,7 +5672,7 @@
                             </div>
                             <button type="button" 
                                     @click="selectFoodFromLibrary(f)" 
-                                    class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 shrink-0 transition cursor-pointer shadow-xs">
+                                    class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 shrink-0 transition cursor-pointer shadow-xs">
                                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                 <span>הוסף</span>
                             </button>
@@ -5654,7 +5683,7 @@
 
             <div class="pt-3 border-t border-[#DBEAFE] flex justify-between items-center shrink-0">
                 <span class="text-xs text-[#1E40AF]" x-text="'מוצגים ' + getFilteredFoodLibrary().length + ' פריטים'"></span>
-                <button type="button" @click="openFoodLibraryModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
+                <button type="button" @click="openFoodLibraryModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
                     סגור ספרייה
                 </button>
             </div>
@@ -5668,7 +5697,7 @@
             <!-- כותרת וסגירה -->
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="book-open" class="w-5 h-5 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -5697,28 +5726,28 @@
 
                 <!-- לשוניות קבוצות שרירים -->
                 <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'all'" :class="exerciseLibrarySelectedMuscle === 'all' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'all'" :class="exerciseLibrarySelectedMuscle === 'all' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         הכל (<span x-text="exerciseLibrary.length"></span>)
                     </button>
-                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'chest'" :class="exerciseLibrarySelectedMuscle === 'chest' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'chest'" :class="exerciseLibrarySelectedMuscle === 'chest' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         חזה (20)
                     </button>
-                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'back'" :class="exerciseLibrarySelectedMuscle === 'back' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'back'" :class="exerciseLibrarySelectedMuscle === 'back' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         גב (22)
                     </button>
-                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'legs'" :class="exerciseLibrarySelectedMuscle === 'legs' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'legs'" :class="exerciseLibrarySelectedMuscle === 'legs' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         רגליים (28)
                     </button>
-                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'shoulders'" :class="exerciseLibrarySelectedMuscle === 'shoulders' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'shoulders'" :class="exerciseLibrarySelectedMuscle === 'shoulders' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         כתפיים (19)
                     </button>
-                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'arms'" :class="exerciseLibrarySelectedMuscle === 'arms' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'arms'" :class="exerciseLibrarySelectedMuscle === 'arms' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         ידיים (23)
                     </button>
-                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'core'" :class="exerciseLibrarySelectedMuscle === 'core' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'core'" :class="exerciseLibrarySelectedMuscle === 'core' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         בטן וליבה (15)
                     </button>
-                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'cardio'" :class="exerciseLibrarySelectedMuscle === 'cardio' ? 'bg-[#1E40AF] text-[#3B82F6] border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
+                    <button type="button" @click="exerciseLibrarySelectedMuscle = 'cardio'" :class="exerciseLibrarySelectedMuscle === 'cardio' ? 'bg-[#1E40AF] text-white border-[#DBEAFE]' : 'bg-white text-[#1E40AF] border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition whitespace-nowrap cursor-pointer">
                         אירובי ו-HIIT (10)
                     </button>
                 </div>
@@ -5750,7 +5779,7 @@
                             </div>
                             <button type="button" 
                                     @click="selectExerciseFromLibrary(ex)" 
-                                    class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 shrink-0 transition cursor-pointer shadow-xs">
+                                    class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 shrink-0 transition cursor-pointer shadow-xs">
                                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                                 <span>הוסף</span>
                             </button>
@@ -5762,7 +5791,7 @@
             <!-- סגירה -->
             <div class="pt-3 border-t border-[#DBEAFE] flex justify-between items-center shrink-0">
                 <span class="text-xs text-[#1E40AF]" x-text="'מוצגים ' + getFilteredExerciseLibrary().length + ' תרגילים'"></span>
-                <button type="button" @click="openExerciseLibraryModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
+                <button type="button" @click="openExerciseLibraryModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
                     סגור ספרייה
                 </button>
             </div>
@@ -5773,7 +5802,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="calculator" class="w-5 h-5"></i>
                     </div>
                     <div>
@@ -5833,7 +5862,7 @@
             </div>
 
             <div class="pt-3 border-t border-[#DBEAFE] flex justify-end shrink-0">
-                <button type="button" @click="openOneRmModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
+                <button type="button" @click="openOneRmModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
                     סגור מחשבון
                 </button>
             </div>
@@ -5845,7 +5874,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="disc" class="w-5 h-5 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -5885,7 +5914,7 @@
                     <div class="flex items-center gap-1.5 flex-wrap pt-1">
                         <span class="text-[10px] text-[#1E40AF] font-bold">משקלים נפוצים:</span>
                         <template x-for="tw in [40, 60, 80, 100, 120, 140, 160]" :key="tw">
-                            <button type="button" @click="plateTargetWeight = tw" :class="plateTargetWeight === tw ? 'bg-[#1E40AF] text-[#3B82F6]' : 'bg-white text-[#172554]'" class="border border-[#DBEAFE] px-2 py-0.5 rounded-lg text-[10px] font-black transition cursor-pointer" x-text="tw + 'kg'"></button>
+                            <button type="button" @click="plateTargetWeight = tw" :class="plateTargetWeight === tw ? 'bg-[#1E40AF] text-white' : 'bg-white text-[#172554]'" class="border border-[#DBEAFE] px-2 py-0.5 rounded-lg text-[10px] font-black transition cursor-pointer" x-text="tw + 'kg'"></button>
                         </template>
                     </div>
                 </div>
@@ -5927,7 +5956,7 @@
                                           x-text="p.plate"></span>
                                     <span class="font-bold text-xs text-[#172554]" x-text="p.plate + ' ק״ג'"></span>
                                 </div>
-                                <span class="bg-[#1E40AF] text-[#3B82F6] px-2.5 py-1 rounded-xl text-xs font-black" x-text="'× ' + p.count"></span>
+                                <span class="bg-[#1E40AF] text-white px-2.5 py-1 rounded-xl text-xs font-black" x-text="'× ' + p.count"></span>
                             </div>
                         </template>
                     </div>
@@ -5941,7 +5970,7 @@
             </div>
 
             <div class="pt-3 border-t border-[#DBEAFE] flex justify-end shrink-0">
-                <button type="button" @click="openPlateCalculatorModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
+                <button type="button" @click="openPlateCalculatorModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer">
                     סגור מחשבון
                 </button>
             </div>
@@ -5953,7 +5982,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-md w-full shadow-2xl space-y-4 animate-scale-up mx-2 text-[#172554]">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3">
                 <div class="flex items-center gap-2.5">
-                    <div class="p-2 rounded-xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2 rounded-xl bg-[#1E40AF] text-white">
                         <i data-lucide="plus-circle" class="w-5 h-5 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -5974,7 +6003,7 @@
                         <template x-for="mType in ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ערב', 'ארוחת ביניים']" :key="mType">
                             <button type="button" 
                                     @click="quickAddMealType = mType" 
-                                    :class="quickAddMealType === mType ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE]'"
+                                    :class="quickAddMealType === mType ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE]'"
                                     class="py-2 px-1 rounded-xl text-[10px] transition cursor-pointer"
                                     x-text="mType">
                             </button>
@@ -6033,7 +6062,7 @@
             </div>
 
             <!-- תצוגת ציון יומי ענקית ומרשימה -->
-            <div class="bg-gradient-to-br from-[#3B82F6] to-[#1E40AF] text-[#172554] p-5 rounded-3xl text-center space-y-2 shadow-xl border border-[#DBEAFE]">
+            <div class="bg-gradient-to-br from-[#3B82F6] to-[#1E40AF] text-white p-5 rounded-3xl text-center space-y-2 shadow-xl border border-[#DBEAFE]">
                 <span class="text-[11px] font-black text-[#3B82F6] uppercase tracking-wider block">ציון ההתמדה היומי שלך</span>
                 <div class="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] via-amber-300 to-[#4ade80]" x-text="getLiveDailyScore(portalClient) + '%'"></div>
                 <div class="flex items-center justify-center gap-1.5 text-xs font-bold text-[#ede3f5]">
@@ -6138,7 +6167,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl space-y-4 animate-scale-up mx-2 text-[#172554]">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <div class="p-2 rounded-xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2 rounded-xl bg-[#1E40AF] text-white">
                         <i data-lucide="history" class="w-5 h-5 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -6186,7 +6215,7 @@
             <!-- כותרת המודל -->
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3 shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <div class="p-2 rounded-xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2 rounded-xl bg-[#1E40AF] text-white">
                         <i data-lucide="search" class="w-5 h-5 text-[#3B82F6]"></i>
                     </div>
                     <div>
@@ -6230,7 +6259,7 @@
                     ]" :key="cat.id">
                         <button type="button" 
                                 @click="foodSearchCategory = cat.id"
-                                :class="foodSearchCategory === cat.id ? 'bg-[#1E40AF] text-[#3B82F6] font-bold' : 'bg-white text-slate-600 border border-[#DBEAFE]'"
+                                :class="foodSearchCategory === cat.id ? 'bg-[#1E40AF] text-white font-bold' : 'bg-white text-slate-600 border border-[#DBEAFE]'"
                                 class="px-2.5 py-1 rounded-xl whitespace-nowrap transition cursor-pointer"
                                 x-text="cat.label">
                         </button>
@@ -6290,7 +6319,7 @@
                                 <template x-for="mType in ['ארוחת בוקר', 'ארוחת צהריים', 'ארוחת ערב', 'ארוחת ביניים']" :key="mType">
                                     <button type="button" 
                                             @click="foodSearchTargetMeal = mType" 
-                                            :class="foodSearchTargetMeal === mType ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-slate-700 border border-[#DBEAFE]'"
+                                            :class="foodSearchTargetMeal === mType ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-slate-700 border border-[#DBEAFE]'"
                                             class="py-2 px-1 rounded-xl text-[10px] transition cursor-pointer"
                                             x-text="mType">
                                     </button>
@@ -6324,7 +6353,7 @@
                         </div>
 
                         <!-- תצוגה מקדימה של החישוב עבור הכמות שנבחרה -->
-                        <div class="bg-[#1E40AF] text-[#172554] p-3 rounded-xl flex items-center justify-between">
+                        <div class="bg-[#1E40AF] text-white p-3 rounded-xl flex items-center justify-between">
                             <div>
                                 <span class="text-[10px] text-purple-200 block">ערך תזונתי לכמות זו:</span>
                                 <span class="text-sm font-black text-[#3B82F6]" x-text="Math.round(foodSearchSelectedFood.calPer100 * ((foodSearchUnit === 'servingSpoon' ? (foodSearchSelectedFood.servingSpoonGrams || 50) : foodSearchUnit === 'spoon' ? (foodSearchSelectedFood.spoonGrams || 15) : foodSearchUnit === 'cup' ? (foodSearchSelectedFood.cupGrams || 180) : foodSearchUnit === 'unit' ? (foodSearchSelectedFood.unitGrams || foodSearchSelectedFood.defaultGrams || 100) : foodSearchUnit === 'slice' ? (foodSearchSelectedFood.sliceGrams || 30) : foodSearchUnit === 'box' ? (foodSearchSelectedFood.boxGrams || 200) : 1) * (parseFloat(foodSearchQuantity) || 100) / (foodSearchUnit === 'grams' ? 100 : 100))) + ' קלוריות'"></span>
@@ -6336,7 +6365,7 @@
                         </div>
 
                         <!-- כפתור הוספה סופי -->
-                        <button type="button" @click="addSelectedFoodToMeal()" class="w-full bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black py-3 rounded-2xl text-xs transition border border-[#DBEAFE] shadow-lg cursor-pointer flex items-center justify-center gap-2">
+                        <button type="button" @click="addSelectedFoodToMeal()" class="w-full bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black py-3 rounded-2xl text-xs transition border border-[#DBEAFE] shadow-lg cursor-pointer flex items-center justify-center gap-2">
                             <i data-lucide="plus-circle" class="w-4 h-4"></i>
                             <span x-text="'+ הוסף ל' + foodSearchTargetMeal"></span>
                         </button>
@@ -6359,7 +6388,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-lg w-full shadow-2xl space-y-5 animate-scale-up mx-2">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="clipboard-list" class="w-5 h-5"></i>
                     </div>
                     <div>
@@ -6393,11 +6422,11 @@
 
                 <!-- כפתורי פעולה -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
-                    <a :href="getSendIntakeWhatsAppLink()" target="_blank" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] shadow-md font-black py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition">
+                    <a :href="getSendIntakeWhatsAppLink()" target="_blank" class="bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white shadow-md font-black py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition">
                         <i data-lucide="message-circle" class="w-4 h-4"></i>
                         <span>שלח עכשיו בוואטסאפ 🚀</span>
                     </a>
-                    <button type="button" @click="copyIntakeLink()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#DBEAFE] transition">
+                    <button type="button" @click="copyIntakeLink()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#DBEAFE] transition">
                         <i data-lucide="copy" class="w-4 h-4 text-[#3B82F6]"></i>
                         <span>העתק קישור לשאלון</span>
                     </button>
@@ -6417,7 +6446,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-6 max-w-2xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="clipboard-edit" class="w-5 h-5"></i>
                     </div>
                     <div>
@@ -6532,7 +6561,7 @@
 
                 <div class="pt-3 border-t border-[#DBEAFE] flex justify-end gap-2 shrink-0">
                     <button type="button" @click="openEditIntakeModal = false" class="bg-white border border-[#3B82F6]/40 text-[#3B82F6] font-bold px-4 py-2 rounded-xl text-xs">ביטול</button>
-                    <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] shadow-md shadow-[#1E40AF]/20">
+                    <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl text-xs transition border border-[#DBEAFE] shadow-md shadow-[#1E40AF]/20">
                         <span>שמור עדכון שאלון 👑</span>
                     </button>
                 </div>
@@ -6597,7 +6626,7 @@
 
                 <div class="pt-4 border-t border-[#DBEAFE] flex justify-end gap-2 text-xs">
                     <button type="button" @click="openAddClientModal = false" class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] text-[#1E40AF] hover:text-[#172554] px-4 py-2 rounded-xl font-bold">ביטול</button>
-                    <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl shadow-md transition">שמור והוסף מתאמן 🚀</button>
+                    <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl shadow-md transition">שמור והוסף מתאמן 🚀</button>
                 </div>
             </form>
         </div>
@@ -6695,7 +6724,7 @@
                     <button type="button" @click="openEditModal = false; deleteClient(editingClient.id)" class="bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold px-4 py-2 rounded-xl transition">מחק מתאמן</button>
                     <div class="flex gap-2">
                         <button type="button" @click="openEditModal = false" class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] text-[#1E40AF] hover:text-[#172554] px-4 py-2 rounded-xl font-bold">ביטול</button>
-                        <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-5 py-2 rounded-xl shadow-md transition">שמור שינויים ✨</button>
+                        <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-5 py-2 rounded-xl shadow-md transition">שמור שינויים ✨</button>
                     </div>
                 </div>
             </form>
@@ -6745,7 +6774,7 @@
 
                 <div class="pt-4 border-t border-[#DBEAFE] flex justify-end gap-2 text-xs">
                     <button type="button" @click="openAddEventModal = false" class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] text-[#1E40AF] hover:text-[#172554] px-4 py-2 rounded-xl font-bold">ביטול</button>
-                    <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-5 py-2 rounded-xl shadow-md transition">קבע פגישה 📅</button>
+                    <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-5 py-2 rounded-xl shadow-md transition">קבע פגישה 📅</button>
                 </div>
             </form>
         </div>
@@ -6771,7 +6800,7 @@
                 
                 <div class="pt-4 border-t border-[#DBEAFE] flex justify-end gap-2 text-xs">
                     <button type="button" @click="openImportIntakeModal = false" class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] text-[#1E40AF] hover:text-[#172554] px-4 py-2 rounded-xl font-bold">ביטול</button>
-                    <button type="button" @click="parseAndCreateClientFromIntake()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2 rounded-xl shadow-md transition">ייבא וצור כרטיס ✨</button>
+                    <button type="button" @click="parseAndCreateClientFromIntake()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2 rounded-xl shadow-md transition">ייבא וצור כרטיס ✨</button>
                 </div>
             </div>
         </div>
@@ -6782,7 +6811,7 @@
         <div class="bg-white border border-[#DBEAFE] w-full max-w-xl rounded-3xl shadow-2xl flex flex-col mx-2 max-h-[90vh] overflow-hidden" @click.away="openFoodLibraryModal = false">
             <div class="p-4 md:p-5 border-b border-[#DBEAFE] flex justify-between items-center bg-white">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-2xl bg-[#1E40AF] text-[#3B82F6] flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-2xl bg-[#1E40AF] text-white flex items-center justify-center">
                         <i data-lucide="sparkles" class="w-4 h-4"></i>
                     </div>
                     <div>
@@ -6805,12 +6834,12 @@
 
                     <!-- טאבים לקטגוריות -->
                     <div class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px]">
-                        <button @click="foodCategoryFilter = 'all'" :class="foodCategoryFilter === 'all' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">הכל</button>
-                        <button @click="foodCategoryFilter = 'protein'" :class="foodCategoryFilter === 'protein' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍗 חלבון</button>
-                        <button @click="foodCategoryFilter = 'carb'" :class="foodCategoryFilter === 'carb' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍚 פחמימה</button>
-                        <button @click="foodCategoryFilter = 'dairy'" :class="foodCategoryFilter === 'dairy' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥛 חלב וגבינות</button>
-                        <button @click="foodCategoryFilter = 'fat'" :class="foodCategoryFilter === 'fat' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥑 שומן בריא</button>
-                        <button @click="foodCategoryFilter = 'fruit'" :class="foodCategoryFilter === 'fruit' ? 'bg-[#1E40AF] text-[#3B82F6] font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍎 פירות</button>
+                        <button @click="foodCategoryFilter = 'all'" :class="foodCategoryFilter === 'all' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">הכל</button>
+                        <button @click="foodCategoryFilter = 'protein'" :class="foodCategoryFilter === 'protein' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍗 חלבון</button>
+                        <button @click="foodCategoryFilter = 'carb'" :class="foodCategoryFilter === 'carb' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍚 פחמימה</button>
+                        <button @click="foodCategoryFilter = 'dairy'" :class="foodCategoryFilter === 'dairy' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥛 חלב וגבינות</button>
+                        <button @click="foodCategoryFilter = 'fat'" :class="foodCategoryFilter === 'fat' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🥑 שומן בריא</button>
+                        <button @click="foodCategoryFilter = 'fruit'" :class="foodCategoryFilter === 'fruit' ? 'bg-[#1E40AF] text-white font-black' : 'bg-white text-[#1E40AF] border border-[#DBEAFE] hover:text-[#172554]'" class="px-3 py-1.5 rounded-xl shrink-0 transition">🍎 פירות</button>
                     </div>
                 </div>
 
@@ -6868,7 +6897,7 @@
 
             <div class="p-4 border-t border-[#DBEAFE] flex justify-end gap-2 bg-white">
                 <button type="button" @click="openFoodLibraryModal = false" class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] text-[#1E40AF] px-4 py-2 rounded-xl text-xs font-bold">ביטול</button>
-                <button type="button" @click="addSelectedFoodToMealPlan()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
+                <button type="button" @click="addSelectedFoodToMealPlan()" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     <span>הוסף לתפריט</span>
                 </button>
@@ -6925,7 +6954,7 @@
             </div>
 
             <div class="pt-2">
-                <button type="button" @click="saveClientPr()" class="w-full bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-[#172554] font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#3B82F6]/20 transition cursor-pointer">
+                <button type="button" @click="saveClientPr()" class="w-full bg-gradient-to-r from-[#3B82F6] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#1D4ED8] text-white font-black py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#3B82F6]/20 transition cursor-pointer">
                     <i data-lucide="trophy" class="w-4 h-4"></i>
                     <span>שמור ושבור שיא חדש! 🚀</span>
                 </button>
@@ -6938,7 +6967,7 @@
         <div class="bg-white border border-[#DBEAFE] rounded-3xl p-5 md:p-7 max-w-2xl w-full shadow-2xl space-y-5 animate-scale-up mx-2 max-h-[90vh] flex flex-col text-[#172554]">
             <div class="flex items-center justify-between border-b border-[#DBEAFE] pb-3.5 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-[#3B82F6]">
+                    <div class="p-2.5 rounded-2xl bg-[#1E40AF] text-white">
                         <i data-lucide="shield-check" class="w-5 h-5"></i>
                     </div>
                     <div>
@@ -6985,7 +7014,7 @@
             </div>
 
             <div class="pt-3 border-t border-[#DBEAFE] flex justify-end shrink-0">
-                <button type="button" @click="openPrivacyModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-6 py-2.5 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer shadow-md shadow-[#1E40AF]/20">
+                <button type="button" @click="openPrivacyModal = false" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-6 py-2.5 rounded-xl text-xs transition border border-[#DBEAFE] cursor-pointer shadow-md shadow-[#1E40AF]/20">
                     קראתי והבנתי ✓
                 </button>
             </div>
@@ -14749,7 +14778,7 @@ openExerciseLibraryForDay(dayIdx, exIdx = null) {
                 <!-- כפתורי פעולה -->
                 <div class="pt-4 border-t border-[#DBEAFE] flex justify-end gap-2 text-xs">
                     <button type="button" @click="openMacroEditModal = false" class="bg-white border border-[#DBEAFE] text-[#172554] focus:border-[#3B82F6] text-[#1E40AF] hover:text-[#172554] px-4 py-2 rounded-xl font-bold">ביטול</button>
-                    <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-[#3B82F6] font-black px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                    <button type="submit" class="bg-[#1E40AF] hover:bg-[#1E40AF] text-white font-black px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer">
                         <i data-lucide="check" class="w-4 h-4 text-[#3B82F6]"></i>
                         <span>שמור מכסות לענן ⚡</span>
                     </button>
